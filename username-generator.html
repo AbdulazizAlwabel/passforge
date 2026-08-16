@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Username Generator — PassForge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+
+/* ===== DESIGN TOKENS ===== */
+:root, [data-theme="light"] {
+  --color-bg: #f4f4f0; --color-surface: #f8f8f5; --color-surface-2: #ffffff;
+  --color-surface-offset: #ebebе6; --color-border: oklch(0.3 0 0 / 0.10);
+  --color-divider: oklch(0.3 0 0 / 0.07); --color-text: #1a1a18;
+  --color-text-muted: #6b6b68; --color-text-faint: #b0b0ac;
+  --color-text-inverse: #f8f8f5; --color-primary: #1a6b4a;
+  --color-primary-hover: #145538; --color-primary-active: #0e3f28;
+  --color-primary-highlight: #d0e8dd;
+  --color-success: #1a6b4a; --color-warning: #b05a10; --color-error: #c0392b;
+  --shadow-sm: 0 1px 3px oklch(0.1 0 0 / 0.07);
+  --shadow-md: 0 4px 16px oklch(0.1 0 0 / 0.08);
+  --shadow-lg: 0 12px 40px oklch(0.1 0 0 / 0.10);
+  --radius-sm: 0.375rem; --radius-md: 0.5rem; --radius-lg: 0.75rem;
+  --radius-xl: 1rem; --radius-full: 9999px;
+  --font-mono: 'JetBrains Mono','Fira Code',monospace;
+  --font-body: 'Inter',system-ui,sans-serif;
+  --text-xs: clamp(0.75rem,0.7rem + 0.25vw,0.875rem);
+  --text-sm: clamp(0.875rem,0.8rem + 0.35vw,1rem);
+  --text-base: clamp(1rem,0.95rem + 0.25vw,1.125rem);
+  --text-lg: clamp(1.125rem,1rem + 0.75vw,1.5rem);
+  --text-xl: clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+  --space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;
+  --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;
+  --space-12:3rem;--space-16:4rem;
+  --transition:180ms cubic-bezier(0.16,1,0.3,1);
+}
+[data-theme="dark"] {
+  --color-bg:#121210;--color-surface:#181816;--color-surface-2:#1e1e1c;
+  --color-surface-offset:#242422;--color-border:oklch(1 0 0 / 0.08);
+  --color-divider:oklch(1 0 0 / 0.05);--color-text:#e8e8e4;
+  --color-text-muted:#888884;--color-text-faint:#505050;
+  --color-text-inverse:#121210;--color-primary:#3dba7e;
+  --color-primary-hover:#2da066;--color-primary-active:#208750;
+  --color-primary-highlight:#1a3028;
+  --color-success:#2ecc71;--color-warning:#e67e22;--color-error:#e74c3c;
+  --shadow-sm:0 1px 3px oklch(0 0 0/0.25);
+  --shadow-md:0 4px 16px oklch(0 0 0/0.35);
+  --shadow-lg:0 12px 40px oklch(0 0 0/0.45);
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme]){
+  --color-bg:#121210;--color-surface:#181816;--color-surface-2:#1e1e1c;
+  --color-surface-offset:#242422;--color-border:oklch(1 0 0/0.08);
+  --color-divider:oklch(1 0 0/0.05);--color-text:#e8e8e4;
+  --color-text-muted:#888884;--color-text-faint:#505050;
+  --color-text-inverse:#121210;--color-primary:#3dba7e;
+  --color-primary-hover:#2da066;--color-primary-active:#208750;
+  --color-primary-highlight:#1a3028;
+  --color-success:#2ecc71;--color-warning:#e67e22;--color-error:#e74c3c;
+  --shadow-sm:0 1px 3px oklch(0 0 0/0.25);
+  --shadow-md:0 4px 16px oklch(0 0 0/0.35);
+  --shadow-lg:0 12px 40px oklch(0 0 0/0.45);
+}}
+
+/* ===== BASE ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth;}
+body{min-height:100dvh;font-family:var(--font-body);font-size:var(--text-base);
+  color:var(--color-text);background:var(--color-bg);
+  display:flex;flex-direction:column;align-items:center;
+  padding:var(--space-8) var(--space-4);
+  transition:background var(--transition),color var(--transition);}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit;}
+input,select,textarea{font:inherit;color:inherit;}
+a,button,input,select,textarea{transition:all var(--transition);}
+:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm);}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;}
+
+/* ===== HEADER / NAV ===== */
+.app-header{
+  width:100%;max-width:760px;
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:var(--space-10);gap:var(--space-4);flex-wrap:wrap;
+}
+.logo{display:flex;align-items:center;gap:var(--space-3);text-decoration:none;color:inherit;}
+.logo-mark{width:36px;height:36px;color:var(--color-primary);flex-shrink:0;}
+.logo-name{font-family:var(--font-mono);font-weight:700;font-size:var(--text-lg);
+  letter-spacing:-0.02em;color:var(--color-text);}
+.logo-name span{color:var(--color-primary);}
+
+.header-right{display:flex;align-items:center;gap:var(--space-3);}
+
+/* Nav dropdown */
+.nav-select-wrap{position:relative;display:flex;align-items:center;}
+.nav-select-wrap::after{
+  content:'';position:absolute;right:var(--space-3);top:50%;transform:translateY(-50%);
+  width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;
+  border-top:5px solid var(--color-text-muted);pointer-events:none;
+}
+.nav-select{
+  appearance:none;-webkit-appearance:none;
+  padding:var(--space-2) var(--space-8) var(--space-2) var(--space-3);
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-md);font-size:var(--text-sm);
+  color:var(--color-text);cursor:pointer;
+  box-shadow:var(--shadow-sm);
+}
+.nav-select:hover{border-color:var(--color-primary);}
+
+.theme-toggle{
+  width:40px;height:40px;border-radius:var(--radius-full);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--color-text-muted);border:1px solid var(--color-border);
+  background:var(--color-surface);flex-shrink:0;
+}
+.theme-toggle:hover{color:var(--color-text);background:var(--color-surface-offset);}
+
+/* ===== CARD ===== */
+.card{
+  width:100%;max-width:760px;
+  background:var(--color-surface);border-radius:var(--radius-xl);
+  border:1px solid var(--color-border);box-shadow:var(--shadow-lg);overflow:hidden;
+}
+.card-header{
+  padding:var(--space-6) var(--space-6) var(--space-5);
+  border-bottom:1px solid var(--color-divider);background:var(--color-surface-2);
+}
+.card-title{font-size:var(--text-lg);font-weight:700;color:var(--color-text);margin-bottom:var(--space-1);}
+.card-desc{font-size:var(--text-sm);color:var(--color-text-muted);}
+.card-body{padding:var(--space-6);}
+
+/* ===== FORM ELEMENTS ===== */
+.field{display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-4);}
+.field label{font-size:var(--text-sm);font-weight:500;color:var(--color-text);}
+.input-base{
+  width:100%;padding:var(--space-3) var(--space-4);
+  background:var(--color-surface-2);border:1px solid var(--color-border);
+  border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--color-text);
+  outline:none;resize:vertical;
+}
+.input-base:focus{border-color:var(--color-primary);box-shadow:0 0 0 3px var(--color-primary-highlight);}
+.input-mono{font-family:var(--font-mono);}
+
+/* ===== BUTTONS ===== */
+.btn{
+  padding:var(--space-3) var(--space-5);border-radius:var(--radius-md);
+  font-size:var(--text-sm);font-weight:600;display:inline-flex;
+  align-items:center;gap:var(--space-2);cursor:pointer;
+}
+.btn-primary{background:var(--color-primary);color:var(--color-text-inverse);border:none;}
+.btn-primary:hover{background:var(--color-primary-hover);}
+.btn-primary:active{background:var(--color-primary-active);}
+.btn-secondary{background:var(--color-surface-offset);color:var(--color-text);
+  border:1px solid var(--color-border);}
+.btn-secondary:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.btn-row{display:flex;gap:var(--space-3);flex-wrap:wrap;margin-top:var(--space-4);}
+.btn-full{width:100%;justify-content:center;}
+
+/* ===== OUTPUT BOX ===== */
+.output-box{
+  background:var(--color-surface-offset);border:1px solid var(--color-border);
+  border-radius:var(--radius-md);padding:var(--space-4);
+  font-family:var(--font-mono);font-size:var(--text-sm);
+  word-break:break-all;white-space:pre-wrap;
+  color:var(--color-text);min-height:60px;
+  position:relative;
+}
+.output-empty{color:var(--color-text-faint);font-style:italic;font-family:var(--font-body);}
+
+/* ===== BADGE ===== */
+.badge{
+  display:inline-flex;align-items:center;padding:var(--space-1) var(--space-3);
+  border-radius:var(--radius-full);font-size:var(--text-xs);font-weight:600;
+  letter-spacing:0.04em;
+}
+.badge-green{background:var(--color-primary-highlight);color:var(--color-primary);}
+.badge-red{background:#fde8e8;color:var(--color-error);}
+[data-theme="dark"] .badge-red{background:#3a1a1a;color:#e74c3c;}
+
+/* ===== DIVIDER ===== */
+.divider{height:1px;background:var(--color-divider);margin:var(--space-5) 0;}
+
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;bottom:var(--space-6);left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--color-text);color:var(--color-bg);
+  padding:var(--space-3) var(--space-5);border-radius:var(--radius-full);
+  font-size:var(--text-sm);font-weight:500;box-shadow:var(--shadow-lg);
+  opacity:0;transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+  pointer-events:none;white-space:nowrap;z-index:100;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ===== GRID ===== */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);}
+@media(max-width:560px){.grid-2{grid-template-columns:1fr;}.app-header{margin-bottom:var(--space-6);}}
+
+
+.chk-item{display:flex;align-items:center;gap:var(--space-2);padding:var(--space-3);background:var(--color-surface-offset);border-radius:var(--radius-md);border:1px solid var(--color-border);cursor:pointer;user-select:none;}
+.chk-item:hover{border-color:var(--color-primary);}
+.chk-item:has(input:checked){background:var(--color-primary-highlight);border-color:var(--color-primary);}
+.chk-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--color-primary);cursor:pointer;flex-shrink:0;}
+.chk-text{font-size:var(--text-sm);color:var(--color-text-muted);}
+.chk-item:has(input:checked) .chk-text{color:var(--color-text);font-weight:500;}
+.un-card{display:flex;align-items:center;justify-content:space-between;padding:var(--space-3) var(--space-4);background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:var(--radius-md);animation:fadeUp 0.2s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+.un-name{font-family:var(--font-mono);font-size:var(--text-sm);color:var(--color-text);}
+.un-copy{font-size:var(--text-xs);color:var(--color-text-faint);padding:var(--space-1) var(--space-2);border-radius:var(--radius-sm);}
+.un-copy:hover{color:var(--color-primary);}
+@media(max-width:480px){#results{grid-template-columns:1fr;}}
+
+
+
+</style>
+</head>
+<body>
+<a href="#main" class="sr-only">Skip to content</a>
+<header class="app-header">
+  <a href="/" class="logo" aria-label="PassForge home">
+    <svg class="logo-mark" viewBox="0 0 36 36" fill="none" aria-label="PassForge logo">
+  <rect x="6" y="16" width="24" height="16" rx="3" stroke="currentColor" stroke-width="2.2"/>
+  <path d="M12 16v-4a6 6 0 0 1 12 0v4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+  <circle cx="18" cy="24" r="2.5" fill="currentColor"/>
+  <line x1="18" y1="26.5" x2="18" y2="29" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+</svg>
+    <span class="logo-name">Pass<span>Forge</span></span>
+  </a>
+  <div class="header-right">
+    
+<div class="nav-select-wrap">
+  <select class="nav-select" id="siteNav" aria-label="Navigate to tool">
+    <option value="/unit-converter">📐 Unit Converter</option>
+      <option value="/date-converter">📅 Date Converter</option>
+      <option value="/password-generator" >🔐 Password Generator</option>
+<option value="/username-generator" selected>👤 Username Generator</option>
+<option value="/strength-checker" >💪 Strength Checker</option>
+<option value="/hash-generator" >#️⃣ Hash Generator</option>
+<option value="/base64-tool" >📦 Base64 Encoder/Decoder</option>
+<option value="/json-formatter" >{ } JSON Formatter</option>
+<option value="/ip-network" >🌐 IP & Network Info</option>
+<option value="/text-converter" >🔤 Text Case Converter</option>
+  </select>
+</div>
+    <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</header>
+<main id="main">
+
+<div class="card">
+  <div class="card-header">
+    <p class="card-title">Username Generator</p>
+    <p class="card-desc">Generate unique usernames for any style — professional, gamer, or anonymous.</p>
+  </div>
+  <div class="card-body">
+    <div class="grid-2">
+      <div class="field">
+        <label for="styleSelect">Style</label>
+        <select class="input-base" id="styleSelect">
+          <option value="professional">Professional</option>
+          <option value="gamer">Gamer</option>
+          <option value="anonymous">Anonymous</option>
+          <option value="friendly">Friendly</option>
+          <option value="techie">Techie</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="wordInput">Base word (optional)</label>
+        <input type="text" class="input-base" id="wordInput" placeholder="e.g. Ali, Wolf, Fire…" maxlength="20">
+      </div>
+    </div>
+    <div class="field">
+      <label>Options</label>
+      <div style="display:flex;gap:var(--space-3);flex-wrap:wrap;">
+        <label class="chk-item" style="flex:1;min-width:140px;"><input type="checkbox" id="addNum" checked><span class="chk-text">Add numbers</span></label>
+        <label class="chk-item" style="flex:1;min-width:140px;"><input type="checkbox" id="addSep"><span class="chk-text">Add separator (_, .)</span></label>
+        <label class="chk-item" style="flex:1;min-width:140px;"><input type="checkbox" id="capsMode"><span class="chk-text">Mixed caps</span></label>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full" id="genBtn" style="margin-bottom:var(--space-5);">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+      Generate Usernames
+    </button>
+    <div id="results" style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2);"></div>
+  </div>
+</div>
+
+</main>
+<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+<script>
+
+// Theme
+(function(){
+  const t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
+  let d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
+  r.setAttribute('data-theme',d);upIcon();
+  t&&t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);upIcon();});
+  function upIcon(){if(!t)return;
+    t.innerHTML=d==='dark'
+      ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+      :'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    t.setAttribute('aria-label','Switch to '+(d==='dark'?'light':'dark')+' mode');}
+})();
+// Nav
+document.getElementById('siteNav').addEventListener('change',function(){
+  if(this.value)window.location.href=this.value;
+});
+// Toast
+let _tt;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2200);}
+function copyToClipboard(text,msg){navigator.clipboard.writeText(text).then(()=>showToast(msg||'Copied to clipboard!'));}
+
+
+const ADJ_PRO=['Solid','Prime','Alpha','Core','Elite','Swift','Sharp','Keen','Bold','Clear'];
+const ADJ_GAM=['Dark','Shadow','Neon','Cyber','Ghost','Storm','Blaze','Iron','Void','Sonic'];
+const ADJ_ANON=['Anon','Hidden','Silent','Quiet','Stealth','Masked','Veiled','Covert','Phantom','Unknown'];
+const ADJ_FRI=['Happy','Sunny','Warm','Bright','Cozy','Cheerful','Lucky','Jolly','Merry','Breezy'];
+const ADJ_TECH=['Dev','Hex','Null','Root','Byte','Stack','Node','Flux','Sync','Loop'];
+const NOUNS=['Wolf','Hawk','Lion','Bear','Fox','Eagle','Raven','Tiger','Falcon','Cobra','Orca','Lynx'];
+
+function rnd(arr){return arr[Math.floor(Math.random()*arr.length)];}
+function rndNum(max=99){return Math.floor(Math.random()*max)+1;}
+
+function generate(){
+  const style=document.getElementById('styleSelect').value;
+  const base=document.getElementById('wordInput').value.trim();
+  const addNum=document.getElementById('addNum').checked;
+  const addSep=document.getElementById('addSep').checked;
+  const caps=document.getElementById('capsMode').checked;
+  const seps=addSep?['_','.','-']:[''];
+
+  const adjPool={professional:ADJ_PRO,gamer:ADJ_GAM,anonymous:ADJ_ANON,friendly:ADJ_FRI,techie:ADJ_TECH};
+  const adjs=adjPool[style];
+
+  const results=[];
+  for(let i=0;i<12;i++){
+    const adj=base||(style==='anonymous'?rnd(ADJ_ANON):rnd(adjs));
+    const noun=base?rnd(NOUNS):rnd(NOUNS);
+    const sep=rnd(seps);
+    let part1=base||adj;
+    let part2=noun;
+    if(caps){part1=part1.charAt(0).toUpperCase()+part1.slice(1).toLowerCase();part2=part2.charAt(0).toUpperCase()+part2.slice(1).toLowerCase();}
+    let name=(base?part1+sep+part2:part1+sep+part2)+(addNum?(sep||'')+rndNum():'');
+    if(style==='anonymous')name='Anon'+sep+rnd(ADJ_ANON)+sep+(addNum?rndNum(999):'');
+    results.push(name);
+  }
+
+  const div=document.getElementById('results');
+  div.innerHTML=results.map(n=>`<div class="un-card"><span class="un-name">${n}</span><button class="un-copy" onclick="copyToClipboard('${n}','Copied: ${n}')">Copy</button></div>`).join('');
+}
+
+document.getElementById('genBtn').addEventListener('click',generate);
+generate();
+
+
+</script>
+</body>
+</html>

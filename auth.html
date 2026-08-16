@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Sign In / Sign Up — PassForge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root, [data-theme="light"] {
+  --color-bg: #f4f4f0; --color-surface: #f8f8f5; --color-surface-2: #ffffff;
+  --color-surface-offset: #ebebe6; --color-border: oklch(0.3 0 0 / 0.10);
+  --color-divider: oklch(0.3 0 0 / 0.07); --color-text: #1a1a18;
+  --color-text-muted: #6b6b68; --color-text-faint: #b0b0ac;
+  --color-text-inverse: #f8f8f5; --color-primary: #1a6b4a;
+  --color-primary-hover: #145538; --color-primary-active: #0e3f28;
+  --color-primary-highlight: #d0e8dd;
+  --color-success: #1a6b4a; --color-warning: #b05a10; --color-error: #c0392b;
+  --shadow-sm: 0 1px 3px oklch(0.1 0 0 / 0.07);
+  --shadow-md: 0 4px 16px oklch(0.1 0 0 / 0.08);
+  --shadow-lg: 0 12px 40px oklch(0.1 0 0 / 0.10);
+  --radius-sm: 0.375rem; --radius-md: 0.5rem; --radius-lg: 0.75rem;
+  --radius-xl: 1rem; --radius-2xl: 1.5rem; --radius-full: 9999px;
+  --font-mono: 'JetBrains Mono','Fira Code',monospace;
+  --font-body: 'Inter',system-ui,sans-serif;
+  --text-xs: clamp(0.75rem,0.7rem + 0.25vw,0.875rem);
+  --text-sm: clamp(0.875rem,0.8rem + 0.35vw,1rem);
+  --text-base: clamp(1rem,0.95rem + 0.25vw,1.125rem);
+  --text-lg: clamp(1.125rem,1rem + 0.75vw,1.5rem);
+  --text-xl: clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+  --space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;
+  --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;
+  --space-12:3rem;--space-16:4rem;
+  --transition:180ms cubic-bezier(0.16,1,0.3,1);
+}
+[data-theme="dark"] {
+  --color-bg:#121210;--color-surface:#181816;--color-surface-2:#1e1e1c;
+  --color-surface-offset:#242422;--color-border:oklch(1 0 0 / 0.08);
+  --color-divider:oklch(1 0 0 / 0.05);--color-text:#e8e8e4;
+  --color-text-muted:#888884;--color-text-faint:#505050;
+  --color-text-inverse:#121210;--color-primary:#3dba7e;
+  --color-primary-hover:#2da066;--color-primary-active:#208750;
+  --color-primary-highlight:#1a3028;
+  --color-success:#2ecc71;--color-warning:#e67e22;--color-error:#e74c3c;
+  --shadow-sm:0 1px 3px oklch(0 0 0/0.25);
+  --shadow-md:0 4px 16px oklch(0 0 0/0.35);
+  --shadow-lg:0 12px 40px oklch(0 0 0/0.45);
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme]){
+  --color-bg:#121210;--color-surface:#181816;--color-surface-2:#1e1e1c;
+  --color-surface-offset:#242422;--color-border:oklch(1 0 0/0.08);
+  --color-divider:oklch(1 0 0/0.05);--color-text:#e8e8e4;
+  --color-text-muted:#888884;--color-text-faint:#505050;
+  --color-text-inverse:#121210;--color-primary:#3dba7e;
+  --color-primary-hover:#2da066;--color-primary-active:#208750;
+  --color-primary-highlight:#1a3028;
+  --color-success:#2ecc71;--color-warning:#e67e22;--color-error:#e74c3c;
+  --shadow-sm:0 1px 3px oklch(0 0 0/0.25);
+  --shadow-md:0 4px 16px oklch(0 0 0/0.35);
+  --shadow-lg:0 12px 40px oklch(0 0 0/0.45);
+}}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-font-smoothing:antialiased;}
+body{
+  min-height:100dvh;font-family:var(--font-body);font-size:var(--text-base);
+  color:var(--color-text);background:var(--color-bg);
+  display:flex;align-items:center;justify-content:center;padding:var(--space-6);
+  transition:background var(--transition),color var(--transition);
+}
+a{text-decoration:none;color:inherit;}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit;}
+:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm);}
+
+.auth-wrap{width:100%;max-width:420px;}
+
+.back-link{
+  display:inline-flex;align-items:center;gap:var(--space-2);
+  font-size:var(--text-sm);color:var(--color-text-muted);
+  margin-bottom:var(--space-6);transition:color var(--transition);
+}
+.back-link:hover{color:var(--color-primary);}
+
+.auth-card{
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-2xl);padding:var(--space-8);
+  box-shadow:var(--shadow-lg);
+}
+
+.auth-logo{
+  display:flex;align-items:center;justify-content:center;gap:var(--space-3);
+  margin-bottom:var(--space-6);
+}
+.auth-logo svg{width:30px;height:30px;color:var(--color-primary);}
+.auth-logo span{font-family:var(--font-mono);font-weight:700;font-size:var(--text-lg);letter-spacing:-0.02em;}
+.auth-logo span b{color:var(--color-primary);font-weight:700;}
+
+.tabs{
+  display:flex;background:var(--color-surface-offset);
+  border-radius:var(--radius-lg);padding:4px;margin-bottom:var(--space-6);
+}
+.tab{
+  flex:1;text-align:center;padding:var(--space-3);border-radius:var(--radius-md);
+  font-size:var(--text-sm);font-weight:600;color:var(--color-text-muted);
+  transition:all var(--transition);
+}
+.tab.active{background:var(--color-primary);color:var(--color-text-inverse);}
+
+.form-panel{display:none;}
+.form-panel.active{display:block;}
+
+label{display:block;font-size:var(--text-xs);font-weight:600;color:var(--color-text-muted);margin-bottom:var(--space-2);}
+input{
+  width:100%;padding:var(--space-3) var(--space-4);margin-bottom:var(--space-4);
+  border-radius:var(--radius-md);border:1px solid var(--color-border);
+  background:var(--color-surface-2);color:var(--color-text);
+  font-size:var(--text-sm);font-family:var(--font-body);
+  transition:border-color var(--transition);
+}
+input:focus{outline:none;border-color:var(--color-primary);}
+
+.submit-btn{
+  width:100%;padding:var(--space-3);border-radius:var(--radius-md);
+  background:var(--color-primary);color:var(--color-text-inverse);
+  font-weight:700;font-size:var(--text-sm);
+  transition:background var(--transition),transform var(--transition);
+}
+.submit-btn:hover{background:var(--color-primary-hover);}
+.submit-btn:disabled{opacity:0.6;cursor:not-allowed;}
+
+.message{
+  margin-top:var(--space-4);padding:var(--space-3) var(--space-4);
+  border-radius:var(--radius-md);font-size:var(--text-xs);font-weight:500;display:none;
+}
+.message.error{background:oklch(0.55 0.18 25 / 0.12);color:var(--color-error);display:block;}
+.message.success{background:var(--color-primary-highlight);color:var(--color-primary);display:block;}
+
+.forgot-link{
+  display:block;text-align:right;font-size:var(--text-xs);
+  color:var(--color-primary);margin:calc(var(--space-4) * -1) 0 var(--space-4);
+  font-weight:600;
+}
+</style>
+</head>
+<body>
+
+<div class="auth-wrap">
+  <a href="/index.html" class="back-link">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    Back to home
+  </a>
+
+  <div class="auth-card">
+    <div class="auth-logo">
+      <svg viewBox="0 0 36 36" fill="none" aria-hidden="true">
+        <rect x="6" y="16" width="24" height="16" rx="3" stroke="currentColor" stroke-width="2.2"/>
+        <path d="M12 16v-4a6 6 0 0 1 12 0v4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="18" cy="24" r="2.5" fill="currentColor"/>
+        <line x1="18" y1="26.5" x2="18" y2="29" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <span>Pass<b>Forge</b></span>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" data-tab="login">Sign In</div>
+      <div class="tab" data-tab="register">Sign Up</div>
+    </div>
+
+    <div class="form-panel active" id="login-panel">
+      <form id="login-form">
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" required>
+
+        <label for="login-password">Password</label>
+        <input type="password" id="login-password" required>
+
+        <a href="#" class="forgot-link" id="forgot-link">Forgot password?</a>
+
+        <button type="submit" class="submit-btn">Sign In</button>
+        <div class="message" id="login-message"></div>
+      </form>
+    </div>
+
+    <div class="form-panel" id="register-panel">
+      <form id="register-form">
+        <label for="reg-username">Username</label>
+        <input type="text" id="reg-username" required minlength="3">
+
+        <label for="reg-email">Email</label>
+        <input type="email" id="reg-email" required>
+
+        <label for="reg-password">Password</label>
+        <input type="password" id="reg-password" required minlength="8">
+
+        <button type="submit" class="submit-btn">Create Account</button>
+        <div class="message" id="register-message"></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const r=document.documentElement;
+  let d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
+  r.setAttribute('data-theme',d);
+})();
+
+const API_BASE = 'https://www.nicelydone.qd.je/api';
+
+const tabs = document.querySelectorAll('.tab');
+const panels = document.querySelectorAll('.form-panel');
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    panels.forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.tab + '-panel').classList.add('active');
+  });
+});
+
+function showMessage(el, text, type) {
+  el.textContent = text;
+  el.className = 'message ' + type;
+}
+
+document.getElementById('register-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  const msg = document.getElementById('register-message');
+  btn.disabled = true;
+
+  const username = document.getElementById('reg-username').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-password').value;
+
+  try {
+    const res = await fetch(`${API_BASE}/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ username, email, password })
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      showMessage(msg, data.error || 'Registration failed', 'error');
+    } else {
+      showMessage(msg, data.message || 'Account created! Check your email.', 'success');
+      e.target.reset();
+    }
+  } catch (err) {
+    showMessage(msg, 'Network error. Please try again.', 'error');
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = e.target.querySelector('button');
+  const msg = document.getElementById('login-message');
+  btn.disabled = true;
+
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+
+  try {
+    const res = await fetch(`${API_BASE}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+
+    if (!res.ok) {
+      showMessage(msg, data.error || 'Login failed', 'error');
+    } else {
+      showMessage(msg, 'Signed in! Redirecting...', 'success');
+      setTimeout(() => window.location.href = '/index.html', 1000);
+    }
+  } catch (err) {
+    showMessage(msg, 'Network error. Please try again.', 'error');
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+document.getElementById('forgot-link').addEventListener('click', async (e) => {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  if (!email) {
+    showMessage(document.getElementById('login-message'), 'Enter your email above first', 'error');
+    return;
+  }
+  try {
+    const res = await fetch(`${API_BASE}/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+    const data = await res.json();
+    showMessage(document.getElementById('login-message'), data.message, 'success');
+  } catch (err) {
+    showMessage(document.getElementById('login-message'), 'Something went wrong', 'error');
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Date Converter — PassForge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root,[data-theme="light"]{
+  --color-bg:#f4f4f0;--color-surface:#f8f8f5;--color-surface-2:#ffffff;
+  --color-surface-offset:#ebebе6;--color-border:oklch(0.3 0 0/0.10);
+  --color-divider:oklch(0.3 0 0/0.07);--color-text:#1a1a18;
+  --color-text-muted:#6b6b68;--color-text-faint:#b0b0ac;
+  --color-text-inverse:#f8f8f5;--color-primary:#1a6b4a;
+  --color-primary-hover:#145538;--color-primary-active:#0e3f28;
+  --color-primary-highlight:#d0e8dd;
+  --shadow-sm:0 1px 3px oklch(0.1 0 0/0.07);
+  --shadow-md:0 4px 16px oklch(0.1 0 0/0.08);
+  --shadow-lg:0 12px 40px oklch(0.1 0 0/0.10);
+  --radius-sm:0.375rem;--radius-md:0.5rem;--radius-lg:0.75rem;
+  --radius-xl:1rem;--radius-full:9999px;
+  --font-mono:"JetBrains Mono","Fira Code",monospace;
+  --font-body:"Inter",system-ui,sans-serif;
+  --text-xs:clamp(0.75rem,0.7rem + 0.25vw,0.875rem);
+  --text-sm:clamp(0.875rem,0.8rem + 0.35vw,1rem);
+  --text-base:clamp(1rem,0.95rem + 0.25vw,1.125rem);
+  --text-lg:clamp(1.125rem,1rem + 0.75vw,1.5rem);
+  --space-1:0.25rem;--space-2:0.5rem;--space-3:0.75rem;--space-4:1rem;
+  --space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;
+  --transition:180ms cubic-bezier(0.16,1,0.3,1);
+}
+[data-theme="dark"]{
+  --color-bg:#121210;--color-surface:#181816;--color-surface-2:#1e1e1c;
+  --color-surface-offset:#242422;--color-border:oklch(1 0 0/0.08);
+  --color-divider:oklch(1 0 0/0.05);--color-text:#e8e8e4;
+  --color-text-muted:#888884;--color-text-faint:#505050;
+  --color-text-inverse:#121210;--color-primary:#3dba7e;
+  --color-primary-hover:#2da066;--color-primary-active:#208750;
+  --color-primary-highlight:#1a3028;
+  --shadow-sm:0 1px 3px oklch(0 0 0/0.25);
+  --shadow-md:0 4px 16px oklch(0 0 0/0.35);
+  --shadow-lg:0 12px 40px oklch(0 0 0/0.45);
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme]){
+  --color-bg:#121210;--color-surface:#181816;--color-surface-2:#1e1e1c;
+  --color-surface-offset:#242422;--color-border:oklch(1 0 0/0.08);
+  --color-divider:oklch(1 0 0/0.05);--color-text:#e8e8e4;
+  --color-text-muted:#888884;--color-text-faint:#505050;
+  --color-text-inverse:#121210;--color-primary:#3dba7e;
+  --color-primary-hover:#2da066;--color-primary-active:#208750;
+  --color-primary-highlight:#1a3028;
+  --shadow-sm:0 1px 3px oklch(0 0 0/0.25);
+  --shadow-md:0 4px 16px oklch(0 0 0/0.35);
+  --shadow-lg:0 12px 40px oklch(0 0 0/0.45);
+}}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{-webkit-font-smoothing:antialiased;}
+body{min-height:100dvh;font-family:var(--font-body);font-size:var(--text-base);
+  color:var(--color-text);background:var(--color-bg);
+  display:flex;flex-direction:column;align-items:center;
+  padding:var(--space-8) var(--space-4);
+  transition:background var(--transition),color var(--transition);}
+button{cursor:pointer;background:none;border:none;font:inherit;color:inherit;}
+input,select{font:inherit;color:inherit;}
+a{text-decoration:none;color:inherit;}
+:focus-visible{outline:2px solid var(--color-primary);outline-offset:3px;border-radius:var(--radius-sm);}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;}
+
+.app-header{width:100%;max-width:860px;display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-10);gap:var(--space-4);flex-wrap:wrap;}
+.logo{display:flex;align-items:center;gap:var(--space-3);}
+.logo-mark{width:36px;height:36px;color:var(--color-primary);flex-shrink:0;}
+.logo-name{font-family:var(--font-mono);font-weight:700;font-size:var(--text-lg);letter-spacing:-0.02em;}
+.logo-name span{color:var(--color-primary);}
+.header-right{display:flex;align-items:center;gap:var(--space-3);}
+.nav-select-wrap{position:relative;display:flex;align-items:center;}
+.nav-select-wrap::after{content:'';position:absolute;right:var(--space-3);top:50%;transform:translateY(-50%);width:0;height:0;border-left:4px solid transparent;border-right:4px solid transparent;border-top:5px solid var(--color-text-muted);pointer-events:none;}
+.nav-select{appearance:none;-webkit-appearance:none;padding:var(--space-2) var(--space-8) var(--space-2) var(--space-3);background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--color-text);cursor:pointer;box-shadow:var(--shadow-sm);}
+.nav-select:hover{border-color:var(--color-primary);}
+.theme-toggle{width:40px;height:40px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);border:1px solid var(--color-border);background:var(--color-surface);flex-shrink:0;}
+.theme-toggle:hover{color:var(--color-text);background:var(--color-surface-offset);}
+
+.card{width:100%;max-width:860px;background:var(--color-surface);border-radius:var(--radius-xl);border:1px solid var(--color-border);box-shadow:var(--shadow-lg);overflow:hidden;}
+.card-header{padding:var(--space-6) var(--space-6) var(--space-5);border-bottom:1px solid var(--color-divider);background:var(--color-surface-2);}
+.card-title{font-size:var(--text-lg);font-weight:700;margin-bottom:var(--space-1);}
+.card-desc{font-size:var(--text-sm);color:var(--color-text-muted);}
+.card-body{padding:var(--space-6);}
+
+.field{display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-4);}
+.field label{font-size:var(--text-sm);font-weight:500;}
+.input-base{width:100%;padding:var(--space-3) var(--space-4);background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:var(--text-sm);color:var(--color-text);outline:none;}
+.input-base:focus{border-color:var(--color-primary);box-shadow:0 0 0 3px var(--color-primary-highlight);}
+.input-mono{font-family:var(--font-mono);}
+.btn{padding:var(--space-3) var(--space-5);border-radius:var(--radius-md);font-size:var(--text-sm);font-weight:600;display:inline-flex;align-items:center;gap:var(--space-2);}
+.btn-primary{background:var(--color-primary);color:var(--color-text-inverse);border:none;}
+.btn-primary:hover{background:var(--color-primary-hover);}
+.btn-secondary{background:var(--color-surface-offset);color:var(--color-text);border:1px solid var(--color-border);}
+.btn-secondary:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.btn-full{width:100%;justify-content:center;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);}
+@media(max-width:560px){.grid-2{grid-template-columns:1fr;}.app-header{margin-bottom:var(--space-6);}}
+
+.toast{position:fixed;bottom:var(--space-6);left:50%;transform:translateX(-50%) translateY(80px);background:var(--color-text);color:var(--color-bg);padding:var(--space-3) var(--space-5);border-radius:var(--radius-full);font-size:var(--text-sm);font-weight:500;box-shadow:var(--shadow-lg);opacity:0;transition:all 0.3s cubic-bezier(0.16,1,0.3,1);pointer-events:none;white-space:nowrap;z-index:100;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* Date converter specific */
+.date-tabs{display:flex;gap:var(--space-2);margin-bottom:var(--space-6);background:var(--color-surface-offset);padding:4px;border-radius:var(--radius-lg);border:1px solid var(--color-border);}
+.date-tab{flex:1;padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);font-size:var(--text-sm);font-weight:600;text-align:center;cursor:pointer;transition:all var(--transition);color:var(--color-text-muted);border:none;background:none;}
+.date-tab.active{background:var(--color-surface-2);color:var(--color-primary);box-shadow:var(--shadow-sm);}
+.date-tab:hover:not(.active){color:var(--color-text);}
+.date-panel{display:none;}
+.date-panel.active{display:block;}
+.big-result{background:var(--color-primary-highlight);border:1px solid var(--color-primary);border-radius:var(--radius-xl);padding:var(--space-6);text-align:center;margin-bottom:var(--space-5);}
+.big-result .result-main{font-family:var(--font-mono);font-size:clamp(1.2rem,3vw,1.8rem);font-weight:700;color:var(--color-primary);margin-bottom:var(--space-2);}
+.big-result .result-sub{font-size:var(--text-sm);color:var(--color-text-muted);}
+.info-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:var(--space-3);margin-bottom:var(--space-5);}
+.info-card{background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:var(--space-3) var(--space-4);}
+.info-card-label{font-size:var(--text-xs);color:var(--color-text-faint);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px;}
+.info-card-val{font-family:var(--font-mono);font-size:var(--text-sm);font-weight:700;color:var(--color-text);}
+.today-banner{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) var(--space-5);background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:var(--radius-lg);margin-bottom:var(--space-6);flex-wrap:wrap;gap:var(--space-3);}
+.today-side{display:flex;flex-direction:column;gap:4px;}
+.today-label{font-size:var(--text-xs);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-faint);}
+.today-val{font-family:var(--font-mono);font-size:var(--text-base);font-weight:700;color:var(--color-text);}
+.today-divider{width:1px;height:40px;background:var(--color-divider);}
+.arrow-icon{color:var(--color-primary);font-size:1.4rem;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-top:var(--space-4);}
+.cal-header{font-size:var(--text-xs);font-weight:700;text-align:center;color:var(--color-text-faint);padding:var(--space-2);}
+.cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:var(--radius-sm);font-size:var(--text-xs);font-family:var(--font-mono);cursor:default;flex-direction:column;gap:1px;}
+.cal-day:hover{background:var(--color-surface-offset);}
+.cal-day.today{background:var(--color-primary);color:var(--color-text-inverse);border-radius:var(--radius-md);}
+.cal-day .hijri-num{font-size:9px;color:var(--color-primary);line-height:1;}
+.cal-day.today .hijri-num{color:rgba(255,255,255,0.8);}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-3);}
+.cal-nav button{padding:var(--space-2) var(--space-3);border-radius:var(--radius-md);border:1px solid var(--color-border);background:var(--color-surface-offset);font-size:var(--text-xs);font-weight:600;cursor:pointer;color:var(--color-text-muted);}
+.cal-nav button:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.cal-title{font-size:var(--text-sm);font-weight:700;color:var(--color-text);}
+.err-box{display:none;padding:var(--space-4);background:#fde8e8;border-radius:var(--radius-md);color:#c0392b;font-size:var(--text-sm);border:1px solid #f5c6c6;}
+[data-theme="dark"] .err-box{background:#3a1a1a;color:#e74c3c;border-color:#5a2a2a;}
+@media(max-width:520px){.today-divider{display:none;}.date-tab{font-size:var(--text-xs);padding:var(--space-2);}}
+</style>
+</head>
+<body>
+<header class="app-header">
+  <a href="/" class="logo" aria-label="PassForge home">
+    <svg class="logo-mark" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+      <rect x="6" y="16" width="24" height="16" rx="3" stroke="currentColor" stroke-width="2.2"/>
+      <path d="M12 16v-4a6 6 0 0 1 12 0v4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      <circle cx="18" cy="24" r="2.5" fill="currentColor"/>
+      <line x1="18" y1="26.5" x2="18" y2="29" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <span class="logo-name">Pass<span>Forge</span></span>
+  </a>
+  <div class="header-right">
+    <div class="nav-select-wrap">
+      <select class="nav-select" id="siteNav" aria-label="Navigate to tool">
+        <option value="/date-converter" selected>&#x1F4C5; Date Converter</option>
+        <option value="/password-generator">&#x1F510; Password Generator</option>
+        <option value="/username-generator">&#x1F464; Username Generator</option>
+        <option value="/strength-checker">&#x1F4AA; Strength Checker</option>
+        <option value="/hash-generator">#&#xFE0F;&#x20E3; Hash Generator</option>
+        <option value="/base64-tool">&#x1F4E6; Base64 Encoder/Decoder</option>
+        <option value="/json-formatter">{ } JSON Formatter</option>
+        <option value="/ip-network">&#x1F310; IP &amp; Network Info</option>
+        <option value="/text-converter">&#x1F524; Text Case Converter</option>
+        <option value="/unit-converter">&#x1F4D0; Unit Converter</option>
+      </select>
+    </div>
+    <button class="theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="main">
+<div class="card">
+  <div class="card-header">
+    <p class="card-title">Islamic &#x2194; Gregorian Date Converter</p>
+    <p class="card-desc">Convert between Hijri (Islamic) and Gregorian (European) calendar dates, with live today display and a dual calendar view.</p>
+  </div>
+  <div class="card-body">
+
+    <div class="today-banner">
+      <div class="today-side">
+        <p class="today-label">&#x1F319; Today &mdash; Hijri</p>
+        <p class="today-val" id="todayHijri">&mdash;</p>
+      </div>
+      <div class="today-divider"></div>
+      <div class="arrow-icon">&#x21C4;</div>
+      <div class="today-divider"></div>
+      <div class="today-side" style="text-align:right;">
+        <p class="today-label">&#x1F4C5; Today &mdash; Gregorian</p>
+        <p class="today-val" id="todayGreg">&mdash;</p>
+      </div>
+    </div>
+
+    <div class="date-tabs">
+      <button class="date-tab active" data-tab="hijri2greg">&#x1F319; Hijri &rarr; Gregorian</button>
+      <button class="date-tab" data-tab="greg2hijri">&#x1F4C5; Gregorian &rarr; Hijri</button>
+      <button class="date-tab" data-tab="calendar">&#x1F5D3;&#xFE0F; Calendar</button>
+    </div>
+
+    <!-- Hijri to Gregorian -->
+    <div class="date-panel active" id="panel-hijri2greg">
+      <div class="grid-2" style="margin-bottom:var(--space-4);">
+        <div class="field" style="margin:0;"><label for="hDay">Hijri Day</label>
+          <input type="number" class="input-base input-mono" id="hDay" min="1" max="30" placeholder="e.g. 1"></div>
+        <div class="field" style="margin:0;"><label for="hYear">Hijri Year</label>
+          <input type="number" class="input-base input-mono" id="hYear" min="1" max="1600" placeholder="e.g. 1446"></div>
+      </div>
+      <div class="field"><label for="hMonth">Hijri Month</label>
+        <select class="input-base" id="hMonth">
+          <option value="1">1 &mdash; Muharram (&mu;&upsilon;&chi;&alpha;&rho;&rho;&alpha;&mu;)</option>
+          <option value="2">2 &mdash; Safar</option>
+          <option value="3">3 &mdash; Rabi al-Awwal</option>
+          <option value="4">4 &mdash; Rabi al-Thani</option>
+          <option value="5">5 &mdash; Jumada al-Awwal</option>
+          <option value="6">6 &mdash; Jumada al-Thani</option>
+          <option value="7">7 &mdash; Rajab</option>
+          <option value="8">8 &mdash; Sha'ban</option>
+          <option value="9">9 &mdash; Ramadan</option>
+          <option value="10">10 &mdash; Shawwal</option>
+          <option value="11">11 &mdash; Dhu al-Qi'dah</option>
+          <option value="12">12 &mdash; Dhu al-Hijjah</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-full" id="btnH2G" style="margin-bottom:var(--space-5);">Convert to Gregorian</button>
+      <div id="result-h2g" style="display:none;">
+        <div class="big-result">
+          <p class="result-main" id="h2g-main"></p>
+          <p class="result-sub" id="h2g-sub"></p>
+        </div>
+        <div class="info-cards" id="h2g-cards"></div>
+        <button class="btn btn-secondary" id="copy-h2g">Copy Result</button>
+      </div>
+      <div class="err-box" id="err-h2g"></div>
+    </div>
+
+    <!-- Gregorian to Hijri -->
+    <div class="date-panel" id="panel-greg2hijri">
+      <div class="grid-2" style="margin-bottom:var(--space-4);">
+        <div class="field" style="margin:0;"><label for="gDay">Day</label>
+          <input type="number" class="input-base input-mono" id="gDay" min="1" max="31" placeholder="e.g. 29"></div>
+        <div class="field" style="margin:0;"><label for="gYear">Year</label>
+          <input type="number" class="input-base input-mono" id="gYear" min="622" max="2600" placeholder="e.g. 2026"></div>
+      </div>
+      <div class="field"><label for="gMonth">Month</label>
+        <select class="input-base" id="gMonth">
+          <option value="1">January</option><option value="2">February</option>
+          <option value="3">March</option><option value="4">April</option>
+          <option value="5">May</option><option value="6">June</option>
+          <option value="7">July</option><option value="8">August</option>
+          <option value="9">September</option><option value="10">October</option>
+          <option value="11">November</option><option value="12">December</option>
+        </select>
+      </div>
+      <button class="btn btn-primary btn-full" id="btnG2H" style="margin-bottom:var(--space-5);">Convert to Hijri</button>
+      <div id="result-g2h" style="display:none;">
+        <div class="big-result">
+          <p class="result-main" id="g2h-main"></p>
+          <p class="result-sub" id="g2h-sub"></p>
+        </div>
+        <div class="info-cards" id="g2h-cards"></div>
+        <button class="btn btn-secondary" id="copy-g2h">Copy Result</button>
+      </div>
+      <div class="err-box" id="err-g2h"></div>
+    </div>
+
+    <!-- Calendar -->
+    <div class="date-panel" id="panel-calendar">
+      <div class="cal-nav">
+        <button id="calPrev">&#9664; Prev</button>
+        <span class="cal-title" id="calTitle"></span>
+        <button id="calNext">Next &#9654;</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:var(--space-3);margin-bottom:var(--space-3);flex-wrap:wrap;">
+        <span style="font-size:var(--text-xs);color:var(--color-text-faint);">Each cell: <b>Gregorian</b> top &middot; <span style="color:var(--color-primary);">Hijri</span> bottom</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;font-size:var(--text-xs);"><span style="width:14px;height:14px;border-radius:3px;background:var(--color-primary);display:inline-block;"></span> Today</span>
+      </div>
+      <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+  </div>
+</div>
+</main>
+<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
+<script>
+// ---- Theme ----
+(function(){
+  const t=document.querySelector('[data-theme-toggle]'),r=document.documentElement;
+  let d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
+  r.setAttribute('data-theme',d);upIcon();
+  t&&t.addEventListener('click',()=>{d=d==='dark'?'light':'dark';r.setAttribute('data-theme',d);upIcon();});
+  function upIcon(){if(!t)return;
+    t.innerHTML=d==='dark'
+      ?'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>'
+      :'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+    t.setAttribute('aria-label','Switch to '+(d==='dark'?'light':'dark')+' mode');}
+})();
+document.getElementById('siteNav').addEventListener('change',function(){if(this.value)window.location.href=this.value;});
+let _tt;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>t.classList.remove('show'),2200);}
+function copyToClipboard(text,msg){navigator.clipboard.writeText(text).then(()=>showToast(msg||'Copied!'));}
+
+// ============================================================
+// Hijri <-> Gregorian  (browser Intl API — Umm al-Qura)
+// ============================================================
+const HIJRI_MONTHS = [
+  'Muharram','Safar',"Rabi' al-Awwal","Rabi' al-Thani",
+  'Jumada al-Awwal','Jumada al-Thani','Rajab',"Sha'ban",
+  'Ramadan','Shawwal',"Dhu al-Qi'dah",'Dhu al-Hijjah'
+];
+const HIJRI_MONTHS_AR = [
+  'مُحَرَّم',
+  'صَفَر',
+  'رَبيع الأوّل',
+  'رَبيع الثّاني',
+  'جُمَادى الأوّل',
+  'جُمَادى الثّاني',
+  'رَجَب',
+  'شَعْبَان',
+  'رَمَضَان',
+  'شَوّال',
+  'ذو القعدة',
+  'ذو الحجّة'
+];
+const GREG_MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS_EN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+function gregToHijri(gy, gm, gd) {
+  const date = new Date(gy, gm-1, gd);
+  const parts = new Intl.DateTimeFormat('en-u-ca-islamic-umalqura', {
+    day:'numeric', month:'numeric', year:'numeric'
+  }).formatToParts(date);
+  const get = type => parseInt(parts.find(p=>p.type===type).value);
+  return {y:get('year'), m:get('month'), d:get('day')};
+}
+
+function hijriToGreg(hy, hm, hd) {
+  const jd = Math.floor((11*hy+3)/30) + 354*hy + 30*hm
+           - Math.floor((hm-1)/2) + hd + 1948440 - 385;
+  const approxMs = (jd - 2440587.5) * 86400000;
+  for (let offset = -45; offset <= 45; offset++) {
+    const c = new Date(approxMs + offset * 86400000);
+    const h = gregToHijri(c.getFullYear(), c.getMonth()+1, c.getDate());
+    if (h.y===hy && h.m===hm && h.d===hd)
+      return {y:c.getFullYear(), m:c.getMonth()+1, d:c.getDate()};
+  }
+  return null;
+}
+
+// ---- Today banner ----
+(function(){
+  const now=new Date();
+  const gy=now.getFullYear(),gm=now.getMonth()+1,gd=now.getDate();
+  const h=gregToHijri(gy,gm,gd);
+  document.getElementById('todayHijri').textContent=h.d+' '+HIJRI_MONTHS[h.m-1]+' '+h.y+' AH';
+  document.getElementById('todayGreg').textContent=gd+' '+GREG_MONTHS[gm-1]+' '+gy;
+  document.getElementById('hDay').value=h.d;
+  document.getElementById('hMonth').value=h.m;
+  document.getElementById('hYear').value=h.y;
+  document.getElementById('gDay').value=gd;
+  document.getElementById('gMonth').value=gm;
+  document.getElementById('gYear').value=gy;
+})();
+
+// ---- Tabs ----
+document.querySelectorAll('.date-tab').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.date-tab').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.date-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab==='calendar') renderCalendar();
+  });
+});
+
+function infoCard(label,val){return '<div class="info-card"><p class="info-card-label">'+label+'</p><p class="info-card-val">'+val+'</p></div>';}
+
+// ---- Hijri -> Gregorian ----
+document.getElementById('btnH2G').addEventListener('click',()=>{
+  const d=parseInt(document.getElementById('hDay').value);
+  const m=parseInt(document.getElementById('hMonth').value);
+  const y=parseInt(document.getElementById('hYear').value);
+  const err=document.getElementById('err-h2g');
+  const res=document.getElementById('result-h2g');
+  err.style.display='none'; res.style.display='none';
+  if(!d||!y||d<1||d>30||y<1){err.style.display='block';err.textContent='Please enter a valid Hijri date.';return;}
+  const g=hijriToGreg(y,m,d);
+  if(!g){err.style.display='block';err.textContent='Could not convert this date. Please check values.';return;}
+  const dow=DAYS_EN[new Date(g.y,g.m-1,g.d).getDay()];
+  const leap=(g.y%4===0&&g.y%100!==0)||(g.y%400===0);
+  document.getElementById('h2g-main').textContent=dow+', '+g.d+' '+GREG_MONTHS[g.m-1]+' '+g.y;
+  document.getElementById('h2g-sub').textContent=d+' '+HIJRI_MONTHS[m-1]+' '+y+' AH';
+  document.getElementById('h2g-cards').innerHTML=[
+    infoCard('Day',dow),infoCard('Date',g.d),
+    infoCard('Month',GREG_MONTHS[g.m-1]),infoCard('Year',g.y),
+    infoCard('Leap Year',leap?'Yes':'No'),
+    infoCard('Hijri Month',HIJRI_MONTHS_AR[m-1]),
+  ].join('');
+  res.style.display='block';
+  document.getElementById('copy-h2g').onclick=()=>copyToClipboard(dow+', '+g.d+' '+GREG_MONTHS[g.m-1]+' '+g.y,'Date copied!');
+});
+
+// ---- Gregorian -> Hijri ----
+document.getElementById('btnG2H').addEventListener('click',()=>{
+  const d=parseInt(document.getElementById('gDay').value);
+  const m=parseInt(document.getElementById('gMonth').value);
+  const y=parseInt(document.getElementById('gYear').value);
+  const err=document.getElementById('err-g2h');
+  const res=document.getElementById('result-g2h');
+  err.style.display='none'; res.style.display='none';
+  if(!d||!y||d<1||d>31||y<622){err.style.display='block';err.textContent='Please enter a valid Gregorian date (year >= 622).';return;}
+  const h=gregToHijri(y,m,d);
+  const dow=DAYS_EN[new Date(y,m-1,d).getDay()];
+  document.getElementById('g2h-main').textContent=h.d+' '+HIJRI_MONTHS[h.m-1]+' '+h.y+' AH';
+  document.getElementById('g2h-sub').textContent=HIJRI_MONTHS_AR[h.m-1]+' · '+dow+', '+d+' '+GREG_MONTHS[m-1]+' '+y;
+  document.getElementById('g2h-cards').innerHTML=[
+    infoCard('Hijri Day',h.d),
+    infoCard('Hijri Month',HIJRI_MONTHS[h.m-1]),
+    infoCard('Arabic Month',HIJRI_MONTHS_AR[h.m-1]),
+    infoCard('Hijri Year',h.y+' AH'),
+    infoCard('Day of Week',dow),
+    infoCard('Gregorian',d+' '+GREG_MONTHS[m-1]+' '+y),
+  ].join('');
+  res.style.display='block';
+  document.getElementById('copy-g2h').onclick=()=>copyToClipboard(h.d+' '+HIJRI_MONTHS[h.m-1]+' '+h.y+' AH','Date copied!');
+});
+
+// ---- Calendar ----
+let calYear=new Date().getFullYear(), calMonth=new Date().getMonth()+1;
+function renderCalendar(){
+  const dim=new Date(calYear,calMonth,0).getDate();
+  const fdow=new Date(calYear,calMonth-1,1).getDay();
+  const now=new Date();
+  const todayKey=now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
+  document.getElementById('calTitle').textContent=GREG_MONTHS[calMonth-1]+' '+calYear;
+  const DLABELS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html=DLABELS.map(d=>'<div class="cal-header">'+d+'</div>').join('');
+  for(let i=0;i<fdow;i++) html+='<div></div>';
+  for(let d=1;d<=dim;d++){
+    const h=gregToHijri(calYear,calMonth,d);
+    const isTod=(calYear+'-'+calMonth+'-'+d)===todayKey;
+    html+='<div class="cal-day'+(isTod?' today':')+'">'+'<span>'+d+'</span>'+'<span class="hijri-num">'+h.d+'</span></div>';
+  }
+  document.getElementById('calGrid').innerHTML=html;
+}
+document.getElementById('calPrev').addEventListener('click',()=>{calMonth--;if(calMonth<1){calMonth=12;calYear--;}renderCalendar();});
+document.getElementById('calNext').addEventListener('click',()=>{calMonth++;if(calMonth>12){calMonth=1;calYear++;}renderCalendar();});
+</script>
+</body>
+</html>
