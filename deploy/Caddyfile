@@ -4,7 +4,7 @@
 
 nicelydone.qd.je {
 	encode zstd gzip
-	reverse_proxy 127.0.0.1:3000
+	reverse_proxy 127.0.0.1:3080
 }
 
 www.nicelydone.qd.je {
