@@ -54,7 +54,11 @@ if ! /usr/local/bin/caddy version 2>/dev/null | grep -q "v$CADDY_VER"; then
   sudo restorecon -v /usr/local/bin/caddy || true
   rm -rf $T
 fi
-sudo mkdir -p /etc/caddy && sudo install -m 644 "$BUNDLE/deploy/Caddyfile" /etc/caddy/Caddyfile
+sudo mkdir -p /etc/caddy
+# Certificate contact email: $ACME_EMAIL, or keep the one already configured on this host.
+ACME_EMAIL=${ACME_EMAIL:-$(sudo awk '/^\temail /{print $2; exit}' /etc/caddy/Caddyfile 2>/dev/null || true)}
+[ -n "$ACME_EMAIL" ] || { echo "Set ACME_EMAIL=you@example.com (needed for ZeroSSL certificates)"; exit 1; }
+sed "s|{\$ACME_EMAIL}|$ACME_EMAIL|" "$BUNDLE/deploy/Caddyfile" | sudo tee /etc/caddy/Caddyfile >/dev/null
 sudo install -m 644 "$BUNDLE/deploy/caddy.service" /etc/systemd/system/caddy.service
 sudo sed -e "s|/opt/nicelydone|$APP|g" "$BUNDLE/deploy/nicelydone.service" | sudo tee /etc/systemd/system/nicelydone.service >/dev/null
 
