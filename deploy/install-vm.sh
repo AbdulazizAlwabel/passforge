@@ -15,21 +15,24 @@ sudo mkdir -p $APP
 sudo rsync -a --delete --exclude node_modules --exclude .env "$BUNDLE/dist/" $APP/dist/
 sudo rsync -a --exclude node_modules --exclude .env "$BUNDLE/server/" $APP/server/
 sudo chown -R root:nicelydone $APP && sudo chmod -R g+rX,o-rwx $APP
-(cd $APP/server && sudo HOME=/root /usr/bin/npm ci --omit=dev --no-audit --no-fund --loglevel=error)
+sudo bash -c "cd $APP/server && HOME=/root /usr/bin/npm ci --omit=dev --no-audit --no-fund --loglevel=error"
 sudo chown -R root:nicelydone $APP/server/node_modules && sudo chmod -R g+rX,o-rwx $APP/server/node_modules
 
 echo "== mariadb"
 sudo systemctl enable --now mariadb
-if [ ! -f $APP/server/.env ]; then
+if ! sudo test -f $APP/server/.env; then
   DBPW=$(openssl rand -hex 24); JWT=$(openssl rand -hex 48)
   sudo mysql -e "CREATE DATABASE IF NOT EXISTS passforge CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
     CREATE USER IF NOT EXISTS 'passforge_app'@'localhost' IDENTIFIED BY '$DBPW';
     ALTER USER 'passforge_app'@'localhost' IDENTIFIED BY '$DBPW';
-    GRANT SELECT, INSERT, UPDATE, DELETE ON passforge.* TO 'passforge_app'@'localhost'; FLUSH PRIVILEGES;"
-  sudo mysql passforge < $APP/server/schema.sql
+    GRANT SELECT, INSERT, UPDATE, DELETE ON passforge.* TO 'passforge_app'@'localhost';
+    CREATE USER IF NOT EXISTS 'passforge_app'@'127.0.0.1' IDENTIFIED BY '$DBPW';
+    ALTER USER 'passforge_app'@'127.0.0.1' IDENTIFIED BY '$DBPW';
+    GRANT SELECT, INSERT, UPDATE, DELETE ON passforge.* TO 'passforge_app'@'127.0.0.1'; FLUSH PRIVILEGES;"
+  sudo mysql passforge < "$BUNDLE/server/schema.sql"
   sed -e "s/^JWT_SECRET=.*/JWT_SECRET=$JWT/" -e "s/^DB_PASSWORD=.*/DB_PASSWORD=$DBPW/" \
       -e "s|^STATIC_DIR=.*|STATIC_DIR=$APP/dist|" -e "s/^PORT=.*/PORT=3080/" \
-      $APP/server/.env.example | sudo tee $APP/server/.env >/dev/null
+      "$BUNDLE/server/.env.example" | sudo tee $APP/server/.env >/dev/null
   sudo chown root:nicelydone $APP/server/.env && sudo chmod 640 $APP/server/.env
   echo "   created database + .env (SMTP still to be filled in)"
 fi

@@ -17,6 +17,7 @@ const mail = require('./email');
 
 const {
   PORT = 3000,
+  HOST = '127.0.0.1',
   NODE_ENV = 'production',
   SITE_URL = 'https://nicelydone.qd.je',
   STATIC_DIR = '../dist',
@@ -318,4 +319,4 @@ app.use(express.static(STATIC_ROOT, {
 }));
 app.use((req, res) => res.status(404).sendFile(path.join(STATIC_ROOT, '404.html')));
 
-app.listen(PORT, () => console.log(`[nicelydone] listening on :${PORT} — serving ${STATIC_ROOT}`));
+app.listen(PORT, HOST, () => console.log(`[nicelydone] listening on ${HOST}:${PORT} — serving ${STATIC_ROOT}`));
