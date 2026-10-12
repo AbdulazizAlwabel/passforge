@@ -1,0 +1,149 @@
+<!-- @tool -->
+<div class="panel">
+  <div class="panel-body">
+    <div class="today">
+      <div><div class="k">Today · Hijri</div><div class="v" id="tH">—</div><div class="ar" id="tHar" lang="ar" dir="rtl" style="text-align:left"></div></div>
+      <div class="sw"></div>
+      <div class="r"><div class="k">Today · Gregorian</div><div class="v" id="tG">—</div><div class="ar" id="tDay" style="font-family:var(--font-sans);font-size:.95rem"></div></div>
+    </div>
+  </div>
+  <div class="panel-sec">
+    <div class="seg" role="tablist" aria-label="Mode" style="margin-bottom:22px">
+      <button role="tab" aria-selected="true" data-tab="h2g">Hijri → Gregorian</button>
+      <button role="tab" aria-selected="false" data-tab="g2h">Gregorian → Hijri</button>
+      <button role="tab" aria-selected="false" data-tab="cal">Dual calendar</button>
+    </div>
+
+    <div data-pane="h2g">
+      <div class="grid3">
+        <div class="field"><label class="label" for="hD">Day</label><input class="input mono-in" id="hD" type="number" min="1" max="30" inputmode="numeric"></div>
+        <div class="field" style="margin-top:0"><label class="label" for="hM">Month</label><select class="select" id="hM"></select></div>
+        <div class="field" style="margin-top:0"><label class="label" for="hY">Year (AH)</label><input class="input mono-in" id="hY" type="number" min="1300" max="1600" inputmode="numeric"></div>
+      </div>
+      <div class="result-big" id="h2gOut" style="margin-top:18px"></div>
+    </div>
+
+    <div data-pane="g2h" hidden>
+      <div class="grid3">
+        <div class="field"><label class="label" for="gD">Day</label><input class="input mono-in" id="gD" type="number" min="1" max="31" inputmode="numeric"></div>
+        <div class="field" style="margin-top:0"><label class="label" for="gM">Month</label><select class="select" id="gM"></select></div>
+        <div class="field" style="margin-top:0"><label class="label" for="gY">Year (CE)</label><input class="input mono-in" id="gY" type="number" min="1882" max="2174" inputmode="numeric"></div>
+      </div>
+      <div class="result-big" id="g2hOut" style="margin-top:18px"></div>
+    </div>
+
+    <div data-pane="cal" hidden>
+      <div class="cal-head">
+        <button class="icon-btn" id="prev" aria-label="Previous month">{{icon:chev_l}}</button>
+        <div class="cal-title"><div class="g" id="calG"></div><div class="h" id="calH"></div></div>
+        <button class="icon-btn" id="next" aria-label="Next month">{{icon:chev}}</button>
+      </div>
+      <div class="cal" id="cal"></div>
+      <div class="row between" style="margin-top:14px;font-size:.8rem;color:var(--text-3)">
+        <span>Large: Gregorian · small: Hijri · <span style="color:var(--gold)">gold</span> = first of a Hijri month</span>
+        <button class="btn btn-ghost btn-sm" id="todayBtn">Today</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- @aside -->
+<div class="panel">
+  <h4>Umm al-Qura</h4>
+  <p>Conversions use the Umm al-Qura calendar — the official calendar of Saudi Arabia — built into your browser via <code class="mono">Intl</code>. Supported range: 1300–1600 AH (1882–2174 CE).</p>
+</div>
+<div class="panel">
+  <h4>Note</h4>
+  <p>Religious observances such as Ramadan and Eid are set by moon sighting and can differ from the computed calendar by a day.</p>
+</div>
+
+<!-- @about -->
+<h2>Two calendars, one view</h2>
+<p>The Hijri calendar is lunar: its 12 months have 29 or 30 days, so a Hijri year is about 11 days shorter than a Gregorian year, and Hijri dates drift through the seasons over a 33-year cycle. Use the dual calendar to see both systems side by side for any month.</p>
+
+<!-- @script -->
+<script>
+(function(){
+  const $=ND.$,$$=ND.$$;
+  const HM=['Muharram','Safar','Rabiʿ al-Awwal','Rabiʿ al-Thani','Jumada al-Ula','Jumada al-Akhirah','Rajab','Shaʿban','Ramadan','Shawwal','Dhu al-Qaʿdah','Dhu al-Hijjah'];
+  const HMAR=['محرّم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوّال','ذو القعدة','ذو الحجة'];
+  const GM=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DOW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const DOWAR=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+  const F=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'numeric',year:'numeric',timeZone:'UTC'});
+  const utc=(y,m,d)=>{const t=new Date(Date.UTC(2000,m-1,d));t.setUTCFullYear(y);return t;};
+  function g2h(y,m,d){const p=F.formatToParts(utc(y,m,d));const g=t=>parseInt(p.find(x=>x.type===t).value,10);return {y:g('year'),m:g('month'),d:g('day')};}
+  function h2g(hy,hm,hd){
+    const approx=Math.round((hy-1)*354.36707+(hm-1)*29.530589+hd)+227014;
+    const base=new Date(Date.UTC(1,0,1));base.setUTCFullYear(1);
+    for(let off=0;off<=60;off++){for(const s of off?[off,-off]:[0]){
+      const t=new Date(base.getTime()+(approx+s)*86400000);
+      const h=g2h(t.getUTCFullYear(),t.getUTCMonth()+1,t.getUTCDate());
+      if(h.y===hy&&h.m===hm&&h.d===hd)return {y:t.getUTCFullYear(),m:t.getUTCMonth()+1,d:t.getUTCDate()};
+    }}
+    return null;
+  }
+  const dow=(y,m,d)=>utc(y,m,d).getUTCDay();
+  const fmtG=g=>DOW[dow(g.y,g.m,g.d)]+', '+g.d+' '+GM[g.m-1]+' '+g.y;
+  const fmtH=h=>h.d+' '+HM[h.m-1]+' '+h.y+' AH';
+  const arNum=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
+  const fmtHar=h=>arNum(h.d)+' '+HMAR[h.m-1]+' '+arNum(h.y)+' هـ';
+
+  const now=new Date(),T={y:now.getFullYear(),m:now.getMonth()+1,d:now.getDate()},TH=g2h(T.y,T.m,T.d);
+  $('#tH').textContent=fmtH(TH);$('#tHar').textContent=DOWAR[now.getDay()]+'، '+fmtHar(TH);
+  $('#tG').textContent=T.d+' '+GM[T.m-1]+' '+T.y;$('#tDay').textContent=DOW[now.getDay()];
+
+  $('#hM').innerHTML=HM.map((n,i)=>'<option value="'+(i+1)+'">'+(i+1)+' · '+n+'</option>').join('');
+  $('#gM').innerHTML=GM.map((n,i)=>'<option value="'+(i+1)+'">'+n+'</option>').join('');
+  $('#hD').value=TH.d;$('#hM').value=TH.m;$('#hY').value=TH.y;
+  $('#gD').value=T.d;$('#gM').value=T.m;$('#gY').value=T.y;
+
+  const copyBtn=txt=>'<div style="margin-top:16px"><button class="copy" data-copy="'+ND.esc(txt)+'">{{icon:copy}}Copy</button></div>';
+  const err=msg=>'<p class="faint">'+msg+'</p>';
+  function runH(){
+    const d=+$('#hD').value,m=+$('#hM').value,y=+$('#hY').value,o=$('#h2gOut');
+    if(!d||!y||d<1||d>30||y<1300||y>1600){o.innerHTML=err('Enter a Hijri date between 1300 and 1600 AH.');return;}
+    const g=h2g(y,m,d);
+    if(!g){o.innerHTML=err(HM[m-1]+' '+y+' has only 29 days in the Umm al-Qura calendar.');return;}
+    const days=Math.round((utc(g.y,g.m,g.d)-utc(T.y,T.m,T.d))/86400000);
+    const rel=days===0?'Today':days>0?'In '+days.toLocaleString()+' day'+(days===1?'':'s'):Math.abs(days).toLocaleString()+' day'+(days===-1?'':'s')+' ago';
+    o.innerHTML='<div class="main">'+fmtG(g)+'</div><div class="ar" lang="ar" dir="rtl">'+fmtHar({y,m,d})+'</div><div class="sub">'+rel+'</div>'+copyBtn(fmtG(g));
+  }
+  function runG(){
+    const d=+$('#gD').value,m=+$('#gM').value,y=+$('#gY').value,o=$('#g2hOut');
+    const real=new Date(Date.UTC(y,m,0)).getUTCDate();
+    if(!d||!y||y<1882||y>2174||d<1||d>real){o.innerHTML=err(d>real?GM[m-1]+' '+y+' has '+real+' days.':'Enter a Gregorian date between 1882 and 2174.');return;}
+    const h=g2h(y,m,d);
+    o.innerHTML='<div class="main">'+fmtH(h)+'</div><div class="ar" lang="ar" dir="rtl">'+DOWAR[dow(y,m,d)]+'، '+fmtHar(h)+'</div><div class="sub">'+fmtG({y,m,d})+'</div>'+copyBtn(fmtH(h));
+  }
+  ['hD','hM','hY'].forEach(i=>$('#'+i).addEventListener('input',runH));
+  ['gD','gM','gY'].forEach(i=>$('#'+i).addEventListener('input',runG));
+  document.addEventListener('click',e=>{const b=e.target.closest('[data-copy]');if(b)ND.copy(b.dataset.copy,b,'Date copied');});
+
+  let cy=T.y,cm=T.m;
+  function cal(){
+    const dim=new Date(Date.UTC(cy,cm,0)).getUTCDate(),first=dow(cy,cm,1);
+    const hs=g2h(cy,cm,1),he=g2h(cy,cm,dim);
+    $('#calG').textContent=GM[cm-1]+' '+cy;
+    $('#calH').textContent=hs.m===he.m?HM[hs.m-1]+' '+hs.y:HM[hs.m-1]+(hs.y!==he.y?' '+hs.y:'')+' – '+HM[he.m-1]+' '+he.y;
+    let h=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>'<div class="dow">'+d+'</div>').join('');
+    for(let i=0;i<first;i++)h+='<div></div>';
+    for(let d=1;d<=dim;d++){
+      const x=g2h(cy,cm,d),isT=cy===T.y&&cm===T.m&&d===T.d,fri=(first+d-1)%7===5;
+      const lbl=x.d===1?HM[x.m-1].split(' ')[0].slice(0,5):x.d;
+      h+='<div class="day'+(isT?' today':'')+(x.d===1?' h1':'')+(fri?' fri':'')+'" title="'+fmtH(x)+'"><span class="g">'+d+'</span><span class="h">'+lbl+'</span></div>';
+    }
+    $('#cal').innerHTML=h;
+  }
+  $('#prev').addEventListener('click',()=>{if(--cm<1){cm=12;cy--;}cal();});
+  $('#next').addEventListener('click',()=>{if(++cm>12){cm=1;cy++;}cal();});
+  $('#todayBtn').addEventListener('click',()=>{cy=T.y;cm=T.m;cal();});
+
+  $$('[data-tab]').forEach(b=>b.addEventListener('click',()=>{
+    $$('[data-tab]').forEach(x=>x.setAttribute('aria-selected',x===b?'true':'false'));
+    $$('[data-pane]').forEach(p=>p.hidden=p.dataset.pane!==b.dataset.tab);
+    if(b.dataset.tab==='cal')cal();
+  }));
+  runH();runG();
+})();
+</script>

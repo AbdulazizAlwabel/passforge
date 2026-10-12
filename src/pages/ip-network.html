@@ -1,0 +1,111 @@
+<!-- @badges -->
+<span class="badge info">{{icon:globe}}IP lookup is the only network call</span>
+
+<!-- @tool -->
+<div class="panel">
+  <div class="panel-body">
+    <div class="panel-title">Your public IP <button class="copy" id="copyIp">{{icon:copy}}Copy</button></div>
+    <div class="ip-hero">
+      <span class="pulse" id="pulse"></span>
+      <div style="min-width:0">
+        <div class="ip-big" id="ip">Looking up…</div>
+        <div class="ip-loc" id="loc">&nbsp;</div>
+      </div>
+    </div>
+  </div>
+  <div class="panel-sec">
+    <div class="grid2" style="gap:28px">
+      <div><div class="panel-title">Network</div><dl class="kv" id="net"></dl></div>
+      <div><div class="panel-title">This device</div><dl class="kv" id="dev"></dl></div>
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-body">
+    <div class="panel-title">IPv4 subnet calculator</div>
+    <div class="grid2">
+      <div class="field"><label class="label" for="addr">IP address or CIDR</label><input class="input mono-in" id="addr" value="192.168.1.10/24" spellcheck="false" autocomplete="off"></div>
+      <div class="field" style="margin-top:0"><label class="label" for="cidr">Prefix length <span class="val" id="cidrVal">/24</span></label><input class="range" type="range" id="cidr" min="0" max="32" value="24" style="margin-top:8px"></div>
+    </div>
+    <div class="alert" id="subErr" hidden style="margin-top:14px"></div>
+  </div>
+  <div class="panel-sec" id="subOut">
+    <div class="stat-grid" id="subGrid"></div>
+    <div class="panel-title" style="margin-top:22px">Binary <span class="faint" style="text-transform:none;letter-spacing:0"><span style="color:var(--accent)">network</span> · host</span></div>
+    <div class="bits-row" id="bin"></div>
+  </div>
+</div>
+
+<!-- @aside -->
+<div class="panel">
+  <h4>About the lookup</h4>
+  <p>Your public IP can only be seen from outside your network, so this page asks a public geolocation service (<span class="mono">ipwho.is</span>, falling back to <span class="mono">ipapi.co</span>) once on load. Everything else, including the subnet calculator, runs locally.</p>
+</div>
+<div class="panel">
+  <h4>Tip</h4>
+  <p>Type CIDR directly — <span class="mono">10.0.0.0/8</span> — or drag the slider. Click any result to copy it.</p>
+</div>
+
+<!-- @script -->
+<script>
+(function(){
+  const $=ND.$;
+  const kv=rows=>rows.map(([k,v])=>'<div><dt>'+ND.esc(k)+'</dt><dd>'+ND.esc(v==null||v===''?'—':v)+'</dd></div>').join('');
+  let myIp='';
+  async function lookup(){
+    const tries=[
+      async()=>{const d=await (await fetch('https://ipwho.is/')).json();if(!d.success)throw 0;return {ip:d.ip,city:d.city,region:d.region,country:d.country,flag:d.flag&&d.flag.emoji,isp:d.connection&&(d.connection.isp||d.connection.org),asn:d.connection&&d.connection.asn?'AS'+d.connection.asn:'',tz:d.timezone&&d.timezone.id,type:d.type,postal:d.postal};},
+      async()=>{const d=await (await fetch('https://ipapi.co/json/')).json();if(d.error)throw 0;return {ip:d.ip,city:d.city,region:d.region,country:d.country_name,isp:d.org,asn:d.asn,tz:d.timezone,type:d.version,postal:d.postal};},
+      async()=>{const d=await (await fetch('https://api64.ipify.org?format=json')).json();return {ip:d.ip};}
+    ];
+    for(const t of tries){try{return await t();}catch(e){}}
+    return null;
+  }
+  lookup().then(d=>{
+    if(!d){$('#ip').textContent='Unavailable';$('#loc').textContent='Couldn’t reach a lookup service — you may be offline or blocking it.';$('#pulse').style.background='var(--warn)';$('#net').innerHTML=kv([['Status','Offline']]);return;}
+    myIp=d.ip;$('#ip').textContent=d.ip;
+    $('#loc').textContent=[d.flag,[d.city,d.region,d.country].filter(Boolean).join(', ')].filter(Boolean).join('  ')||'Location unavailable';
+    $('#net').innerHTML=kv([['Provider',d.isp],['ASN',d.asn],['Version',d.type||(d.ip.includes(':')?'IPv6':'IPv4')],['Time zone',d.tz],['Postal code',d.postal]]);
+  });
+  $('#copyIp').addEventListener('click',e=>ND.copy(myIp,e.currentTarget,'IP copied'));
+
+  const ua=navigator.userAgent;
+  const browser=(ua.match(/(Edg|OPR|Firefox|Chrome|Safari)\/([\d.]+)/)||[]);
+  const bname={Edg:'Edge',OPR:'Opera'}[browser[1]]||browser[1];
+  const ver=browser[1]==='Safari'?(ua.match(/Version\/([\d.]+)/)||[])[1]:browser[2];
+  const os=/Windows/.test(ua)?'Windows':/Android/.test(ua)?'Android':/iPhone|iPad/.test(ua)?'iOS':/Mac OS/.test(ua)?'macOS':/Linux/.test(ua)?'Linux':'—';
+  const conn=navigator.connection||{};
+  $('#dev').innerHTML=kv([
+    ['Browser',bname?bname+' '+(ver||'').split('.')[0]:'—'],['OS',os],
+    ['Language',navigator.language],['Time zone',Intl.DateTimeFormat().resolvedOptions().timeZone],
+    ['Screen',screen.width+' × '+screen.height+' @'+(window.devicePixelRatio||1)+'x'],
+    ['CPU threads',navigator.hardwareConcurrency],['Connection',conn.effectiveType?conn.effectiveType.toUpperCase()+(conn.downlink?' · ~'+conn.downlink+' Mbps':''):'—'],
+    ['Online',navigator.onLine?'Yes':'No']
+  ]);
+
+  const ip2n=s=>s.split('.').reduce((a,b)=>(a*256)+(+b),0)>>>0;
+  const n2ip=n=>[n>>>24,(n>>>16)&255,(n>>>8)&255,n&255].join('.');
+  const valid=s=>/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.test(s)&&s.split('.').every(o=>+o<=255&&String(+o)===o);
+  function ipClass(n){const a=n>>>24;if(a===10||(a===172&&((n>>>16)&255)>=16&&((n>>>16)&255)<=31)||(a===192&&((n>>>16)&255)===168))return 'Private';if(a===127)return 'Loopback';if(a===169&&((n>>>16)&255)===254)return 'Link-local';if(a===100&&((n>>>16)&255)>=64&&((n>>>16)&255)<=127)return 'CGNAT';if(a>=224&&a<=239)return 'Multicast';return 'Public';}
+  let vals={};
+  function calc(fromText){
+    let raw=$('#addr').value.trim(),ip=raw,c=+$('#cidr').value;
+    const m=raw.match(/^(.+?)\/(\d{1,2})$/);
+    if(m){ip=m[1];if(fromText&&+m[2]<=32){c=+m[2];$('#cidr').value=c;ND.syncRange($('#cidr'));}}
+    $('#cidrVal').textContent='/'+c;
+    if(!valid(ip)){$('#subErr').hidden=false;$('#subErr').textContent='Enter a valid IPv4 address, e.g. 10.0.0.1 or 172.16.0.0/12';$('#subOut').hidden=true;return;}
+    $('#subErr').hidden=true;$('#subOut').hidden=false;
+    const n=ip2n(ip),mask=c===0?0:(0xFFFFFFFF<<(32-c))>>>0,net=(n&mask)>>>0,bc=(net|(~mask>>>0))>>>0;
+    const total=Math.pow(2,32-c),usable=c>=31?(c===31?2:1):total-2;
+    vals={'Network':n2ip(net)+'/'+c,'Subnet mask':n2ip(mask),'Wildcard':n2ip(~mask>>>0),'Broadcast':c>=31?'—':n2ip(bc),'First host':n2ip(c>=31?net:net+1),'Last host':n2ip(c>=31?bc:bc-1),'Usable hosts':usable.toLocaleString(),'Total addresses':total.toLocaleString(),'Type':ipClass(n),'Hex':'0x'+n.toString(16).toUpperCase().padStart(8,'0')};
+    $('#subGrid').innerHTML=Object.entries(vals).map(([k,v])=>'<div class="stat click" data-k="'+k+'" title="Click to copy"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>').join('');
+    const b=n.toString(2).padStart(32,'0');
+    $('#bin').innerHTML=b.split('').map((x,i)=>(i&&i%8===0?' . ':'')+'<span class="'+(i<c?'n':'h')+'">'+x+'</span>').join('');
+  }
+  $('#subGrid').addEventListener('click',e=>{const s=e.target.closest('[data-k]');if(s&&vals[s.dataset.k]!=='—')ND.copy(vals[s.dataset.k],null,s.dataset.k+' copied');});
+  $('#addr').addEventListener('input',()=>calc(true));
+  $('#cidr').addEventListener('input',()=>{const ip=$('#addr').value.trim().split('/')[0];$('#addr').value=ip+'/'+$('#cidr').value;calc(false);});
+  calc(true);
+})();
+</script>

@@ -1,0 +1,117 @@
+<!-- @body -->
+<section class="auth">
+  <div class="auth-side">
+    <p class="eyebrow"><span class="dot"></span>Optional account</p>
+    <h1 class="display" style="margin-top:24px">Everything works <em>without</em> one.</h1>
+    <ul>
+      <li>{{icon:check}}<span>Every tool stays free and anonymous — an account is never required.</span></li>
+      <li>{{icon:shield}}<span>Passwords are hashed with bcrypt; sessions live in an HTTP-only cookie.</span></li>
+      <li>{{icon:cpu}}<span>Nothing you type into a tool is ever linked to your account.</span></li>
+    </ul>
+  </div>
+  <div class="auth-main">
+    <div class="auth-card">
+      <div class="msg info" id="offline" hidden>{{icon:offline}}<span>Accounts aren’t available on this deployment right now. All tools still work normally.</span></div>
+      <div class="msg ok" id="flash" hidden>{{icon:check}}<span></span></div>
+
+      <!-- Sign in -->
+      <div data-view="login">
+        <h2 class="h2">Welcome <em>back</em></h2>
+        <p class="muted">Sign in with your email or username.</p>
+        <form id="loginForm" novalidate>
+          <div class="field"><label class="label" for="lEmail">Email or username</label><input class="input" id="lEmail" name="email" autocomplete="username" required></div>
+          <div class="field">
+            <label class="label" for="lPass">Password <a href="#forgot" class="link" style="font-size:.82rem" data-go="forgot">Forgot?</a></label>
+            <div class="input-wrap"><input class="input" type="password" id="lPass" autocomplete="current-password" required><button type="button" class="in-btn" data-eye="lPass" aria-label="Show password">{{icon:eye}}</button></div>
+          </div>
+          <div class="msg err" hidden></div>
+          <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+        </form>
+        <p class="auth-switch">New here? <a href="#register" class="link" data-go="register">Create an account</a></p>
+      </div>
+
+      <!-- Register -->
+      <div data-view="register" hidden>
+        <h2 class="h2">Create your <em>account</em></h2>
+        <p class="muted">Free, quick, and entirely optional.</p>
+        <form id="regForm" novalidate>
+          <div class="field"><label class="label" for="rUser">Username</label><input class="input" id="rUser" autocomplete="username" minlength="3" maxlength="30" required pattern="[A-Za-z0-9_.\-]{3,30}"><span class="hint">3–30 characters: letters, numbers, _ . -</span></div>
+          <div class="field"><label class="label" for="rEmail">Email</label><input class="input" type="email" id="rEmail" autocomplete="email" required></div>
+          <div class="field">
+            <label class="label" for="rPass">Password <button type="button" class="link" style="font-size:.82rem" id="suggest">Suggest a strong one</button></label>
+            <div class="input-wrap"><input class="input" type="password" id="rPass" autocomplete="new-password" minlength="8" maxlength="128" required><button type="button" class="in-btn" data-eye="rPass" aria-label="Show password">{{icon:eye}}</button></div>
+            <div class="meter" id="rMeter" data-level="0" style="margin-top:6px"><i></i><i></i><i></i><i></i><i></i></div>
+          </div>
+          <div class="msg err" hidden></div>
+          <button class="btn btn-primary btn-block" type="submit">Create account</button>
+        </form>
+        <p class="auth-switch">Already have one? <a href="#login" class="link" data-go="login">Sign in</a></p>
+      </div>
+
+      <!-- Forgot -->
+      <div data-view="forgot" hidden>
+        <h2 class="h2">Reset your <em>password</em></h2>
+        <p class="muted">Enter your account email and we’ll send a link that’s valid for one hour.</p>
+        <form id="forgotForm" novalidate>
+          <div class="field"><label class="label" for="fEmail">Email</label><input class="input" type="email" id="fEmail" autocomplete="email" required></div>
+          <div class="msg err" hidden></div>
+          <button class="btn btn-primary btn-block" type="submit">Send reset link</button>
+        </form>
+        <p class="auth-switch"><a href="#login" class="link" data-go="login">← Back to sign in</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- @script -->
+<script>
+(function(){
+  const $=ND.$,$$=ND.$$;
+  const EYE='{{icon:eye}}',EYE_OFF='{{icon:eye_off}}';
+  function go(v){$$('[data-view]').forEach(x=>x.hidden=x.dataset.view!==v);const f=$('[data-view="'+v+'"] input');if(f)setTimeout(()=>f.focus(),30);history.replaceState(null,'',v==='login'?location.pathname+location.search:'#'+v);}
+  document.addEventListener('click',e=>{const a=e.target.closest('[data-go]');if(a){e.preventDefault();$('#flash').hidden=true;go(a.dataset.go);}});
+  $$('[data-eye]').forEach(b=>b.addEventListener('click',()=>{const i=$('#'+b.dataset.eye),show=i.type==='password';i.type=show?'text':'password';b.innerHTML=show?EYE_OFF:EYE;b.setAttribute('aria-label',show?'Hide password':'Show password');}));
+  const flash=t=>{const f=$('#flash');f.querySelector('span').textContent=t;f.hidden=false;};
+
+  const q=new URLSearchParams(location.search);
+  if(q.get('verified')==='1')flash('Email verified — you can sign in now.');
+  if(q.get('verified')==='0'){const f=$('#flash');f.className='msg err';f.querySelector('span').textContent='That verification link is invalid or has expired. Sign in and resend it from your profile.';f.hidden=false;}
+  if(q.get('reset')==='1')flash('Password updated. Sign in with your new password.');
+  go(['register','forgot'].includes(location.hash.slice(1))?location.hash.slice(1):'login');
+
+  ND.me.then(u=>{if(u===null){$('#offline').hidden=false;$$('form button[type=submit]').forEach(b=>b.disabled=true);}else if(u){location.replace(q.get('next')&&q.get('next').startsWith('/')&&!q.get('next').startsWith('//')?q.get('next'):'/profile/');}});
+
+  async function submit(form,path,body,onOk){
+    const btn=form.querySelector('button[type=submit]'),err=form.querySelector('.msg.err'),label=btn.innerHTML;
+    err.hidden=true;btn.disabled=true;btn.innerHTML='<span class="spin"></span>';
+    const r=await ND.api(path,{method:'POST',body});
+    btn.disabled=false;btn.innerHTML=label;
+    if(r.ok)onOk(r.data);else{err.textContent=r.data.error||'Something went wrong. Please try again.';err.hidden=false;}
+  }
+  $('#loginForm').addEventListener('submit',e=>{e.preventDefault();
+    const id=$('#lEmail').value.trim(),pw=$('#lPass').value;
+    if(!id||!pw){const er=e.target.querySelector('.msg.err');er.textContent='Enter your email (or username) and password.';er.hidden=false;return;}
+    submit(e.target,'/login',{email:id,password:pw},()=>{const n=q.get('next');location.href=n&&n.startsWith('/')&&!n.startsWith('//')?n:'/profile/';});
+  });
+  $('#regForm').addEventListener('submit',e=>{e.preventDefault();
+    const er=e.target.querySelector('.msg.err');
+    const u=$('#rUser').value.trim(),em=$('#rEmail').value.trim(),pw=$('#rPass').value;
+    const bad=!/^[A-Za-z0-9_.\-]{3,30}$/.test(u)?'Username must be 3–30 letters, numbers, _ . or -':!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)?'Enter a valid email address.':pw.length<8?'Password must be at least 8 characters.':'';
+    if(bad){er.textContent=bad;er.hidden=false;return;}
+    submit(e.target,'/register',{username:u,email:em,password:pw},d=>{e.target.reset();$('#rMeter').dataset.level=0;go('login');flash(d.message||'Account created! Check your email to verify it.');});
+  });
+  $('#forgotForm').addEventListener('submit',e=>{e.preventDefault();
+    const em=$('#fEmail').value.trim();
+    if(!em){const er=e.target.querySelector('.msg.err');er.textContent='Enter your email address.';er.hidden=false;return;}
+    submit(e.target,'/forgot-password',{email:em},d=>{e.target.reset();go('login');flash(d.message||'If that email has an account, a reset link is on its way.');});
+  });
+
+  function level(pw){if(!pw)return 0;let pool=0;if(/[a-z]/.test(pw))pool+=26;if(/[A-Z]/.test(pw))pool+=26;if(/\d/.test(pw))pool+=10;if(/[^A-Za-z0-9]/.test(pw))pool+=33;const b=pw.length*Math.log2(pool||1);return b<28?1:b<45?2:b<64?3:b<90?4:5;}
+  $('#rPass').addEventListener('input',()=>{$('#rMeter').dataset.level=level($('#rPass').value);});
+  $('#suggest').addEventListener('click',()=>{
+    const A='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*-_=+?';let s='';for(let i=0;i<20;i++)s+=A[ND.randInt(A.length)];
+    const i=$('#rPass');i.value=s;i.type='text';$('[data-eye="rPass"]').innerHTML=EYE_OFF;$('#rMeter').dataset.level=level(s);
+    ND.copy(s,null,'Suggested password copied — save it in your password manager');
+  });
+})();
+</script>

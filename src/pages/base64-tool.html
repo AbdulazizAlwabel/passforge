@@ -1,0 +1,94 @@
+<!-- @tool -->
+<div class="panel">
+  <div class="panel-body">
+    <div class="row between" style="margin-bottom:16px">
+      <div class="seg" role="tablist" aria-label="Direction">
+        <button role="tab" aria-selected="true" data-dir="enc">Encode</button>
+        <button role="tab" aria-selected="false" data-dir="dec">Decode</button>
+      </div>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" id="urlSafe"><span>URL-safe</span></label>
+        <label class="chip"><input type="checkbox" id="wrap"><span>Wrap at 76</span></label>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label" for="in"><span id="inLbl">Plain text</span><span class="stats"><span><b id="inN">0</b> chars</span></span></label>
+      <textarea class="textarea mono-in" id="in" placeholder="Type or paste…" spellcheck="false"></textarea>
+    </div>
+    <div class="row" style="margin-top:14px">
+      <button class="btn btn-sm" id="swap">{{icon:swap}}Swap</button>
+      <label class="btn btn-sm" for="file" style="cursor:pointer">{{icon:file}}File → Base64<input type="file" id="file" hidden></label>
+      <button class="btn btn-ghost btn-sm" id="clear">Clear</button>
+    </div>
+  </div>
+  <div class="panel-sec">
+    <div class="panel-title"><span id="outLbl">Base64</span><span class="row" style="gap:10px"><span class="stats"><span><b id="outN">0</b> chars</span><span id="ratio"></span></span><button class="copy" id="copy">{{icon:copy}}Copy</button></span></div>
+    <div class="out empty scroll" id="out">Output appears as you type.</div>
+    <div class="alert" id="err" hidden style="margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- @aside -->
+<div class="panel">
+  <h4>Good to know</h4>
+  <ul>
+    <li>Base64 is an encoding, not encryption — anyone can decode it.</li>
+    <li>Encoded output is ~33% larger than the input.</li>
+    <li>URL-safe mode swaps <code class="mono">+ /</code> for <code class="mono">- _</code> and drops padding, as used in JWTs.</li>
+    <li>Decoding auto-detects URL-safe input and missing padding.</li>
+  </ul>
+</div>
+
+<!-- @about -->
+<h2>What is Base64 used for?</h2>
+<p>Base64 represents binary data using 64 printable characters, so it can travel safely through systems built for text — email attachments, data URLs in CSS and HTML, HTTP Basic auth headers, JSON Web Tokens and configuration files.</p>
+<p>This tool handles full Unicode (emoji and Arabic included) by encoding to UTF-8 bytes first, which the browser’s built-in <code>btoa</code> can’t do on its own.</p>
+
+<!-- @script -->
+<script>
+(function(){
+  const $=ND.$,$$=ND.$$;
+  let dir='enc',outText='';
+  function bytesToB64(bytes){let s='';const CH=0x8000;for(let i=0;i<bytes.length;i+=CH)s+=String.fromCharCode.apply(null,bytes.subarray(i,i+CH));return btoa(s);}
+  function b64ToBytes(b64){
+    let s=b64.replace(/\s+/g,'').replace(/-/g,'+').replace(/_/g,'/');
+    if(/[^A-Za-z0-9+/=]/.test(s))throw new Error('Input contains characters that aren’t valid Base64.');
+    s=s.replace(/=+$/,'');if(s.length%4===1)throw new Error('Input length isn’t valid Base64.');
+    while(s.length%4)s+='=';
+    const bin=atob(s);const out=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)out[i]=bin.charCodeAt(i);return out;
+  }
+  const finish=s=>{if($('#urlSafe').checked)s=s.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');if($('#wrap').checked)s=s.replace(/(.{76})/g,'$1\n').trim();return s;};
+  function run(){
+    const v=$('#in').value;$('#inN').textContent=v.length;$('#err').hidden=true;
+    const o=$('#out');
+    if(!v){o.textContent=dir==='enc'?'Output appears as you type.':'Decoded text appears here.';o.classList.add('empty');outText='';$('#outN').textContent=0;$('#ratio').textContent='';return;}
+    try{
+      if(dir==='enc'){outText=finish(bytesToB64(new TextEncoder().encode(v)));}
+      else{const bytes=b64ToBytes(v);try{outText=new TextDecoder('utf-8',{fatal:true}).decode(bytes);}catch(e){outText=Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join(' ');$('#err').hidden=false;$('#err').textContent='Decoded data isn’t UTF-8 text — showing raw bytes as hex.';}}
+      o.textContent=outText;o.classList.remove('empty');
+      $('#outN').textContent=outText.length;
+      $('#ratio').textContent=v.length?Math.round(outText.length/v.length*100)+'%':'';
+    }catch(e){o.textContent='';o.classList.add('empty');outText='';$('#err').hidden=false;$('#err').textContent=e.message;$('#outN').textContent=0;}
+  }
+  function setDir(d){
+    dir=d;$$('[data-dir]').forEach(x=>x.setAttribute('aria-selected',x.dataset.dir===d?'true':'false'));
+    $('#inLbl').textContent=d==='enc'?'Plain text':'Base64';$('#outLbl').textContent=d==='enc'?'Base64':'Plain text';
+    $('#in').placeholder=d==='enc'?'Type or paste text to encode…':'Paste Base64 to decode…';
+    run();
+  }
+  $$('[data-dir]').forEach(b=>b.addEventListener('click',()=>setDir(b.dataset.dir)));
+  $('#in').addEventListener('input',run);
+  ['urlSafe','wrap'].forEach(id=>$('#'+id).addEventListener('change',run));
+  $('#swap').addEventListener('click',()=>{if(!outText||!$('#err').hidden)return;$('#in').value=outText;setDir(dir==='enc'?'dec':'enc');});
+  $('#clear').addEventListener('click',()=>{$('#in').value='';run();$('#in').focus();});
+  $('#copy').addEventListener('click',e=>ND.copy(outText,e.currentTarget,'Output copied'));
+  $('#file').addEventListener('change',async e=>{
+    const f=e.target.files[0];if(!f)return;
+    const b=new Uint8Array(await f.arrayBuffer());
+    outText='data:'+(f.type||'application/octet-stream')+';base64,'+bytesToB64(b);
+    const o=$('#out');o.textContent=outText.length>200000?outText.slice(0,200000)+'\n… (truncated in preview — Copy gets everything)':outText;o.classList.remove('empty');
+    $('#outLbl').textContent='Data URL · '+f.name;$('#outN').textContent=outText.length;$('#ratio').textContent='';$('#err').hidden=true;
+    e.target.value='';
+  });
+})();
+</script>

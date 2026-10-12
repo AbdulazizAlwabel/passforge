@@ -1,0 +1,98 @@
+<!-- @tool -->
+<div class="panel">
+  <div class="panel-body">
+    <div class="field">
+      <span class="label">Personality</span>
+      <div class="seg full" role="tablist" aria-label="Style" id="styles">
+        <button role="tab" aria-selected="true" data-style="professional">Professional</button>
+        <button role="tab" aria-selected="false" data-style="gamer">Gamer</button>
+        <button role="tab" aria-selected="false" data-style="anonymous">Anonymous</button>
+        <button role="tab" aria-selected="false" data-style="friendly">Friendly</button>
+        <button role="tab" aria-selected="false" data-style="techie">Techie</button>
+      </div>
+    </div>
+    <div class="grid2" style="margin-top:18px">
+      <div class="field">
+        <label class="label" for="base">Include a word <span class="faint" style="font-weight:400">optional</span></label>
+        <input class="input" id="base" placeholder="e.g. Aziz, Falcon, Nova" maxlength="20" autocomplete="off">
+      </div>
+      <div class="field" style="margin-top:0">
+        <label class="label" for="maxLen">Max length <span class="val" id="maxVal">16</span></label>
+        <input class="range" type="range" id="maxLen" min="6" max="24" value="16" style="margin-top:8px">
+      </div>
+    </div>
+    <div class="field">
+      <span class="label">Options</span>
+      <div class="chips">
+        <label class="chip"><input type="checkbox" id="num" checked><span>Numbers</span></label>
+        <label class="chip"><input type="checkbox" id="sepOn"><span>Separators <small>_ .</small></span></label>
+        <label class="chip"><input type="checkbox" id="lower"><span>all lowercase</span></label>
+      </div>
+    </div>
+    <div class="row" style="margin-top:24px">
+      <button class="btn btn-primary" id="gen">{{icon:sparkle}}Generate names</button>
+      <span class="faint" style="font-size:.85rem">Click any name to copy it.</span>
+    </div>
+  </div>
+  <div class="panel-sec">
+    <div class="names" id="names"></div>
+  </div>
+</div>
+
+<!-- @about -->
+<h2>Picking a good handle</h2>
+<p>A good username is easy to say, hard to confuse and doesn’t give away personal details like your birth year or full name. If you use the same handle everywhere, people can link your accounts together — for privacy-sensitive sites, use the Anonymous style and a different name each time.</p>
+
+<!-- @script -->
+<script>
+(function(){
+  const $=ND.$,$$=ND.$$;
+  const A={
+    professional:['Prime','Clear','Bright','Noble','Swift','Sharp','Keen','Bold','True','Calm','Steady','Astute','Lucid','Vivid','Civic','Exact','Solid','Grand','Modern','Polar'],
+    gamer:['Dark','Shadow','Neon','Cyber','Ghost','Storm','Blaze','Iron','Void','Sonic','Toxic','Feral','Rogue','Frost','Venom','Hyper','Rapid','Crimson','Phantom','Savage'],
+    anonymous:['Quiet','Silent','Hidden','Masked','Veiled','Covert','Faint','Nameless','Grey','Muted','Distant','Unseen','Hollow','Still','Pale','Obscure','Vague','Drift','Null','Blank'],
+    friendly:['Happy','Sunny','Cozy','Jolly','Merry','Breezy','Lucky','Cheery','Gentle','Bubbly','Peachy','Snug','Witty','Zesty','Chill','Kind','Sparkly','Fuzzy','Dreamy','Golden'],
+    techie:['Byte','Hex','Root','Stack','Node','Flux','Sync','Loop','Kernel','Async','Pixel','Vector','Lambda','Binary','Cache','Daemon','Shell','Parse','Query','Proxy']
+  };
+  const N={
+    professional:['Ledger','Atlas','Summit','Harbor','Compass','Bridge','Anchor','Quill','Meridian','Keystone','Beacon','Venture','Studio','Works','Craft','Signal','Vista','Forge','North','Arc'],
+    gamer:['Wolf','Reaper','Viper','Hawk','Titan','Sniper','Raptor','Fang','Blade','Hunter','Wraith','Cobra','Dragon','Knight','Specter','Raider','Ronin','Golem','Kraken','Ace'],
+    anonymous:['Owl','Moth','Fox','Raven','Echo','Cipher','Signal','Mist','Static','Shade','Lantern','Stone','Harbor','Comet','Ash','Wave','Frame','Atom','Field','River'],
+    friendly:['Panda','Otter','Bunny','Muffin','Sprout','Pebble','Biscuit','Mango','Puffin','Koala','Cupcake','Daisy','Noodle','Button','Waffle','Clover','Teacup','Pickle','Bean','Marble'],
+    techie:['Dev','Ops','Coder','Hacker','Ninja','Wizard','Smith','Bot','Logic','Script','Packet','Socket','Commit','Branch','Kernel','Cloud','Matrix','Signal','Daemon','Lab']
+  };
+  let style='professional';
+  const cap=s=>s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();
+  function one(){
+    const base=$('#base').value.trim().replace(/[^\p{L}\p{N}]/gu,'');
+    const useNum=$('#num').checked, useSep=$('#sepOn').checked, low=$('#lower').checked, max=+$('#maxLen').value;
+    const sep=useSep?ND.pick(['_','.','_']):'';
+    let parts;
+    const r=ND.randInt(3);
+    if(base) parts=r===0?[cap(base),ND.pick(N[style])]:r===1?[ND.pick(A[style]),cap(base)]:[cap(base),ND.pick(A[style])];
+    else parts=[ND.pick(A[style]),ND.pick(N[style])];
+    let name=parts.join(sep);
+    if(useNum){
+      const n=style==='gamer'?ND.pick([ND.randInt(100),ND.randInt(1000),'X','99','007']):style==='anonymous'?ND.randInt(9000)+1000:ND.randInt(99)+1;
+      name+=(useSep&&ND.randInt(2)?sep:'')+n;
+    }
+    if(style==='gamer'&&!useSep&&ND.randInt(5)===0) name='x'+name+'x';
+    if(low) name=name.toLowerCase();
+    return name.length<=max?name:null;
+  }
+  function generate(){
+    const set=new Set();let guard=0;
+    while(set.size<12&&guard++<600){const n=one();if(n)set.add(n);}
+    const list=[...set];
+    $('#names').innerHTML=list.length?list.map((n,i)=>'<button class="name-btn" style="--d:'+(i*30)+'ms" data-n="'+ND.esc(n)+'"><span>'+ND.esc(n)+'</span>{{icon:copy}}</button>').join(''):'<div class="empty-state"><p>No names fit — try a longer max length or a shorter word.</p></div>';
+  }
+  $('#names').addEventListener('click',e=>{const b=e.target.closest('[data-n]');if(b)ND.copy(b.dataset.n,b,'Copied “'+b.dataset.n+'”');});
+  $$('[data-style]').forEach(b=>b.addEventListener('click',()=>{style=b.dataset.style;$$('[data-style]').forEach(x=>x.setAttribute('aria-selected',x===b?'true':'false'));generate();}));
+  $('#maxLen').addEventListener('input',()=>{$('#maxVal').textContent=$('#maxLen').value;});
+  $('#maxLen').addEventListener('change',generate);
+  ['num','sepOn','lower'].forEach(id=>$('#'+id).addEventListener('change',generate));
+  let t;$('#base').addEventListener('input',()=>{clearTimeout(t);t=setTimeout(generate,250);});
+  $('#gen').addEventListener('click',generate);
+  generate();
+})();
+</script>

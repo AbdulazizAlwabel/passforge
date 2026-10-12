@@ -1,0 +1,83 @@
+<!-- @body -->
+<section class="tool-hero">
+  <div class="wrap page-narrow">
+    <div id="loading" class="empty-state"><span class="spin" style="display:inline-block;width:22px;height:22px;border-radius:50%;border:2px solid var(--text-3);border-right-color:transparent;animation:spin .7s linear infinite"></span></div>
+
+    <div id="signedOut" hidden class="empty-state">
+      {{icon:user}}
+      <h1 class="h2" style="color:var(--text);margin-bottom:10px">You’re not signed in</h1>
+      <p style="margin-bottom:22px">Sign in to manage your account. Every tool works without one.</p>
+      <a class="btn btn-primary" href="/account/?next=/profile/">Sign in</a>
+    </div>
+
+    <div id="content" hidden>
+      <div class="profile-head">
+        <span class="avatar lg" id="av">?</span>
+        <div class="who"><h1 class="h2" id="uName">—</h1><p class="muted" id="uEmail">—</p></div>
+        <span id="vBadge"></span>
+      </div>
+      <div class="msg ok" id="flash" hidden style="margin-top:24px">{{icon:check}}<span></span></div>
+      <div class="msg info" id="unverified" hidden style="margin-top:24px;align-items:center;justify-content:space-between;flex-wrap:wrap">
+        <span style="display:flex;gap:10px">{{icon:alert}}<span>Your email isn’t verified yet. Check your inbox for the link.</span></span>
+        <button class="btn btn-sm" id="resend">Resend email</button>
+      </div>
+
+      <div class="stat-grid" style="margin-top:28px">
+        <div class="stat"><div class="k">Member since</div><div class="v" id="since">—</div></div>
+        <div class="stat"><div class="k">Account ID</div><div class="v" id="uid">—</div></div>
+        <div class="stat"><div class="k">Status</div><div class="v" id="status">—</div></div>
+      </div>
+
+      <div class="panel" style="margin-top:28px">
+        <div class="panel-body">
+          <p class="panel-title">Change password</p>
+          <form id="pwForm" class="grid2" novalidate style="align-items:end">
+            <div class="field"><label class="label" for="cur">Current password</label><input class="input" type="password" id="cur" autocomplete="current-password" required></div>
+            <div class="field" style="margin-top:0"><label class="label" for="nw">New password</label><input class="input" type="password" id="nw" autocomplete="new-password" minlength="8" maxlength="128" required></div>
+            <div class="msg err" hidden style="grid-column:1/-1"></div>
+            <div style="grid-column:1/-1"><button class="btn btn-primary" type="submit">Update password</button></div>
+          </form>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:28px;justify-content:space-between">
+        <a class="btn" href="/admin/" id="adminLink" hidden>{{icon:shield}}Admin</a>
+        <button class="btn btn-danger" id="logout" style="margin-left:auto">Sign out</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- @script -->
+<script>
+(function(){
+  const $=ND.$;
+  const fmt=iso=>iso?new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}):'—';
+  const q=new URLSearchParams(location.search);
+  async function load(){
+    const r=await ND.api('/profile');
+    $('#loading').hidden=true;
+    if(!r.ok){$('#signedOut').hidden=false;if(r.offline)$('#signedOut').querySelector('p').textContent='Accounts aren’t available on this deployment right now.';return;}
+    const u=r.data;
+    $('#content').hidden=false;
+    $('#av').textContent=(u.username||'?').charAt(0).toUpperCase();
+    $('#uName').textContent=u.username;$('#uEmail').textContent=u.email;
+    $('#since').textContent=fmt(u.created_at);$('#uid').textContent='#'+u.id;
+    $('#status').textContent=u.verified?'Verified':'Unverified';
+    $('#vBadge').innerHTML=u.verified?'<span class="badge ok">{{icon:check}}Verified</span>':'<span class="badge">Unverified</span>';
+    $('#unverified').hidden=!!u.verified;$('#unverified').style.display=u.verified?'none':'flex';
+    $('#adminLink').hidden=!u.admin;
+    if(q.get('verified')==='1'){const f=$('#flash');f.querySelector('span').textContent='Email verified — thank you!';f.hidden=false;history.replaceState(null,'',location.pathname);}
+  }
+  load();
+  $('#resend').addEventListener('click',async e=>{const b=e.currentTarget;b.disabled=true;const r=await ND.api('/resend-verification',{method:'POST'});ND.toast(r.ok?(r.data.message||'Verification email sent'):(r.data.error||'Could not send email'));setTimeout(()=>b.disabled=false,30000);});
+  $('#pwForm').addEventListener('submit',async e=>{
+    e.preventDefault();const er=e.target.querySelector('.msg.err'),btn=e.target.querySelector('[type=submit]');er.hidden=true;
+    const cur=$('#cur').value,nw=$('#nw').value;
+    if(!cur||nw.length<8){er.textContent=!cur?'Enter your current password.':'New password must be at least 8 characters.';er.hidden=false;return;}
+    btn.disabled=true;const r=await ND.api('/profile/password',{method:'PUT',body:{currentPassword:cur,newPassword:nw}});btn.disabled=false;
+    if(r.ok){e.target.reset();ND.toast(r.data.message||'Password updated');}else{er.textContent=r.data.error||'Update failed';er.hidden=false;}
+  });
+  $('#logout').addEventListener('click',async()=>{await ND.api('/logout',{method:'POST'});location.href='/';});
+})();
+</script>

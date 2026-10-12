@@ -1,0 +1,138 @@
+<!-- @tool -->
+<div class="panel">
+  <div class="panel-body">
+    <div class="field">
+      <label class="label" for="pw">Password to analyse</label>
+      <div class="input-wrap">
+        <input class="input mono-in" type="password" id="pw" placeholder="Type or paste a password…" autocomplete="off" spellcheck="false" autocapitalize="off" style="height:56px;font-size:1.05rem">
+        <button class="in-btn" id="vis" aria-label="Show password" aria-pressed="false">{{icon:eye}}</button>
+      </div>
+    </div>
+    <div class="pw-strength" style="margin-top:20px">
+      <div class="meter" id="meter" data-level="0"><i></i><i></i><i></i><i></i><i></i></div>
+      <span class="bits" id="bits">0 bits</span>
+      <span class="lvl" id="lvl">—</span>
+    </div>
+  </div>
+  <div class="panel-sec" id="results" hidden>
+    <div class="panel-title">Time to crack</div>
+    <div class="stat-grid" id="crack"></div>
+    <div class="divider"></div>
+    <div class="panel-title">Composition</div>
+    <div class="stat-grid" id="comp"></div>
+    <div class="divider"></div>
+    <div class="panel-title">Analysis</div>
+    <div class="checks" id="checks"></div>
+  </div>
+  <div class="panel-sec" id="empty">
+    <div class="empty-state">{{icon:shield}}<p>Start typing — the analysis updates with every keystroke.</p></div>
+  </div>
+</div>
+
+<!-- @aside -->
+<div class="panel">
+  <h4>Fully private</h4>
+  <p>The password never leaves this page. There’s no network call, no logging and no storage — close the tab and it’s gone.</p>
+</div>
+<div class="panel">
+  <h4>How we estimate</h4>
+  <ul>
+    <li>Entropy starts from length × character pool, then is penalised for dictionary words, sequences, repeats, keyboard walks and dates.</li>
+    <li>Crack times assume an attacker guessing at the rates shown, finding it halfway through on average.</li>
+  </ul>
+</div>
+
+<!-- @about -->
+<h2>What makes a password weak?</h2>
+<p>Attackers don’t guess randomly. They start with leaked password lists, then try dictionary words with common substitutions (<code>p@ssw0rd</code>), keyboard patterns (<code>qwerty</code>), years and dates, and short repeated chunks. A password can look complex and still fall in seconds if it follows one of these patterns.</p>
+<p>The fix is randomness and length. Use a password manager and let the <a href="/password-generator/" style="color:var(--accent)">Password Generator</a> create something no human would choose.</p>
+
+<!-- @script -->
+<script>
+(function(){
+  const $=ND.$;
+  const COMMON=['password','passw0rd','123456','12345678','123456789','1234567890','qwerty','qwertyuiop','abc123','111111','123123','admin','letmein','welcome','monkey','dragon','football','baseball','iloveyou','master','sunshine','princess','shadow','superman','michael','trustno1','starwars','whatever','hello','freedom','login','secret','computer','charlie','donald','batman','access','mustang','696969','654321','666666','121212','000000','zaq12wsx','1q2w3e4r','1qaz2wsx','asdfgh','asdfghjkl','zxcvbnm','google','samsung','apple','summer','winter','spring','autumn','love','pokemon','soccer','hockey','killer','jordan','hunter','ranger','buster','pepper','ginger','cookie','cheese','flower','tigger','matrix','qwerty123','password1','password123','admin123','root','toor','changeme','default','guest','test','test123','pass','pass123','user','abcdef','abcd1234','aaaaaa','987654321','00000000','11111111','q1w2e3r4','987654','ninja','azerty','solo','loveme','whatever1','mypass','mypassword','allah','bismillah','saudi','riyadh','arabia'];
+  const WORDS=['love','pass','word','admin','user','king','queen','star','moon','blue','red','dog','cat','life','baby','angel','money','team','game','golf','home','cool','summer','winter','apple','orange','lion','tiger','eagle','dragon','magic','power','secret','hello','world','sun','fire','ice','rock','music','happy','sweet','heart','god','jesus','allah'];
+  const ROWS=['qwertyuiop','asdfghjkl','zxcvbnm','1234567890','qwertzuiop','azertyuiop'];
+  const LEET={'0':'o','1':'i','3':'e','4':'a','5':'s','7':'t','@':'a','$':'s','!':'i'};
+  let shown=false;
+
+  $('#vis').addEventListener('click',function(){
+    shown=!shown;$('#pw').type=shown?'text':'password';
+    this.setAttribute('aria-pressed',shown);this.setAttribute('aria-label',shown?'Hide password':'Show password');
+    this.innerHTML=shown?'{{icon:eye_off}}':'{{icon:eye}}';
+  });
+
+  function pool(pw){let s=0;if(/[a-z]/.test(pw))s+=26;if(/[A-Z]/.test(pw))s+=26;if(/[0-9]/.test(pw))s+=10;if(/[^a-zA-Z0-9]/.test(pw))s+=33;return s;}
+  function seqLen(pw){
+    let max=1,run=1;
+    for(let i=1;i<pw.length;i++){const d=pw.charCodeAt(i)-pw.charCodeAt(i-1);
+      if(Math.abs(d)===1&&(i<2||pw.charCodeAt(i-1)-pw.charCodeAt(i-2)===d)){run++;max=Math.max(max,run);}else run=1;}
+    return max>=3?max:0;
+  }
+  function kbWalk(pw){
+    const p=pw.toLowerCase();let best=0;
+    ROWS.forEach(r=>{for(let n=Math.min(p.length,r.length);n>=4;n--){for(let i=0;i+n<=r.length;i++){const s=r.substr(i,n);if(p.includes(s)||p.includes([...s].reverse().join(''))){best=Math.max(best,n);break;}}}});
+    return best;
+  }
+  function analyse(pw){
+    const len=[...pw].length,P=pool(pw);
+    let bits=len*Math.log2(Math.max(P,1));
+    const issues=[];
+    const lower=pw.toLowerCase();
+    const unleet=lower.replace(/[013457@$!]/g,c=>LEET[c]||c);
+    const common=COMMON.find(c=>lower===c||unleet===c||unleet.replace(/\d+$/,'')===c);
+    if(common){bits=Math.min(bits,10);issues.push({sev:'bad',t:'This is one of the most common passwords — it would be guessed instantly.'});}
+    else{
+      const dict=COMMON.concat(WORDS).filter(w=>w.length>=4&&unleet.includes(w));
+      if(dict.length){const w=dict.sort((a,b)=>b.length-a.length)[0];bits-=w.length*Math.log2(P||1)*0.75;issues.push({sev:'fail',t:'Contains the common word “'+w+'”'+(unleet!==lower?' (even with substitutions)':'')+'.'});}
+    }
+    const kb=kbWalk(pw);if(kb){bits-=kb*2.5;issues.push({sev:'fail',t:'Contains a keyboard pattern ('+kb+' keys in a row).'});}
+    const sq=seqLen(pw);if(sq){bits-=sq*2.5;issues.push({sev:'fail',t:'Contains a sequence like “abc” or “123” ('+sq+' characters).'});}
+    const rep=pw.match(/(.)\1{2,}/);if(rep){bits-=rep[0].length*2;issues.push({sev:'fail',t:'Repeats “'+rep[1]+'” '+rep[0].length+' times in a row.'});}
+    const chunk=pw.match(/(.{2,})\1+/);if(chunk&&chunk[0].length>=4){bits-=chunk[0].length*1.5;issues.push({sev:'fail',t:'Repeats the chunk “'+chunk[1]+'”.'});}
+    if(/(19|20)\d{2}/.test(pw)){bits-=6;issues.push({sev:'fail',t:'Looks like it contains a year — years are among the first things tried.'});}
+    if(/^[A-Z][a-z]+\d+[^a-zA-Z0-9]?$/.test(pw)){bits-=8;issues.push({sev:'fail',t:'Follows the very common “Word + numbers” shape.'});}
+    bits=Math.max(0,bits);
+    const unique=new Set(pw).size;
+    return {len,P,bits,unique,issues};
+  }
+  function human(sec){
+    if(sec<1)return 'Instantly';
+    const u=[['century',3153600000],['year',31536000],['month',2592000],['day',86400],['hour',3600],['minute',60],['second',1]];
+    if(sec>3153600000*1e6)return 'Heat death of the sun';
+    for(const [n,s] of u){if(sec>=s){const v=sec/s;
+      if(n==='century'&&v>=1000){return v>=1e6?(v/1e6).toFixed(0)+' million centuries':Math.round(v/1000)+' thousand centuries';}
+      const r=Math.round(v);return r+' '+(n==='century'?(r===1?'century':'centuries'):n+(r===1?'':'s'));}}
+  }
+  function run(){
+    const pw=$('#pw').value;
+    $('#results').hidden=!pw;$('#empty').hidden=!!pw;
+    if(!pw){$('#meter').dataset.level=0;$('#bits').textContent='0 bits';$('#lvl').textContent='—';$('#lvl').style.color='';return;}
+    const a=analyse(pw),b=Math.round(a.bits);
+    const level=b<28?1:b<45?2:b<64?3:b<90?4:5;
+    $('#meter').dataset.level=level;$('#bits').textContent=b+' bits';
+    const names=['','Very weak','Weak','Fair','Strong','Excellent'];
+    const cols=['','var(--danger)','var(--warn)','var(--gold)','var(--accent-2)','var(--accent)'];
+    $('#lvl').textContent=names[level];$('#lvl').style.color=cols[level];
+    const guesses=Math.pow(2,a.bits)/2;
+    const sc=[['Online, throttled','100 / hour',100/3600],['Online, unthrottled','10 / second',10],['Offline, slow hash','10k / second',1e4],['Offline, fast hash','100B / second',1e11]];
+    $('#crack').innerHTML=sc.map(([k,r,rate])=>'<div class="stat"><div class="k">'+k+'</div><div class="v">'+human(guesses/rate)+'</div><div class="faint mono" style="font-size:.72rem;margin-top:4px">'+r+'</div></div>').join('');
+    $('#comp').innerHTML=[['Length',a.len],['Character pool',a.P],['Unique chars',a.unique+' / '+a.len],['Raw entropy',Math.round(a.len*Math.log2(a.P||1))+' bits']].map(([k,v])=>'<div class="stat"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>').join('');
+    const checks=[
+      {ok:a.len>=12,p:'At least 12 characters',f:'Use at least 12 characters (currently '+a.len+')'},
+      {ok:a.len>=16,p:'16+ characters — excellent length',f:'16+ characters gives a big safety margin'},
+      {ok:/[a-z]/.test(pw)&&/[A-Z]/.test(pw),p:'Mixes upper and lower case',f:'Mix upper and lower case letters'},
+      {ok:/[0-9]/.test(pw),p:'Contains numbers',f:'Add some numbers'},
+      {ok:/[^a-zA-Z0-9]/.test(pw),p:'Contains symbols',f:'Add symbols such as ! # % &'},
+    ];
+    const tick='{{icon:check}}',warn='{{icon:alert}}',x='{{icon:x}}';
+    let html=a.issues.map(i=>'<div class="check '+i.sev+'">'+(i.sev==='bad'?x:warn)+'<span>'+ND.esc(i.t)+'</span></div>').join('');
+    html+=checks.map(c=>'<div class="check '+(c.ok?'pass':'fail')+'">'+(c.ok?tick:warn)+'<span>'+(c.ok?c.p:c.f)+'</span></div>').join('');
+    if(!a.issues.length&&b>=64)html='<div class="check pass">'+tick+'<span><b style="color:var(--text)">No common patterns found.</b></span></div>'+html;
+    $('#checks').innerHTML=html;
+  }
+  $('#pw').addEventListener('input',run);
+  $('#pw').focus();
+})();
+</script>

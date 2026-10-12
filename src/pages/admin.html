@@ -1,0 +1,52 @@
+<!-- @body -->
+<section class="tool-hero">
+  <div class="wrap">
+    <p class="eyebrow"><span class="dot"></span>Administration</p>
+    <h1 class="h1" style="margin-top:20px">Admin <em>console</em></h1>
+    <div class="msg err" id="denied" hidden style="margin-top:24px">{{icon:alert}}<span id="deniedTxt">You don’t have access to this page.</span></div>
+
+    <div id="content" hidden>
+      <div class="stat-grid" style="margin-top:32px" id="kpis"></div>
+
+      <div class="row between" style="margin-top:40px;margin-bottom:14px">
+        <h2 class="h2" style="font-size:1.8rem">Users</h2>
+        <input class="input" id="filter" placeholder="Filter by name or email…" style="max-width:280px;height:40px" autocomplete="off">
+      </div>
+      <div class="table-wrap"><table class="data"><thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Status</th><th>Joined</th><th></th></tr></thead><tbody id="users"></tbody></table></div>
+
+      <h2 class="h2" style="font-size:1.8rem;margin:40px 0 14px">Recent email tokens</h2>
+      <div class="table-wrap"><table class="data"><thead><tr><th>User</th><th>Type</th><th>State</th><th>Created</th><th>Expires</th></tr></thead><tbody id="tokens"></tbody></table></div>
+    </div>
+  </div>
+</section>
+
+<!-- @script -->
+<script>
+(function(){
+  const $=ND.$;let users=[];
+  const d=iso=>iso?new Date(iso).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}):'—';
+  function deny(t){$('#denied').hidden=false;$('#deniedTxt').textContent=t;}
+  async function load(){
+    const [u,t]=await Promise.all([ND.api('/admin/users'),ND.api('/admin/tokens')]);
+    if(!u.ok){deny(u.status===401?'Please sign in with an admin account.':u.data.error||'You don’t have access to this page.');return;}
+    users=u.data;$('#content').hidden=false;
+    const verified=users.filter(x=>x.verified).length,week=users.filter(x=>Date.now()-new Date(x.created_at)<7*864e5).length;
+    $('#kpis').innerHTML=[['Total users',users.length],['Verified',verified],['Unverified',users.length-verified],['Joined this week',week]].map(([k,v])=>'<div class="stat"><div class="k">'+k+'</div><div class="v" style="font-family:var(--font-display);font-size:2rem">'+v+'</div></div>').join('');
+    renderUsers();
+    const tk=t.ok?t.data:[];
+    $('#tokens').innerHTML=tk.length?tk.map(x=>{const exp=new Date(x.expires_at)<new Date();return '<tr><td>'+ND.esc(x.username)+'</td><td>'+(x.type==='verify_email'?'Verify email':'Reset password')+'</td><td>'+(x.used?'<span class="badge ok">Used</span>':exp?'<span class="badge">Expired</span>':'<span class="badge info">Active</span>')+'</td><td>'+d(x.created_at)+'</td><td>'+d(x.expires_at)+'</td></tr>';}).join(''):'<tr><td colspan="5" class="faint">No tokens yet.</td></tr>';
+  }
+  function renderUsers(){
+    const f=$('#filter').value.trim().toLowerCase();
+    const list=users.filter(x=>!f||x.username.toLowerCase().includes(f)||x.email.toLowerCase().includes(f));
+    $('#users').innerHTML=list.length?list.map(x=>'<tr><td class="mono faint">#'+x.id+'</td><td>'+ND.esc(x.username)+'</td><td>'+ND.esc(x.email)+'</td><td>'+(x.verified?'<span class="badge ok">Verified</span>':'<span class="badge">Unverified</span>')+'</td><td>'+d(x.created_at)+'</td><td style="text-align:right">'+(x.verified?'':'<button class="btn btn-sm" data-verify="'+x.id+'">Verify</button> ')+'<button class="btn btn-sm btn-danger" data-del="'+x.id+'" data-name="'+ND.esc(x.username)+'">Delete</button></td></tr>').join(''):'<tr><td colspan="6" class="faint">No users match.</td></tr>';
+  }
+  $('#filter').addEventListener('input',renderUsers);
+  $('#users').addEventListener('click',async e=>{
+    const v=e.target.closest('[data-verify]'),del=e.target.closest('[data-del]');
+    if(v){const r=await ND.api('/admin/users/'+v.dataset.verify+'/verify',{method:'PUT'});ND.toast(r.ok?'User verified':(r.data.error||'Failed'));if(r.ok)load();}
+    if(del){if(!confirm('Delete user “'+del.dataset.name+'”? This can’t be undone.'))return;const r=await ND.api('/admin/users/'+del.dataset.del,{method:'DELETE'});ND.toast(r.ok?'User deleted':(r.data.error||'Failed'));if(r.ok)load();}
+  });
+  ND.me.then(m=>{if(m===null)deny('Accounts aren’t available on this deployment.');else if(!m)deny('Please sign in with an admin account.');else load();});
+})();
+</script>

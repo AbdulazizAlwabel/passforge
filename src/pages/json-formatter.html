@@ -1,0 +1,102 @@
+<!-- @tool -->
+<div class="panel">
+  <div class="panel-body">
+    <div class="row between" style="margin-bottom:14px">
+      <div class="seg" role="group" aria-label="Indentation">
+        <button aria-pressed="true" data-indent="2">2 spaces</button>
+        <button aria-pressed="false" data-indent="4">4 spaces</button>
+        <button aria-pressed="false" data-indent="tab">Tabs</button>
+      </div>
+      <button class="btn btn-ghost btn-sm" id="sample">Load sample</button>
+    </div>
+    <textarea class="textarea mono-in" id="in" style="min-height:220px" placeholder='Paste JSON here…  e.g. {"name":"Aziz","tools":10}' spellcheck="false"></textarea>
+    <div class="row" style="margin-top:14px">
+      <button class="btn btn-primary" id="fmt">Format</button>
+      <button class="btn" id="min">Minify</button>
+      <button class="btn" id="sort">Sort keys A→Z</button>
+      <button class="btn btn-ghost" id="clear">Clear</button>
+      <span class="faint" style="font-size:.8rem;margin-left:auto"><span class="kbd"><span data-mod>Ctrl</span>↵</span> to format</span>
+    </div>
+  </div>
+  <div class="panel-sec">
+    <div class="panel-title"><span class="row" style="gap:10px">Output <span id="status"></span></span><button class="copy" id="copy">{{icon:copy}}Copy</button></div>
+    <pre class="out scroll json-out empty" id="out">Formatted JSON appears here.</pre>
+    <div class="alert" id="err" hidden style="margin-top:12px"></div>
+    <div class="stats" id="stats" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- @aside -->
+<div class="panel">
+  <h4>Validation</h4>
+  <p>Input is parsed with the browser’s strict <code class="mono">JSON.parse</code>. Errors point to the exact line and column, with a snippet of the surrounding text.</p>
+</div>
+<div class="panel">
+  <h4>Shortcuts</h4>
+  <div class="shortcuts">
+    <div>Format <span class="kbd"><span data-mod>Ctrl</span>↵</span></div>
+    <div>Search tools <span class="kbd"><span data-mod>Ctrl</span>K</span></div>
+  </div>
+</div>
+
+<!-- @about -->
+<h2>Clean JSON, quickly</h2>
+<p>Pretty-printing makes API responses and config files readable; minifying strips whitespace for transport; sorting keys makes two documents easy to diff. Large documents stay on your machine — nothing is uploaded.</p>
+
+<!-- @script -->
+<script>
+(function(){
+  const $=ND.$,$$=ND.$$;
+  let indent=2,last='';
+  const SAMPLE={"site":"nicelydone.qd.je","tools":10,"private":true,"categories":["Security","Developer","Everyday"],"owner":{"name":"Abdulaziz","since":2026},"tracking":null,"rating":4.9};
+  function highlight(s){
+    return ND.esc(s).replace(/(&quot;(?:\\.|[^\\&]|&(?!quot;))*?&quot;)(\s*:)?|\b(true|false)\b|\bnull\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/g,(m,str,colon,bool)=>{
+      if(str)return colon?'<span class="k">'+str+'</span>'+colon:'<span class="s">'+str+'</span>';
+      if(bool)return '<span class="b">'+m+'</span>';
+      if(m==='null')return '<span class="z">null</span>';
+      return '<span class="n">'+m+'</span>';
+    });
+  }
+  function sortKeys(o){if(Array.isArray(o))return o.map(sortKeys);if(o&&typeof o==='object')return Object.keys(o).sort((a,b)=>a.localeCompare(b)).reduce((r,k)=>(r[k]=sortKeys(o[k]),r),{});return o;}
+  function stats(o){let keys=0,depth=0,arrays=0;(function walk(v,d){depth=Math.max(depth,d);if(Array.isArray(v)){arrays++;v.forEach(x=>walk(x,d+1));}else if(v&&typeof v==='object'){for(const k in v){keys++;walk(v[k],d+1);}}})(o,0);return {keys,depth,arrays};}
+  function locate(src,msg){
+    let pos=null;const m=msg.match(/position (\d+)/i);if(m)pos=+m[1];
+    const lc=msg.match(/line (\d+) column (\d+)/i);
+    let line,col;
+    if(lc){line=+lc[1];col=+lc[2];}
+    else if(pos!=null){const before=src.slice(0,pos);line=before.split('\n').length;col=pos-before.lastIndexOf('\n');}
+    if(line==null)return '';
+    const L=src.split('\n')[line-1]||'';
+    return ' — line '+line+', column '+col+'\n'+L.slice(Math.max(0,col-40),col+40)+'\n'+' '.repeat(Math.min(col-1,40))+'^';
+  }
+  function run(kind){
+    const src=$('#in').value;$('#err').hidden=true;
+    const out=$('#out'),st=$('#status');
+    if(!src.trim()){out.className='out scroll json-out empty';out.textContent='Formatted JSON appears here.';st.innerHTML='';$('#stats').innerHTML='';last='';return;}
+    let obj;
+    try{obj=JSON.parse(src);}catch(e){
+      st.innerHTML='<span class="badge bad">{{icon:x}}Invalid</span>';
+      $('#err').hidden=false;$('#err').style.whiteSpace='pre-wrap';$('#err').style.fontFamily='var(--font-mono)';
+      $('#err').textContent=e.message.replace(/^JSON\.parse: /,'')+locate(src,e.message);
+      return;
+    }
+    if(kind==='sort')obj=sortKeys(obj);
+    const ind=indent==='tab'?'\t':indent;
+    last=kind==='min'?JSON.stringify(obj):JSON.stringify(obj,null,ind);
+    out.className='out scroll json-out';out.innerHTML=highlight(last);
+    st.innerHTML='<span class="badge ok">{{icon:check}}Valid JSON</span>';
+    const s=stats(obj),bytes=new TextEncoder().encode(last).length,inB=new TextEncoder().encode(src).length;
+    const fmtB=b=>b<1024?b+' B':(b/1024).toFixed(1)+' KB';
+    $('#stats').innerHTML='<span>Keys <b>'+s.keys+'</b></span><span>Arrays <b>'+s.arrays+'</b></span><span>Depth <b>'+s.depth+'</b></span><span>Size <b>'+fmtB(inB)+' → '+fmtB(bytes)+'</b></span>';
+  }
+  $('#fmt').addEventListener('click',()=>run('fmt'));
+  $('#min').addEventListener('click',()=>run('min'));
+  $('#sort').addEventListener('click',()=>run('sort'));
+  $('#clear').addEventListener('click',()=>{$('#in').value='';run();$('#in').focus();});
+  $('#sample').addEventListener('click',()=>{$('#in').value=JSON.stringify(SAMPLE);run('fmt');});
+  $('#copy').addEventListener('click',e=>ND.copy(last,e.currentTarget,'JSON copied'));
+  $('#in').addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){e.preventDefault();run('fmt');}});
+  let t;$('#in').addEventListener('input',()=>{clearTimeout(t);t=setTimeout(()=>run('fmt'),400);});
+  $$('[data-indent]').forEach(b=>b.addEventListener('click',()=>{indent=b.dataset.indent==='tab'?'tab':+b.dataset.indent;$$('[data-indent]').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));if($('#in').value.trim())run('fmt');}));
+})();
+</script>

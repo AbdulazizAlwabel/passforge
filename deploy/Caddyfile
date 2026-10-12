@@ -1,0 +1,12 @@
+# Caddy reverse proxy — automatic HTTPS (Let's Encrypt) for the site + API.
+# Install: sudo dnf install caddy   (or see https://caddyserver.com/docs/install)
+# Copy to /etc/caddy/Caddyfile, then: sudo systemctl enable --now caddy
+
+nicelydone.qd.je {
+	encode zstd gzip
+	reverse_proxy 127.0.0.1:3000
+}
+
+www.nicelydone.qd.je {
+	redir https://nicelydone.qd.je{uri} permanent
+}

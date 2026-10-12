@@ -1,0 +1,61 @@
+<!-- @tool -->
+<div class="panel">
+  <div class="panel-body">
+    <div class="field">
+      <label class="label" for="in">Your text <span class="stats"><span><b id="nc">0</b> chars</span><span><b id="nw">0</b> words</span><span><b id="nl">0</b> lines</span></span></label>
+      <textarea class="textarea" id="in" placeholder="Type or paste anything — e.g. “user profile settings” or “getUserProfileSettings”" spellcheck="false"></textarea>
+    </div>
+  </div>
+  <div class="panel-sec">
+    <div class="panel-title">Every case, live <span class="faint" style="text-transform:none;letter-spacing:0">Click to copy</span></div>
+    <div class="case-list" id="cases"></div>
+  </div>
+</div>
+
+<!-- @aside -->
+<div class="panel">
+  <h4>Smart splitting</h4>
+  <p>Words are detected from spaces, punctuation, <code class="mono">snake_case</code>, <code class="mono">kebab-case</code> and <code class="mono">camelCase</code> boundaries — so you can paste an identifier in one style and get every other style back.</p>
+</div>
+
+<!-- @about -->
+<h2>Naming conventions, decoded</h2>
+<p><b>camelCase</b> is the norm for JavaScript and Java variables, <b>PascalCase</b> for classes and React components, <b>snake_case</b> for Python and SQL, <b>kebab-case</b> for URLs and CSS classes, and <b>CONSTANT_CASE</b> for environment variables and constants.</p>
+
+<!-- @script -->
+<script>
+(function(){
+  const $=ND.$;
+  const words=t=>t.replace(/([a-z0-9])([A-Z])/g,'$1 $2').replace(/([A-Z]+)([A-Z][a-z])/g,'$1 $2').split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+  const cap=w=>w.charAt(0).toUpperCase()+w.slice(1).toLowerCase();
+  const SMALL=new Set(['a','an','and','as','at','but','by','for','in','nor','of','on','or','the','to','up','via','with']);
+  const CASES=[
+    ['camelCase',t=>{const w=words(t);return w.map((x,i)=>i?cap(x):x.toLowerCase()).join('');}],
+    ['PascalCase',t=>words(t).map(cap).join('')],
+    ['snake_case',t=>words(t).map(w=>w.toLowerCase()).join('_')],
+    ['kebab-case',t=>words(t).map(w=>w.toLowerCase()).join('-')],
+    ['CONSTANT_CASE',t=>words(t).map(w=>w.toUpperCase()).join('_')],
+    ['dot.case',t=>words(t).map(w=>w.toLowerCase()).join('.')],
+    ['path/case',t=>words(t).map(w=>w.toLowerCase()).join('/')],
+    ['Train-Case',t=>words(t).map(cap).join('-')],
+    ['Title Case',t=>t.toLowerCase().replace(/[\p{L}\p{N}']+/gu,(w,i)=>(i===0||!SMALL.has(w))?w.charAt(0).toUpperCase()+w.slice(1):w)],
+    ['Sentence case',t=>t.toLowerCase().replace(/(^\s*\p{L}|[.!?]\s+\p{L})/gu,m=>m.toUpperCase())],
+    ['UPPERCASE',t=>t.toUpperCase()],
+    ['lowercase',t=>t.toLowerCase()],
+    ['aLtErNaTiNg',t=>{let i=0;return t.replace(/\p{L}/gu,c=>(i++%2)?c.toUpperCase():c.toLowerCase());}],
+    ['InVeRsE',t=>t.replace(/\p{L}/gu,c=>c===c.toUpperCase()?c.toLowerCase():c.toUpperCase())],
+    ['esreveR',t=>[...t].reverse().join('')],
+    ['slug',t=>t.normalize('NFKD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')],
+  ];
+  let vals=[];
+  function run(){
+    const t=$('#in').value;
+    $('#nc').textContent=[...t].length;$('#nw').textContent=(t.trim().match(/\S+/g)||[]).length;$('#nl').textContent=t?t.split('\n').length:0;
+    vals=CASES.map(([,f])=>t?f(t):'');
+    $('#cases').innerHTML=CASES.map(([n],i)=>'<button class="case-item" data-i="'+i+'"><span class="lbl"><span>'+n+'</span>{{icon:copy}}</span><span class="txt'+(vals[i]?'':' empty')+'">'+(vals[i]?ND.esc(vals[i]):ND.esc(CASES[i][1]('nicely done tools')))+'</span></button>').join('');
+  }
+  $('#cases').addEventListener('click',e=>{const b=e.target.closest('[data-i]');if(!b)return;const v=vals[+b.dataset.i];if(!v){ND.toast('Type some text first');$('#in').focus();return;}ND.copy(v,null,CASES[+b.dataset.i][0]+' copied');});
+  $('#in').addEventListener('input',run);
+  run();
+})();
+</script>

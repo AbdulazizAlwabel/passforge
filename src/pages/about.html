@@ -1,0 +1,74 @@
+<!-- @body -->
+<section class="tool-hero">
+  <div class="wrap">
+    <p class="eyebrow reveal"><span class="dot"></span>Trust &amp; transparency</p>
+    <h1 class="display reveal" style="--d:80ms;margin-top:24px;max-width:14ch">Don’t trust us. <em>Verify.</em></h1>
+    <p class="lede reveal" style="--d:160ms;margin-top:24px">Every tool here is built so you can check exactly what leaves your browser — in about ten seconds, with tools you already have.</p>
+  </div>
+</section>
+
+<section class="wrap" style="padding-bottom:40px">
+  <div class="about-sec reveal">
+    <div class="num">01<h2>How the tools work</h2></div>
+    <div class="prose">
+      <p>Every generator, checker and converter — passwords, hashes, Base64, JSON and the rest — runs <b style="color:var(--text)">entirely as JavaScript inside your browser</b>. Nothing you type, paste or generate is sent anywhere, because there’s no server-side processing to send it to.</p>
+      <div class="panel" style="padding:24px;margin-top:22px">
+        <p class="panel-title" style="margin-bottom:4px">Verify it yourself, right now</p>
+        <ol class="steps">
+          <li><span>Open any tool, e.g. the <a class="link" href="/password-generator/">Password Generator</a>.</span></li>
+          <li><span>Press <span class="kbd">F12</span> (or right-click → Inspect) and open the <b style="color:var(--text)">Network</b> tab.</span></li>
+          <li><span>Clear the log, then generate a few passwords.</span></li>
+          <li><span>Watch the list stay empty: no fetch, no XHR, nothing leaves the page. You can even switch off Wi-Fi first — it keeps working.</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-sec reveal">
+    <div class="num">02<h2>What talks to a server</h2></div>
+    <div class="prose">
+      <p>Vague privacy claims are how bad actors get away with lying, so here’s the precise list:</p>
+      <div class="scope">
+        <div><span>Password, passphrase &amp; PIN generator</span><span class="badge ok">Local only</span></div>
+        <div><span>Strength checker · Hash generator · Username generator</span><span class="badge ok">Local only</span></div>
+        <div><span>Base64 · JSON · Text case · Unit · Hijri date</span><span class="badge ok">Local only</span></div>
+        <div><span>Subnet calculator</span><span class="badge ok">Local only</span></div>
+        <div><span>Your public IP lookup (IP &amp; Network page)</span><span class="badge info">Public IP service</span></div>
+        <div><span>Sign in · Sign up · Profile</span><span class="badge info">Our server — only if you create an account</span></div>
+      </div>
+      <p>You never need an account to use any tool. There are no analytics, no advertising scripts and no tracking cookies; the only cookie is the sign-in session, and only if you sign in.</p>
+    </div>
+  </div>
+
+  <div class="about-sec reveal">
+    <div class="num">03<h2>Open source</h2></div>
+    <div class="prose">
+      <p>“Trust us” is a weak claim from a security tool. “Read the code” is a strong one — it’s the same reason open-source password managers earn trust. The full source is public:</p>
+      <a class="panel" href="{GITHUB}" rel="noopener" style="display:flex;align-items:center;gap:16px;padding:20px 22px;margin-top:18px">
+        <div class="tile-icon" style="flex:none">{{icon:code}}</div>
+        <div style="flex:1;min-width:0"><b style="color:var(--text);font-weight:500" class="mono">github.com/AbdulazizAlwabel/passforge</b><br><span class="faint" style="font-size:.88rem">Read every line, or fork it and run your own copy.</span></div>
+        <span class="tile-go" style="position:static">{{icon:arrow}}</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="about-sec reveal">
+    <div class="num">04<h2>Connection security</h2></div>
+    <div class="prose">
+      <p>The whole site — every page, the API and all assets — is served over HTTPS. Account passwords are hashed with bcrypt (cost 12) and never stored or logged in plain text; sessions use an HTTP-only, same-site cookie that page scripts can’t read; one-time email links are stored only as SHA-256 hashes and expire.</p>
+      <p>Randomness for every generator comes from <code>crypto.getRandomValues</code> with rejection sampling, so every character is equally likely.</p>
+    </div>
+  </div>
+
+  <div class="about-sec reveal">
+    <div class="num">05<h2>Who built this</h2></div>
+    <div class="prose" style="display:flex;gap:20px;align-items:flex-start">
+      <span class="avatar lg">A</span>
+      <div>
+        <p style="color:var(--text)">Built by a solo developer, not a company.</p>
+        <p>It started as a personal itch: most “free online tools” sites are ad-stuffed and vague about what they do with your input. I wanted a password generator I’d actually trust for my own accounts — so I built one, made the logic auditable, and put it up for anyone who wants the same thing. No funding, no data resale, no dark patterns. Just tools that do the one thing they say they do, nicely.</p>
+        <p class="faint" style="margin-top:14px;font-size:.85rem">Passphrases use the EFF Short Wordlist (CC BY 3.0 US).</p>
+      </div>
+    </div>
+  </div>
+</section>
