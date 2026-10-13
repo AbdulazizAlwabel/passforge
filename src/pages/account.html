@@ -41,6 +41,7 @@
             <label class="label" for="rPass">Password <button type="button" class="link" style="font-size:.82rem" id="suggest">Suggest a strong one</button></label>
             <div class="input-wrap"><input class="input" type="password" id="rPass" autocomplete="new-password" minlength="8" maxlength="128" required><button type="button" class="in-btn" data-eye="rPass" aria-label="Show password">{{icon:eye}}</button></div>
             <div class="meter" id="rMeter" data-level="0" style="margin-top:6px"><i></i><i></i><i></i><i></i><i></i></div>
+            <div class="pw-warn" id="rWarn" hidden></div>
           </div>
           <div class="msg err" hidden></div>
           <button class="btn btn-primary btn-block" type="submit">Create account</button>
@@ -107,7 +108,10 @@
   });
 
   function level(pw){if(!pw)return 0;let pool=0;if(/[a-z]/.test(pw))pool+=26;if(/[A-Z]/.test(pw))pool+=26;if(/\d/.test(pw))pool+=10;if(/[^A-Za-z0-9]/.test(pw))pool+=33;const b=pw.length*Math.log2(pool||1);return b<28?1:b<45?2:b<64?3:b<90?4:5;}
-  $('#rPass').addEventListener('input',()=>{$('#rMeter').dataset.level=level($('#rPass').value);});
+
+  let pwnT,pwnSeq=0;
+  function warnLeak(input,el){clearTimeout(pwnT);const my=++pwnSeq;el.hidden=true;const v=input.value;if(v.length<6)return;pwnT=setTimeout(async()=>{const n=await ND.pwned(v);if(my===pwnSeq&&n>0){el.textContent='⚠ This password appeared in '+n.toLocaleString()+' data breaches — please choose a different one.';el.hidden=false;}},500);}
+  $('#rPass').addEventListener('input',()=>{$('#rMeter').dataset.level=level($('#rPass').value);warnLeak($('#rPass'),$('#rWarn'));});
   $('#suggest').addEventListener('click',()=>{
     const A='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*-_=+?';let s='';for(let i=0;i<20;i++)s+=A[ND.randInt(A.length)];
     const i=$('#rPass');i.value=s;i.type='text';$('[data-eye="rPass"]').innerHTML=EYE_OFF;$('#rMeter').dataset.level=level(s);

@@ -33,7 +33,7 @@
           <p class="panel-title">Change password</p>
           <form id="pwForm" class="grid2" novalidate style="align-items:end">
             <div class="field"><label class="label" for="cur">Current password</label><input class="input" type="password" id="cur" autocomplete="current-password" required></div>
-            <div class="field" style="margin-top:0"><label class="label" for="nw">New password</label><input class="input" type="password" id="nw" autocomplete="new-password" minlength="8" maxlength="128" required></div>
+            <div class="field" style="margin-top:0"><label class="label" for="nw">New password</label><input class="input" type="password" id="nw" autocomplete="new-password" minlength="8" maxlength="128" required><div class="pw-warn" id="warn" hidden></div></div>
             <div class="msg err" hidden style="grid-column:1/-1"></div>
             <div style="grid-column:1/-1"><button class="btn btn-primary" type="submit">Update password</button></div>
           </form>
@@ -78,6 +78,10 @@
     btn.disabled=true;const r=await ND.api('/profile/password',{method:'PUT',body:{currentPassword:cur,newPassword:nw}});btn.disabled=false;
     if(r.ok){e.target.reset();ND.toast(r.data.message||'Password updated');}else{er.textContent=r.data.error||'Update failed';er.hidden=false;}
   });
+
+  let pwnT,pwnSeq=0;
+  function warnLeak(input,el){clearTimeout(pwnT);const my=++pwnSeq;el.hidden=true;const v=input.value;if(v.length<6)return;pwnT=setTimeout(async()=>{const n=await ND.pwned(v);if(my===pwnSeq&&n>0){el.textContent='⚠ This password appeared in '+n.toLocaleString()+' data breaches — please choose a different one.';el.hidden=false;}},500);}
+  $('#nw').addEventListener('input',()=>warnLeak($('#nw'),$('#warn')));
   $('#logout').addEventListener('click',async()=>{await ND.api('/logout',{method:'POST'});location.href='/';});
 })();
 </script>

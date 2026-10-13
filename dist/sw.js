@@ -1,6 +1,6 @@
 /* Nicely Done — offline cache */
-const CACHE = 'nd-68d0d36767';
-const PRECACHE = ["/", "/404.html", "/assets/site.css?v=68d0d36767", "/assets/site.js?v=68d0d36767", "/favicon.svg", "/password-generator/", "/strength-checker/", "/share/", "/hash-generator/", "/username-generator/", "/base64-tool/", "/json-formatter/", "/text-converter/", "/ip-network/", "/unit-converter/", "/date-converter/", "/about/"];
+const CACHE = 'nd-3348c72a46';
+const PRECACHE = ["/", "/404.html", "/assets/site.css?v=3348c72a46", "/assets/site.js?v=3348c72a46", "/favicon.svg", "/password-generator/", "/strength-checker/", "/share/", "/hash-generator/", "/username-generator/", "/base64-tool/", "/json-formatter/", "/text-converter/", "/ip-network/", "/unit-converter/", "/date-converter/", "/about/"];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
 });

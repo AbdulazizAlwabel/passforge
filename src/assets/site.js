@@ -217,6 +217,32 @@
   const isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
   ND.$$('[data-mod]').forEach((el) => { el.textContent = isMac ? '⌘' : 'Ctrl'; });
 
+  /* ---------- Leaked-password check (Have I Been Pwned, k-anonymity) ----------
+     Only the first 5 hex chars of the password's SHA-1 leave the device; the
+     response lists ~800 matching suffixes (plus padding) and we compare locally.
+     Resolves to a breach count (0 = not found) or null if the check failed. */
+  const pwnedCache = new Map();
+  ND.pwned = async (password) => {
+    if (!password) return 0;
+    try {
+      const digest = await crypto.subtle.digest('SHA-1', new TextEncoder().encode(password));
+      const hex = Array.from(new Uint8Array(digest), (b) => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+      const prefix = hex.slice(0, 5), suffix = hex.slice(5);
+      let body = pwnedCache.get(prefix);
+      if (!body) {
+        const res = await fetch('https://api.pwnedpasswords.com/range/' + prefix, { headers: { 'Add-Padding': 'true' }, referrerPolicy: 'no-referrer', cache: 'no-store' });
+        if (!res.ok) return null;
+        body = await res.text();
+        pwnedCache.set(prefix, body);
+      }
+      for (const line of body.split('\n')) {
+        const [s, n] = line.trim().split(':');
+        if (s === suffix) return parseInt(n, 10) || 0;
+      }
+      return 0;
+    } catch (e) { return null; }
+  };
+
   /* ---------- Accounts (optional backend) ----------
      The tools never need the API. When /api is reachable the header shows
      "Sign in" or the signed-in user; on static-only hosting it stays hidden. */

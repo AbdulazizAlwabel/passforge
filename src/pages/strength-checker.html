@@ -1,3 +1,6 @@
+<!-- @badges -->
+<span class="badge info">{{icon:shield}}Leak check sends only 5 hash characters</span>
+
 <!-- @tool -->
 <div class="panel">
   <div class="panel-body">
@@ -13,6 +16,11 @@
       <span class="bits" id="bits">0 bits</span>
       <span class="lvl" id="lvl">—</span>
     </div>
+    <div class="breach" id="breach" data-state="idle" hidden>
+      <span class="breach-icon" id="breachIcon"></span>
+      <div style="flex:1;min-width:0"><div class="breach-title" id="breachTitle"></div><div class="breach-sub" id="breachSub"></div></div>
+    </div>
+    <label class="chip" style="margin-top:16px;display:inline-block"><input type="checkbox" id="leakOn"><span>Check leaked-password databases <small>900M+ passwords</small></span></label>
   </div>
   <div class="panel-sec" id="results" hidden>
     <div class="panel-title">Time to crack</div>
@@ -31,8 +39,8 @@
 
 <!-- @aside -->
 <div class="panel">
-  <h4>Fully private</h4>
-  <p>The password never leaves this page. There’s no network call, no logging and no storage — close the tab and it’s gone.</p>
+  <h4>Private, even when checking leaks</h4>
+  <p>The password never leaves this page. For the leak check, your browser sends only the first <b>5 characters</b> of its SHA-1 hash to Have I Been Pwned, gets back hundreds of matching hashes, and compares them here. Nobody — including us — learns your password.</p>
 </div>
 <div class="panel">
   <h4>How we estimate</h4>
@@ -43,6 +51,9 @@
 </div>
 
 <!-- @about -->
+<h2>Why leaked passwords matter</h2>
+<p>A password can look strong and still be useless if it appeared in a data breach: attackers try those lists first, before any brute force. The leak check uses the Have I Been Pwned database of over 900 million real passwords exposed in breaches, queried with k-anonymity so the password itself is never sent.</p>
+
 <h2>What makes a password weak?</h2>
 <p>Attackers don’t guess randomly. They start with leaked password lists, then try dictionary words with common substitutions (<code>p@ssw0rd</code>), keyboard patterns (<code>qwerty</code>), years and dates, and short repeated chunks. A password can look complex and still fall in seconds if it follows one of these patterns.</p>
 <p>The fix is randomness and length. Use a password manager and let the <a href="/password-generator/" style="color:var(--accent)">Password Generator</a> create something no human would choose.</p>
@@ -108,7 +119,7 @@
   function run(){
     const pw=$('#pw').value;
     $('#results').hidden=!pw;$('#empty').hidden=!!pw;
-    if(!pw){$('#meter').dataset.level=0;$('#bits').textContent='0 bits';$('#lvl').textContent='—';$('#lvl').style.color='';return;}
+    if(!pw){$('#meter').dataset.level=0;$('#bits').textContent='0 bits';$('#lvl').textContent='—';$('#lvl').style.color='';leakCheck('');return;}
     const a=analyse(pw),b=Math.round(a.bits);
     const level=b<28?1:b<45?2:b<64?3:b<90?4:5;
     $('#meter').dataset.level=level;$('#bits').textContent=b+' bits';
@@ -131,7 +142,30 @@
     html+=checks.map(c=>'<div class="check '+(c.ok?'pass':'fail')+'">'+(c.ok?tick:warn)+'<span>'+(c.ok?c.p:c.f)+'</span></div>').join('');
     if(!a.issues.length&&b>=64)html='<div class="check pass">'+tick+'<span><b style="color:var(--text)">No common patterns found.</b></span></div>'+html;
     $('#checks').innerHTML=html;
+    if(pw!==run.lastPw){run.lastPw=pw;leakCheck(pw);}else applyLeak();
   }
+  /* ---- Leaked-password check ---- */
+  let leakSeq=0,leakTimer=null,leakCount=null,lastBits=0;
+  $('#leakOn').checked=ND.store.get('leak-check',true);
+  function setBreach(state,title,sub){const b=$('#breach');b.hidden=state==='idle';b.dataset.state=state;$('#breachIcon').innerHTML=state==='bad'?'{{icon:alert}}':state==='ok'?'{{icon:shield}}':state==='err'?'{{icon:offline}}':'<span class="spin"></span>';$('#breachTitle').textContent=title;$('#breachSub').textContent=sub||'';}
+  function applyLeak(){
+    if(!leakCount)return;
+    $('#meter').dataset.level=1;$('#lvl').textContent='Leaked';$('#lvl').style.color='var(--danger)';
+    $('#crack').querySelectorAll('.v').forEach(v=>v.textContent='Instantly');
+  }
+  function leakCheck(pw){
+    clearTimeout(leakTimer);leakCount=null;
+    if(!pw||!$('#leakOn').checked){setBreach('idle');return;}
+    const my=++leakSeq;setBreach('wait','Checking known data breaches…','Sending only 5 characters of a hash');
+    leakTimer=setTimeout(async()=>{
+      const n=await ND.pwned(pw);if(my!==leakSeq)return;
+      leakCount=n;
+      if(n===null)setBreach('err','Couldn’t reach the breach database','You may be offline. The rest of the analysis still applies.');
+      else if(n>0){setBreach('bad','Found in '+n.toLocaleString()+' data breach'+(n===1?'':'es'),'Attackers try leaked passwords first. Don’t use this anywhere — choose a new one.');applyLeak();}
+      else setBreach('ok','Not found in any known data breach','Checked against 900M+ leaked passwords.');
+    },450);
+  }
+  $('#leakOn').addEventListener('change',e=>{ND.store.set('leak-check',e.target.checked);run.lastPw=null;run();});
   $('#pw').addEventListener('input',run);
   $('#pw').focus();
 })();

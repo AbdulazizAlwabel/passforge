@@ -111,6 +111,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 button { background: none; border: 0; cursor: pointer; }
 ::selection { background: var(--accent); color: var(--accent-ink); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+[hidden] { display: none !important; }
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 .skip { position: fixed; left: 16px; top: -60px; z-index: 100; padding: 10px 16px; border-radius: var(--r-sm); background: var(--accent); color: var(--accent-ink); font-weight: 600; transition: top var(--t); }
 .skip:focus { top: 16px; }
@@ -811,3 +812,18 @@ table.data tr:hover td { background: var(--surface); }
 .about-sec .num { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); letter-spacing: 0.08em; text-transform: uppercase; }
 .about-sec .num h2 { font-family: var(--font-display); font-weight: 400; color: var(--text); font-size: 1.8rem; letter-spacing: -0.01em; text-transform: none; margin-top: 8px; line-height: 1.1; }
 @media (max-width: 800px) { .about-sec { grid-template-columns: 1fr; gap: 12px; } }
+
+/* Breach check */
+.breach { display: flex; align-items: center; gap: 14px; margin-top: 18px; padding: 14px 16px; border-radius: var(--r-md); border: 1px solid var(--line); background: var(--bg-2); }
+.breach-icon { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; flex: none; background: var(--surface-2); color: var(--text-3); }
+.breach-icon svg { width: 18px; height: 18px; }
+.breach-icon .spin { width: 16px; height: 16px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin .7s linear infinite; }
+.breach-title { font-weight: 600; font-size: 0.95rem; }
+.breach-sub { font-size: 0.82rem; color: var(--text-2); margin-top: 2px; }
+.breach[data-state="bad"] { border-color: color-mix(in srgb, var(--danger) 45%, transparent); background: color-mix(in srgb, var(--danger) 9%, var(--bg-2)); }
+.breach[data-state="bad"] .breach-icon { background: color-mix(in srgb, var(--danger) 18%, transparent); color: var(--danger); }
+.breach[data-state="bad"] .breach-title { color: var(--danger); }
+.breach[data-state="ok"] { border-color: color-mix(in srgb, var(--ok) 35%, transparent); }
+.breach[data-state="ok"] .breach-icon { background: var(--accent-soft); color: var(--ok); }
+.pw-warn { font-size: 0.8rem; color: var(--danger); margin-top: 6px; }
+.pw-warn[hidden] { display: none; }

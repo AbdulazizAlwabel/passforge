@@ -27,7 +27,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css?v=68d0d36767">
+<link rel="stylesheet" href="/assets/site.css?v=3348c72a46">
 <script>(function(){try{var t=JSON.parse(localStorage.getItem('nd:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script>
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Strength Checker — Nicely Done", "url": "https://nicelydone.qd.je/strength-checker/", "description": "Check password strength privately in your browser: entropy bits, crack time estimates for online and offline attacks, common-password and pattern detection.", "applicationCategory": "UtilitiesApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}, "isAccessibleForFree": true}</script>
 </head>
@@ -55,7 +55,7 @@
       <div class="tool-badges">
         <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>Runs on your device</span>
         <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14.5A4.5 4.5 0 0 1 8.2 8a6 6 0 0 1 11.3 2.5A4 4 0 0 1 18 18.5H8"/><path d="m3 3 18 18"/></svg>Works offline</span>
-        
+        <span class="badge info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z"/><path d="m9 12 2.2 2.2L15.5 10"/></svg>Leak check sends only 5 hash characters</span>
       </div>
     </div>
   </section>
@@ -75,6 +75,11 @@
       <span class="bits" id="bits">0 bits</span>
       <span class="lvl" id="lvl">—</span>
     </div>
+    <div class="breach" id="breach" data-state="idle" hidden>
+      <span class="breach-icon" id="breachIcon"></span>
+      <div style="flex:1;min-width:0"><div class="breach-title" id="breachTitle"></div><div class="breach-sub" id="breachSub"></div></div>
+    </div>
+    <label class="chip" style="margin-top:16px;display:inline-block"><input type="checkbox" id="leakOn"><span>Check leaked-password databases <small>900M+ passwords</small></span></label>
   </div>
   <div class="panel-sec" id="results" hidden>
     <div class="panel-title">Time to crack</div>
@@ -91,8 +96,8 @@
   </div>
 </div></div>
       <aside class="aside"><div class="panel">
-  <h4>Fully private</h4>
-  <p>The password never leaves this page. There’s no network call, no logging and no storage — close the tab and it’s gone.</p>
+  <h4>Private, even when checking leaks</h4>
+  <p>The password never leaves this page. For the leak check, your browser sends only the first <b>5 characters</b> of its SHA-1 hash to Have I Been Pwned, gets back hundreds of matching hashes, and compares them here. Nobody — including us — learns your password.</p>
 </div>
 <div class="panel">
   <h4>How we estimate</h4>
@@ -103,7 +108,10 @@
 </div></aside>
     </div>
   </section>
-  <section class="section" style="padding-top:0"><div class="wrap"><div class="prose reveal"><h2>What makes a password weak?</h2>
+  <section class="section" style="padding-top:0"><div class="wrap"><div class="prose reveal"><h2>Why leaked passwords matter</h2>
+<p>A password can look strong and still be useless if it appeared in a data breach: attackers try those lists first, before any brute force. The leak check uses the Have I Been Pwned database of over 900 million real passwords exposed in breaches, queried with k-anonymity so the password itself is never sent.</p>
+
+<h2>What makes a password weak?</h2>
 <p>Attackers don’t guess randomly. They start with leaked password lists, then try dictionary words with common substitutions (<code>p@ssw0rd</code>), keyboard patterns (<code>qwerty</code>), years and dates, and short repeated chunks. A password can look complex and still fall in seconds if it follows one of these patterns.</p>
 <p>The fix is randomness and length. Use a password manager and let the <a href="/password-generator/" style="color:var(--accent)">Password Generator</a> create something no human would choose.</p></div></div></section>
   <section class="section" style="padding-top:0">
@@ -130,7 +138,7 @@
   </div>
 </footer>
 <script>window.ND_TOOLS=[{"name": "Password Generator", "short": "Unbiased, cryptographically secure passwords & passphrases.", "cat": "Security", "href": "/password-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"11\" width=\"16\" height=\"10\" rx=\"2.5\"/><path d=\"M8 11V7.5a4 4 0 0 1 8 0V11\"/><circle cx=\"12\" cy=\"16\" r=\"1.2\" fill=\"currentColor\"/><\/svg>", "keywords": "random secure strong passphrase diceware generate"}, {"name": "Strength Checker", "short": "Entropy, crack-time estimates and pattern detection.", "cat": "Security", "href": "/strength-checker/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z\"/><path d=\"m9 12 2.2 2.2L15.5 10\"/><\/svg>", "keywords": "password strength test entropy crack time analyse"}, {"name": "One-Time Secret", "short": "Share a password through a link that self-destructs.", "cat": "Security", "href": "/share/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L12 5.6\"/><path d=\"M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2\"/><\/svg>", "keywords": "share secret password one-time link self-destruct burn encrypted send note"}, {"name": "Hash Generator", "short": "MD5, SHA-1, SHA-256/384/512 for text or files.", "cat": "Security", "href": "/hash-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 9h15M4 15h15M10 3 8 21M16 3l-2 18\"/><\/svg>", "keywords": "md5 sha1 sha256 sha512 checksum digest file verify"}, {"name": "Username Generator", "short": "Distinctive handles in five personalities.", "cat": "Security", "href": "/username-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4.5 21a7.5 7.5 0 0 1 15 0\"/><\/svg>", "keywords": "username handle gamertag nickname name"}, {"name": "Base64 Encoder", "short": "Encode and decode Base64 — standard or URL-safe.", "cat": "Developer", "href": "/base64-tool/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m16 18 6-6-6-6M8 6l-6 6 6 6\"/><\/svg>", "keywords": "base64 encode decode url-safe data url btoa atob"}, {"name": "JSON Formatter", "short": "Format, validate, minify and sort JSON.", "cat": "Developer", "href": "/json-formatter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1\"/><\/svg>", "keywords": "json format beautify validate minify pretty print lint"}, {"name": "Text Case Converter", "short": "camelCase, snake_case, Title Case and more — all at once.", "cat": "Developer", "href": "/text-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 7V5h16v2M9 19h6M12 5v14\"/><\/svg>", "keywords": "case convert camel snake kebab pascal title upper lower"}, {"name": "IP & Network", "short": "Your public IP, browser details and a subnet calculator.", "cat": "Developer", "href": "/ip-network/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18\"/><\/svg>", "keywords": "ip address my ip subnet cidr calculator network mask"}, {"name": "Unit Converter", "short": "Ten categories — weight, length, temperature, data and more.", "cat": "Everyday", "href": "/unit-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 17 17 3l4 4L7 21z\"/><path d=\"m7 13 2 2M10 10l2 2M13 7l2 2\"/><\/svg>", "keywords": "convert units kg lb km miles celsius fahrenheit"}, {"name": "Hijri Date Converter", "short": "Umm al-Qura Hijri ⇄ Gregorian, with a dual calendar.", "cat": "Everyday", "href": "/date-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"5\" width=\"17\" height=\"15.5\" rx=\"2.5\"/><path d=\"M8 3v4M16 3v4M3.5 10h17\"/><path d=\"M15.5 13.2a2.6 2.6 0 1 0 0 4.6 3.3 3.3 0 1 1 0-4.6Z\"/><\/svg>", "keywords": "hijri islamic gregorian date convert umm al-qura calendar"}];</script>
-<script src="/assets/site.js?v=68d0d36767"></script>
+<script src="/assets/site.js?v=3348c72a46"></script>
 <script>
 (function(){
   const $=ND.$;
@@ -191,7 +199,7 @@
   function run(){
     const pw=$('#pw').value;
     $('#results').hidden=!pw;$('#empty').hidden=!!pw;
-    if(!pw){$('#meter').dataset.level=0;$('#bits').textContent='0 bits';$('#lvl').textContent='—';$('#lvl').style.color='';return;}
+    if(!pw){$('#meter').dataset.level=0;$('#bits').textContent='0 bits';$('#lvl').textContent='—';$('#lvl').style.color='';leakCheck('');return;}
     const a=analyse(pw),b=Math.round(a.bits);
     const level=b<28?1:b<45?2:b<64?3:b<90?4:5;
     $('#meter').dataset.level=level;$('#bits').textContent=b+' bits';
@@ -214,7 +222,30 @@
     html+=checks.map(c=>'<div class="check '+(c.ok?'pass':'fail')+'">'+(c.ok?tick:warn)+'<span>'+(c.ok?c.p:c.f)+'</span></div>').join('');
     if(!a.issues.length&&b>=64)html='<div class="check pass">'+tick+'<span><b style="color:var(--text)">No common patterns found.</b></span></div>'+html;
     $('#checks').innerHTML=html;
+    if(pw!==run.lastPw){run.lastPw=pw;leakCheck(pw);}else applyLeak();
   }
+  /* ---- Leaked-password check ---- */
+  let leakSeq=0,leakTimer=null,leakCount=null,lastBits=0;
+  $('#leakOn').checked=ND.store.get('leak-check',true);
+  function setBreach(state,title,sub){const b=$('#breach');b.hidden=state==='idle';b.dataset.state=state;$('#breachIcon').innerHTML=state==='bad'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/></svg>':state==='ok'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z"/><path d="m9 12 2.2 2.2L15.5 10"/></svg>':state==='err'?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14.5A4.5 4.5 0 0 1 8.2 8a6 6 0 0 1 11.3 2.5A4 4 0 0 1 18 18.5H8"/><path d="m3 3 18 18"/></svg>':'<span class="spin"></span>';$('#breachTitle').textContent=title;$('#breachSub').textContent=sub||'';}
+  function applyLeak(){
+    if(!leakCount)return;
+    $('#meter').dataset.level=1;$('#lvl').textContent='Leaked';$('#lvl').style.color='var(--danger)';
+    $('#crack').querySelectorAll('.v').forEach(v=>v.textContent='Instantly');
+  }
+  function leakCheck(pw){
+    clearTimeout(leakTimer);leakCount=null;
+    if(!pw||!$('#leakOn').checked){setBreach('idle');return;}
+    const my=++leakSeq;setBreach('wait','Checking known data breaches…','Sending only 5 characters of a hash');
+    leakTimer=setTimeout(async()=>{
+      const n=await ND.pwned(pw);if(my!==leakSeq)return;
+      leakCount=n;
+      if(n===null)setBreach('err','Couldn’t reach the breach database','You may be offline. The rest of the analysis still applies.');
+      else if(n>0){setBreach('bad','Found in '+n.toLocaleString()+' data breach'+(n===1?'':'es'),'Attackers try leaked passwords first. Don’t use this anywhere — choose a new one.');applyLeak();}
+      else setBreach('ok','Not found in any known data breach','Checked against 900M+ leaked passwords.');
+    },450);
+  }
+  $('#leakOn').addEventListener('change',e=>{ND.store.set('leak-check',e.target.checked);run.lastPw=null;run();});
   $('#pw').addEventListener('input',run);
   $('#pw').focus();
 })();

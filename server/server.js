@@ -61,7 +61,7 @@ const CSP = [
   "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
   "font-src 'self' https://fonts.gstatic.com",
   "img-src 'self' data:",
-  "connect-src 'self' https://ipwho.is https://ipapi.co https://api64.ipify.org https://fonts.googleapis.com https://fonts.gstatic.com",
+  "connect-src 'self' https://api.pwnedpasswords.com https://ipwho.is https://ipapi.co https://api64.ipify.org https://fonts.googleapis.com https://fonts.gstatic.com",
   "worker-src 'self'",
   "manifest-src 'self'",
   "base-uri 'self'",
