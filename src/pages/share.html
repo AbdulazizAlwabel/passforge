@@ -1,0 +1,162 @@
+<!-- @badges -->
+<span class="badge ok">{{icon:lock}}End-to-end encrypted</span>
+<span class="badge">{{icon:sparkle}}Self-destructs after one view</span>
+
+<!-- @tool -->
+<div class="msg info" id="offline" hidden style="margin-bottom:16px">{{icon:offline}}<span>Secret sharing needs the server, which isn’t reachable right now. Your other tools still work.</span></div>
+
+<div class="panel" id="composer">
+  <div class="panel-body">
+    <div class="field">
+      <label class="label" for="secret">Secret <span class="stats"><span><b id="count">0</b> / 10,000</span></span></label>
+      <textarea class="textarea mono-in" id="secret" maxlength="10000" placeholder="Paste a password, API key, recovery code or private note…" spellcheck="false" autocomplete="off" style="min-height:170px"></textarea>
+    </div>
+    <div class="grid2" style="margin-top:20px;align-items:start">
+      <div class="field">
+        <span class="label">Expires after</span>
+        <div class="seg full" role="group" aria-label="Expiry">
+          <button aria-pressed="false" data-ttl="3600">1 hour</button>
+          <button aria-pressed="true" data-ttl="86400">1 day</button>
+          <button aria-pressed="false" data-ttl="604800">7 days</button>
+        </div>
+      </div>
+      <div class="field" style="margin-top:0">
+        <span class="label">Extra protection</span>
+        <label class="chip"><input type="checkbox" id="usePw"><span>Require a password</span></label>
+      </div>
+    </div>
+    <div class="field" id="pwField" hidden>
+      <label class="label" for="pw">Password <span class="faint" style="font-weight:400">share it separately, e.g. by phone</span></label>
+      <div class="input-wrap"><input class="input" type="password" id="pw" autocomplete="new-password" maxlength="200"><button type="button" class="in-btn" id="eye" aria-label="Show password">{{icon:eye}}</button></div>
+    </div>
+    <div class="alert" id="err" hidden style="margin-top:16px"></div>
+    <div class="row" style="margin-top:24px">
+      <button class="btn btn-primary" id="create" disabled>{{icon:lock}}Create one-time link</button>
+      <span class="faint" style="font-size:.84rem">Encrypted on this device before it’s sent.</span>
+    </div>
+  </div>
+</div>
+
+<div class="panel" id="result" hidden>
+  <div class="panel-body">
+    <p class="panel-title">Your one-time link</p>
+    <div class="pw-display" style="padding:18px 20px">
+      <div class="pw-text" id="link" style="font-size:.95rem;word-break:break-all"></div>
+      <div class="pw-actions"><button class="btn btn-primary btn-sm" id="copyLink">{{icon:copy}}Copy</button></div>
+    </div>
+    <div class="stat-grid" style="margin-top:16px">
+      <div class="stat"><div class="k">Expires</div><div class="v" id="rExp">—</div></div>
+      <div class="stat"><div class="k">Views allowed</div><div class="v">1</div></div>
+      <div class="stat"><div class="k">Password</div><div class="v" id="rPw">—</div></div>
+    </div>
+    <div class="msg info" style="margin-top:16px">{{icon:alert}}<span>Copy the link now — it contains the only key. We can’t recover it, and neither can anyone else.</span></div>
+    <div class="row" style="margin-top:20px">
+      <button class="btn" id="another">{{icon:refresh}}Share another</button>
+      <button class="btn btn-danger" id="burnNow">Destroy this link</button>
+    </div>
+  </div>
+</div>
+
+<div class="panel">
+  <div class="panel-body">
+    <div class="panel-title">Links you created <button class="btn btn-ghost btn-sm" id="refresh">{{icon:refresh}}Refresh</button></div>
+    <div class="list" id="mine"></div>
+    <p class="faint" style="font-size:.8rem;margin-top:12px" id="mineNote">Only the status is stored — never the secret or its key. Anonymous links are remembered in this browser only.</p>
+  </div>
+</div>
+
+<!-- @aside -->
+<div class="panel">
+  <h4>How it works</h4>
+  <ul>
+    <li>Your browser encrypts the secret with AES-256-GCM using a fresh random key.</li>
+    <li>The key goes only into the link, after the <code>#</code>. Browsers never send that part to any server.</li>
+    <li>We store ciphertext we can’t read. The first view deletes it for good.</li>
+    <li>A password adds PBKDF2 with 600,000 rounds, and 5 wrong guesses destroy the secret.</li>
+  </ul>
+</div>
+<div class="panel">
+  <h4>Safe with previews</h4>
+  <p>Chat apps that preview links can’t burn your secret — the recipient has to tap <b>Reveal</b>.</p>
+</div>
+
+<!-- @about -->
+<h2>Stop pasting passwords into chat</h2>
+<p>Messages sit in chat histories, email archives and backups for years. A one-time link keeps the secret out of all of them: once your recipient opens it, the encrypted copy on our server is erased, and the link becomes useless.</p>
+<div class="faq">
+  <details><summary>Can you read my secrets?</summary><p>No. Encryption happens in your browser, and the key lives only in the part of the link after <code>#</code>, which browsers never transmit. The server only ever stores scrambled data. The code is <a class="link" href="{GITHUB}">open source</a> — check <code>assets/secret.js</code>.</p></details>
+  <details><summary>What if someone intercepts the link?</summary><p>Whoever opens it first sees the secret — and the intended recipient will then see “already viewed”, so you’ll know. For sensitive secrets, add a password and share it through a different channel.</p></details>
+  <details><summary>What happens after it expires?</summary><p>The ciphertext is deleted within minutes of expiry, and the record of the link itself is removed after 30 days.</p></details>
+</div>
+
+<!-- @script -->
+<script src="/assets/secret.js?v={V}"></script>
+<script>
+(function(){
+  const $=ND.$,$$=ND.$$;
+  const LS='secrets';
+  let ttl=86400,current=null;
+  const ago=d=>{const s=(new Date(d)-Date.now())/1000,a=Math.abs(s);const f=a<3600?Math.round(a/60)+' min':a<86400?Math.round(a/3600)+' h':Math.round(a/86400)+' d';return s>0?'in '+f:f+' ago';};
+  const fmt=d=>new Date(d).toLocaleString(undefined,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+
+  $('#secret').addEventListener('input',()=>{const n=$('#secret').value.length;$('#count').textContent=n.toLocaleString();$('#create').disabled=!n;});
+  $$('[data-ttl]').forEach(b=>b.addEventListener('click',()=>{ttl=+b.dataset.ttl;$$('[data-ttl]').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
+  $('#usePw').addEventListener('change',e=>{$('#pwField').hidden=!e.target.checked;if(e.target.checked)$('#pw').focus();});
+  $('#eye').addEventListener('click',function(){const s=$('#pw').type==='password';$('#pw').type=s?'text':'password';this.innerHTML=s?'{{icon:eye_off}}':'{{icon:eye}}';});
+
+  $('#create').addEventListener('click',async()=>{
+    const text=$('#secret').value,pw=$('#usePw').checked?$('#pw').value:'';
+    const err=$('#err');err.hidden=true;
+    if(!text)return;
+    if($('#usePw').checked&&pw.length<4){err.textContent='Use a password of at least 4 characters, or turn the password off.';err.hidden=false;return;}
+    const btn=$('#create'),label=btn.innerHTML;btn.disabled=true;btn.innerHTML='<span class="spin"></span>Encrypting…';
+    try{
+      const sealed=await NDSecret.seal(text,pw||null);
+      const body={payload:sealed.payload,expiresIn:ttl};
+      if(sealed.salt){body.salt=sealed.salt;body.verifier=sealed.verifier;}
+      const r=await ND.api('/secrets',{method:'POST',body});
+      if(!r.ok)throw new Error(r.data.error||'Couldn’t create the link.');
+      current={id:r.data.id,burnToken:r.data.burnToken,createdAt:new Date().toISOString(),expiresAt:r.data.expiresAt,hasPassword:!!pw};
+      const list=ND.store.get(LS,[]);list.unshift(current);ND.store.set(LS,list.slice(0,30));
+      $('#link').textContent=NDSecret.link(r.data.id,sealed.key);
+      $('#rExp').textContent=fmt(r.data.expiresAt);$('#rPw').textContent=pw?'Required':'None';
+      $('#secret').value='';$('#pw').value='';$('#count').textContent='0';
+      $('#composer').hidden=true;$('#result').hidden=false;
+      $('#result').scrollIntoView({behavior:'smooth',block:'center'});
+      loadMine();
+    }catch(e){err.textContent=e.message;err.hidden=false;}
+    finally{btn.innerHTML=label;btn.disabled=!$('#secret').value;}
+  });
+  $('#copyLink').addEventListener('click',e=>ND.copy($('#link').textContent,e.currentTarget,'Link copied — send it to your recipient'));
+  $('#another').addEventListener('click',()=>{$('#result').hidden=true;$('#composer').hidden=false;$('#link').textContent='';current=null;$('#secret').focus();});
+  $('#burnNow').addEventListener('click',()=>{if(current)burn(current.id,current.burnToken,true);});
+
+  async function burn(id,token,fromResult){
+    if(!confirm('Destroy this secret now? The link will stop working.'))return;
+    const r=await ND.api('/secrets/'+id+'/burn',{method:'POST',body:token?{burnToken:token}:{}});
+    ND.toast(r.ok?'Secret destroyed':(r.data.error||'Couldn’t destroy it'));
+    if(r.ok&&fromResult)$('#another').click();
+    loadMine();
+  }
+
+  const badge=s=>({active:'<span class="badge info">Waiting</span>',viewed:'<span class="badge ok">{{icon:check}}Viewed</span>',expired:'<span class="badge">Expired</span>',burned:'<span class="badge bad">Destroyed</span>',missing:'<span class="badge">Gone</span>'}[s]||'');
+  async function loadMine(){
+    const box=$('#mine');
+    const local=ND.store.get(LS,[]);
+    const map=new Map();
+    const me=await ND.me;
+    if(me===null){box.innerHTML='<div class="empty-state" style="padding:24px"><p>Unavailable while the server is unreachable.</p></div>';return;}
+    if(me){const r=await ND.api('/my/secrets');if(r.ok)r.data.forEach(x=>map.set(x.id,x));$('#mineNote').textContent='Signed in as '+me.username+' — links you create are listed here on any device. Only the status is stored, never the secret or its key.';}
+    await Promise.all(local.filter(x=>!map.has(x.id)).map(async x=>{const r=await ND.api('/secrets/'+x.id);map.set(x.id,Object.assign({},x,{status:r.data.status||'missing',viewedAt:r.data.viewedAt}));}));
+    local.forEach(x=>{const m=map.get(x.id);if(m)m.burnToken=x.burnToken;});
+    const rows=[...map.values()].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,30);
+    ND.store.set(LS,local.filter(x=>{const m=map.get(x.id);return m&&m.status!=='missing';}));
+    if(!rows.length){box.innerHTML='<div class="empty-state" style="padding:24px"><p>No links yet.</p></div>';return;}
+    box.innerHTML=rows.map(x=>'<div class="list-item"><span class="txt" style="font-family:var(--font-sans)">'+(x.hasPassword?'🔒 ':'')+'Created '+ago(x.createdAt)+' · '+(x.status==='viewed'&&x.viewedAt?'opened '+ago(x.viewedAt):x.status==='active'?'expires '+ago(x.expiresAt):'')+'</span>'+badge(x.status)+(x.status==='active'?'<button class="copy" data-burn="'+x.id+'">Destroy</button>':'')+'</div>').join('');
+    box.querySelectorAll('[data-burn]').forEach(b=>b.addEventListener('click',()=>{const x=map.get(b.dataset.burn);burn(x.id,x.burnToken);}));
+  }
+  $('#refresh').addEventListener('click',loadMine);
+  ND.me.then(m=>{if(m===null){$('#offline').hidden=false;$('#composer').querySelectorAll('textarea,button,input').forEach(e=>e.disabled=true);}});
+  loadMine();
+})();
+</script>

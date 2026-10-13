@@ -36,6 +36,8 @@ if ! sudo test -f $APP/server/.env; then
   sudo chown root:nicelydone $APP/server/.env && sudo chmod 640 $APP/server/.env
   echo "   created database + .env (SMTP still to be filled in)"
 fi
+# Schema migrations (idempotent: CREATE TABLE IF NOT EXISTS …)
+for m in "$BUNDLE"/server/migrations/*.sql; do sudo mysql passforge < "$m"; done
 # MariaDB only on localhost
 if ! grep -qs '^bind-address' /etc/my.cnf.d/nicelydone.cnf; then
   printf '[mysqld]\nbind-address=127.0.0.1\nskip-name-resolve\n' | sudo tee /etc/my.cnf.d/nicelydone.cnf >/dev/null

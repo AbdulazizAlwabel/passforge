@@ -1,0 +1,102 @@
+<!-- @body -->
+<section class="auth" style="grid-template-columns:1fr">
+  <div class="auth-main">
+    <div class="auth-card" style="max-width:560px">
+
+      <div data-state="loading" class="empty-state"><span class="spin" style="display:inline-block;width:22px;height:22px;border-radius:50%;border:2px solid var(--text-3);border-right-color:transparent;animation:spin .7s linear infinite"></span></div>
+
+      <div data-state="ready" hidden>
+        <p class="eyebrow"><span class="dot"></span>One-time secret</p>
+        <h1 class="h2" style="margin-top:18px">Someone shared a <em>secret</em> with you</h1>
+        <p class="muted" style="margin-top:10px">It can be viewed <b style="color:var(--text)">once</b>. After you reveal it, it’s permanently destroyed — so have somewhere ready to save it.</p>
+        <div class="stat-grid" style="margin-top:22px">
+          <div class="stat"><div class="k">Expires</div><div class="v" id="exp">—</div></div>
+          <div class="stat"><div class="k">Protection</div><div class="v" id="prot">—</div></div>
+        </div>
+        <form id="revealForm" style="margin-top:22px;display:flex;flex-direction:column;gap:14px" novalidate>
+          <div class="field" id="pwField" hidden>
+            <label class="label" for="pw">Password <span class="faint" style="font-weight:400">from the sender</span></label>
+            <input class="input" type="password" id="pw" autocomplete="off" maxlength="200">
+          </div>
+          <div class="msg err" id="err" hidden></div>
+          <button class="btn btn-primary btn-block" type="submit" id="revealBtn">{{icon:eye}}Reveal secret</button>
+        </form>
+      </div>
+
+      <div data-state="revealed" hidden>
+        <p class="eyebrow"><span class="dot"></span>Revealed · now destroyed</p>
+        <h1 class="h2" style="margin-top:18px">Here’s your <em>secret</em></h1>
+        <pre class="out scroll" id="plain" style="margin-top:20px;font-size:1rem;max-height:420px"></pre>
+        <div class="row" style="margin-top:14px">
+          <button class="btn btn-primary" id="copy">{{icon:copy}}Copy</button>
+          <a class="btn" href="/share/">Share a secret yourself</a>
+        </div>
+        <div class="msg info" style="margin-top:18px">{{icon:alert}}<span>The encrypted copy has been erased from our server. If you close this page without saving it, it’s gone for good.</span></div>
+      </div>
+
+      <div data-state="gone" hidden class="empty-state" style="padding:48px 0">
+        {{icon:lock}}
+        <h1 class="h2" style="color:var(--text);margin-bottom:10px" id="goneTitle">This secret is gone</h1>
+        <p id="goneText" style="max-width:42ch;margin:0 auto 22px">It was already viewed, has expired, or was destroyed by its sender.</p>
+        <a class="btn" href="/share/">Share a secret yourself</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- @script -->
+<script src="/assets/secret.js?v={V}"></script>
+<script>
+(function(){
+  const $=ND.$,$$=ND.$$;
+  const show=s=>$$('[data-state]').forEach(x=>x.hidden=x.dataset.state!==s);
+  const link=NDSecret.parse(location.hash);
+  let meta=null,plain='';
+  function gone(status){
+    const T={viewed:['Already viewed','This secret has already been opened, so it was destroyed. If you didn’t open it, someone else did — let the sender know.'],
+      expired:['This secret expired','It wasn’t opened in time and was deleted. Ask the sender for a new link.'],
+      burned:['This secret was destroyed','The sender cancelled it, or too many wrong passwords were tried.'],
+      missing:['Link not found','This link doesn’t exist or has been cleaned up. Check that you copied all of it.'],
+      invalid:['This link is incomplete','The part after # is missing or damaged. Ask the sender to copy the whole link.'],
+      offline:['Can’t reach the server','Check your connection and reload this page. The secret hasn’t been opened.']}[status]||['This secret is gone',''];
+    $('#goneTitle').textContent=T[0];$('#goneText').textContent=T[1];show('gone');
+  }
+  async function init(){
+    if(!link)return gone('invalid');
+    const r=await ND.api('/secrets/'+link.id);
+    if(r.offline||r.status===0)return gone('offline');
+    if(!r.ok||r.data.status!=='active')return gone(r.data.status||'missing');
+    meta=r.data;
+    $('#exp').textContent=new Date(meta.expiresAt).toLocaleString(undefined,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    $('#prot').textContent=meta.hasPassword?'Password':'Link only';
+    $('#pwField').hidden=!meta.hasPassword;
+    show('ready');
+    if(meta.hasPassword)$('#pw').focus();
+  }
+  $('#revealForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const err=$('#err'),btn=$('#revealBtn'),label=btn.innerHTML;err.hidden=true;
+    let body={},keyPart=null;
+    btn.disabled=true;
+    try{
+      if(meta.hasPassword){
+        const pw=$('#pw').value;
+        if(!pw){err.textContent='Enter the password the sender gave you.';err.hidden=false;return;}
+        btn.innerHTML='<span class="spin"></span>Checking…';
+        const v=await NDSecret.verifier(pw,meta.salt);body.verifier=v.verifier;keyPart=v.keyPart;
+      }
+      btn.innerHTML='<span class="spin"></span>Decrypting…';
+      const r=await ND.api('/secrets/'+link.id+'/reveal',{method:'POST',body});
+      if(r.status===403){err.textContent=r.data.error+(r.data.attemptsLeft!=null?' '+r.data.attemptsLeft+' attempt'+(r.data.attemptsLeft===1?'':'s')+' left.':'');err.hidden=false;$('#pw').select();return;}
+      if(!r.ok)return gone(r.data.status||'missing');
+      try{plain=await NDSecret.open(r.data.payload,link.key,keyPart);}
+      catch(_){err.textContent='The link’s key doesn’t match this secret — it may have been copied incompletely. The secret has now been destroyed.';err.hidden=false;return;}
+      history.replaceState(null,'',location.pathname);
+      $('#plain').textContent=plain;show('revealed');
+    }finally{btn.disabled=false;btn.innerHTML=label;}
+  });
+  $('#copy').addEventListener('click',e=>ND.copy(plain,e.currentTarget,'Secret copied'));
+  init();
+})();
+</script>

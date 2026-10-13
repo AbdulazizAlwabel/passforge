@@ -38,6 +38,7 @@ ICONS = {
     "type": ic('<path d="M4 7V5h16v2M9 19h6M12 5v14"/>'),
     "ruler": ic('<path d="M3 17 17 3l4 4L7 21z"/><path d="m7 13 2 2M10 10l2 2M13 7l2 2"/>'),
     "calendar": ic('<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="M15.5 13.2a2.6 2.6 0 1 0 0 4.6 3.3 3.3 0 1 1 0-4.6Z"/>'),
+    "link": ic('<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L12 5.6"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2"/>'),
     "arrow": ic('<path d="M7 17 17 7M8 7h9v9"/>'),
     "search": ic('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
     "copy": ic('<rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/>'),
@@ -80,6 +81,12 @@ TOOLS = [
          lede="See how a password holds up against real attacks — entropy, crack time across attack scenarios, and the patterns that weaken it.",
          desc="Check password strength privately in your browser: entropy bits, crack time estimates for online and offline attacks, common-password and pattern detection.",
          keywords="password strength test entropy crack time analyse"),
+    dict(slug="share", name="One-Time Secret", title="One-time <em>secrets</em>",
+         cat="Security", icon="link", offline=False, new=True,
+         short="Share a password through a link that self-destructs.",
+         lede="Send a password, API key or private note through a link that works exactly once. It’s encrypted in your browser — we only ever hold ciphertext we can’t read.",
+         desc="Share passwords and secrets with end-to-end encrypted, self-destructing one-time links. Encrypted in your browser with AES-256; the key never reaches the server.",
+         keywords="share secret password one-time link self-destruct burn encrypted send note"),
     dict(slug="hash-generator", name="Hash Generator", title="Hash <em>Generator</em>",
          cat="Security", icon="hash",
          short="MD5, SHA-1, SHA-256/384/512 for text or files.",
@@ -111,7 +118,7 @@ TOOLS = [
          desc="Convert text between UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, kebab-case and more.",
          keywords="case convert camel snake kebab pascal title upper lower"),
     dict(slug="ip-network", name="IP & Network", title="IP & <em>Network</em>",
-         cat="Developer", icon="globe",
+         cat="Developer", icon="globe", offline=False,
          short="Your public IP, browser details and a subnet calculator.",
          lede="Your public IP and network at a glance, browser and device details, and a live IPv4 subnet calculator.",
          desc="See your public IP address, ISP and location, browser details, and calculate IPv4 subnets (CIDR, mask, broadcast, host range).",
@@ -276,6 +283,7 @@ def build_tool(t):
         f'<a href="/{r["slug"]}/"><div class="tile-icon">{ICONS[r["icon"]]}</div>'
         f'<div><strong>{r["name"]}</strong><span>{r["short"]}</span></div></a>' for r in related)
     badges = s.get("badges", "")
+    offline_badge = f'<span class="badge">{ICONS["offline"]}Works offline</span>' if t.get("offline", True) else ""
     aside = s.get("aside", "")
     ws_class = "workspace" if aside else "workspace single"
     aside_html = f'<aside class="aside">{aside}</aside>' if aside else ""
@@ -290,7 +298,7 @@ def build_tool(t):
       <p class="lede">{t['lede']}</p>
       <div class="tool-badges">
         <span class="badge">{ICONS['cpu']}Runs on your device</span>
-        <span class="badge">{ICONS['offline']}Works offline</span>
+        {offline_badge}
         {badges}
       </div>
     </div>
@@ -310,13 +318,12 @@ def build_tool(t):
   </section>
 </main>
 """ + footer() + scripts(s.get("script", ""))
-    return page
+    return page.replace("{GITHUB}", GITHUB)
 
 
 def build_home():
     tile_layout = {
         "password-generator": "tile-wide tile-feature",
-        "unit-converter": "tile-half", "date-converter": "tile-half",
     }
     tiles = ""
     for i, t in enumerate(TOOLS):
@@ -325,7 +332,7 @@ def build_home():
         if t["slug"] == "password-generator":
             preview = '<div class="tile-preview" id="tilePw" aria-hidden="true">k7#Qm<b>9</b>vX!pL2<b>@</b>wR4z</div>'
         tiles += f"""<a class="tile reveal {cls}" style="--d:{(i % 3) * 70}ms" href="/{t['slug']}/" data-cat="{t['cat']}">
-  <div class="tile-top"><div class="tile-icon">{ICONS[t['icon']]}</div><span class="tile-cat">{t['cat']}</span></div>
+  <div class="tile-top"><div class="tile-icon">{ICONS[t['icon']]}</div><span class="tile-cat">{'<span class="badge ok" style="height:22px">New</span>' if t.get('new') else t['cat']}</span></div>
   {preview}
   <h3>{t['name']}</h3>
   <p>{t['short']}</p>
@@ -339,7 +346,7 @@ def build_home():
         "@context": "https://schema.org", "@type": "WebSite", "name": SITE, "url": ORIGIN + "/",
         "description": "Private, browser-based security and developer tools.",
     }
-    desc = ("Ten beautifully crafted, private tools — password & username generators, strength checker, hashes, "
+    desc = ("Beautifully crafted, private tools — password generator, one-time secret links, strength checker, hashes, "
             "Base64, JSON, text case, IP & subnet, unit and Hijri date converters. Everything runs in your browser.")
     page = head(f"{SITE} — Small tools, nicely done.", desc, "/", "", jsonld) + header() + f"""<main id="main">
   <section class="hero">
@@ -449,6 +456,7 @@ EXTRA_PAGES = [
     ("reset-password", "Reset password", "Choose a new password for your Nicely Done account.", None, True),
     ("profile", "Your profile", "Manage your Nicely Done account.", None, True),
     ("admin", "Admin", "Nicely Done administration.", None, True),
+    ("s", "A secret for you", "Someone shared a one-time secret with you.", None, True),
 ]
 
 
@@ -505,6 +513,7 @@ self.addEventListener('fetch', (e) => {
   const sameOrigin = url.origin === location.origin;
   const isFont = /fonts\\.(googleapis|gstatic)\\.com$/.test(url.hostname);
   if (!sameOrigin && !isFont) return;
+  if (sameOrigin && url.pathname.startsWith('/api/')) return;
   if (req.mode === 'navigate') {
     e.respondWith(fetch(req).then((res) => {
       const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); return res;
@@ -542,7 +551,7 @@ def main():
     (DIST / "favicon.svg").write_text(FAVICON)
     (DIST / "CNAME").write_text(DOMAIN + "\n")
     (DIST / ".nojekyll").write_text("")
-    (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {ORIGIN}/sitemap.xml\n")
+    (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /s/\nDisallow: /api/\n\nSitemap: {ORIGIN}/sitemap.xml\n")
     today = datetime.date.today().isoformat()
     urls = ["/"] + [f"/{t['slug']}/" for t in TOOLS] + ["/about/"]
     (DIST / "sitemap.xml").write_text(

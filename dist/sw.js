@@ -1,6 +1,6 @@
 /* Nicely Done — offline cache */
-const CACHE = 'nd-ef23ed9381';
-const PRECACHE = ["/", "/404.html", "/assets/site.css?v=ef23ed9381", "/assets/site.js?v=ef23ed9381", "/favicon.svg", "/password-generator/", "/strength-checker/", "/hash-generator/", "/username-generator/", "/base64-tool/", "/json-formatter/", "/text-converter/", "/ip-network/", "/unit-converter/", "/date-converter/", "/about/"];
+const CACHE = 'nd-68d0d36767';
+const PRECACHE = ["/", "/404.html", "/assets/site.css?v=68d0d36767", "/assets/site.js?v=68d0d36767", "/favicon.svg", "/password-generator/", "/strength-checker/", "/share/", "/hash-generator/", "/username-generator/", "/base64-tool/", "/json-formatter/", "/text-converter/", "/ip-network/", "/unit-converter/", "/date-converter/", "/about/"];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
 });
@@ -14,6 +14,7 @@ self.addEventListener('fetch', (e) => {
   const sameOrigin = url.origin === location.origin;
   const isFont = /fonts\.(googleapis|gstatic)\.com$/.test(url.hostname);
   if (!sameOrigin && !isFont) return;
+  if (sameOrigin && url.pathname.startsWith('/api/')) return;
   if (req.mode === 'navigate') {
     e.respondWith(fetch(req).then((res) => {
       const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); return res;

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://nicelydone.qd.je/</loc><lastmod>2026-10-12</lastmod><priority>1.0</priority></url>
-  <url><loc>https://nicelydone.qd.je/password-generator/</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
-  <url><loc>https://nicelydone.qd.je/strength-checker/</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
-  <url><loc>https://nicelydone.qd.je/hash-generator/</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
-  <url><loc>https://nicelydone.qd.je/username-generator/</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
-  <url><loc>https://nicelydone.qd.je/base64-tool/</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
-  <url><loc>https://nicelydone.qd.je/json-formatter/</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
-  <url><loc>https://nicelydone.qd.je/text-converter/</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
-  <url><loc>https://nicelydone.qd.je/ip-network/</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
-  <url><loc>https://nicelydone.qd.je/unit-converter/</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
-  <url><loc>https://nicelydone.qd.je/date-converter/</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
-  <url><loc>https://nicelydone.qd.je/about/</loc><lastmod>2026-10-12</lastmod><priority>0.8</priority></url>
+  <url><loc>https://nicelydone.qd.je/</loc><lastmod>2026-10-13</lastmod><priority>1.0</priority></url>
+  <url><loc>https://nicelydone.qd.je/password-generator/</loc><lastmod>2026-10-13</lastmod><priority>0.8</priority></url>
+  <url><loc>https://nicelydone.qd.je/strength-checker/</loc><lastmod>2026-10-13</lastmod><priority>0.8</priority></url>
+  <url><loc>https://nicelydone.qd.je/share/</loc><lastmod>2026-10-13</lastmod><priority>0.8</priority></url>
+  <url><loc>https://nicelydone.qd.je/hash-generator/</loc><lastmod>2026-10-13</lastmod><priority>0.8</priority></url>
+  <url><loc>https://nicelydone.qd.je/username-generator/</loc><lastmod>2026-10-13</lastmod><priority>0.8</priority></url>
+  <url><loc>https://nicelydone.qd.je/base64-tool/</loc><lastmod>2026-10-13</lastmod><priority>0.8</priority></url>
+  <url><loc>https://nicelydone.qd.je/json-formatter/</loc><lastmod>2026-10-13</lastmod><priority>0.8</priority></url>
+  <url><loc>https://nicelydone.qd.je/text-converter/</loc><lastmod>2026-10-13</lastmod><priority>0.8</priority></url>
+  <url><loc>https://nicelydone.qd.je/ip-network/</loc><lastmod>2026-10-13</lastmod><priority>0.8</priority></url>
+  <url><loc>https://nicelydone.qd.je/unit-converter/</loc><lastmod>2026-10-13</lastmod><priority>0.8</priority></url>
+  <url><loc>https://nicelydone.qd.je/date-converter/</loc><lastmod>2026-10-13</lastmod><priority>0.8</priority></url>
+  <url><loc>https://nicelydone.qd.je/about/</loc><lastmod>2026-10-13</lastmod><priority>0.8</priority></url>
 </urlset>

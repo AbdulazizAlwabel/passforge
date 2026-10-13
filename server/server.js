@@ -83,7 +83,7 @@ app.use((req, res, next) => {
 
 /* ── API ──────────────────────────────────────────────────────────── */
 const api = express.Router();
-api.use(express.json({ limit: '10kb' }));
+api.use(express.json({ limit: '100kb' }));
 api.use(cookieParser());
 api.use((req, res, next) => { res.set('Cache-Control', 'no-store'); next(); });
 
@@ -149,6 +149,12 @@ function auth(req, res, next) {
   if (!t) return res.status(401).json({ error: 'Not signed in' });
   try { req.user = jwt.verify(t, JWT_SECRET); next(); }
   catch { res.clearCookie(COOKIE, { path: '/' }); res.status(401).json({ error: 'Your session has expired. Please sign in again.' }); }
+}
+/* Signed-in user if the session cookie is valid, otherwise null (never errors). */
+function readUser(req) {
+  const t = req.cookies[COOKIE];
+  if (!t) return null;
+  try { return jwt.verify(t, JWT_SECRET); } catch { return null; }
 }
 function admin(req, res, next) {
   auth(req, res, () => (isAdmin(req.user.username) ? next() : res.status(403).json({ error: 'Access denied' })));
@@ -294,9 +300,12 @@ api.get('/admin/tokens', admin, wrap(async (req, res) => {
   res.json(rows);
 }));
 
+require('./secrets')(api, { db, wrap, limiter, sha256, readUser });
+
 api.use((req, res) => res.status(404).json({ error: 'Not found' }));
 api.use((err, req, res, next) => { // eslint-disable-line no-unused-vars
   console.error('[api]', err);
+  if (err.type === 'entity.too.large') return res.status(413).json({ error: 'That’s too large.' });
   res.status(err.status === 400 ? 400 : 500).json({ error: err.status === 400 ? 'Malformed request' : 'Something went wrong on our side' });
 });
 app.use('/api', api);

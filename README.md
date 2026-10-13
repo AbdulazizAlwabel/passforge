@@ -2,7 +2,7 @@
 
 Small, private tools for security and everyday developer work. (Formerly **PassForge**.)
 
-All ten tools run entirely in the browser — nothing typed into them is sent anywhere:
+Every tool runs in the browser — nothing typed into them is sent anywhere:
 
 | Security | Developer | Everyday |
 |---|---|---|
@@ -10,6 +10,7 @@ All ten tools run entirely in the browser — nothing typed into them is sent an
 | Password strength checker | JSON formatter / validator | Hijri ⇄ Gregorian (Umm al-Qura) |
 | Hash generator (MD5, SHA-1/256/384/512, files, verify) | Text case converter | |
 | Username generator | IP & network + subnet calculator | |
+| **One-time secret links** (E2E encrypted, self-destructing) | | |
 
 Extras: ⌘K / Ctrl K command palette, light & dark themes, offline support (service worker / PWA),
 SEO metadata, Open Graph image, sitemap, and an **optional** account system (sign up, email
