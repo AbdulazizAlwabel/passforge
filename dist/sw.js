@@ -1,6 +1,6 @@
 /* Nicely Done — offline cache */
-const CACHE = 'nd-affd146a5e';
-const PRECACHE = ["/", "/404.html", "/assets/site.css?v=affd146a5e", "/assets/site.js?v=affd146a5e", "/assets/fonts.css?v=affd146a5e", "/assets/fonts/geist-normal-300-700-latin.woff2", "/assets/fonts/instrument-serif-normal-400-latin.woff2", "/favicon.svg", "/password-generator/", "/strength-checker/", "/share/", "/hash-generator/", "/username-generator/", "/base64-tool/", "/json-formatter/", "/text-converter/", "/ip-network/", "/unit-converter/", "/date-converter/", "/about/", "/ar/", "/ar/404.html"];
+const CACHE = 'nd-012fda510e';
+const PRECACHE = ["/", "/404.html", "/assets/site.css?v=012fda510e", "/assets/site.js?v=012fda510e", "/assets/fonts.css?v=012fda510e", "/assets/fonts/geist-normal-300-700-latin.woff2", "/assets/fonts/instrument-serif-normal-400-latin.woff2", "/favicon.svg", "/password-generator/", "/strength-checker/", "/share/", "/hash-generator/", "/username-generator/", "/base64-tool/", "/json-formatter/", "/text-converter/", "/ip-network/", "/unit-converter/", "/speed-test/", "/date-converter/", "/about/", "/ar/", "/ar/404.html"];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
 });

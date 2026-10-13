@@ -1,0 +1,10 @@
+# CPU priority group for the website (Node + Caddy). Under contention, user services
+# (e.g. the Hermes agent, weight 100) get ~77% of the CPU and this slice ~23%.
+# When nothing else needs the CPU, the website still uses all of it.
+[Unit]
+Description=Nicely Done (low CPU priority)
+Before=slices.target
+
+[Slice]
+CPUWeight=30
+IOWeight=50

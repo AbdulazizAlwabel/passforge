@@ -62,6 +62,7 @@ ACME_EMAIL=${ACME_EMAIL:-$(sudo awk '/^\temail /{print $2; exit}' /etc/caddy/Cad
 [ -n "$ACME_EMAIL" ] || { echo "Set ACME_EMAIL=you@example.com (needed for ZeroSSL certificates)"; exit 1; }
 sed "s|{\$ACME_EMAIL}|$ACME_EMAIL|" "$BUNDLE/deploy/Caddyfile" | sudo tee /etc/caddy/Caddyfile >/dev/null
 sudo install -m 644 "$BUNDLE/deploy/caddy.service" /etc/systemd/system/caddy.service
+sudo install -m 644 "$BUNDLE/deploy/nicelydone.slice" /etc/systemd/system/nicelydone.slice
 sudo sed -e "s|/opt/nicelydone|$APP|g" "$BUNDLE/deploy/nicelydone.service" | sudo tee /etc/systemd/system/nicelydone.service >/dev/null
 
 echo "== firewall"

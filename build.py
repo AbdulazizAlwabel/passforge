@@ -40,6 +40,7 @@ ICONS = {
     "type": ic('<path d="M4 7V5h16v2M9 19h6M12 5v14"/>'),
     "ruler": ic('<path d="M3 17 17 3l4 4L7 21z"/><path d="m7 13 2 2M10 10l2 2M13 7l2 2"/>'),
     "calendar": ic('<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="M15.5 13.2a2.6 2.6 0 1 0 0 4.6 3.3 3.3 0 1 1 0-4.6Z"/>'),
+    "gauge": ic('<path d="M4.9 18.5a9 9 0 1 1 14.2 0"/><path d="m12 14 4-5"/><circle cx="12" cy="14" r="1.6" fill="currentColor"/>'),
     "link": ic('<path d="M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L12 5.6"/><path d="M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2"/>'),
     "arrow": ic('<path d="M7 17 17 7M8 7h9v9"/>'),
     "search": ic('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>'),
@@ -131,6 +132,12 @@ TOOLS = [
          lede="Convert across ten categories — weight, length, speed, temperature, volume, area, data, time, pressure and energy.",
          desc="Convert units of weight, length, speed, temperature, volume, area, data, time, pressure and energy instantly.",
          keywords="convert units kg lb km miles celsius fahrenheit"),
+    dict(slug="speed-test", name="Speed Test", title="Speed <em>Test</em>",
+         cat="Everyday", icon="gauge", offline=False, local=False, new=True,
+         short="Private internet speed test — no third parties.",
+         lede="Measure download, upload, latency and responsiveness under load — against our own server, with nothing logged and no third party watching.",
+         desc="A private internet speed test: download, upload, latency, jitter and bufferbloat, measured against our own server in Riyadh. No tracking, no third parties, nothing stored.",
+         keywords="speed test internet bandwidth download upload ping latency jitter bufferbloat mbps"),
     dict(slug="date-converter", name="Hijri Date Converter", title="Hijri <em>&amp;</em> Gregorian",
          cat="Everyday", icon="calendar",
          short="Umm al-Qura Hijri ⇄ Gregorian, with a dual calendar.",
@@ -283,6 +290,7 @@ def build_tool(t):
         f'<a href="/{r["slug"]}/"><div class="tile-icon">{ICONS[r["icon"]]}</div>'
         f'<div><strong>{r["name"]}</strong><span>{r["short"]}</span></div></a>' for r in related)
     badges = s.get("badges", "")
+    local_badge = f'<span class="badge">{ICONS["cpu"]}Runs on your device</span>' if t.get("local", True) else ""
     offline_badge = f'<span class="badge">{ICONS["offline"]}Works offline</span>' if t.get("offline", True) else ""
     aside = s.get("aside", "")
     ws_class = "workspace" if aside else "workspace single"
@@ -297,7 +305,7 @@ def build_tool(t):
       <h1 class="h1">{t['title']}</h1>
       <p class="lede">{t['lede']}</p>
       <div class="tool-badges">
-        <span class="badge">{ICONS['cpu']}Runs on your device</span>
+        {local_badge}
         {offline_badge}
         {badges}
       </div>
@@ -324,13 +332,20 @@ def build_tool(t):
 def build_home():
     tile_layout = {
         "password-generator": "tile-wide tile-feature",
+        "speed-test": "tile-wide tile-feature",
+        "unit-converter": "tile-half", "date-converter": "tile-half",
     }
+    order = ["password-generator", "strength-checker", "speed-test", "share", "hash-generator", "username-generator",
+             "base64-tool", "json-formatter", "text-converter", "ip-network", "unit-converter", "date-converter"]
+    home_tools = sorted(TOOLS, key=lambda t: order.index(t["slug"]) if t["slug"] in order else 99)
     tiles = ""
-    for i, t in enumerate(TOOLS):
+    for i, t in enumerate(home_tools):
         cls = tile_layout.get(t["slug"], "")
         preview = ""
         if t["slug"] == "password-generator":
             preview = '<div class="tile-preview" id="tilePw" aria-hidden="true">k7#Qm<b>9</b>vX!pL2<b>@</b>wR4z</div>'
+        if t["slug"] == "speed-test":
+            preview = '<div class="tile-preview" id="tileSpeed" aria-hidden="true">↓ <b>—</b> Mbps · ↑ <b>—</b> Mbps · <b>—</b> ms</div>'
         tiles += f"""<a class="tile reveal {cls}" style="--d:{(i % 3) * 70}ms" href="/{t['slug']}/" data-cat="{t['cat']}">
   <div class="tile-top"><div class="tile-icon">{ICONS[t['icon']]}</div><span class="tile-cat">{'<span class="badge ok" style="height:22px">New</span>' if t.get('new') else t['cat']}</span></div>
   {preview}
@@ -352,7 +367,7 @@ def build_home():
   <section class="hero">
     <div class="wrap hero-row">
       <div>
-        <p class="eyebrow reveal"><span class="dot"></span>{len(TOOLS)} tools · zero servers</p>
+        <p class="eyebrow reveal"><span class="dot"></span>{len(TOOLS)} tools · zero tracking</p>
         <h1 class="display reveal" style="--d:80ms">Small tools,<br><em>nicely done.</em></h1>
         <p class="lede reveal" style="--d:160ms">A quiet, beautifully made toolkit for security and everyday developer work. Every calculation happens on your device — nothing you type ever leaves it.</p>
         <div class="hero-cta reveal" style="--d:240ms">
@@ -437,6 +452,8 @@ HOME_SCRIPT = r"""<script>
   next();setInterval(()=>{if(!document.hidden)next();},4200);
   document.getElementById('specCopy').addEventListener('click',e=>ND.copy(current,e.currentTarget,'Password copied'));
 
+  const ts=document.getElementById('tileSpeed'),sh=ND.store.get('speed-history',[]);
+  if(ts&&sh.length){const x=sh[0],f=v=>v>=100?Math.round(v):v.toFixed(1);ts.innerHTML='↓ <b>'+f(x.d)+'</b> Mbps · ↑ <b>'+f(x.u)+'</b> Mbps · <b>'+Math.round(x.p)+'</b> ms';}
   const tp=document.getElementById('tilePw');
   if(tp){setInterval(()=>{if(document.hidden)return;let s='';for(let i=0;i<18;i++){const c=ALL[ND.randInt(ALL.length)];s+=(CH.s.includes(c)||CH.n.includes(c))?'<b>'+ND.esc(c)+'</b>':ND.esc(c);}tp.innerHTML=s;},1600);}
 

@@ -22,4 +22,14 @@ if [ ! -f "$STATE/cert-checked" ] || [ -n "$(find "$STATE/cert-checked" -mmin +1
     [ "$days" -lt 14 ] && "$here/notify.sh" "⚠️ nicelydone.qd.je certificate expires in $days days" "Caddy should renew automatically — check: journalctl -u caddy"
   fi
 fi
+# Speed-test egress budget (Oracle Always Free: 10 TB/month outbound). Alert once per threshold per month.
+m=$(date -u +%Y-%m)
+bytes=$(mysql -N -e "SELECT bytes FROM passforge.speed_usage WHERE month='$m'" 2>/dev/null || echo 0)
+for t in 1 3; do
+  f="$STATE/speed-$m-${t}TB"
+  if [ "${bytes:-0}" -ge $((t * 1000000000000)) ] && [ ! -f "$f" ]; then
+    touch "$f"
+    "$here/notify.sh" "📈 Speed test used ${t} TB this month" "That's $((t * 10))% of Oracle's free 10 TB. Tests shorten automatically from 1 TB and pause at 4.5 TB — visitors won't see errors."
+  fi
+done
 exit 0
