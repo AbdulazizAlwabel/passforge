@@ -40,6 +40,26 @@
         </div>
       </div>
 
+      <div class="panel" style="margin-top:20px">
+        <div class="panel-body">
+          <p class="panel-title">Sessions</p>
+          <div class="row between">
+            <p class="muted" style="font-size:.92rem;max-width:52ch">Lost a device or signed in somewhere public? Sign out of every browser at once — including this one.</p>
+            <button class="btn" id="logoutAll">Sign out everywhere</button>
+          </div>
+        </div>
+        <div class="panel-sec">
+          <p class="panel-title" style="color:var(--danger)">Delete account</p>
+          <p class="muted" style="font-size:.92rem;max-width:60ch">Permanently deletes your account, your email address and every one-time secret you created. Your tools keep working — they never needed an account.</p>
+          <button class="btn btn-danger" id="delOpen" style="margin-top:14px">Delete my account…</button>
+          <form id="delForm" hidden novalidate style="margin-top:16px;display:flex;flex-direction:column;gap:12px;max-width:420px">
+            <div class="field"><label class="label" for="delPw">Confirm with your password</label><input class="input" type="password" id="delPw" autocomplete="current-password" required></div>
+            <div class="msg err" hidden></div>
+            <div class="row"><button class="btn btn-danger" type="submit">Delete permanently</button><button class="btn btn-ghost" type="button" id="delCancel">Cancel</button></div>
+          </form>
+        </div>
+      </div>
+
       <div class="row" style="margin-top:28px;justify-content:space-between">
         <a class="btn" href="/admin/" id="adminLink" hidden>{{icon:shield}}Admin</a>
         <button class="btn btn-danger" id="logout" style="margin-inline-start:auto">Sign out</button>
@@ -82,6 +102,16 @@
   let pwnT,pwnSeq=0;
   function warnLeak(input,el){clearTimeout(pwnT);const my=++pwnSeq;el.hidden=true;const v=input.value;if(v.length<6)return;pwnT=setTimeout(async()=>{const n=await ND.pwned(v);if(my===pwnSeq&&n>0){el.textContent=ND.f('⚠ This password appeared in {count} — please choose a different one.',{count:ND.count(n,{one:'data breach',other:'data breaches'},{one:'تسريب',two:'تسريبين',few:'تسريبات',many:'تسريبًا',other:'تسريب'})});el.hidden=false;}},500);}
   $('#nw').addEventListener('input',()=>warnLeak($('#nw'),$('#warn')));
+  $('#logoutAll').addEventListener('click',async()=>{if(!confirm('Sign out on every device, including this one?'))return;const r=await ND.api('/logout-all',{method:'POST'});if(r.ok)location.href=ND.url('/account/?signedout=1');else ND.toast(r.data.error||'Something went wrong.');});
+  $('#delOpen').addEventListener('click',()=>{$('#delForm').hidden=false;$('#delOpen').hidden=true;$('#delPw').focus();});
+  $('#delCancel').addEventListener('click',()=>{$('#delForm').hidden=true;$('#delOpen').hidden=false;$('#delPw').value='';});
+  $('#delForm').addEventListener('submit',async e=>{
+    e.preventDefault();const er=e.target.querySelector('.msg.err'),btn=e.target.querySelector('[type=submit]');er.hidden=true;
+    if(!$('#delPw').value){er.textContent='Enter your current password.';er.hidden=false;return;}
+    if(!confirm('This permanently deletes your account. Continue?'))return;
+    btn.disabled=true;const r=await ND.api('/account',{method:'DELETE',body:{password:$('#delPw').value}});btn.disabled=false;
+    if(r.ok)location.href=ND.url('/?deleted=1');else{er.textContent=r.data.error||'Something went wrong.';er.hidden=false;}
+  });
   $('#logout').addEventListener('click',async()=>{await ND.api('/logout',{method:'POST'});location.href=ND.url('/');});
 })();
 </script>

@@ -33,7 +33,7 @@ module.exports = function mountSecrets(api, { db, wrap, limiter, sha256, readUse
 
     const id = crypto.randomBytes(16).toString('base64url');
     const burnToken = crypto.randomBytes(24).toString('base64url');
-    const user = readUser(req);
+    const user = await readUser(req);
     await db.execute(
       'INSERT INTO secrets (id, payload, salt, verifier_hash, burn_hash, user_id, expires_at) VALUES (?, ?, ?, ?, ?, ?, ?)',
       [id, payload, hasPw ? salt : null, hasPw ? sha256(verifier) : null, sha256(burnToken), user ? user.id : null,
@@ -99,7 +99,7 @@ module.exports = function mountSecrets(api, { db, wrap, limiter, sha256, readUse
     const [[r]] = await db.execute('SELECT burn_hash, user_id FROM secrets WHERE id = ?', [req.params.id]);
     if (!r) return res.status(404).json({ error: 'Not found' });
     const token = String(req.body.burnToken || '');
-    const user = readUser(req);
+    const user = await readUser(req);
     const byToken = token && crypto.timingSafeEqual(Buffer.from(sha256(token)), Buffer.from(r.burn_hash));
     const byOwner = user && r.user_id === user.id;
     if (!byToken && !byOwner) return res.status(403).json({ error: 'You can’t destroy this secret.' });
@@ -109,7 +109,7 @@ module.exports = function mountSecrets(api, { db, wrap, limiter, sha256, readUse
 
   // Signed-in users: the links they created (status only, never content).
   api.get('/my/secrets', wrap(async (req, res) => {
-    const user = readUser(req);
+    const user = await readUser(req);
     if (!user) return res.status(401).json({ error: 'Not signed in' });
     const [rows] = await db.execute(
       'SELECT id, created_at, expires_at, viewed_at, burned_at, verifier_hash IS NOT NULL AS has_pw FROM secrets WHERE user_id = ? ORDER BY created_at DESC LIMIT 50',

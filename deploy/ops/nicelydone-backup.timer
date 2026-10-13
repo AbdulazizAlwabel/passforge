@@ -1,0 +1,10 @@
+[Unit]
+Description=Nicely Done — Nightly database backup
+
+[Timer]
+OnCalendar=*-*-* 00:30:00
+Persistent=true
+RandomizedDelaySec=20
+
+[Install]
+WantedBy=timers.target

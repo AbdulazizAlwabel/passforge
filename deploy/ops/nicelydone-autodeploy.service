@@ -1,0 +1,7 @@
+[Unit]
+Description=Nicely Done — Deploy new commits from GitHub
+After=network-online.target mariadb.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/nicelydone-ops/autodeploy.sh

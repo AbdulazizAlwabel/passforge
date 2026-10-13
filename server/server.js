@@ -23,7 +23,7 @@ const {
   STATIC_DIR = '../dist',
   TRUST_PROXY = '1',
   JWT_SECRET,
-  ADMIN_USERNAMES = 'AbdulazizAlwabel,Abdulaziz',
+  ADMIN_USER_IDS = '',
 } = process.env;
 
 if (!JWT_SECRET || JWT_SECRET.length < 32) {
@@ -32,7 +32,8 @@ if (!JWT_SECRET || JWT_SECRET.length < 32) {
 }
 
 const PROD = NODE_ENV === 'production';
-const ADMINS = new Set(ADMIN_USERNAMES.split(',').map((s) => s.trim().toLowerCase()).filter(Boolean));
+// Admins are identified by numeric user id — never by username, which anyone could register.
+const ADMINS = new Set(ADMIN_USER_IDS.split(',').map((s) => parseInt(s, 10)).filter(Number.isInteger));
 const STATIC_ROOT = path.resolve(__dirname, STATIC_DIR);
 const COOKIE = 'token';
 const SESSION_DAYS = 7;
@@ -58,10 +59,10 @@ if (TRUST_PROXY === '1') app.set('trust proxy', 1);
 const CSP = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline'",
-  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-  "font-src 'self' https://fonts.gstatic.com",
+  "style-src 'self' 'unsafe-inline'",
+  "font-src 'self'",
   "img-src 'self' data:",
-  "connect-src 'self' https://api.pwnedpasswords.com https://ipwho.is https://ipapi.co https://api64.ipify.org https://fonts.googleapis.com https://fonts.gstatic.com",
+  "connect-src 'self' https://api.pwnedpasswords.com https://ipwho.is https://ipapi.co https://api64.ipify.org",
   "worker-src 'self'",
   "manifest-src 'self'",
   "base-uri 'self'",
@@ -117,13 +118,13 @@ const normal = limiter({ windowMs: 15 * 60 * 1000, max: 60 });
 
 const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 const sha256 = (s) => crypto.createHash('sha256').update(s).digest('hex');
-const isAdmin = (username) => ADMINS.has(String(username).toLowerCase());
+const isAdmin = (user) => !!user && ADMINS.has(user.id);
 const USERNAME_RE = /^[A-Za-z0-9_.-]{3,30}$/;
 const langOf = (req) => (req.body && req.body.lang === 'ar') || req.query.lang === 'ar' ? 'ar' : 'en';
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
 
 function setSession(res, user) {
-  const token = jwt.sign({ id: user.id, username: user.username }, JWT_SECRET, { expiresIn: SESSION_DAYS + 'd' });
+  const token = jwt.sign({ id: user.id, username: user.username, tv: user.token_version || 0 }, JWT_SECRET, { expiresIn: SESSION_DAYS + 'd' });
   res.cookie(COOKIE, token, { httpOnly: true, secure: PROD, sameSite: 'lax', path: '/', maxAge: SESSION_DAYS * 864e5 });
 }
 
@@ -145,20 +146,25 @@ async function consumeToken(raw, type) {
   return r.affectedRows ? rows[0].user_id : null;
 }
 
-function auth(req, res, next) {
-  const t = req.cookies[COOKIE];
-  if (!t) return res.status(401).json({ error: 'Not signed in' });
-  try { req.user = jwt.verify(t, JWT_SECRET); next(); }
-  catch { res.clearCookie(COOKIE, { path: '/' }); res.status(401).json({ error: 'Your session has expired. Please sign in again.' }); }
-}
-/* Signed-in user if the session cookie is valid, otherwise null (never errors). */
-function readUser(req) {
+/* Signed-in user if the session cookie is valid and current, otherwise null (never throws). */
+async function readUser(req) {
   const t = req.cookies[COOKIE];
   if (!t) return null;
-  try { return jwt.verify(t, JWT_SECRET); } catch { return null; }
+  let claims;
+  try { claims = jwt.verify(t, JWT_SECRET); } catch { return null; }
+  const [[u]] = await db.execute('SELECT id, username, token_version FROM users WHERE id = ?', [claims.id]);
+  if (!u || (claims.tv || 0) !== u.token_version) return null;
+  return { id: u.id, username: u.username, token_version: u.token_version };
+}
+function auth(req, res, next) {
+  if (!req.cookies[COOKIE]) return res.status(401).json({ error: 'Not signed in' });
+  readUser(req).then((u) => {
+    if (!u) { res.clearCookie(COOKIE, { path: '/' }); return res.status(401).json({ error: 'Your session has expired. Please sign in again.' }); }
+    req.user = u; next();
+  }, next);
 }
 function admin(req, res, next) {
-  auth(req, res, () => (isAdmin(req.user.username) ? next() : res.status(403).json({ error: 'Access denied' })));
+  auth(req, res, () => (isAdmin(req.user) ? next() : res.status(403).json({ error: 'Access denied' })));
 }
 
 api.get('/health', wrap(async (req, res) => {
@@ -252,18 +258,18 @@ api.post('/reset-password', strict, wrap(async (req, res) => {
   if (password.length < 8 || password.length > 128) return res.status(400).json({ error: 'Password must be 8–128 characters' });
   const userId = await consumeToken(String(req.body.token || ''), 'reset_password');
   if (!userId) return res.status(400).json({ error: 'This reset link is invalid or has expired. Please request a new one.' });
-  await db.execute('UPDATE users SET password = ? WHERE id = ?', [await bcrypt.hash(password, BCRYPT_COST), userId]);
+  await db.execute('UPDATE users SET password = ?, token_version = token_version + 1 WHERE id = ?', [await bcrypt.hash(password, BCRYPT_COST), userId]);
   res.json({ message: 'Password reset successfully' });
 }));
 
 api.get('/me', auth, (req, res) => {
-  res.json({ id: req.user.id, username: req.user.username, admin: isAdmin(req.user.username) });
+  res.json({ id: req.user.id, username: req.user.username, admin: isAdmin(req.user) });
 });
 
 api.get('/profile', auth, wrap(async (req, res) => {
   const [[u]] = await db.execute('SELECT id, username, email, verified, created_at FROM users WHERE id = ?', [req.user.id]);
   if (!u) { res.clearCookie(COOKIE, { path: '/' }); return res.status(401).json({ error: 'Account not found' }); }
-  res.json({ ...u, verified: !!u.verified, admin: isAdmin(u.username) });
+  res.json({ ...u, verified: !!u.verified, admin: isAdmin(u) });
 }));
 
 api.put('/profile/password', strict, auth, wrap(async (req, res) => {
@@ -271,11 +277,28 @@ api.put('/profile/password', strict, auth, wrap(async (req, res) => {
   const next = String(req.body.newPassword || '');
   if (!cur || !next) return res.status(400).json({ error: 'Both fields are required' });
   if (next.length < 8 || next.length > 128) return res.status(400).json({ error: 'New password must be 8–128 characters' });
-  const [[u]] = await db.execute('SELECT id, username, password FROM users WHERE id = ?', [req.user.id]);
+  const [[u]] = await db.execute('SELECT id, username, password, token_version FROM users WHERE id = ?', [req.user.id]);
   if (!u || !(await bcrypt.compare(cur, u.password))) return res.status(401).json({ error: 'Current password is incorrect' });
-  await db.execute('UPDATE users SET password = ? WHERE id = ?', [await bcrypt.hash(next, BCRYPT_COST), u.id]);
-  setSession(res, u);
-  res.json({ message: 'Password updated' });
+  await db.execute('UPDATE users SET password = ?, token_version = token_version + 1 WHERE id = ?', [await bcrypt.hash(next, BCRYPT_COST), u.id]);
+  setSession(res, { ...u, token_version: u.token_version + 1 }); // keep this device signed in
+  res.json({ message: 'Password updated — other devices have been signed out' });
+}));
+
+api.post('/logout-all', auth, wrap(async (req, res) => {
+  await db.execute('UPDATE users SET token_version = token_version + 1 WHERE id = ?', [req.user.id]);
+  res.clearCookie(COOKIE, { path: '/' });
+  res.json({ message: 'Signed out on every device' });
+}));
+
+api.delete('/account', strict, auth, wrap(async (req, res) => {
+  const password = String(req.body.password || '');
+  const [[u]] = await db.execute('SELECT id, password FROM users WHERE id = ?', [req.user.id]);
+  if (!u || !(await bcrypt.compare(password, u.password))) return res.status(401).json({ error: 'Password is incorrect' });
+  if (isAdmin(u)) return res.status(400).json({ error: 'Admin accounts can’t be deleted here' });
+  await db.execute('DELETE FROM secrets WHERE user_id = ?', [u.id]);
+  await db.execute('DELETE FROM users WHERE id = ?', [u.id]); // tokens cascade
+  res.clearCookie(COOKIE, { path: '/' });
+  res.json({ message: 'Your account has been deleted' });
 }));
 
 api.get('/admin/users', admin, wrap(async (req, res) => {

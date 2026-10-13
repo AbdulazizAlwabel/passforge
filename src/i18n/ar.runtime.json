@@ -52,5 +52,10 @@
  "Too many wrong passwords — the secret has been destroyed.": "كلمات مرور خاطئة كثيرة — تم تدمير السر.",
  "Wrong password.": "كلمة مرور خاطئة.",
  "You can’t destroy this secret.": "لا يمكنك تدمير هذا السر.",
- "Secret destroyed": "تم تدمير السر"
+ "Secret destroyed": "تم تدمير السر",
+ "Password updated — other devices have been signed out": "تم تحديث كلمة المرور — وتم تسجيل الخروج من الأجهزة الأخرى",
+ "Signed out on every device": "تم تسجيل الخروج من كل الأجهزة",
+ "Password is incorrect": "كلمة المرور غير صحيحة",
+ "Admin accounts can’t be deleted here": "لا يمكن حذف حسابات المدراء من هنا",
+ "Your account has been deleted": "تم حذف حسابك"
 }

@@ -78,6 +78,7 @@
   const nextUrl=()=>{const n=q.get('next');return ND.url(n&&n.startsWith('/')&&!n.startsWith('//')?n.replace(/^\/ar(?=\/)/,''):'/profile/');};
   if(q.get('verified')==='1')flash('Email verified — you can sign in now.');
   if(q.get('verified')==='0'){const f=$('#flash');f.className='msg err';f.querySelector('span').textContent='That verification link is invalid or has expired. Sign in and resend it from your profile.';f.hidden=false;}
+  if(q.get('signedout')==='1')flash('Signed out on every device.');
   if(q.get('reset')==='1')flash('Password updated. Sign in with your new password.');
   go(['register','forgot'].includes(location.hash.slice(1))?location.hash.slice(1):'login');
 

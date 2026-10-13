@@ -144,10 +144,6 @@ CATS = ["Security", "Developer", "Everyday"]
 # ---------------------------------------------------------------------------
 # Template pieces
 # ---------------------------------------------------------------------------
-FONTS = ("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1"
-         "&family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap")
-FONTS_AR = "https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500&display=swap"
-
 THEME_BOOT = ("<script>(function(){try{var t=JSON.parse(localStorage.getItem('nd:theme'));"
               "if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script>")
 
@@ -191,9 +187,9 @@ def head(title, desc, path, extra_fonts="", jsonld=None, noindex=False):
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="{FONTS}">{extra_fonts}
+<link rel="preload" href="/assets/fonts/geist-normal-300-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/instrument-serif-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/fonts.css?v={{V}}">
 <link rel="stylesheet" href="/assets/site.css?v={{V}}">
 {THEME_BOOT}
 <!--HREFLANG-->
@@ -280,7 +276,7 @@ def build_tool(t):
         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
         "isAccessibleForFree": True,
     }
-    extra = f'\n<link rel="stylesheet" href="{FONTS_AR}">' if t["slug"] == "date-converter" else ""
+    extra = ""
     related = [x for x in TOOLS if x["cat"] == t["cat"] and x["slug"] != t["slug"]]
     related = (related + [x for x in TOOLS if x["cat"] != t["cat"]])[:3]
     rel_html = "".join(
@@ -416,6 +412,7 @@ def build_home():
 
 HOME_SCRIPT = r"""<script>
 (function(){
+  if(new URLSearchParams(location.search).get('deleted')==='1'){ND.toast('Your account has been deleted');history.replaceState(null,'',location.pathname);}
   const CH={u:'ABCDEFGHJKLMNPQRSTUVWXYZ',l:'abcdefghijkmnopqrstuvwxyz',n:'23456789',s:'!@#$%^&*-_=+?'};
   const ALL=CH.u+CH.l+CH.n+CH.s, POOL=26+26+10+13, LEN=20;
   const el=document.getElementById('specPw'),bits=document.getElementById('specBits'),bar=document.getElementById('specBar');
@@ -515,8 +512,7 @@ self.addEventListener('fetch', (e) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   const sameOrigin = url.origin === location.origin;
-  const isFont = /fonts\\.(googleapis|gstatic)\\.com$/.test(url.hostname);
-  if (!sameOrigin && !isFont) return;
+  if (!sameOrigin) return;
   if (sameOrigin && url.pathname.startsWith('/api/')) return;
   if (req.mode === 'navigate') {
     e.respondWith(fetch(req).then((res) => {
@@ -532,8 +528,6 @@ self.addEventListener('fetch', (e) => {
 """
 
 
-FONTS_AR_UI = ("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700"
-               "&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap")
 STATIC_PREFIXES = ("assets/", "api/", "favicon", "manifest", "og.png", "apple-touch", "icon-", "sw.js", "ar/", "s/#")
 
 
@@ -554,7 +548,6 @@ def finish(html_src, rel, lang):
     out = TR.page(out, rel)
     out = out.replace('<script src="/assets/site.js', '<script>window.ND_I18N=' + RUNTIME_AR + ';</script>\n<script src="/assets/site.js', 1)
     out = out.replace('<html lang="en" class="no-js">', '<html lang="ar" dir="rtl" class="no-js">', 1)
-    out = out.replace(f'<link rel="stylesheet" href="{FONTS}">', f'<link rel="stylesheet" href="{FONTS}">\n<link rel="stylesheet" href="{FONTS_AR_UI}">', 1)
     out = re.sub(r'(href|data-href)="/(?!/)([^"]*)"', lambda m: m.group(0) if m.group(2).startswith(STATIC_PREFIXES) else f'{m.group(1)}="/ar/{m.group(2)}"', out)
     out = out.replace('"href":"/', '"href":"/ar/').replace('"href": "/', '"href": "/ar/')
     out = out.replace(f'<link rel="canonical" href="{en}">', f'<link rel="canonical" href="{ar}">')
@@ -576,8 +569,7 @@ def main():
         shutil.rmtree(DIST)
     (DIST / "assets").mkdir(parents=True)
 
-    for f in (SRC / "assets").iterdir():
-        shutil.copy(f, DIST / "assets" / f.name)
+    shutil.copytree(SRC / "assets", DIST / "assets", dirs_exist_ok=True)
     version = hashlib.sha1(b"".join(p.read_bytes() for p in sorted((SRC).rglob("*")) if p.is_file())
                            + Path(__file__).read_bytes()).hexdigest()[:10]
 
@@ -620,7 +612,8 @@ def main():
         ],
         "shortcuts": [{"name": t["name"], "url": f"/{t['slug']}/"} for t in TOOLS[:4]],
     }, indent=2))
-    precache = ["/", "/404.html", f"/assets/site.css?v={version}", f"/assets/site.js?v={version}", "/favicon.svg"] + \
+    precache = ["/", "/404.html", f"/assets/site.css?v={version}", f"/assets/site.js?v={version}", f"/assets/fonts.css?v={version}",
+                "/assets/fonts/geist-normal-300-700-latin.woff2", "/assets/fonts/instrument-serif-normal-400-latin.woff2", "/favicon.svg"] + \
                [f"/{t['slug']}/" for t in TOOLS] + ["/about/", "/ar/", "/ar/404.html"]
     (DIST / "sw.js").write_text(SW.replace("{V}", version).replace("{PRECACHE}", json.dumps(precache)))
     # Keep IIS / Azure App Service compatibility from the original deployment.

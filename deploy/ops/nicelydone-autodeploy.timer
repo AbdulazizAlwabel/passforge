@@ -1,0 +1,10 @@
+[Unit]
+Description=Nicely Done — Deploy new commits from GitHub
+
+[Timer]
+OnCalendar=*:2/5
+Persistent=true
+RandomizedDelaySec=20
+
+[Install]
+WantedBy=timers.target

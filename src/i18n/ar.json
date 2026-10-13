@@ -830,5 +830,19 @@
  " bits": " بت",
  "bits": "بت",
  "-bit": " بت",
- "\">Destroy": "\">تدمير"
+ "\">Destroy": "\">تدمير",
+ "Sessions": "الجلسات",
+ "Lost a device or signed in somewhere public? Sign out of every browser at once — including this one.": "فقدت جهازًا أو سجّلت الدخول في مكان عام؟ سجّل الخروج من كل المتصفحات دفعة واحدة — بما فيها هذا.",
+ "Sign out everywhere": "تسجيل الخروج من كل الأجهزة",
+ "Delete account": "حذف الحساب",
+ "Permanently deletes your account, your email address and every one-time secret you created. Your tools keep working — they never needed an account.": "يحذف حسابك وبريدك الإلكتروني وكل الأسرار لمرة واحدة التي أنشأتها نهائيًا. وتبقى أدواتك تعمل — فهي لم تحتج إلى حساب أصلًا.",
+ "Delete my account…": "احذف حسابي…",
+ "Confirm with your password": "أكّد بكلمة مرورك",
+ "Delete permanently": "احذف نهائيًا",
+ "Cancel": "إلغاء",
+ "Sign out on every device, including this one?": "تسجيل الخروج من كل الأجهزة، بما فيها هذا الجهاز؟",
+ "This permanently deletes your account. Continue?": "سيُحذف حسابك نهائيًا. هل تريد المتابعة؟",
+ "Signed out on every device.": "تم تسجيل الخروج من كل الأجهزة.",
+ "Pages, fonts and icons": "الصفحات والخطوط والأيقونات",
+ "Our server only — no third-party CDNs or font services": "خادمنا فقط — بلا شبكات توزيع أو خدمات خطوط خارجية"
 }

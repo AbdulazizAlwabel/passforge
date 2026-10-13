@@ -1,0 +1,7 @@
+[Unit]
+Description=Nicely Done — Uptime and certificate monitor
+After=network-online.target mariadb.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/nicelydone-ops/monitor.sh

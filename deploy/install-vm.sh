@@ -67,9 +67,19 @@ sudo sed -e "s|/opt/nicelydone|$APP|g" "$BUNDLE/deploy/nicelydone.service" | sud
 echo "== firewall"
 sudo firewall-cmd -q --permanent --add-service=http --add-service=https && sudo firewall-cmd -q --reload
 
+echo "== ops (backups, monitor, auto-deploy)"
+sudo install -d -m 755 /opt/nicelydone-ops /etc/nicelydone
+sudo install -m 755 "$BUNDLE"/deploy/ops/*.sh /opt/nicelydone-ops/
+sudo install -m 644 "$BUNDLE"/deploy/ops/nicelydone-*.service "$BUNDLE"/deploy/ops/nicelydone-*.timer /etc/systemd/system/
+if ! sudo test -f /etc/nicelydone/ops.env; then
+  printf '# Where alerts go (a Hermes target, e.g. photon:any;-;+9665XXXXXXXX). Empty = log only.\nNOTIFY_TARGET=\nNOTIFY_USER=opc\n' | sudo tee /etc/nicelydone/ops.env >/dev/null
+  sudo chmod 600 /etc/nicelydone/ops.env
+fi
+
 echo "== services"
 sudo systemctl daemon-reload
 sudo systemctl enable -q nicelydone caddy
+sudo systemctl enable -q --now nicelydone-backup.timer nicelydone-monitor.timer nicelydone-autodeploy.timer
 sudo systemctl restart nicelydone
 sleep 2
 curl -fsS http://127.0.0.1:3080/api/health && echo

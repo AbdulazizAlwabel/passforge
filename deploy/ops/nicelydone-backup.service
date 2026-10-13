@@ -1,0 +1,7 @@
+[Unit]
+Description=Nicely Done — Nightly database backup
+After=network-online.target mariadb.service
+
+[Service]
+Type=oneshot
+ExecStart=/opt/nicelydone-ops/backup.sh
