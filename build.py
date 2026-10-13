@@ -238,14 +238,14 @@ def footer():
     <div class="foot-grid">
       <div>
         <a class="brand" href="/">{MARK}<span class="brand-word">nicely<em>done</em></span></a>
-        <p class="foot-tag">Small, sharp tools that run entirely in your browser. No accounts, no cookies, no servers watching.</p>
+        <p class="foot-tag">Small, sharp tools that work in your browser. No sign-up needed, no tracking, no one watching.</p>
       </div>
       {cols}
     </div>
     <div class="foot-big" aria-hidden="true">nicely<em>done</em></div>
     <div class="foot-bottom">
       <span>© {year} {SITE} · <a href="/about/">About &amp; trust</a> · <a href="{GITHUB}" rel="noopener">Source on GitHub</a></span>
-      <span>Everything is computed on your device · Works offline</span>
+      <span>Private by design · No tracking, no third parties</span>
     </div>
   </div>
 </footer>

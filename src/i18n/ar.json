@@ -10,12 +10,10 @@
  "Primary": "التنقل الرئيسي",
  "Toggle colour theme": "تبديل المظهر",
  "Nicely Done — home": "Nicely Done — الرئيسية",
- "Small, sharp tools that run entirely in your browser. No accounts, no cookies, no servers watching.": "أدوات صغيرة ودقيقة تعمل بالكامل داخل متصفحك. بلا حسابات، بلا ملفات تعريف ارتباط، ولا خوادم تراقب.",
  "© 2026 Nicely Done ·": "© 2026 Nicely Done ·",
  "About &amp; trust": "عن الموقع والثقة",
  "About & trust": "عن الموقع والثقة",
  "Source on GitHub": "الشيفرة المصدرية على GitHub",
- "Everything is computed on your device · Works offline": "كل العمليات تُنفَّذ على جهازك · يعمل دون اتصال",
  "Breadcrumb": "مسار التنقل",
  "Home": "الرئيسية",
  "More tools": "أدوات أخرى",
@@ -894,5 +892,7 @@
  "12 tools · zero tracking": "12 أداة · بلا تتبّع",
  "Speed test": "اختبار السرعة",
  "Our server only — results stay in your browser; nothing logged": "خادمنا فقط — النتائج تبقى في متصفحك؛ ولا يُسجَّل شيء",
- "For the speed test, your IP address is held in memory — never on disk — for up to an hour, only to pace repeat tests fairly. It is not logged or linked to anything.": "في اختبار السرعة، يُحتفظ بعنوان IP في الذاكرة فقط — لا على القرص أبدًا — لمدة أقصاها ساعة، وذلك لتنظيم الاختبارات المتكررة بإنصاف. ولا يُسجَّل ولا يُربط بأي شيء."
+ "For the speed test, your IP address is held in memory — never on disk — for up to an hour, only to pace repeat tests fairly. It is not logged or linked to anything.": "في اختبار السرعة، يُحتفظ بعنوان IP في الذاكرة فقط — لا على القرص أبدًا — لمدة أقصاها ساعة، وذلك لتنظيم الاختبارات المتكررة بإنصاف. ولا يُسجَّل ولا يُربط بأي شيء.",
+ "Small, sharp tools that work in your browser. No sign-up needed, no tracking, no one watching.": "أدوات صغيرة ودقيقة تعمل داخل متصفحك. لا حاجة للتسجيل، بلا تتبّع، ولا أحد يراقب.",
+ "Private by design · No tracking, no third parties": "الخصوصية في صميم التصميم · بلا تتبّع وبلا أطراف ثالثة"
 }
