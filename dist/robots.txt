@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /s/
+Disallow: /ar/s/
 Disallow: /api/
 
 Sitemap: https://nicelydone.qd.je/sitemap.xml

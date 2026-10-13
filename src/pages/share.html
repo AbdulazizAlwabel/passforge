@@ -96,8 +96,10 @@
   const $=ND.$,$$=ND.$$;
   const LS='secrets';
   let ttl=86400,current=null;
-  const ago=d=>{const s=(new Date(d)-Date.now())/1000,a=Math.abs(s);const f=a<3600?Math.round(a/60)+' min':a<86400?Math.round(a/3600)+' h':Math.round(a/86400)+' d';return s>0?'in '+f:f+' ago';};
-  const fmt=d=>new Date(d).toLocaleString(undefined,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+  const RTF=new Intl.RelativeTimeFormat(ND.lang==='ar'?'ar-u-nu-latn':ND.lang,{numeric:'auto'});
+  const ago=d=>{const s=(new Date(d)-Date.now())/1000,a=Math.abs(s);return a<3600?RTF.format(Math.round(s/60),'minute'):a<86400?RTF.format(Math.round(s/3600),'hour'):RTF.format(Math.round(s/86400),'day');};
+  const LOC=ND.lang==='ar'?'ar-u-nu-latn':undefined;
+  const fmt=d=>new Date(d).toLocaleString(LOC,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
 
   $('#secret').addEventListener('input',()=>{const n=$('#secret').value.length;$('#count').textContent=n.toLocaleString();$('#create').disabled=!n;});
   $$('[data-ttl]').forEach(b=>b.addEventListener('click',()=>{ttl=+b.dataset.ttl;$$('[data-ttl]').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));}));
@@ -146,13 +148,13 @@
     const map=new Map();
     const me=await ND.me;
     if(me===null){box.innerHTML='<div class="empty-state" style="padding:24px"><p>Unavailable while the server is unreachable.</p></div>';return;}
-    if(me){const r=await ND.api('/my/secrets');if(r.ok)r.data.forEach(x=>map.set(x.id,x));$('#mineNote').textContent='Signed in as '+me.username+' — links you create are listed here on any device. Only the status is stored, never the secret or its key.';}
+    if(me){const r=await ND.api('/my/secrets');if(r.ok)r.data.forEach(x=>map.set(x.id,x));$('#mineNote').textContent=ND.f('Signed in as {user} — links you create are listed here on any device. Only the status is stored, never the secret or its key.',{user:me.username});}
     await Promise.all(local.filter(x=>!map.has(x.id)).map(async x=>{const r=await ND.api('/secrets/'+x.id);map.set(x.id,Object.assign({},x,{status:r.data.status||'missing',viewedAt:r.data.viewedAt}));}));
     local.forEach(x=>{const m=map.get(x.id);if(m)m.burnToken=x.burnToken;});
     const rows=[...map.values()].sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)).slice(0,30);
     ND.store.set(LS,local.filter(x=>{const m=map.get(x.id);return m&&m.status!=='missing';}));
     if(!rows.length){box.innerHTML='<div class="empty-state" style="padding:24px"><p>No links yet.</p></div>';return;}
-    box.innerHTML=rows.map(x=>'<div class="list-item"><span class="txt" style="font-family:var(--font-sans)">'+(x.hasPassword?'🔒 ':'')+'Created '+ago(x.createdAt)+' · '+(x.status==='viewed'&&x.viewedAt?'opened '+ago(x.viewedAt):x.status==='active'?'expires '+ago(x.expiresAt):'')+'</span>'+badge(x.status)+(x.status==='active'?'<button class="copy" data-burn="'+x.id+'">Destroy</button>':'')+'</div>').join('');
+    box.innerHTML=rows.map(x=>'<div class="list-item"><span class="txt" style="font-family:var(--font-sans)">'+(x.hasPassword?'🔒 ':'')+ND.f('Created {when}',{when:ago(x.createdAt)})+(x.status==='viewed'&&x.viewedAt?' · '+ND.f('opened {when}',{when:ago(x.viewedAt)}):x.status==='active'?' · '+ND.f('expires {when}',{when:ago(x.expiresAt)}):'')+'</span>'+badge(x.status)+(x.status==='active'?'<button class="copy" data-burn="'+x.id+'">Destroy</button>':'')+'</div>').join('');
     box.querySelectorAll('[data-burn]').forEach(b=>b.addEventListener('click',()=>{const x=map.get(b.dataset.burn);burn(x.id,x.burnToken);}));
   }
   $('#refresh').addEventListener('click',loadMine);

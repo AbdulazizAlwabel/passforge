@@ -75,12 +75,13 @@
   const flash=t=>{const f=$('#flash');f.querySelector('span').textContent=t;f.hidden=false;};
 
   const q=new URLSearchParams(location.search);
+  const nextUrl=()=>{const n=q.get('next');return ND.url(n&&n.startsWith('/')&&!n.startsWith('//')?n.replace(/^\/ar(?=\/)/,''):'/profile/');};
   if(q.get('verified')==='1')flash('Email verified — you can sign in now.');
   if(q.get('verified')==='0'){const f=$('#flash');f.className='msg err';f.querySelector('span').textContent='That verification link is invalid or has expired. Sign in and resend it from your profile.';f.hidden=false;}
   if(q.get('reset')==='1')flash('Password updated. Sign in with your new password.');
   go(['register','forgot'].includes(location.hash.slice(1))?location.hash.slice(1):'login');
 
-  ND.me.then(u=>{if(u===null){$('#offline').hidden=false;$$('form button[type=submit]').forEach(b=>b.disabled=true);}else if(u){location.replace(q.get('next')&&q.get('next').startsWith('/')&&!q.get('next').startsWith('//')?q.get('next'):'/profile/');}});
+  ND.me.then(u=>{if(u===null){$('#offline').hidden=false;$$('form button[type=submit]').forEach(b=>b.disabled=true);}else if(u){location.replace(nextUrl());}});
 
   async function submit(form,path,body,onOk){
     const btn=form.querySelector('button[type=submit]'),err=form.querySelector('.msg.err'),label=btn.innerHTML;
@@ -92,25 +93,25 @@
   $('#loginForm').addEventListener('submit',e=>{e.preventDefault();
     const id=$('#lEmail').value.trim(),pw=$('#lPass').value;
     if(!id||!pw){const er=e.target.querySelector('.msg.err');er.textContent='Enter your email (or username) and password.';er.hidden=false;return;}
-    submit(e.target,'/login',{email:id,password:pw},()=>{const n=q.get('next');location.href=n&&n.startsWith('/')&&!n.startsWith('//')?n:'/profile/';});
+    submit(e.target,'/login',{email:id,password:pw},()=>{location.href=nextUrl();});
   });
   $('#regForm').addEventListener('submit',e=>{e.preventDefault();
     const er=e.target.querySelector('.msg.err');
     const u=$('#rUser').value.trim(),em=$('#rEmail').value.trim(),pw=$('#rPass').value;
     const bad=!/^[A-Za-z0-9_.\-]{3,30}$/.test(u)?'Username must be 3–30 letters, numbers, _ . or -':!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)?'Enter a valid email address.':pw.length<8?'Password must be at least 8 characters.':'';
     if(bad){er.textContent=bad;er.hidden=false;return;}
-    submit(e.target,'/register',{username:u,email:em,password:pw},d=>{e.target.reset();$('#rMeter').dataset.level=0;go('login');flash(d.message||'Account created! Check your email to verify it.');});
+    submit(e.target,'/register',{username:u,email:em,password:pw,lang:ND.lang},d=>{e.target.reset();$('#rMeter').dataset.level=0;go('login');flash(d.message||'Account created! Check your email to verify it.');});
   });
   $('#forgotForm').addEventListener('submit',e=>{e.preventDefault();
     const em=$('#fEmail').value.trim();
     if(!em){const er=e.target.querySelector('.msg.err');er.textContent='Enter your email address.';er.hidden=false;return;}
-    submit(e.target,'/forgot-password',{email:em},d=>{e.target.reset();go('login');flash(d.message||'If that email has an account, a reset link is on its way.');});
+    submit(e.target,'/forgot-password',{email:em,lang:ND.lang},d=>{e.target.reset();go('login');flash(d.message||'If that email has an account, a reset link is on its way.');});
   });
 
   function level(pw){if(!pw)return 0;let pool=0;if(/[a-z]/.test(pw))pool+=26;if(/[A-Z]/.test(pw))pool+=26;if(/\d/.test(pw))pool+=10;if(/[^A-Za-z0-9]/.test(pw))pool+=33;const b=pw.length*Math.log2(pool||1);return b<28?1:b<45?2:b<64?3:b<90?4:5;}
 
   let pwnT,pwnSeq=0;
-  function warnLeak(input,el){clearTimeout(pwnT);const my=++pwnSeq;el.hidden=true;const v=input.value;if(v.length<6)return;pwnT=setTimeout(async()=>{const n=await ND.pwned(v);if(my===pwnSeq&&n>0){el.textContent='⚠ This password appeared in '+n.toLocaleString()+' data breaches — please choose a different one.';el.hidden=false;}},500);}
+  function warnLeak(input,el){clearTimeout(pwnT);const my=++pwnSeq;el.hidden=true;const v=input.value;if(v.length<6)return;pwnT=setTimeout(async()=>{const n=await ND.pwned(v);if(my===pwnSeq&&n>0){el.textContent=ND.f('⚠ This password appeared in {count} — please choose a different one.',{count:ND.count(n,{one:'data breach',other:'data breaches'},{one:'تسريب',two:'تسريبين',few:'تسريبات',many:'تسريبًا',other:'تسريب'})});el.hidden=false;}},500);}
   $('#rPass').addEventListener('input',()=>{$('#rMeter').dataset.level=level($('#rPass').value);warnLeak($('#rPass'),$('#rWarn'));});
   $('#suggest').addEventListener('click',()=>{
     const A='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*-_=+?';let s='';for(let i=0;i<20;i++)s+=A[ND.randInt(A.length)];

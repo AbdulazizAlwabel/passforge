@@ -72,7 +72,7 @@
     return hex(o.buffer);
   }
   const hex=b=>Array.from(new Uint8Array(b),x=>x.toString(16).padStart(2,'0')).join('');
-  const ALGOS=[['MD5',128,'legacy'],['SHA-1',160,'legacy'],['SHA-256',256,''],['SHA-384',384,''],['SHA-512',512,'']];
+  const ALGOS=[['MD5',128,'Legacy'],['SHA-1',160,'Legacy'],['SHA-256',256,''],['SHA-384',384,''],['SHA-512',512,'']];
   let results={},src='text',fileBytes=null,seq=0;
 
   async function compute(bytes){
@@ -90,7 +90,7 @@
       const val=results[a],m=v&&val===v;if(m)matched=a;
       return '<div class="hash-row'+(m?' match':'')+'"><div class="top"><span class="algo"><b>'+a+'</b> · '+bits+'-bit'+(tag?' · <span style="color:var(--warn)">'+tag+'</span>':'')+'</span><button class="copy" data-a="'+a+'">{{icon:copy}}Copy</button></div><div class="val">'+(up?val.toUpperCase():val)+'</div></div>';
     }).join('');
-    $('#verdict').innerHTML=!v?'':matched?'<span class="badge ok">{{icon:check}}Match — '+matched+' checksum is identical</span>':'<span class="badge bad">{{icon:x}}No match with any algorithm</span>';
+    $('#verdict').innerHTML=!v?'':matched?'<span class="badge ok">{{icon:check}}'+ND.f('Match — {algo} checksum is identical',{algo:matched})+'</span>':'<span class="badge bad">{{icon:x}}No match with any algorithm</span>';
   }
   $('#out').addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const v=results[b.dataset.a];ND.copy($('#upper').checked?v.toUpperCase():v,b,b.dataset.a+' copied');});
   $('#upper').addEventListener('change',render);

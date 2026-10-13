@@ -12,7 +12,7 @@ Every tool runs in the browser — nothing typed into them is sent anywhere:
 | Username generator | IP & network + subnet calculator | |
 | **One-time secret links** (E2E encrypted, self-destructing) | | |
 
-Extras: ⌘K / Ctrl K command palette, light & dark themes, offline support (service worker / PWA),
+Extras: a full **Arabic version** at `/ar/` (right-to-left, Arabic typography, translated at build time from `src/i18n/ar.json`), ⌘K / Ctrl K command palette, light & dark themes, offline support (service worker / PWA),
 SEO metadata, Open Graph image, sitemap, and an **optional** account system (sign up, email
 verification, password reset, profile, admin console).
 
@@ -27,6 +27,13 @@ dist/               build output — deploy this folder
 server/             Node/Express account API + static host (MySQL/MariaDB, SMTP)
 deploy/             Caddyfile + systemd unit
 ```
+
+## Translations
+
+Pages are written in English; `build.py` renders each one again under `/ar/` using `src/i18n/ar.json`
+(page text, attributes and inline-script strings) and `src/i18n/ar.runtime.json` (shared scripts and API
+messages). Every build writes `i18n-missing.txt`; keep it empty. Sentences with numbers use templates —
+`ND.f('Found in {count}', …)` — and plurals use `ND.pl` / `ND.count` with Arabic plural forms.
 
 ## Build
 

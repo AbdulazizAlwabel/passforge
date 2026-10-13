@@ -12,6 +12,8 @@ import re
 import shutil
 from pathlib import Path
 
+from i18n import Translator
+
 ROOT = Path(__file__).parent
 SRC = ROOT / "src"
 DIST = ROOT / "dist"
@@ -194,6 +196,7 @@ def head(title, desc, path, extra_fonts="", jsonld=None, noindex=False):
 <link rel="stylesheet" href="{FONTS}">{extra_fonts}
 <link rel="stylesheet" href="/assets/site.css?v={{V}}">
 {THEME_BOOT}
+<!--HREFLANG-->
 {ld}
 </head>
 <body>
@@ -213,6 +216,7 @@ def header(active=None):
       <a class="nav-link" href="/about/"{about_cur}>About</a>
       <a class="btn btn-sm" data-account hidden href="/account/">Sign in</a>
       <button class="search-trigger" data-search aria-label="Search tools">{ICONS['search']}<span>Search tools…</span><span class="kbd"><span data-mod>Ctrl</span>K</span></button>
+      <a class="icon-btn lang-switch" href="{{ALT_HREF}}" hreflang="{{ALT_LANG}}" lang="{{ALT_LANG}}" aria-label="{{ALT_LABEL}}">{{ALT_TEXT}}</a>
       <button class="icon-btn theme-toggle" data-theme-toggle aria-label="Toggle colour theme">{ICONS['moon']}{ICONS['sun']}</button>
     </nav>
   </div>
@@ -517,7 +521,7 @@ self.addEventListener('fetch', (e) => {
   if (req.mode === 'navigate') {
     e.respondWith(fetch(req).then((res) => {
       const copy = res.clone(); caches.open(CACHE).then((c) => c.put(req, copy)); return res;
-    }).catch(() => caches.match(req).then((r) => r || caches.match('/404.html'))));
+    }).catch(() => caches.match(req).then((r) => r || caches.match(url.pathname.startsWith('/ar/') ? '/ar/404.html' : '/404.html'))));
     return;
   }
   e.respondWith(caches.match(req).then((hit) => hit || fetch(req).then((res) => {
@@ -528,7 +532,46 @@ self.addEventListener('fetch', (e) => {
 """
 
 
+FONTS_AR_UI = ("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700"
+               "&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap")
+STATIC_PREFIXES = ("assets/", "api/", "favicon", "manifest", "og.png", "apple-touch", "icon-", "sw.js", "ar/", "s/#")
+
+
+def page_path(rel):
+    return "/" if rel == "index.html" else "/" + rel[: -len("index.html")] if rel.endswith("/index.html") else "/" + rel
+
+
+def finish(html_src, rel, lang):
+    """Fill language-specific placeholders; for non-English, localise the page."""
+    path = page_path(rel)
+    en, ar = ORIGIN + path, ORIGIN + "/ar" + path
+    alts = (f'<link rel="alternate" hreflang="en" href="{en}">\n<link rel="alternate" hreflang="ar" href="{ar}">\n'
+            f'<link rel="alternate" hreflang="x-default" href="{en}">')
+    out = html_src.replace("<!--HREFLANG-->", alts if rel != "404.html" else "")
+    if lang == "en":
+        return (out.replace("{ALT_HREF}", "/ar" + path).replace("{ALT_LANG}", "ar")
+                   .replace("{ALT_LABEL}", "العربية").replace("{ALT_TEXT}", "ع"))
+    out = TR.page(out, rel)
+    out = out.replace('<script src="/assets/site.js', '<script>window.ND_I18N=' + RUNTIME_AR + ';</script>\n<script src="/assets/site.js', 1)
+    out = out.replace('<html lang="en" class="no-js">', '<html lang="ar" dir="rtl" class="no-js">', 1)
+    out = out.replace(f'<link rel="stylesheet" href="{FONTS}">', f'<link rel="stylesheet" href="{FONTS}">\n<link rel="stylesheet" href="{FONTS_AR_UI}">', 1)
+    out = re.sub(r'(href|data-href)="/(?!/)([^"]*)"', lambda m: m.group(0) if m.group(2).startswith(STATIC_PREFIXES) else f'{m.group(1)}="/ar/{m.group(2)}"', out)
+    out = out.replace('"href":"/', '"href":"/ar/').replace('"href": "/', '"href": "/ar/')
+    out = out.replace(f'<link rel="canonical" href="{en}">', f'<link rel="canonical" href="{ar}">')
+    out = out.replace(f'<meta property="og:url" content="{en}">', f'<meta property="og:url" content="{ar}">')
+    out = out.replace('<meta property="og:type" content="website">', '<meta property="og:type" content="website">\n<meta property="og:locale" content="ar_SA">')
+    return (out.replace("{ALT_HREF}", path).replace("{ALT_LANG}", "en")
+               .replace("{ALT_LABEL}", "English").replace("{ALT_TEXT}", "EN"))
+
+
+TR = None
+RUNTIME_AR = "{}"
+
+
 def main():
+    global TR, RUNTIME_AR
+    TR = Translator(SRC / "i18n" / "ar.json")
+    RUNTIME_AR = json.dumps(json.loads((SRC / "i18n" / "ar.runtime.json").read_text()), ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     if DIST.exists():
         shutil.rmtree(DIST)
     (DIST / "assets").mkdir(parents=True)
@@ -544,19 +587,27 @@ def main():
     for slug, *rest in EXTRA_PAGES:
         pages[f"{slug}/index.html"] = build_page(slug, *rest)
     for rel, content in pages.items():
-        out = DIST / rel
-        out.parent.mkdir(parents=True, exist_ok=True)
-        out.write_text(content.replace("{V}", version))
+        for lang in ("en", "ar"):
+            out = DIST / rel if lang == "en" else DIST / "ar" / rel
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(finish(content, rel, lang).replace("{V}", version))
+    missing = TR.missing
+    (ROOT / "i18n-missing.txt").write_text("".join(f"{k}\t{v}\n" for k, v in sorted(missing.items())))
+    (ROOT / "i18n-missing-js.txt").write_text("".join(f"{k}\t{v}\n" for k, v in sorted(TR.js_candidates.items())))
+    print(f"i18n: {len(TR.used)} strings used, {len(missing)} missing → i18n-missing.txt, {len(TR.js_candidates)} JS candidates")
 
     (DIST / "favicon.svg").write_text(FAVICON)
     (DIST / "CNAME").write_text(DOMAIN + "\n")
     (DIST / ".nojekyll").write_text("")
-    (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /s/\nDisallow: /api/\n\nSitemap: {ORIGIN}/sitemap.xml\n")
+    (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /s/\nDisallow: /ar/s/\nDisallow: /api/\n\nSitemap: {ORIGIN}/sitemap.xml\n")
     today = datetime.date.today().isoformat()
     urls = ["/"] + [f"/{t['slug']}/" for t in TOOLS] + ["/about/"]
     (DIST / "sitemap.xml").write_text(
-        '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-        + "".join(f"  <url><loc>{ORIGIN}{u}</loc><lastmod>{today}</lastmod><priority>{'1.0' if u == '/' else '0.8'}</priority></url>\n" for u in urls)
+        '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
+        + "".join(
+            f"  <url><loc>{ORIGIN}{pre}{u}</loc><lastmod>{today}</lastmod><priority>{'1.0' if u == '/' else '0.8'}</priority>"
+            f'<xhtml:link rel="alternate" hreflang="en" href="{ORIGIN}{u}"/><xhtml:link rel="alternate" hreflang="ar" href="{ORIGIN}/ar{u}"/></url>\n'
+            for u in urls for pre in ("", "/ar"))
         + "</urlset>\n")
     (DIST / "manifest.webmanifest").write_text(json.dumps({
         "name": SITE, "short_name": SITE, "description": "Private, browser-based security & developer tools.",
@@ -570,7 +621,7 @@ def main():
         "shortcuts": [{"name": t["name"], "url": f"/{t['slug']}/"} for t in TOOLS[:4]],
     }, indent=2))
     precache = ["/", "/404.html", f"/assets/site.css?v={version}", f"/assets/site.js?v={version}", "/favicon.svg"] + \
-               [f"/{t['slug']}/" for t in TOOLS] + ["/about/"]
+               [f"/{t['slug']}/" for t in TOOLS] + ["/about/", "/ar/", "/ar/404.html"]
     (DIST / "sw.js").write_text(SW.replace("{V}", version).replace("{PRECACHE}", json.dumps(precache)))
     # Keep IIS / Azure App Service compatibility from the original deployment.
     (DIST / "web.config").write_text(WEB_CONFIG)

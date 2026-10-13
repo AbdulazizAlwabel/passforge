@@ -43,18 +43,19 @@
     Pressure:{kPa:['Kilopascal',1e3],Pa:['Pascal',1],bar:['Bar',1e5],psi:['PSI',6894.757293168],atm:['Atmosphere',101325],mmHg:['mmHg (Torr)',133.322387415],MPa:['Megapascal',1e6]},
     Energy:{kJ:['Kilojoule',1e3],J:['Joule',1],cal:['Calorie',4.184],kcal:['Kilocalorie',4184],Wh:['Watt-hour',3600],kWh:['Kilowatt-hour',3.6e6],BTU:['BTU',1055.05585262],eV:['Electronvolt',1.602176634e-19]}
   };
+  const CATN={Length:'Length',Weight:'Weight',Temperature:'Temperature',Speed:'Speed',Volume:'Volume',Area:'Area',Data:'Data',Time:'Time',Pressure:'Pressure',Energy:'Energy'};
   const DEF={Length:['km','mi'],Weight:['kg','lb'],Temperature:['c','f'],Speed:['kmh','mph'],Volume:['l','galus'],Area:['m2','ft2'],Data:['GB','GiB'],Time:['h','min'],Pressure:['bar','psi'],Energy:['kcal','kJ']};
   const SYM={c:'°C',f:'°F',k:'K',r:'°R'};
-  let cat=ND.store.get('unit-cat','Length');if(!C[cat])cat='Length';
+  const FIRST=Object.keys(C)[0];let cat=ND.store.get('unit-cat',FIRST);if(!C[cat])cat=FIRST;
   const toC={c:v=>v,f:v=>(v-32)*5/9,k:v=>v-273.15,r:v=>(v-491.67)*5/9};
   const fromC={c:v=>v,f:v=>v*9/5+32,k:v=>v+273.15,r:v=>(v+273.15)*9/5};
-  const conv=(v,a,b)=>cat==='Temperature'?fromC[b](toC[a](v)):v*C[cat][a][1]/C[cat][b][1];
+  const conv=(v,a,b)=>C[cat]===C.Temperature?fromC[b](toC[a](v)):v*C[cat][a][1]/C[cat][b][1];
   function fmt(n){if(!isFinite(n))return '';if(n===0)return '0';const a=Math.abs(n);if(a>=1e15||a<1e-6)return n.toExponential(6).replace(/\.?0+e/,'e');return parseFloat(n.toPrecision(12)).toLocaleString('en-US',{maximumFractionDigits:10});}
   const parse=s=>parseFloat(String(s).replace(/,/g,'').trim());
-  const sym=u=>cat==='Temperature'?SYM[u]:u;
+  const sym=u=>C[cat]===C.Temperature?SYM[u]:u;
 
   function tabs(){
-    $('#cats').innerHTML=Object.keys(C).map(k=>'<button class="filter" role="tab" aria-pressed="'+(k===cat)+'" aria-selected="'+(k===cat)+'" data-c="'+k+'">'+k+'</button>').join('');
+    $('#cats').innerHTML=Object.keys(C).map(k=>'<button class="filter" role="tab" aria-pressed="'+(k===cat)+'" aria-selected="'+(k===cat)+'" data-c="'+k+'">'+CATN[k]+'</button>').join('');
   }
   function selects(){
     const o=Object.entries(C[cat]).map(([k,[n]])=>'<option value="'+k+'">'+n+' ('+sym(k)+')</option>').join('');
@@ -67,10 +68,10 @@
     else{const v=parse($('#fromVal').value);$('#toVal').value=isNaN(v)?'':fmt(conv(v,a,b));}
     const v=parse($('#fromVal').value);
     let f='';
-    if(cat==='Temperature'){const F={'c-f':'°F = °C × 9/5 + 32','f-c':'°C = (°F − 32) × 5/9','c-k':'K = °C + 273.15','k-c':'°C = K − 273.15','f-k':'K = (°F + 459.67) × 5/9','k-f':'°F = K × 9/5 − 459.67'};f=F[a+'-'+b]||'';}
+    if(C[cat]===C.Temperature){const F={'c-f':'°F = °C × 9/5 + 32','f-c':'°C = (°F − 32) × 5/9','c-k':'K = °C + 273.15','k-c':'°C = K − 273.15','f-k':'K = (°F + 459.67) × 5/9','k-f':'°F = K × 9/5 − 459.67'};f=F[a+'-'+b]||'';}
     else if(a!==b){f='× '+fmt(C[cat][a][1]/C[cat][b][1]);}
     $('#formula').textContent=isNaN(v)?'Enter a number to convert':fmt(v)+' '+sym(a)+' = '+$('#toVal').value+' '+sym(b)+(f?'   ·   '+f:'');
-    $('#qrefTitle').textContent='1 '+C[cat][a][0].toLowerCase()+' equals';
+    $('#qrefTitle').textContent=ND.f('1 {unit} equals',{unit:ND.lang==='ar'?C[cat][a][0]:C[cat][a][0].toLowerCase()});
     $('#qref').innerHTML=Object.keys(C[cat]).filter(k=>k!==a).map(k=>'<div class="stat click" data-to="'+k+'"><div class="k">'+C[cat][k][0]+'</div><div class="v">'+fmt(conv(1,a,k))+' '+sym(k)+'</div></div>').join('');
   }
   $('#cats').addEventListener('click',e=>{const b=e.target.closest('[data-c]');if(!b)return;cat=b.dataset.c;ND.store.set('unit-cat',cat);tabs();selects();$('#fromVal').value='1';run();});

@@ -96,25 +96,32 @@
     if(common){bits=Math.min(bits,10);issues.push({sev:'bad',t:'This is one of the most common passwords — it would be guessed instantly.'});}
     else{
       const dict=COMMON.concat(WORDS).filter(w=>w.length>=4&&unleet.includes(w));
-      if(dict.length){const w=dict.sort((a,b)=>b.length-a.length)[0];bits-=w.length*Math.log2(P||1)*0.75;issues.push({sev:'fail',t:'Contains the common word “'+w+'”'+(unleet!==lower?' (even with substitutions)':'')+'.'});}
+      if(dict.length){const w=dict.sort((a,b)=>b.length-a.length)[0];bits-=w.length*Math.log2(P||1)*0.75;issues.push({sev:'fail',t:ND.f(unleet!==lower?'Contains the common word “{w}” (even with substitutions).':'Contains the common word “{w}”.',{w})});}
     }
-    const kb=kbWalk(pw);if(kb){bits-=kb*2.5;issues.push({sev:'fail',t:'Contains a keyboard pattern ('+kb+' keys in a row).'});}
-    const sq=seqLen(pw);if(sq){bits-=sq*2.5;issues.push({sev:'fail',t:'Contains a sequence like “abc” or “123” ('+sq+' characters).'});}
-    const rep=pw.match(/(.)\1{2,}/);if(rep){bits-=rep[0].length*2;issues.push({sev:'fail',t:'Repeats “'+rep[1]+'” '+rep[0].length+' times in a row.'});}
-    const chunk=pw.match(/(.{2,})\1+/);if(chunk&&chunk[0].length>=4){bits-=chunk[0].length*1.5;issues.push({sev:'fail',t:'Repeats the chunk “'+chunk[1]+'”.'});}
+    const kb=kbWalk(pw);if(kb){bits-=kb*2.5;issues.push({sev:'fail',t:ND.f('Contains a keyboard pattern ({n} keys in a row).',{n:kb})});}
+    const sq=seqLen(pw);if(sq){bits-=sq*2.5;issues.push({sev:'fail',t:ND.f('Contains a sequence like “abc” or “123” ({n} characters).',{n:sq})});}
+    const rep=pw.match(/(.)\1{2,}/);if(rep){bits-=rep[0].length*2;issues.push({sev:'fail',t:ND.f('Repeats “{c}” {n} times in a row.',{c:rep[1],n:rep[0].length})});}
+    const chunk=pw.match(/(.{2,})\1+/);if(chunk&&chunk[0].length>=4){bits-=chunk[0].length*1.5;issues.push({sev:'fail',t:ND.f('Repeats the chunk “{c}”.',{c:chunk[1]})});}
     if(/(19|20)\d{2}/.test(pw)){bits-=6;issues.push({sev:'fail',t:'Looks like it contains a year — years are among the first things tried.'});}
     if(/^[A-Z][a-z]+\d+[^a-zA-Z0-9]?$/.test(pw)){bits-=8;issues.push({sev:'fail',t:'Follows the very common “Word + numbers” shape.'});}
     bits=Math.max(0,bits);
     const unique=new Set(pw).size;
     return {len,P,bits,unique,issues};
   }
+  const UNITS=[
+    [3153600000,{one:'century',other:'centuries'},{one:'قرن',two:'قرنان',few:'قرون',many:'قرنًا',other:'قرن'}],
+    [31536000,{one:'year',other:'years'},{one:'سنة',two:'سنتان',few:'سنوات',many:'سنة',other:'سنة'}],
+    [2592000,{one:'month',other:'months'},{one:'شهر',two:'شهران',few:'أشهر',many:'شهرًا',other:'شهر'}],
+    [86400,{one:'day',other:'days'},{one:'يوم',two:'يومان',few:'أيام',many:'يومًا',other:'يوم'}],
+    [3600,{one:'hour',other:'hours'},{one:'ساعة',two:'ساعتان',few:'ساعات',many:'ساعة',other:'ساعة'}],
+    [60,{one:'minute',other:'minutes'},{one:'دقيقة',two:'دقيقتان',few:'دقائق',many:'دقيقة',other:'دقيقة'}],
+    [1,{one:'second',other:'seconds'},{one:'ثانية',two:'ثانيتان',few:'ثوانٍ',many:'ثانية',other:'ثانية'}]];
   function human(sec){
     if(sec<1)return 'Instantly';
-    const u=[['century',3153600000],['year',31536000],['month',2592000],['day',86400],['hour',3600],['minute',60],['second',1]];
     if(sec>3153600000*1e6)return 'Heat death of the sun';
-    for(const [n,s] of u){if(sec>=s){const v=sec/s;
-      if(n==='century'&&v>=1000){return v>=1e6?(v/1e6).toFixed(0)+' million centuries':Math.round(v/1000)+' thousand centuries';}
-      const r=Math.round(v);return r+' '+(n==='century'?(r===1?'century':'centuries'):n+(r===1?'':'s'));}}
+    for(const [s,en,ar] of UNITS){if(sec>=s){const v=sec/s;
+      if(s===UNITS[0][0]&&v>=1000)return v>=1e6?ND.f('{n} million centuries',{n:Math.round(v/1e6)}):ND.f('{n} thousand centuries',{n:Math.round(v/1000)});
+      return ND.count(Math.round(v),en,ar);}}
   }
   function run(){
     const pw=$('#pw').value;
@@ -131,7 +138,7 @@
     $('#crack').innerHTML=sc.map(([k,r,rate])=>'<div class="stat"><div class="k">'+k+'</div><div class="v">'+human(guesses/rate)+'</div><div class="faint mono" style="font-size:.72rem;margin-top:4px">'+r+'</div></div>').join('');
     $('#comp').innerHTML=[['Length',a.len],['Character pool',a.P],['Unique chars',a.unique+' / '+a.len],['Raw entropy',Math.round(a.len*Math.log2(a.P||1))+' bits']].map(([k,v])=>'<div class="stat"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>').join('');
     const checks=[
-      {ok:a.len>=12,p:'At least 12 characters',f:'Use at least 12 characters (currently '+a.len+')'},
+      {ok:a.len>=12,p:'At least 12 characters',f:ND.f('Use at least 12 characters (currently {n})',{n:a.len})},
       {ok:a.len>=16,p:'16+ characters — excellent length',f:'16+ characters gives a big safety margin'},
       {ok:/[a-z]/.test(pw)&&/[A-Z]/.test(pw),p:'Mixes upper and lower case',f:'Mix upper and lower case letters'},
       {ok:/[0-9]/.test(pw),p:'Contains numbers',f:'Add some numbers'},
@@ -161,7 +168,7 @@
       const n=await ND.pwned(pw);if(my!==leakSeq)return;
       leakCount=n;
       if(n===null)setBreach('err','Couldn’t reach the breach database','You may be offline. The rest of the analysis still applies.');
-      else if(n>0){setBreach('bad','Found in '+n.toLocaleString()+' data breach'+(n===1?'':'es'),'Attackers try leaked passwords first. Don’t use this anywhere — choose a new one.');applyLeak();}
+      else if(n>0){setBreach('bad',ND.f('Found in {count}',{count:ND.count(n,{one:'data breach',other:'data breaches'},{one:'تسريب',two:'تسريبين',few:'تسريبات',many:'تسريبًا',other:'تسريب'})}),'Attackers try leaked passwords first. Don’t use this anywhere — choose a new one.');applyLeak();}
       else setBreach('ok','Not found in any known data breach','Checked against 900M+ leaked passwords.');
     },450);
   }

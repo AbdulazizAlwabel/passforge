@@ -119,6 +119,7 @@ const wrap = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).cat
 const sha256 = (s) => crypto.createHash('sha256').update(s).digest('hex');
 const isAdmin = (username) => ADMINS.has(String(username).toLowerCase());
 const USERNAME_RE = /^[A-Za-z0-9_.-]{3,30}$/;
+const langOf = (req) => (req.body && req.body.lang === 'ar') || req.query.lang === 'ar' ? 'ar' : 'en';
 const EMAIL_RE = /^[^\s@]{1,64}@[^\s@]{1,255}\.[^\s@]{2,}$/;
 
 function setSession(res, user) {
@@ -185,7 +186,7 @@ api.post('/register', strict, wrap(async (req, res) => {
   }
   try {
     const t = await createToken(userId, 'verify_email', 24 * 60);
-    await mail.sendVerification(email, username, t);
+    await mail.sendVerification(email, username, t, langOf(req));
   } catch (e) {
     console.error('[register] verification email failed:', e.message);
   }
@@ -214,11 +215,12 @@ api.post('/logout', (req, res) => {
 
 api.get('/verify-email', normal, wrap(async (req, res) => {
   const userId = await consumeToken(String(req.query.token || ''), 'verify_email');
-  if (!userId) return res.redirect(303, '/account/?verified=0');
+  const pre = langOf(req) === 'ar' ? '/ar' : '';
+  if (!userId) return res.redirect(303, pre + '/account/?verified=0');
   await db.execute('UPDATE users SET verified = 1 WHERE id = ?', [userId]);
   const [[u]] = await db.execute('SELECT username, email FROM users WHERE id = ?', [userId]);
-  if (u) mail.sendWelcome(u.email, u.username).catch((e) => console.error('[verify] welcome email failed:', e.message));
-  res.redirect(303, '/account/?verified=1');
+  if (u) mail.sendWelcome(u.email, u.username, langOf(req)).catch((e) => console.error('[verify] welcome email failed:', e.message));
+  res.redirect(303, pre + '/account/?verified=1');
 }));
 
 api.post('/resend-verification', strict, auth, wrap(async (req, res) => {
@@ -226,7 +228,7 @@ api.post('/resend-verification', strict, auth, wrap(async (req, res) => {
   if (!u) return res.status(404).json({ error: 'User not found' });
   if (u.verified) return res.json({ message: 'Your email is already verified' });
   const t = await createToken(u.id, 'verify_email', 24 * 60);
-  await mail.sendVerification(u.email, u.username, t);
+  await mail.sendVerification(u.email, u.username, t, langOf(req));
   res.json({ message: 'Verification email sent' });
 }));
 
@@ -239,7 +241,7 @@ api.post('/forgot-password', strict, wrap(async (req, res) => {
     const [[u]] = await db.execute('SELECT id, username, email FROM users WHERE email = ?', [email]);
     if (!u) return;
     const t = await createToken(u.id, 'reset_password', 60);
-    await mail.sendPasswordReset(u.email, u.username, t);
+    await mail.sendPasswordReset(u.email, u.username, t, langOf(req));
   } catch (e) {
     console.error('[forgot-password]', e.message);
   }
@@ -326,6 +328,6 @@ app.use(express.static(STATIC_ROOT, {
     else res.set('Cache-Control', 'no-cache');
   },
 }));
-app.use((req, res) => res.status(404).sendFile(path.join(STATIC_ROOT, '404.html')));
+app.use((req, res) => res.status(404).sendFile(path.join(STATIC_ROOT, req.path.startsWith('/ar/') ? 'ar/404.html' : '404.html')));
 
 app.listen(PORT, HOST, () => console.log(`[nicelydone] listening on ${HOST}:${PORT} — serving ${STATIC_ROOT}`));

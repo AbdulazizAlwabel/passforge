@@ -42,7 +42,7 @@
 
       <div class="row" style="margin-top:28px;justify-content:space-between">
         <a class="btn" href="/admin/" id="adminLink" hidden>{{icon:shield}}Admin</a>
-        <button class="btn btn-danger" id="logout" style="margin-left:auto">Sign out</button>
+        <button class="btn btn-danger" id="logout" style="margin-inline-start:auto">Sign out</button>
       </div>
     </div>
   </div>
@@ -52,7 +52,7 @@
 <script>
 (function(){
   const $=ND.$;
-  const fmt=iso=>iso?new Date(iso).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}):'—';
+  const fmt=iso=>iso?new Date(iso).toLocaleDateString(ND.lang==='ar'?'ar-u-nu-latn':'en-GB',{day:'numeric',month:'long',year:'numeric'}):'—';
   const q=new URLSearchParams(location.search);
   async function load(){
     const r=await ND.api('/profile');
@@ -70,7 +70,7 @@
     if(q.get('verified')==='1'){const f=$('#flash');f.querySelector('span').textContent='Email verified — thank you!';f.hidden=false;history.replaceState(null,'',location.pathname);}
   }
   load();
-  $('#resend').addEventListener('click',async e=>{const b=e.currentTarget;b.disabled=true;const r=await ND.api('/resend-verification',{method:'POST'});ND.toast(r.ok?(r.data.message||'Verification email sent'):(r.data.error||'Could not send email'));setTimeout(()=>b.disabled=false,30000);});
+  $('#resend').addEventListener('click',async e=>{const b=e.currentTarget;b.disabled=true;const r=await ND.api('/resend-verification',{method:'POST',body:{lang:ND.lang}});ND.toast(r.ok?(r.data.message||'Verification email sent'):(r.data.error||'Could not send email'));setTimeout(()=>b.disabled=false,30000);});
   $('#pwForm').addEventListener('submit',async e=>{
     e.preventDefault();const er=e.target.querySelector('.msg.err'),btn=e.target.querySelector('[type=submit]');er.hidden=true;
     const cur=$('#cur').value,nw=$('#nw').value;
@@ -80,8 +80,8 @@
   });
 
   let pwnT,pwnSeq=0;
-  function warnLeak(input,el){clearTimeout(pwnT);const my=++pwnSeq;el.hidden=true;const v=input.value;if(v.length<6)return;pwnT=setTimeout(async()=>{const n=await ND.pwned(v);if(my===pwnSeq&&n>0){el.textContent='⚠ This password appeared in '+n.toLocaleString()+' data breaches — please choose a different one.';el.hidden=false;}},500);}
+  function warnLeak(input,el){clearTimeout(pwnT);const my=++pwnSeq;el.hidden=true;const v=input.value;if(v.length<6)return;pwnT=setTimeout(async()=>{const n=await ND.pwned(v);if(my===pwnSeq&&n>0){el.textContent=ND.f('⚠ This password appeared in {count} — please choose a different one.',{count:ND.count(n,{one:'data breach',other:'data breaches'},{one:'تسريب',two:'تسريبين',few:'تسريبات',many:'تسريبًا',other:'تسريب'})});el.hidden=false;}},500);}
   $('#nw').addEventListener('input',()=>warnLeak($('#nw'),$('#warn')));
-  $('#logout').addEventListener('click',async()=>{await ND.api('/logout',{method:'POST'});location.href='/';});
+  $('#logout').addEventListener('click',async()=>{await ND.api('/logout',{method:'POST'});location.href=ND.url('/');});
 })();
 </script>

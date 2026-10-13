@@ -8,6 +8,26 @@
 
   const ND = (window.ND = window.ND || {});
 
+  /* ---------- Language ----------
+     Page content is translated at build time; this covers strings created by
+     shared scripts and messages coming back from the API. */
+  ND.lang = root.lang || 'en';
+  const I18N = window.ND_I18N || {};
+  const T = (ND.t = (s) => (s != null && Object.prototype.hasOwnProperty.call(I18N, s) ? I18N[s] : s));
+  /* Locale-aware internal link: ND.url('/profile/') → '/ar/profile/' on Arabic pages. */
+  ND.url = (path) => (ND.lang === 'ar' && path.charAt(0) === '/' && !path.startsWith('/ar/') ? '/ar' + path : path);
+  /* Plurals: ND.pl(n, {one:'day', other:'days'}, {one:'يوم', two:'يومان', few:'أيام', many:'يومًا', other:'يوم'}) */
+  const plRules = {};
+  ND.pl = (n, en, ar) => {
+    const forms = ND.lang === 'ar' && ar ? ar : en;
+    const rule = (plRules[ND.lang] = plRules[ND.lang] || new Intl.PluralRules(ND.lang));
+    return forms[rule.select(n)] || forms.other;
+  };
+  /* Template with {placeholders}; the template itself is translated. */
+  ND.f = (t, v) => T(t).replace(/\{(\w+)\}/g, (m, k) => (v && k in v ? v[k] : m));
+  /* Number + plural noun, e.g. ND.count(3, {...}, {...}) → "3 days" / "3 أيام" */
+  ND.count = (n, en, ar) => n.toLocaleString(ND.lang === 'ar' ? 'en-US' : undefined) + ' ' + ND.pl(n, en, ar);
+
   /* ---------- Utilities ---------- */
   ND.$ = (s, el) => (el || document).querySelector(s);
   ND.$$ = (s, el) => Array.from((el || document).querySelectorAll(s));
@@ -38,7 +58,7 @@
       document.body.appendChild(toastEl);
     }
     toastEl.innerHTML = ICON_CHECK + '<span></span>';
-    toastEl.querySelector('span').textContent = msg;
+    toastEl.querySelector('span').textContent = T(msg);
     requestAnimationFrame(() => toastEl.classList.add('show'));
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1900);
@@ -56,7 +76,7 @@
       try { document.execCommand('copy'); } catch (_) { /* ignore */ }
       ta.remove();
     }
-    ND.toast(msg || 'Copied to clipboard');
+    ND.toast(T(msg || 'Copied to clipboard'));
     if (btn) {
       btn.classList.add('done');
       clearTimeout(btn._t);
@@ -128,11 +148,11 @@
     cmdk = document.createElement('div');
     cmdk.className = 'cmdk-backdrop';
     cmdk.innerHTML =
-      '<div class="cmdk" role="dialog" aria-modal="true" aria-label="Search tools">' +
+      '<div class="cmdk" role="dialog" aria-modal="true" aria-label="' + T('Search tools') + '">' +
         '<div class="cmdk-input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>' +
-        '<input type="text" placeholder="Search tools…" aria-label="Search tools" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="cmdk-list"><span class="kbd">esc</span></div>' +
+        '<input type="text" placeholder="' + T('Search tools…') + '" aria-label="' + T('Search tools') + '" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="cmdk-list"><span class="kbd">esc</span></div>' +
         '<div class="cmdk-list" id="cmdk-list" role="listbox"></div>' +
-        '<div class="cmdk-foot"><span><span class="kbd">↑</span> <span class="kbd">↓</span> navigate</span><span><span class="kbd">↵</span> open</span><span style="margin-left:auto">nicelydone.qd.je</span></div>' +
+        '<div class="cmdk-foot"><span><span class="kbd">↑</span> <span class="kbd">↓</span> ' + T('navigate') + '</span><span><span class="kbd">↵</span> ' + T('open') + '</span><span style="margin-inline-start:auto">nicelydone.qd.je</span></div>' +
       '</div>';
     document.body.appendChild(cmdk);
     cmdInput = cmdk.querySelector('input');
@@ -171,7 +191,7 @@
       html += '<div class="cmdk-item" role="option" id="cmdk-' + i + '" data-href="' + t.href + '" aria-selected="false">' +
         '<div class="tile-icon">' + t.icon + '</div><div><strong>' + ND.esc(t.name) + '</strong><span>' + ND.esc(t.short) + '</span></div><span class="ret">↵</span></div>';
     });
-    cmdList.innerHTML = html || '<div class="cmdk-empty">No tools match “' + ND.esc(q) + '”</div>';
+    cmdList.innerHTML = html || '<div class="cmdk-empty">' + T('No tools match') + ' “' + ND.esc(q) + '”</div>';
     cmdItems = ND.$$('.cmdk-item', cmdList);
     cmdItems.forEach((el, i) => {
       el.addEventListener('mousemove', () => select(i));
@@ -253,12 +273,13 @@
     if (opts.body !== undefined) { init.headers['Content-Type'] = 'application/json'; init.body = JSON.stringify(opts.body); }
     let res;
     try { res = await fetch(ND.API + path, init); }
-    catch (e) { return { ok: false, status: 0, offline: true, data: { error: 'Can’t reach the server. Check your connection and try again.' } }; }
+    catch (e) { return { ok: false, status: 0, offline: true, data: { error: T('Can’t reach the server. Check your connection and try again.') } }; }
     let data = {};
     const ct = res.headers.get('content-type') || '';
     if (ct.includes('application/json')) { try { data = await res.json(); } catch (e) { /* empty body */ } }
     const offline = !ct.includes('application/json') && !res.ok;
-    if (offline) data = { error: 'Accounts are not available on this deployment right now.' };
+    if (offline) data = { error: T('Accounts are not available on this deployment right now.') };
+    if (data && typeof data === 'object') { if (data.error) data.error = T(data.error); if (data.message) data.message = T(data.message); }
     return { ok: res.ok, status: res.status, offline, data };
   };
   ND.me = (async () => {
@@ -270,13 +291,26 @@
       if (r.ok && r.data.username) {
         const u = r.data.username;
         slot.className = 'account-chip';
-        slot.href = '/profile/';
-        slot.setAttribute('aria-label', 'Your profile (' + u + ')');
+        slot.href = ND.url('/profile/');
+        slot.setAttribute('aria-label', T('Your profile') + ' (' + u + ')');
         slot.innerHTML = '<span class="avatar">' + ND.esc(u.charAt(0).toUpperCase()) + '</span><span class="name">' + ND.esc(u) + '</span>';
       }
     }
     return r.ok ? r.data : false;
   })();
+
+  /* ---------- Language suggestion ----------
+     Arabic-language browsers on an English page get a one-line, dismissible
+     pointer to the Arabic version (never an automatic redirect). */
+  document.addEventListener('click', (e) => { if (e.target.closest('.lang-switch, [data-lang-go]')) ND.store.set('lang-choice', 1); });
+  const sw = document.querySelector('.lang-switch');
+  if (ND.lang === 'en' && sw && !ND.store.get('lang-choice', 0) && /^ar\b/i.test(navigator.language || '')) {
+    const bar = document.createElement('div');
+    bar.className = 'lang-hint'; bar.setAttribute('lang', 'ar'); bar.setAttribute('dir', 'rtl');
+    bar.innerHTML = '<span>هذا الموقع متوفر بالعربية</span><a data-lang-go href="' + sw.getAttribute('href') + '">التبديل إلى العربية</a><button type="button" aria-label="إغلاق">×</button>';
+    bar.querySelector('button').addEventListener('click', () => { ND.store.set('lang-choice', 1); bar.remove(); });
+    document.body.appendChild(bar);
+  }
 
   /* ---------- Offline support ---------- */
   if ('serviceWorker' in navigator && location.protocol === 'https:') {

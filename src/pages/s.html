@@ -68,7 +68,7 @@
     if(r.offline||r.status===0)return gone('offline');
     if(!r.ok||r.data.status!=='active')return gone(r.data.status||'missing');
     meta=r.data;
-    $('#exp').textContent=new Date(meta.expiresAt).toLocaleString(undefined,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    $('#exp').textContent=new Date(meta.expiresAt).toLocaleString(ND.lang==='ar'?'ar-u-nu-latn':undefined,{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
     $('#prot').textContent=meta.hasPassword?'Password':'Link only';
     $('#pwField').hidden=!meta.hasPassword;
     show('ready');
@@ -88,7 +88,7 @@
       }
       btn.innerHTML='<span class="spin"></span>Decrypting…';
       const r=await ND.api('/secrets/'+link.id+'/reveal',{method:'POST',body});
-      if(r.status===403){err.textContent=r.data.error+(r.data.attemptsLeft!=null?' '+r.data.attemptsLeft+' attempt'+(r.data.attemptsLeft===1?'':'s')+' left.':'');err.hidden=false;$('#pw').select();return;}
+      if(r.status===403){err.textContent=r.data.error+(r.data.attemptsLeft!=null?' '+ND.f('Attempts left: {n}',{n:r.data.attemptsLeft}):'');err.hidden=false;$('#pw').select();return;}
       if(!r.ok)return gone(r.data.status||'missing');
       try{plain=await NDSecret.open(r.data.payload,link.key,keyPart);}
       catch(_){err.textContent='The link’s key doesn’t match this secret — it may have been copied incompletely. The secret has now been destroyed.';err.hidden=false;return;}

@@ -2,7 +2,7 @@
 <div class="panel">
   <div class="panel-body">
     <div class="today">
-      <div><div class="k">Today · Hijri</div><div class="v" id="tH">—</div><div class="ar" id="tHar" lang="ar" dir="rtl" style="text-align:left"></div></div>
+      <div><div class="k">Today · Hijri</div><div class="v" id="tH">—</div><div class="ar" id="tHar" lang="ar" dir="rtl"></div></div>
       <div class="sw"></div>
       <div class="r"><div class="k">Today · Gregorian</div><div class="v" id="tG">—</div><div class="ar" id="tDay" style="font-family:var(--font-sans);font-size:.95rem"></div></div>
     </div>
@@ -84,8 +84,9 @@
     return null;
   }
   const dow=(y,m,d)=>utc(y,m,d).getUTCDay();
-  const fmtG=g=>DOW[dow(g.y,g.m,g.d)]+', '+g.d+' '+GM[g.m-1]+' '+g.y;
-  const fmtH=h=>h.d+' '+HM[h.m-1]+' '+h.y+' AH';
+  const COMMA=ND.lang==='ar'?'، ':', ';
+  const fmtG=g=>DOW[dow(g.y,g.m,g.d)]+COMMA+g.d+' '+GM[g.m-1]+' '+g.y;
+  const fmtH=h=>h.d+' '+HM[h.m-1]+' '+h.y+' '+'AH';
   const arNum=n=>String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);
   const fmtHar=h=>arNum(h.d)+' '+HMAR[h.m-1]+' '+arNum(h.y)+' هـ';
 
@@ -104,15 +105,15 @@
     const d=+$('#hD').value,m=+$('#hM').value,y=+$('#hY').value,o=$('#h2gOut');
     if(!d||!y||d<1||d>30||y<1300||y>1600){o.innerHTML=err('Enter a Hijri date between 1300 and 1600 AH.');return;}
     const g=h2g(y,m,d);
-    if(!g){o.innerHTML=err(HM[m-1]+' '+y+' has only 29 days in the Umm al-Qura calendar.');return;}
+    if(!g){o.innerHTML=err(ND.f('{month} {year} has only 29 days in the Umm al-Qura calendar.',{month:HM[m-1],year:y}));return;}
     const days=Math.round((utc(g.y,g.m,g.d)-utc(T.y,T.m,T.d))/86400000);
-    const rel=days===0?'Today':days>0?'In '+days.toLocaleString()+' day'+(days===1?'':'s'):Math.abs(days).toLocaleString()+' day'+(days===-1?'':'s')+' ago';
+    const rel=new Intl.RelativeTimeFormat(ND.lang==='ar'?'ar-u-nu-latn':ND.lang,{numeric:'auto'}).format(days,'day');
     o.innerHTML='<div class="main">'+fmtG(g)+'</div><div class="ar" lang="ar" dir="rtl">'+fmtHar({y,m,d})+'</div><div class="sub">'+rel+'</div>'+copyBtn(fmtG(g));
   }
   function runG(){
     const d=+$('#gD').value,m=+$('#gM').value,y=+$('#gY').value,o=$('#g2hOut');
     const real=new Date(Date.UTC(y,m,0)).getUTCDate();
-    if(!d||!y||y<1882||y>2174||d<1||d>real){o.innerHTML=err(d>real?GM[m-1]+' '+y+' has '+real+' days.':'Enter a Gregorian date between 1882 and 2174.');return;}
+    if(!d||!y||y<1882||y>2174||d<1||d>real){o.innerHTML=err(d>real?ND.f('{month} {year} has {n} days.',{month:GM[m-1],year:y,n:real}):'Enter a Gregorian date between 1882 and 2174.');return;}
     const h=g2h(y,m,d);
     o.innerHTML='<div class="main">'+fmtH(h)+'</div><div class="ar" lang="ar" dir="rtl">'+DOWAR[dow(y,m,d)]+'، '+fmtHar(h)+'</div><div class="sub">'+fmtG({y,m,d})+'</div>'+copyBtn(fmtH(h));
   }

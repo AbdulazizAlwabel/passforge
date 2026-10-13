@@ -2,3 +2,5 @@ node_modules/
 server/.env
 *.log
 legacy-passforge.zip
+i18n-missing.txt
+i18n-missing-js.txt

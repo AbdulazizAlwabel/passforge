@@ -88,7 +88,7 @@
   const n2ip=n=>[n>>>24,(n>>>16)&255,(n>>>8)&255,n&255].join('.');
   const valid=s=>/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/.test(s)&&s.split('.').every(o=>+o<=255&&String(+o)===o);
   function ipClass(n){const a=n>>>24;if(a===10||(a===172&&((n>>>16)&255)>=16&&((n>>>16)&255)<=31)||(a===192&&((n>>>16)&255)===168))return 'Private';if(a===127)return 'Loopback';if(a===169&&((n>>>16)&255)===254)return 'Link-local';if(a===100&&((n>>>16)&255)>=64&&((n>>>16)&255)<=127)return 'CGNAT';if(a>=224&&a<=239)return 'Multicast';return 'Public';}
-  let vals={};
+  let vals=[];
   function calc(fromText){
     let raw=$('#addr').value.trim(),ip=raw,c=+$('#cidr').value;
     const m=raw.match(/^(.+?)\/(\d{1,2})$/);
@@ -98,12 +98,12 @@
     $('#subErr').hidden=true;$('#subOut').hidden=false;
     const n=ip2n(ip),mask=c===0?0:(0xFFFFFFFF<<(32-c))>>>0,net=(n&mask)>>>0,bc=(net|(~mask>>>0))>>>0;
     const total=Math.pow(2,32-c),usable=c>=31?(c===31?2:1):total-2;
-    vals={'Network':n2ip(net)+'/'+c,'Subnet mask':n2ip(mask),'Wildcard':n2ip(~mask>>>0),'Broadcast':c>=31?'—':n2ip(bc),'First host':n2ip(c>=31?net:net+1),'Last host':n2ip(c>=31?bc:bc-1),'Usable hosts':usable.toLocaleString(),'Total addresses':total.toLocaleString(),'Type':ipClass(n),'Hex':'0x'+n.toString(16).toUpperCase().padStart(8,'0')};
-    $('#subGrid').innerHTML=Object.entries(vals).map(([k,v])=>'<div class="stat click" data-k="'+k+'" title="Click to copy"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>').join('');
+    vals=[['Network',n2ip(net)+'/'+c],['Subnet mask',n2ip(mask)],['Wildcard',n2ip(~mask>>>0)],['Broadcast',c>=31?'—':n2ip(bc)],['First host',n2ip(c>=31?net:net+1)],['Last host',n2ip(c>=31?bc:bc-1)],['Usable hosts',usable.toLocaleString()],['Total addresses',total.toLocaleString()],['Type',ipClass(n)],['Hex','0x'+n.toString(16).toUpperCase().padStart(8,'0')]];
+    $('#subGrid').innerHTML=vals.map(([k,v],i)=>'<div class="stat click" data-k="'+i+'" title="Click to copy"><div class="k">'+k+'</div><div class="v" dir="ltr">'+v+'</div></div>').join('');
     const b=n.toString(2).padStart(32,'0');
     $('#bin').innerHTML=b.split('').map((x,i)=>(i&&i%8===0?' . ':'')+'<span class="'+(i<c?'n':'h')+'">'+x+'</span>').join('');
   }
-  $('#subGrid').addEventListener('click',e=>{const s=e.target.closest('[data-k]');if(s&&vals[s.dataset.k]!=='—')ND.copy(vals[s.dataset.k],null,s.dataset.k+' copied');});
+  $('#subGrid').addEventListener('click',e=>{const s=e.target.closest('[data-k]');if(s){const [k,v]=vals[+s.dataset.k];if(v!=='—')ND.copy(v,null,ND.f('{label} copied',{label:k}));}});
   $('#addr').addEventListener('input',()=>calc(true));
   $('#cidr').addEventListener('input',()=>{const ip=$('#addr').value.trim().split('/')[0];$('#addr').value=ip+'/'+$('#cidr').value;calc(false);});
   calc(true);

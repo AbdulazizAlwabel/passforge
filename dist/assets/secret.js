@@ -68,7 +68,7 @@
       return td.decode(pt);
     },
     /* Link format: /s/#<id>.<key> — both parts stay client-side. */
-    link(id, key) { return location.origin + '/s/#' + id + '.' + key; },
+    link(id, key) { return location.origin + (window.ND && ND.url ? ND.url('/s/') : '/s/') + '#' + id + '.' + key; },
     parse(hash) {
       const m = String(hash || '').replace(/^#/, '').match(/^([A-Za-z0-9_-]{22})\.([A-Za-z0-9_-]{43})$/);
       return m ? { id: m[1], key: m[2] } : null;
