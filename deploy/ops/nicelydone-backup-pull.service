@@ -1,0 +1,8 @@
+[Unit]
+Description=Pull nicelydone.qd.je database backups from the Oracle VM
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rsync -a --chmod=F600 -e "ssh -i %h/Downloads/key/YOUR-KEY -o BatchMode=yes -o ConnectTimeout=20" opc@YOUR-VM:/var/backups/nicelydone/ %h/Backups/nicelydone/
+ExecStartPost=/usr/bin/find %h/Backups/nicelydone -name "passforge-*.sql.gz" -mtime +30 -delete

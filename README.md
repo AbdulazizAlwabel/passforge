@@ -69,3 +69,17 @@ DigitalPlat dashboard; records then live at that DNS provider:
 
 - Static host: `CNAME nicelydone.qd.je → <host>` (e.g. `abdulazizalwabel.github.io`)
 - Own server: `A nicelydone.qd.je → <server IPv4>` and `CNAME www → nicelydone.qd.je`
+
+## Operations (Oracle VM)
+
+`deploy/install-vm.sh` also installs three systemd timers from `deploy/ops/`:
+
+| Timer | What it does |
+|---|---|
+| `nicelydone-backup` | 00:30 UTC nightly `mysqldump` → `/var/backups/nicelydone`, 14 days kept |
+| `nicelydone-monitor` | every 5 min: health check through HTTPS + daily certificate-expiry check; alerts on change |
+| `nicelydone-autodeploy` | every 5 min: if GitHub `main` moved, rebuild, install, health-check, notify |
+
+Alerts go through Hermes to the target in `/etc/nicelydone/ops.env` (kept off the repo).
+`deploy/ops/nicelydone-backup-pull.*` is a user-level timer template for pulling the backups to another machine.
+Admins are set by numeric id: `ADMIN_USER_IDS` in `server/.env`.
