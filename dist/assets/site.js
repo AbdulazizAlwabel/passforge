@@ -110,6 +110,20 @@
     window.addEventListener('scroll', onScroll, { passive: true });
   }
 
+  /* ---------- Tools menu ---------- */
+  ND.$$('[data-menu]').forEach((btn) => {
+    const panel = document.getElementById(btn.dataset.menu);
+    if (!panel) return;
+    const set = (open) => {
+      panel.hidden = !open; btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (open) { const first = panel.querySelector('a'); if (first && ND._menuKey) first.focus(); }
+    };
+    btn.addEventListener('click', (e) => { e.preventDefault(); ND._menuKey = e.detail === 0; set(panel.hidden); });
+    document.addEventListener('click', (e) => { if (!panel.hidden && !panel.contains(e.target) && !btn.contains(e.target)) set(false); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !panel.hidden) { set(false); btn.focus(); } });
+    panel.addEventListener('click', (e) => { if (e.target.closest('a')) set(false); });
+  });
+
   /* ---------- Reveal on scroll ---------- */
   const reveals = ND.$$('.reveal');
   if ('IntersectionObserver' in window && reveals.length) {

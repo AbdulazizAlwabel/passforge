@@ -147,6 +147,15 @@ TOOLS = [
 ]
 TOOL_BY_SLUG = {t["slug"]: t for t in TOOLS}
 CATS = ["Security", "Developer", "Everyday"]
+CAT_META = {
+    "Security": dict(slug="security", name="Security & privacy", title="Security &amp; <em>privacy</em>", icon="shield",
+                     blurb="Create, check and share secrets without trusting anyone — passwords, hashes and self-destructing links."),
+    "Developer": dict(slug="developer", name="Developer", title="Developer <em>tools</em>", icon="code",
+                      blurb="Encoders, formatters and network helpers for everyday development — instant, offline, nothing uploaded."),
+    "Everyday": dict(slug="everyday", name="Everyday", title="Everyday <em>tools</em>", icon="sparkle",
+                     blurb="Practical helpers for daily life — units, Hijri dates and how fast your internet really is."),
+}
+FEATURED = ["password-generator", "share", "speed-test"]
 
 # ---------------------------------------------------------------------------
 # Template pieces
@@ -157,7 +166,7 @@ THEME_BOOT = ("<script>(function(){try{var t=JSON.parse(localStorage.getItem('nd
 
 def tools_json():
     return json.dumps([
-        dict(name=t["name"], short=t["short"], cat=t["cat"], href=f"/{t['slug']}/",
+        dict(name=t["name"], short=t["short"], cat=CAT_META[t["cat"]]["name"], href=f"/{t['slug']}/",
              icon=ICONS[t["icon"]], keywords=t["keywords"]) for t in TOOLS
     ], ensure_ascii=False).replace("</", "<\\/")
 
@@ -208,6 +217,17 @@ def head(title, desc, path, extra_fonts="", jsonld=None, noindex=False):
 """
 
 
+def tools_menu():
+    cols = ""
+    for c in CATS:
+        m = CAT_META[c]
+        items = "".join(f'<a href="/{t["slug"]}/"><span class="mi">{ICONS[t["icon"]]}</span><span>{t["name"]}</span></a>'
+                        for t in TOOLS if t["cat"] == c)
+        cols += (f'<div class="menu-col"><a class="menu-cat" href="/{m["slug"]}/">{m["name"]}</a>'
+                 f'<div class="menu-items">{items}</div></div>')
+    return f'<div class="menu" id="toolsMenu" hidden><div class="wrap"><div class="menu-grid">{cols}</div></div></div>'
+
+
 def header(active=None):
     tools_cur = ' aria-current="page"' if active == "tools" else ""
     about_cur = ' aria-current="page"' if active == "about" else ""
@@ -215,7 +235,7 @@ def header(active=None):
   <div class="wrap">
     <a class="brand" href="/" aria-label="{SITE} — home">{MARK}<span class="brand-word">nicely<em>done</em></span></a>
     <nav class="nav" aria-label="Primary">
-      <a class="nav-link" href="/#tools"{tools_cur}>Tools</a>
+      <a class="nav-link menu-btn" href="/#tools" data-menu="toolsMenu" aria-expanded="false" aria-controls="toolsMenu"{tools_cur}>Tools {ICONS['chev']}</a>
       <a class="nav-link" href="/about/"{about_cur}>About</a>
       <a class="btn btn-sm" data-account hidden href="/account/">Sign in</a>
       <button class="search-trigger" data-search aria-label="Search tools">{ICONS['search']}<span>Search tools…</span><span class="kbd"><span data-mod>Ctrl</span>K</span></button>
@@ -223,6 +243,7 @@ def header(active=None):
       <button class="icon-btn theme-toggle" data-theme-toggle aria-label="Toggle colour theme">{ICONS['moon']}{ICONS['sun']}</button>
     </nav>
   </div>
+  {tools_menu()}
 </header>
 """
 
@@ -231,7 +252,7 @@ def footer():
     cols = ""
     for c in CATS:
         items = "".join(f'<li><a href="/{t["slug"]}/">{t["name"]}</a></li>' for t in TOOLS if t["cat"] == c)
-        cols += f"<div><h5>{c}</h5><ul>{items}</ul></div>"
+        cols += f'<div><h5><a href="/{CAT_META[c]["slug"]}/">{CAT_META[c]["name"]}</a></h5><ul>{items}</ul></div>'
     year = datetime.date.today().year
     return f"""<footer class="site-footer">
   <div class="wrap">
@@ -301,7 +322,7 @@ def build_tool(t):
     page = head(f"{t['name']} — {SITE}", t["desc"], path, extra, jsonld) + header() + f"""<main id="main">
   <section class="tool-hero">
     <div class="wrap">
-      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{ICONS['chev']}<a href="/#tools">{t['cat']}</a>{ICONS['chev']}<span aria-current="page">{t['name']}</span></nav>
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{ICONS['chev']}<a href="/{CAT_META[t['cat']]['slug']}/">{CAT_META[t['cat']]['name']}</a>{ICONS['chev']}<span aria-current="page">{t['name']}</span></nav>
       <h1 class="h1">{t['title']}</h1>
       <p class="lede">{t['lede']}</p>
       <div class="tool-badges">
@@ -329,40 +350,50 @@ def build_tool(t):
     return page.replace("{GITHUB}", GITHUB)
 
 
-def build_home():
-    tile_layout = {
-        "password-generator": "tile-wide tile-feature",
-        "speed-test": "tile-wide tile-feature",
-        "unit-converter": "tile-half", "date-converter": "tile-half",
-    }
-    order = ["password-generator", "strength-checker", "speed-test", "share", "hash-generator", "username-generator",
-             "base64-tool", "json-formatter", "text-converter", "ip-network", "unit-converter", "date-converter"]
-    home_tools = sorted(TOOLS, key=lambda t: order.index(t["slug"]) if t["slug"] in order else 99)
-    tiles = ""
-    for i, t in enumerate(home_tools):
-        cls = tile_layout.get(t["slug"], "")
-        preview = ""
-        if t["slug"] == "password-generator":
-            preview = '<div class="tile-preview" id="tilePw" aria-hidden="true">k7#Qm<b>9</b>vX!pL2<b>@</b>wR4z</div>'
-        if t["slug"] == "speed-test":
-            preview = '<div class="tile-preview" id="tileSpeed" aria-hidden="true">↓ <b>—</b> Mbps · ↑ <b>—</b> Mbps · <b>—</b> ms</div>'
-        tiles += f"""<a class="tile reveal {cls}" style="--d:{(i % 3) * 70}ms" href="/{t['slug']}/" data-cat="{t['cat']}">
-  <div class="tile-top"><div class="tile-icon">{ICONS[t['icon']]}</div><span class="tile-cat">{'<span class="badge ok" style="height:22px">New</span>' if t.get('new') else t['cat']}</span></div>
+def tool_card(t, i=0, preview=""):
+    badge = '<span class="badge ok" style="height:22px">New</span>' if t.get("new") else ""
+    return f"""<a class="tile reveal" style="--d:{(i % 3) * 70}ms" href="/{t['slug']}/">
+  <div class="tile-top"><div class="tile-icon">{ICONS[t['icon']]}</div><span class="tile-cat">{badge}</span></div>
   {preview}
   <h3>{t['name']}</h3>
   <p>{t['short']}</p>
   <span class="tile-go">{ICONS['arrow']}</span>
 </a>
 """
-    marquee_items = "".join(f"<span>{t['name']}</span>" for t in TOOLS)
-    filters = '<button class="filter" aria-pressed="true" data-filter="all">All</button>' + "".join(
-        f'<button class="filter" aria-pressed="false" data-filter="{c}">{c}</button>' for c in CATS)
+
+
+def tool_row(t):
+    new = ' <span class="badge ok row-new">New</span>' if t.get("new") else ""
+    return (f'<a class="tool-row" href="/{t["slug"]}/"><span class="tile-icon">{ICONS[t["icon"]]}</span>'
+            f'<span class="tr-text"><strong>{t["name"]}{new}</strong><span>{t["short"]}</span></span>'
+            f'<span class="tr-go">{ICONS["chev"]}</span></a>')
+
+
+PREVIEWS = {
+    "password-generator": '<div class="tile-preview" id="tilePw" aria-hidden="true">k7#Qm<b>9</b>vX!pL2<b>@</b>wR4z</div>',
+    "share": '<div class="tile-preview" aria-hidden="true">nicelydone.qd.je/s/#<b>••••••••</b></div>',
+    "speed-test": '<div class="tile-preview" id="tileSpeed" aria-hidden="true">↓ <b>—</b> Mbps · ↑ <b>—</b> Mbps · <b>—</b> ms</div>',
+}
+
+
+def build_home():
+    featured = "".join(tool_card(TOOL_BY_SLUG[slug], i, PREVIEWS.get(slug, "")) for i, slug in enumerate(FEATURED))
+    groups = ""
+    for i, c in enumerate(CATS):
+        m = CAT_META[c]
+        rows = "".join(tool_row(t) for t in TOOLS if t["cat"] == c)
+        n = sum(1 for t in TOOLS if t["cat"] == c)
+        groups += f"""<div class="cat-group reveal" style="--d:{i * 80}ms">
+  <a class="cat-head" href="/{m['slug']}/"><span class="tile-icon">{ICONS[m['icon']]}</span><span><strong>{m['name']}</strong><span class="cat-count">{n} tools</span></span>{ICONS['chev']}</a>
+  <div class="cat-rows">{rows}</div>
+</div>
+"""
     jsonld = {
         "@context": "https://schema.org", "@type": "WebSite", "name": SITE, "url": ORIGIN + "/",
         "description": "Private, browser-based security and developer tools.",
     }
-    desc = ("Beautifully crafted, private tools — password generator, one-time secret links, strength checker, hashes, "
-            "Base64, JSON, text case, IP & subnet, unit and Hijri date converters. Everything runs in your browser.")
+    desc = ("Beautifully crafted, private tools — password generator, one-time secret links, speed test, strength checker, "
+            "hashes, Base64, JSON, text case, IP & subnet, unit and Hijri date converters. No tracking, no third parties.")
     page = head(f"{SITE} — Small tools, nicely done.", desc, "/", "", jsonld) + header() + f"""<main id="main">
   <section class="hero">
     <div class="wrap hero-row">
@@ -395,18 +426,27 @@ def build_home():
     </div>
   </section>
 
-  <div class="marquee" aria-hidden="true"><div class="marquee-track">{marquee_items}{marquee_items}</div></div>
-
-  <section class="section" id="tools">
+  <section class="section" id="tools" style="padding-top:clamp(24px,4vw,48px)">
     <div class="wrap">
       <div class="section-head">
         <div>
-          <h2 class="h2 reveal">The <em>toolkit</em></h2>
-          <p class="lede reveal" style="--d:80ms">Everything you reach for, in one calm place.</p>
+          <h2 class="h2 reveal">Start <em>here</em></h2>
+          <p class="lede reveal" style="--d:80ms">The three tools people reach for most.</p>
         </div>
-        <div class="filters reveal" role="group" aria-label="Filter tools">{filters}</div>
       </div>
-      <div class="bento">{tiles}</div>
+      <div class="featured">{featured}</div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <h2 class="h2 reveal">Every <em>tool</em>, in its place</h2>
+          <p class="lede reveal" style="--d:80ms">Grouped by what you’re trying to do. Or press <span class="kbd"><span data-mod>Ctrl</span>K</span> and type.</p>
+        </div>
+      </div>
+      <div class="cat-groups">{groups}</div>
     </div>
   </section>
 
@@ -414,8 +454,8 @@ def build_home():
     <div class="wrap">
       <div class="section-head"><h2 class="h2 reveal">Made with <em>care</em></h2></div>
       <div class="principles reveal">
-        <div class="principle"><span class="num">01</span><h3>Private by design</h3><p>No backend, no analytics, no cookies. Passwords and data are generated and processed locally with the Web Crypto API.</p></div>
-        <div class="principle"><span class="num">02</span><h3>Fast &amp; offline</h3><p>Pages are tiny and cached on first visit, so every tool keeps working on a plane, in a basement, or behind a firewall.</p></div>
+        <div class="principle"><span class="num">01</span><h3>Private by design</h3><p>No analytics, no ads, no third parties. Passwords and data are generated and processed on your device with the Web Crypto API.</p></div>
+        <div class="principle"><span class="num">02</span><h3>Fast &amp; offline</h3><p>Pages are tiny and cached on first visit, so most tools keep working on a plane, in a basement, or behind a firewall.</p></div>
         <div class="principle"><span class="num">03</span><h3>Free, quietly</h3><p>No sign-ups, no paywalls, no pop-ups. Press <span class="kbd"><span data-mod>Ctrl</span>K</span> anywhere to jump straight to a tool.</p></div>
       </div>
     </div>
@@ -423,6 +463,35 @@ def build_home():
 </main>
 """ + footer() + scripts(HOME_SCRIPT)
     return page
+
+
+def build_category(c):
+    m = CAT_META[c]
+    tools = [t for t in TOOLS if t["cat"] == c]
+    cards = "".join(tool_card(t, i, PREVIEWS.get(t["slug"], "")) for i, t in enumerate(tools))
+    others = "".join(
+        f'<a href="/{CAT_META[o]["slug"]}/"><div class="tile-icon">{ICONS[CAT_META[o]["icon"]]}</div>'
+        f'<div><strong>{CAT_META[o]["name"]}</strong><span>{CAT_META[o]["blurb"]}</span></div></a>' for o in CATS if o != c)
+    path = f"/{m['slug']}/"
+    return head(f"{m['name']} — {SITE}", m["blurb"], path) + header("tools") + f"""<main id="main">
+  <section class="tool-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{ICONS['chev']}<span aria-current="page">{m['name']}</span></nav>
+      <h1 class="h1">{m['title']}</h1>
+      <p class="lede">{m['blurb']}</p>
+    </div>
+  </section>
+  <section class="section" style="padding-top:0">
+    <div class="wrap"><div class="featured">{cards}</div></div>
+  </section>
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <p class="panel-title" style="margin-bottom:16px">Other categories</p>
+      <div class="related related-2">{others}</div>
+    </div>
+  </section>
+</main>
+""" + footer() + scripts(HOME_SCRIPT_TILES)
 
 
 HOME_SCRIPT = r"""<script>
@@ -457,12 +526,17 @@ HOME_SCRIPT = r"""<script>
   const tp=document.getElementById('tilePw');
   if(tp){setInterval(()=>{if(document.hidden)return;let s='';for(let i=0;i<18;i++){const c=ALL[ND.randInt(ALL.length)];s+=(CH.s.includes(c)||CH.n.includes(c))?'<b>'+ND.esc(c)+'</b>':ND.esc(c);}tp.innerHTML=s;},1600);}
 
-  const btns=ND.$$('.filter'),tiles=ND.$$('.tile');
-  btns.forEach(b=>b.addEventListener('click',()=>{
-    btns.forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
-    const f=b.dataset.filter;
-    tiles.forEach(t=>t.classList.toggle('hidden',f!=='all'&&t.dataset.cat!==f));
-  }));
+})();
+</script>"""
+
+
+HOME_SCRIPT_TILES = r"""<script>
+(function(){
+  const ALL='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*-_=+?',SN='23456789!@#$%^&*-_=+?';
+  const ts=document.getElementById('tileSpeed'),sh=ND.store.get('speed-history',[]);
+  if(ts&&sh.length){const x=sh[0],f=v=>v>=100?Math.round(v):v.toFixed(1);ts.innerHTML='↓ <b>'+f(x.d)+'</b> Mbps · ↑ <b>'+f(x.u)+'</b> Mbps · <b>'+Math.round(x.p)+'</b> ms';}
+  const tp=document.getElementById('tilePw');
+  if(tp){setInterval(()=>{if(document.hidden)return;let s='';for(let i=0;i<18;i++){const c=ALL[ND.randInt(ALL.length)];s+=SN.includes(c)?'<b>'+ND.esc(c)+'</b>':ND.esc(c);}tp.innerHTML=s;},1600);}
 })();
 </script>"""
 
@@ -595,6 +669,8 @@ def main():
         pages[f"{t['slug']}/index.html"] = build_tool(t)
     for slug, *rest in EXTRA_PAGES:
         pages[f"{slug}/index.html"] = build_page(slug, *rest)
+    for c in CATS:
+        pages[f"{CAT_META[c]['slug']}/index.html"] = build_category(c)
     for rel, content in pages.items():
         for lang in ("en", "ar"):
             out = DIST / rel if lang == "en" else DIST / "ar" / rel
@@ -610,7 +686,7 @@ def main():
     (DIST / ".nojekyll").write_text("")
     (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /s/\nDisallow: /ar/s/\nDisallow: /api/\n\nSitemap: {ORIGIN}/sitemap.xml\n")
     today = datetime.date.today().isoformat()
-    urls = ["/"] + [f"/{t['slug']}/" for t in TOOLS] + ["/about/"]
+    urls = ["/"] + [f"/{CAT_META[c]['slug']}/" for c in CATS] + [f"/{t['slug']}/" for t in TOOLS] + ["/about/"]
     (DIST / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
         + "".join(
