@@ -348,6 +348,10 @@ app.get(/^\/([a-z0-9-]+)\.html$/, (req, res, next) => {
 app.use(express.static(STATIC_ROOT, {
   extensions: ['html'],
   setHeaders(res, file) {
+    if (file.endsWith('.scriptable')) {
+      res.set('Content-Type', 'application/octet-stream');
+      res.set('Content-Disposition', 'attachment; filename="' + path.basename(file).replace(/"/g, '') + '"');
+    }
     if (file.includes(path.sep + 'assets' + path.sep)) res.set('Cache-Control', 'public, max-age=31536000, immutable');
     else res.set('Cache-Control', 'no-cache');
   },

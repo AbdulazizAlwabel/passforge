@@ -971,3 +971,35 @@ table.data tr:hover td { background: var(--surface); }
   .menu-grid { grid-template-columns: 1fr; gap: 16px; }
 }
 [dir="rtl"] .menu-cat { font-family: var(--font-sans); font-size: 0.8rem; font-weight: 500; }
+
+/* ---------- Widgets page ---------- */
+.widget-cards { display: flex; flex-direction: column; gap: 16px; }
+.wcard { display: grid; grid-template-columns: 300px 1fr; gap: clamp(20px, 4vw, 44px); align-items: center; padding: clamp(20px, 3vw, 32px); border-radius: var(--r-xl); background: var(--surface); border: 1px solid var(--line); }
+@media (max-width: 800px) { .wcard { grid-template-columns: 1fr; } }
+.wmock { display: grid; place-items: center; padding: 26px; border-radius: var(--r-lg); background: radial-gradient(120% 120% at 20% 0%, var(--accent-soft), transparent 60%), var(--bg-2); border: 1px solid var(--line); }
+.ios-widget { width: 170px; height: 170px; border-radius: 26px; padding: 15px 16px; display: flex; flex-direction: column; background: #0b0c0b; color: #ecebe6; box-shadow: 0 20px 40px -18px rgb(0 0 0 / .6), 0 0 0 1px rgb(255 255 255 / .06) inset; font-family: -apple-system, 'Geist', system-ui, sans-serif; direction: ltr; text-align: left; }
+:root[data-theme="light"] .ios-widget { background: #ffffff; color: #161613; }
+.iw-eyebrow { font-size: 9px; font-weight: 600; color: #7ee2b0; letter-spacing: .02em; }
+.iw-row { display: flex; align-items: center; gap: 8px; margin-top: 6px; }
+.iw-day { font-family: Georgia, 'Instrument Serif', serif; font-size: 44px; line-height: 1; }
+.iw-month { font-family: Georgia, serif; font-style: italic; font-size: 14px; color: #7ee2b0; line-height: 1.15; }
+.iw-year { font-size: 11px; color: #a6a59f; }
+.iw-greg { margin-top: auto; font-size: 10px; color: #a6a59f; }
+.iw-occ { font-size: 10px; color: #e8c98a; margin-top: 3px; }
+.iw-chip { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: #15271f; color: #7ee2b0; }
+.iw-chip svg { width: 16px; height: 16px; }
+.iw-title { font-family: Georgia, serif; font-size: 20px; }
+.iw-sub { font-size: 10.5px; color: #a6a59f; margin-top: 3px; }
+.iw-host { font-size: 11px; color: #a6a59f; font-weight: 500; }
+.iw-status { display: flex; align-items: center; gap: 8px; font-family: Georgia, serif; font-size: 30px; }
+.iw-dot { width: 12px; height: 12px; border-radius: 50%; background: #6e6d68; }
+.iw-dot.up { background: #7ee2b0; box-shadow: 0 0 0 4px rgb(126 226 176 / .15); }
+:root[data-theme="light"] .iw-eyebrow, :root[data-theme="light"] .iw-month { color: #0f8a5c; }
+[dir="rtl"] .ios-widget { direction: rtl; text-align: right; font-family: 'IBM Plex Sans Arabic', -apple-system, sans-serif; }
+[dir="rtl"] .iw-month { font-family: 'IBM Plex Sans Arabic', sans-serif; font-style: normal; font-weight: 600; }
+.wbody .hint code { font-family: var(--font-mono); padding: 1px 6px; border-radius: 5px; background: var(--surface-2); color: var(--text); }
+.widget-callout { display: flex; align-items: center; gap: 14px; margin-top: 14px; padding: 16px 18px; border-radius: var(--r-lg); border: 1px dashed var(--line-2); transition: border-color var(--t), background var(--t); }
+.widget-callout:hover { border-color: var(--accent); background: var(--accent-soft); }
+.widget-callout .tile-icon { width: 38px; height: 38px; border-radius: 10px; flex: none; }
+.widget-callout .tile-icon svg { width: 18px; height: 18px; }
+.widget-callout:hover .tr-go svg { color: var(--accent); }

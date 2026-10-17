@@ -1,0 +1,125 @@
+<!-- @body -->
+<section class="tool-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{{icon:chev}}<span aria-current="page">iPhone widgets</span></nav>
+    <h1 class="h1">iPhone <em>widgets</em></h1>
+    <p class="lede">Put Nicely Done on your Home Screen and Lock Screen. The widgets run in the free Scriptable app and calculate everything on your iPhone — the Hijri date and passwords never touch a network.</p>
+    <div class="tool-badges">
+      <span class="badge ok">{{icon:cpu}}Runs on your iPhone</span>
+      <span class="badge">{{icon:code}}Open source — read every line</span>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="widget-cards">
+
+      <article class="wcard reveal">
+        <div class="wmock">
+          <div class="ios-widget">
+            <div class="iw-eyebrow">HIJRI · UMM AL-QURA</div>
+            <div class="iw-row"><div class="iw-day" id="mDay">—</div><div><div class="iw-month" id="mMonth">—</div><div class="iw-year" id="mYear">—</div></div></div>
+            <div class="iw-greg" id="mGreg">—</div>
+            <div class="iw-occ" id="mOcc"></div>
+          </div>
+        </div>
+        <div class="wbody">
+          <h2 class="h2" style="font-size:1.9rem">Hijri <em>date</em></h2>
+          <p class="muted">Today in the Umm al-Qura calendar beside the Gregorian date, with a countdown to the next Ramadan or Eid. Arabic or English, small or medium, plus Lock Screen styles. Tap it to open the date converter.</p>
+          <p class="hint">Optional parameter: <code>ar</code> or <code>en</code> to choose the language.</p>
+          <div class="row" style="margin-top:16px">
+            <a class="btn btn-primary" href="/widgets/Hijri%20Date.scriptable" download>{{icon:file}}Get widget</a>
+            <button class="btn" data-copy-script="/widgets/hijri-date.js">{{icon:copy}}Copy code</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="wcard reveal">
+        <div class="wmock">
+          <div class="ios-widget">
+            <div class="iw-chip">{{icon:lock}}</div>
+            <div style="flex:1"></div>
+            <div class="iw-title">New password</div>
+            <div class="iw-sub">Tap to copy a strong one · 20 chars</div>
+          </div>
+        </div>
+        <div class="wbody">
+          <h2 class="h2" style="font-size:1.9rem">Password <em>on tap</em></h2>
+          <p class="muted">Tap the widget and a strong password is generated on your iPhone and copied to the clipboard, ready to paste. The widget never displays a password, so nobody can read one off your Home Screen.</p>
+          <p class="hint">Optional parameter: a length from <code>12</code> to <code>64</code> (default 20).</p>
+          <div class="row" style="margin-top:16px">
+            <a class="btn btn-primary" href="/widgets/Nicely%20Done%20Password.scriptable" download>{{icon:file}}Get widget</a>
+            <button class="btn" data-copy-script="/widgets/password.js">{{icon:copy}}Copy code</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="wcard reveal">
+        <div class="wmock">
+          <div class="ios-widget">
+            <div class="iw-host">nicelydone.qd.je</div>
+            <div style="flex:1"></div>
+            <div class="iw-status"><span class="iw-dot" id="sDot"></span><span id="sTxt">Checking…</span></div>
+            <div class="iw-sub" id="sMs">&nbsp;</div>
+          </div>
+        </div>
+        <div class="wbody">
+          <h2 class="h2" style="font-size:1.9rem">Site <em>status</em></h2>
+          <p class="muted">See at a glance that nicelydone.qd.je is up and how quickly it answers. It refreshes about every 15 minutes, and works with any site that has a compatible health check.</p>
+          <p class="hint">Optional parameter: another site address to watch.</p>
+          <div class="row" style="margin-top:16px">
+            <a class="btn btn-primary" href="/widgets/Site%20Status.scriptable" download>{{icon:file}}Get widget</a>
+            <button class="btn" data-copy-script="/widgets/site-status.js">{{icon:copy}}Copy code</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="wrap">
+    <div class="about-sec reveal" style="border-top:0;padding-top:0">
+      <div class="num">How to<h2>Install in a minute</h2></div>
+      <div class="prose">
+        <ol class="steps">
+          <li><span>Install the free <a class="link" href="https://apps.apple.com/app/scriptable/id1405459188" rel="noopener">Scriptable</a> app from the App Store.</span></li>
+          <li><span>On your iPhone, open this page in Safari and tap <b style="color:var(--text)">Get widget</b>, then choose <b style="color:var(--text)">Open in Scriptable</b>. If that option doesn’t appear, tap <b style="color:var(--text)">Copy code</b>, create a new script in Scriptable with <b style="color:var(--text)">+</b>, paste, and give it a name.</span></li>
+          <li><span>Touch and hold your Home Screen, tap <b style="color:var(--text)">+</b> (or <b style="color:var(--text)">Edit</b> → <b style="color:var(--text)">Add Widget</b>), search for <b style="color:var(--text)">Scriptable</b> and pick a size.</span></li>
+          <li><span>Tap the new widget, choose your script under <b style="color:var(--text)">Script</b>, and optionally add a <b style="color:var(--text)">Parameter</b>. For the Lock Screen, add a Scriptable widget from the Lock Screen editor the same way.</span></li>
+        </ol>
+        <p>The scripts are plain, readable JavaScript — open them in Scriptable or view the source on <a class="link" href="{GITHUB}/tree/main/src/widgets" rel="noopener">GitHub</a>. The Hijri and password widgets make no network requests at all; the status widget only contacts the site it watches.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- @script -->
+<script>
+(function(){
+  const $=ND.$;
+  const AR=ND.lang==='ar';
+  const HM_EN=['Muharram','Safar','Rabiʿ al-Awwal','Rabiʿ al-Thani','Jumada al-Ula','Jumada al-Akhirah','Rajab','Shaʿban','Ramadan','Shawwal','Dhu al-Qaʿdah','Dhu al-Hijjah'];
+  const HM_AR=['محرّم','صفر','ربيع الأول','ربيع الآخر','جمادى الأولى','جمادى الآخرة','رجب','شعبان','رمضان','شوّال','ذو القعدة','ذو الحجة'];
+  const F=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'numeric',year:'numeric'});
+  const hijri=d=>{const p=F.formatToParts(d),g=t=>parseInt(p.find(x=>x.type===t).value,10);return {y:g('year'),m:g('month'),d:g('day')};};
+  const now=new Date(),h=hijri(now);
+  $('#mDay').textContent=h.d;$('#mMonth').textContent=AR?HM_AR[h.m-1]:HM_EN[h.m-1];$('#mYear').textContent=h.y+(AR?' هـ':' AH');
+  $('#mGreg').textContent=now.toLocaleDateString(AR?'ar-u-nu-latn':'en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const T=[[9,1,'Ramadan','رمضان'],[10,1,'Eid al-Fitr','عيد الفطر'],[12,10,'Eid al-Adha','عيد الأضحى']];
+  const d=new Date(now);
+  for(let i=1;i<=400;i++){d.setDate(d.getDate()+1);const x=hijri(d),t=T.find(([m,dd])=>x.m===m&&x.d===dd);
+    if(t){$('#mOcc').textContent='✦ '+(AR?t[3]+' بعد '+i+' يومًا':t[2]+' in '+i+' days');break;}}
+  (async()=>{const t0=performance.now();
+    try{const r=await fetch('/api/health',{cache:'no-store'});const j=await r.json();
+      $('#sDot').classList.toggle('up',!!j.ok);$('#sTxt').textContent=j.ok?(AR?'يعمل':'Up'):(AR?'متوقف':'Down');
+      $('#sMs').textContent=Math.round(performance.now()-t0)+' ms';}
+    catch(e){$('#sTxt').textContent='—';$('#sMs').textContent='';}
+  })();
+  document.addEventListener('click',async e=>{
+    const b=e.target.closest('[data-copy-script]');if(!b)return;
+    const r=await fetch(b.dataset.copyScript,{cache:'no-store'});ND.copy(await r.text(),b,'Script copied — paste it into a new Scriptable script');
+  });
+})();
+</script>

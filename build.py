@@ -265,7 +265,7 @@ def footer():
     </div>
     <div class="foot-big" aria-hidden="true">nicely<em>done</em></div>
     <div class="foot-bottom">
-      <span>© {year} {SITE} · <a href="/about/">About &amp; trust</a> · <a href="{GITHUB}" rel="noopener">Source on GitHub</a></span>
+      <span>© {year} {SITE} · <a href="/about/">About &amp; trust</a> · <a href="/widgets/">iPhone widgets</a> · <a href="{GITHUB}" rel="noopener">Source on GitHub</a></span>
       <span>Private by design · No tracking, no third parties</span>
     </div>
   </div>
@@ -447,6 +447,7 @@ def build_home():
         </div>
       </div>
       <div class="cat-groups">{groups}</div>
+      <a class="widget-callout reveal" href="/widgets/"><span class="tile-icon">{ICONS['calendar']}</span><span class="tr-text"><strong>On iPhone? Add the widgets</strong><span>Hijri date, one-tap passwords and site status on your Home Screen and Lock Screen.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
     </div>
   </section>
 
@@ -549,6 +550,7 @@ EXTRA_PAGES = [
     ("profile", "Your profile", "Manage your Nicely Done account.", None, True),
     ("admin", "Admin", "Nicely Done administration.", None, True),
     ("s", "A secret for you", "Someone shared a one-time secret with you.", None, True),
+    ("widgets", "iPhone widgets", "Hijri date, password and status widgets for your iPhone Home Screen and Lock Screen — private, open source, run on your phone.", None, False),
 ]
 
 
@@ -639,7 +641,8 @@ def finish(html_src, rel, lang):
     out = TR.page(out, rel)
     out = out.replace('<script src="/assets/site.js', '<script>window.ND_I18N=' + RUNTIME_AR + ';</script>\n<script src="/assets/site.js', 1)
     out = out.replace('<html lang="en" class="no-js">', '<html lang="ar" dir="rtl" class="no-js">', 1)
-    out = re.sub(r'(href|data-href)="/(?!/)([^"]*)"', lambda m: m.group(0) if m.group(2).startswith(STATIC_PREFIXES) else f'{m.group(1)}="/ar/{m.group(2)}"', out)
+    is_file = lambda p: re.search(r"\.(?!html\b)[A-Za-z0-9]{1,12}(?:$|[?#])", p.split("/")[-1] or "") is not None
+    out = re.sub(r'(href|data-href)="/(?!/)([^"]*)"', lambda m: m.group(0) if m.group(2).startswith(STATIC_PREFIXES) or is_file(m.group(2)) else f'{m.group(1)}="/ar/{m.group(2)}"', out)
     out = out.replace('"href":"/', '"href":"/ar/').replace('"href": "/', '"href": "/ar/')
     out = out.replace(f'<link rel="canonical" href="{en}">', f'<link rel="canonical" href="{ar}">')
     out = out.replace(f'<meta property="og:url" content="{en}">', f'<meta property="og:url" content="{ar}">')
@@ -650,6 +653,25 @@ def finish(html_src, rel, lang):
 
 TR = None
 RUNTIME_AR = "{}"
+
+
+WIDGETS = [  # source, installed script name, Scriptable icon glyph
+    ("hijri-date.js", "Hijri Date", "calendar-alt"),
+    ("password.js", "Nicely Done Password", "key"),
+    ("site-status.js", "Site Status", "heartbeat"),
+]
+
+
+def build_widgets():
+    out = DIST / "widgets"
+    out.mkdir(parents=True, exist_ok=True)
+    for src, name, glyph in WIDGETS:
+        code = (SRC / "widgets" / src).read_text()
+        (out / src).write_text(code)
+        (out / f"{name}.scriptable").write_text(json.dumps({
+            "always_run_in_app": False, "icon": {"color": "deep-green", "glyph": glyph},
+            "name": name, "script": code, "share_sheet_inputs": [],
+        }, indent=2, ensure_ascii=False))
 
 
 def main():
@@ -681,12 +703,13 @@ def main():
     (ROOT / "i18n-missing-js.txt").write_text("".join(f"{k}\t{v}\n" for k, v in sorted(TR.js_candidates.items())))
     print(f"i18n: {len(TR.used)} strings used, {len(missing)} missing → i18n-missing.txt, {len(TR.js_candidates)} JS candidates")
 
+    build_widgets()
     (DIST / "favicon.svg").write_text(FAVICON)
     (DIST / "CNAME").write_text(DOMAIN + "\n")
     (DIST / ".nojekyll").write_text("")
     (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /s/\nDisallow: /ar/s/\nDisallow: /api/\n\nSitemap: {ORIGIN}/sitemap.xml\n")
     today = datetime.date.today().isoformat()
-    urls = ["/"] + [f"/{CAT_META[c]['slug']}/" for c in CATS] + [f"/{t['slug']}/" for t in TOOLS] + ["/about/"]
+    urls = ["/"] + [f"/{CAT_META[c]['slug']}/" for c in CATS] + [f"/{t['slug']}/" for t in TOOLS] + ["/about/", "/widgets/"]
     (DIST / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
         + "".join(
