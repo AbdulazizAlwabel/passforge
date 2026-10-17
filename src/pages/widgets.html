@@ -55,7 +55,7 @@
         </div>
       </article>
 
-      <article class="wcard reveal">
+      <article class="wcard owner-card" id="ownerCard" hidden>
         <div class="wmock">
           <div class="ios-widget">
             <div class="iw-host">nicelydone.qd.je</div>
@@ -65,12 +65,13 @@
           </div>
         </div>
         <div class="wbody">
+          <span class="badge info" style="margin-bottom:10px">{{icon:shield}}Owner only — visible because you’re signed in as admin</span>
           <h2 class="h2" style="font-size:1.9rem">Site <em>status</em></h2>
-          <p class="muted">See at a glance that nicelydone.qd.je is up and how quickly it answers. It refreshes about every 15 minutes, and works with any site that has a compatible health check.</p>
+          <p class="muted">See at a glance that nicelydone.qd.je is up and how quickly it answers. It refreshes about every 15 minutes. The download links work only while you’re signed in as the owner.</p>
           <p class="hint">Optional parameter: another site address to watch.</p>
           <div class="row" style="margin-top:16px">
-            <a class="btn btn-primary" href="/widgets/Site%20Status.scriptable" download>{{icon:file}}Get widget</a>
-            <button class="btn" data-copy-script="/widgets/site-status.js">{{icon:copy}}Copy code</button>
+            <a class="btn btn-primary" href="/api/admin/widgets/site-status.scriptable" download="Site Status.scriptable">{{icon:file}}Get widget</a>
+            <button class="btn" data-copy-script="/api/admin/widgets/site-status.js">{{icon:copy}}Copy code</button>
           </div>
         </div>
       </article>
@@ -89,7 +90,7 @@
           <li><span>Touch and hold your Home Screen, tap <b style="color:var(--text)">+</b> (or <b style="color:var(--text)">Edit</b> → <b style="color:var(--text)">Add Widget</b>), search for <b style="color:var(--text)">Scriptable</b> and pick a size.</span></li>
           <li><span>Tap the new widget, choose your script under <b style="color:var(--text)">Script</b>, and optionally add a <b style="color:var(--text)">Parameter</b>. For the Lock Screen, add a Scriptable widget from the Lock Screen editor the same way.</span></li>
         </ol>
-        <p>The scripts are plain, readable JavaScript — open them in Scriptable or view the source on <a class="link" href="{GITHUB}/tree/main/src/widgets" rel="noopener">GitHub</a>. The Hijri and password widgets make no network requests at all; the status widget only contacts the site it watches.</p>
+        <p>The scripts are plain, readable JavaScript — open them in Scriptable or view the source on <a class="link" href="{GITHUB}/tree/main/src/widgets" rel="noopener">GitHub</a>. Neither widget makes any network request — everything happens on your iPhone.</p>
       </div>
     </div>
   </div>
@@ -111,15 +112,18 @@
   const d=new Date(now);
   for(let i=1;i<=400;i++){d.setDate(d.getDate()+1);const x=hijri(d),t=T.find(([m,dd])=>x.m===m&&x.d===dd);
     if(t){$('#mOcc').textContent='✦ '+(AR?t[3]+' بعد '+i+' يومًا':t[2]+' in '+i+' days');break;}}
-  (async()=>{const t0=performance.now();
+  async function statusMock(){const t0=performance.now();
     try{const r=await fetch('/api/health',{cache:'no-store'});const j=await r.json();
       $('#sDot').classList.toggle('up',!!j.ok);$('#sTxt').textContent=j.ok?(AR?'يعمل':'Up'):(AR?'متوقف':'Down');
       $('#sMs').textContent=Math.round(performance.now()-t0)+' ms';}
     catch(e){$('#sTxt').textContent='—';$('#sMs').textContent='';}
-  })();
+  }
+  ND.me.then(u=>{if(u&&u.admin){$('#ownerCard').hidden=false;statusMock();}});
   document.addEventListener('click',async e=>{
     const b=e.target.closest('[data-copy-script]');if(!b)return;
-    const r=await fetch(b.dataset.copyScript,{cache:'no-store'});ND.copy(await r.text(),b,'Script copied — paste it into a new Scriptable script');
+    const r=await fetch(b.dataset.copyScript,{cache:'no-store',credentials:'same-origin'});
+    if(!r.ok){ND.toast('Sign in as the owner to get this widget');return;}
+    ND.copy(await r.text(),b,'Script copied — paste it into a new Scriptable script');
   });
 })();
 </script>

@@ -447,7 +447,7 @@ def build_home():
         </div>
       </div>
       <div class="cat-groups">{groups}</div>
-      <a class="widget-callout reveal" href="/widgets/"><span class="tile-icon">{ICONS['calendar']}</span><span class="tr-text"><strong>On iPhone? Add the widgets</strong><span>Hijri date, one-tap passwords and site status on your Home Screen and Lock Screen.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
+      <a class="widget-callout reveal" href="/widgets/"><span class="tile-icon">{ICONS['calendar']}</span><span class="tr-text"><strong>On iPhone? Add the widgets</strong><span>The Hijri date and one-tap passwords on your Home Screen and Lock Screen.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
     </div>
   </section>
 
@@ -550,7 +550,7 @@ EXTRA_PAGES = [
     ("profile", "Your profile", "Manage your Nicely Done account.", None, True),
     ("admin", "Admin", "Nicely Done administration.", None, True),
     ("s", "A secret for you", "Someone shared a one-time secret with you.", None, True),
-    ("widgets", "iPhone widgets", "Hijri date, password and status widgets for your iPhone Home Screen and Lock Screen — private, open source, run on your phone.", None, False),
+    ("widgets", "iPhone widgets", "Hijri date and password widgets for your iPhone Home Screen and Lock Screen — private, open source, run on your phone.", None, False),
 ]
 
 
@@ -658,7 +658,6 @@ RUNTIME_AR = "{}"
 WIDGETS = [  # source, installed script name, Scriptable icon glyph
     ("hijri-date.js", "Hijri Date", "calendar-alt"),
     ("password.js", "Nicely Done Password", "key"),
-    ("site-status.js", "Site Status", "heartbeat"),
 ]
 
 

@@ -1,5 +1,5 @@
 // Nicely Done — Site status widget for Scriptable (https://scriptable.app)
-// https://nicelydone.qd.je/widgets/
+// Owner-only widget — download from https://nicelydone.qd.je/widgets/ while signed in as admin.
 //
 // Checks that https://nicelydone.qd.je is up and how fast it answers.
 // Widget parameter (optional): another URL whose /api/health returns {"ok":true}.

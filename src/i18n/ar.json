@@ -914,7 +914,6 @@
  "iPhone widgets": "ودجات الآيفون",
  "iPhone widgets — Nicely Done": "ودجات الآيفون — Nicely Done",
  "iPhone <em>widgets</em>": "ودجات <em>الآيفون</em>",
- "Hijri date, password and status widgets for your iPhone Home Screen and Lock Screen — private, open source, run on your phone.": "ودجات التاريخ الهجري وكلمات المرور وحالة الموقع لشاشة الآيفون الرئيسية وشاشة القفل — خاصة ومفتوحة المصدر وتعمل على هاتفك.",
  "Put Nicely Done on your Home Screen and Lock Screen. The widgets run in the free Scriptable app and calculate everything on your iPhone — the Hijri date and passwords never touch a network.": "ضع Nicely Done على شاشتك الرئيسية وشاشة القفل. تعمل الودجات في تطبيق Scriptable المجاني وتحسب كل شيء على جهازك — فالتاريخ الهجري وكلمات المرور لا تمرّ بأي شبكة.",
  "Runs on your iPhone": "يعمل على جهازك",
  "Open source — read every line": "مفتوح المصدر — اقرأ كل سطر",
@@ -931,7 +930,6 @@
  "Optional parameter: a length from": "معامل اختياري: طول من",
  "(default 20).": "(الافتراضي 20).",
  "Site <em>status</em>": "حالة <em>الموقع</em>",
- "See at a glance that nicelydone.qd.je is up and how quickly it answers. It refreshes about every 15 minutes, and works with any site that has a compatible health check.": "اعرف بنظرة أن nicelydone.qd.je يعمل وما مدى سرعة استجابته. يتحدّث كل 15 دقيقة تقريبًا، ويعمل مع أي موقع لديه فحص صحة متوافق.",
  "Optional parameter: another site address to watch.": "معامل اختياري: عنوان موقع آخر لمراقبته.",
  "How to": "الطريقة",
  "Install in a minute": "ثبّتها في دقيقة",
@@ -953,7 +951,10 @@
  ", and optionally add a": "، ويمكنك إضافة",
  ". For the Lock Screen, add a Scriptable widget from the Lock Screen editor the same way.": ". ولشاشة القفل، أضف ودجت Scriptable من محرّر شاشة القفل بالطريقة نفسها.",
  "The scripts are plain, readable JavaScript — open them in Scriptable or view the source on": "السكربتات مكتوبة بلغة JavaScript واضحة ومقروءة — افتحها في Scriptable أو اطّلع على المصدر في",
- ". The Hijri and password widgets make no network requests at all; the status widget only contacts the site it watches.": ". ودجتا التاريخ الهجري وكلمات المرور لا تُجريان أي طلبات شبكة إطلاقًا؛ وودجت الحالة تتصل فقط بالموقع الذي تراقبه.",
  "On iPhone? Add the widgets": "لديك آيفون؟ أضف الودجات",
- "Hijri date, one-tap passwords and site status on your Home Screen and Lock Screen.": "التاريخ الهجري وكلمات المرور بلمسة وحالة الموقع على شاشتك الرئيسية وشاشة القفل."
+ "Hijri date and password widgets for your iPhone Home Screen and Lock Screen — private, open source, run on your phone.": "ودجات التاريخ الهجري وكلمات المرور لشاشة الآيفون الرئيسية وشاشة القفل — خاصة ومفتوحة المصدر وتعمل على هاتفك.",
+ "The Hijri date and one-tap passwords on your Home Screen and Lock Screen.": "التاريخ الهجري وكلمات المرور بلمسة على شاشتك الرئيسية وشاشة القفل.",
+ "Owner only — visible because you’re signed in as admin": "للمالك فقط — تظهر لأنك مسجّل الدخول كمدير",
+ "See at a glance that nicelydone.qd.je is up and how quickly it answers. It refreshes about every 15 minutes. The download links work only while you’re signed in as the owner.": "اعرف بنظرة أن nicelydone.qd.je يعمل وما مدى سرعة استجابته. يتحدّث كل 15 دقيقة تقريبًا. ولا تعمل روابط التنزيل إلا وأنت مسجّل الدخول كمالك.",
+ ". Neither widget makes any network request — everything happens on your iPhone.": ". ولا تُجري أيٌّ من الودجتين أي طلب شبكة — فكل شيء يتم على جهازك."
 }

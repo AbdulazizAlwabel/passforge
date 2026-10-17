@@ -317,6 +317,17 @@ api.delete('/admin/users/:id', admin, wrap(async (req, res) => {
   if (!r.affectedRows) return res.status(404).json({ error: 'User not found' });
   res.json({ message: 'User deleted' });
 }));
+// Owner-only iPhone widget (site status): served only to admins, never part of the public site.
+const OWNER_WIDGET = path.join(__dirname, 'owner-widgets', 'site-status.js');
+api.get('/admin/widgets/site-status.js', admin, (req, res) => {
+  res.type('application/javascript').sendFile(OWNER_WIDGET);
+});
+api.get('/admin/widgets/site-status.scriptable', admin, wrap(async (req, res) => {
+  const script = await fs.promises.readFile(OWNER_WIDGET, 'utf8');
+  res.set({ 'Content-Type': 'application/octet-stream', 'Content-Disposition': 'attachment; filename="Site Status.scriptable"' });
+  res.send(JSON.stringify({ always_run_in_app: false, icon: { color: 'deep-green', glyph: 'heartbeat' }, name: 'Site Status', script, share_sheet_inputs: [] }, null, 2));
+}));
+
 api.get('/admin/tokens', admin, wrap(async (req, res) => {
   const [rows] = await db.query(
     `SELECT t.id, t.type, t.used, t.expires_at, t.created_at, u.username, u.email
