@@ -1,0 +1,84 @@
+<!-- @body -->
+<section class="tool-hero">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{{icon:chev}}<span aria-current="page">Suggest a tool</span></nav>
+    <h1 class="h1">What should we <em>build next?</em></h1>
+    <p class="lede">Suggest a tool, or vote for the ideas you’d use. The most-wanted ones get built first. No account needed, and we don’t track who votes.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0">
+  <div class="wrap suggest-layout">
+    <div>
+      <div class="row between" style="margin-bottom:14px">
+        <p class="panel-title" style="margin:0">Ideas so far</p>
+        <span class="faint" style="font-size:.82rem" id="count"></span>
+      </div>
+      <div class="ideas" id="ideas"><div class="empty-state"><span class="spin" style="display:inline-block;width:20px;height:20px;border-radius:50%;border:2px solid var(--text-3);border-right-color:transparent;animation:spin .7s linear infinite"></span></div></div>
+    </div>
+
+    <aside class="aside">
+      <div class="panel">
+        <h4>Suggest a tool</h4>
+        <form id="form" novalidate style="display:flex;flex-direction:column;gap:14px;margin-top:6px">
+          <div class="field"><label class="label" for="title">Tool name <span class="faint" style="font-weight:400" id="tCount">0 / 80</span></label><input class="input" id="title" maxlength="80" placeholder="e.g. Prayer times" autocomplete="off"></div>
+          <div class="field"><label class="label" for="details">What should it do? <span class="faint" style="font-weight:400">optional</span></label><textarea class="textarea" id="details" maxlength="500" style="min-height:110px" placeholder="A sentence or two is perfect."></textarea></div>
+          <div class="hp" aria-hidden="true"><label>Website <input id="website" tabindex="-1" autocomplete="off"></label></div>
+          <div class="msg err" hidden></div>
+          <div class="msg ok" id="okMsg" hidden>{{icon:check}}<span></span></div>
+          <button class="btn btn-primary btn-block" type="submit">Send suggestion</button>
+          <p class="hint">Suggestions appear after a quick review, to keep spam out.</p>
+        </form>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- @script -->
+<script>
+(function(){
+  const $=ND.$;
+  const opened=Date.now();
+  const VOTED='suggest-votes';
+  const voted=new Set(ND.store.get(VOTED,[]));
+  const LOC=ND.lang==='ar'?'ar-u-nu-latn':undefined;
+  const label={planned:'<span class="badge info">Planned</span>',done:'<span class="badge ok">{{icon:check}}Done</span>',open:''};
+  async function load(){
+    const r=await ND.api('/suggestions');
+    if(!r.ok){$('#ideas').innerHTML='<div class="empty-state"><p>'+ND.esc(r.offline?ND.t('Suggestions aren’t available right now.'):(r.data.error||''))+'</p></div>';$('#form').querySelectorAll('input,textarea,button').forEach(x=>x.disabled=!!r.offline);return;}
+    const list=r.data;
+    $('#count').textContent=ND.count(list.length,{one:'idea',other:'ideas'},{one:'فكرة',two:'فكرتان',few:'أفكار',many:'فكرة',other:'فكرة'});
+    if(!list.length){$('#ideas').innerHTML='<div class="empty-state"><p>'+ND.t('No ideas yet — be the first to suggest one.')+'</p></div>';return;}
+    $('#ideas').innerHTML=list.map(x=>{
+      const can=x.status!=='done',on=voted.has(x.id);
+      return '<article class="idea'+(x.status==='done'?' is-done':'')+'"'+(x.lang==='ar'?' dir="rtl"':' dir="ltr"')+'>'+
+        '<button class="vote'+(on?' on':'')+'" data-id="'+x.id+'" '+(can?'':'disabled ')+'aria-pressed="'+on+'" aria-label="'+ND.esc(ND.t('Vote'))+'">{{icon:chev}}<b>'+x.votes+'</b></button>'+
+        '<div class="idea-body"><div class="idea-title">'+ND.esc(x.title)+' '+(label[x.status]||'')+'</div>'+(x.details?'<div class="idea-details">'+ND.esc(x.details)+'</div>':'')+
+        '<div class="idea-meta">'+new Date(x.created_at).toLocaleDateString(LOC,{day:'numeric',month:'short',year:'numeric'})+'</div></div></article>';
+    }).join('');
+  }
+  $('#ideas').addEventListener('click',async e=>{
+    const b=e.target.closest('.vote');if(!b||b.disabled)return;
+    const id=+b.dataset.id,undo=voted.has(id);
+    b.disabled=true;
+    const r=await ND.api('/suggestions/'+id+'/vote',{method:'POST',body:{undo}});
+    b.disabled=false;
+    if(!r.ok){ND.toast(r.data.error||'Something went wrong.');return;}
+    undo?voted.delete(id):voted.add(id);ND.store.set(VOTED,[...voted]);
+    b.classList.toggle('on',!undo);b.setAttribute('aria-pressed',!undo);b.querySelector('b').textContent=r.data.votes;
+  });
+  $('#title').addEventListener('input',()=>{$('#tCount').textContent=$('#title').value.length+' / 80';});
+  $('#form').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const er=e.target.querySelector('.msg.err'),btn=e.target.querySelector('[type=submit]');er.hidden=true;$('#okMsg').hidden=true;
+    const title=$('#title').value.trim();
+    if(title.length<4){er.textContent=ND.t('Give the tool a short name (4–80 characters).');er.hidden=false;return;}
+    btn.disabled=true;
+    const r=await ND.api('/suggestions',{method:'POST',body:{title,details:$('#details').value,website:$('#website').value,t:opened,lang:ND.lang}});
+    btn.disabled=false;
+    if(r.ok){e.target.reset();$('#tCount').textContent='0 / 80';$('#okMsg').querySelector('span').textContent=r.data.message;$('#okMsg').hidden=false;}
+    else{er.textContent=r.data.error||'Something went wrong.';er.hidden=false;}
+  });
+  load();
+})();
+</script>

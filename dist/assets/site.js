@@ -164,7 +164,7 @@
     cmdk.innerHTML =
       '<div class="cmdk" role="dialog" aria-modal="true" aria-label="' + T('Search tools') + '">' +
         '<div class="cmdk-input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>' +
-        '<input type="text" placeholder="' + T('Search tools…') + '" aria-label="' + T('Search tools') + '" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="cmdk-list"><span class="kbd">esc</span></div>' +
+        '<input type="text" placeholder="' + T('Search tools or type pw 24, 10 km in mi, 15% of 200…') + '" aria-label="' + T('Search tools') + '" autocomplete="off" spellcheck="false" role="combobox" aria-expanded="true" aria-controls="cmdk-list"><span class="kbd">esc</span></div>' +
         '<div class="cmdk-list" id="cmdk-list" role="listbox"></div>' +
         '<div class="cmdk-foot"><span><span class="kbd">↑</span> <span class="kbd">↓</span> ' + T('navigate') + '</span><span><span class="kbd">↵</span> ' + T('open') + '</span><span style="margin-inline-start:auto">nicelydone.qd.je</span></div>' +
       '</div>';
@@ -176,7 +176,7 @@
     cmdInput.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowDown') { e.preventDefault(); move(1); }
       else if (e.key === 'ArrowUp') { e.preventDefault(); move(-1); }
-      else if (e.key === 'Enter') { e.preventDefault(); const it = cmdItems[cmdIndex]; if (it) location.href = it.dataset.href; }
+      else if (e.key === 'Enter') { e.preventDefault(); activate(cmdItems[cmdIndex], e.shiftKey); }
       else if (e.key === 'Escape') { closeCmdk(); }
       else if (e.key === 'Tab') { e.preventDefault(); }
     });
@@ -195,23 +195,54 @@
     return s;
   }
 
+  let answerSeq = 0;
+  function answerHtml(a) {
+    const act = a.href ? T('open') : T('copy');
+    return '<div class="cmdk-item cmdk-answer" role="option" id="cmdk-a" aria-selected="false"' +
+      (a.href ? ' data-href="' + ND.url(a.href) + '"' : ' data-copy="' + ND.esc(a.copy != null ? a.copy : a.value) + '"') +
+      (a.more ? ' data-more="' + ND.url(a.more) + '"' : '') + '>' +
+      '<div class="ans-body"><span class="ans-label">' + ND.esc(a.label) + '</span>' +
+      '<span class="ans-value' + (a.mono || a.secret ? ' mono' : '') + '">' + ND.esc(a.value) + '</span>' +
+      (a.hint ? '<span class="ans-hint">' + ND.esc(a.hint) + '</span>' : '') + '</div>' +
+      '<span class="ret">↵ ' + act + '</span></div>';
+  }
   function renderCmdk() {
     const q = cmdInput.value.trim();
     const results = tools.map((t) => ({ t, s: score(t, q) })).filter((r) => r.s > 0);
     if (q) results.sort((a, b) => b.s - a.s);
     let html = '', lastCat = null;
+    if (!q && ND.answerExamples) {
+      html += '<div class="cmdk-try"><span>' + T('Try') + '</span>' + ND.answerExamples.map((x) => '<button type="button" data-try="' + ND.esc(x) + '">' + ND.esc(x) + '</button>').join('') + '</div>';
+    }
+    let ans = q && ND.answer ? ND.answer(q) : null;
+    const seq = ++answerSeq;
+    if (ans && typeof ans.then === 'function') {
+      ans.then((a) => { if (seq === answerSeq && a) { const slot = cmdList.querySelector('#cmdk-a-slot'); if (slot) { slot.outerHTML = answerHtml(a); bindItems(); select(0); } } });
+      html += '<div id="cmdk-a-slot" class="cmdk-answer-pending">…</div>';
+      ans = null;
+    } else if (ans) html += answerHtml(ans);
     results.forEach(({ t }, i) => {
       if (!q && t.cat !== lastCat) { html += '<div class="cmdk-group">' + ND.esc(t.cat) + '</div>'; lastCat = t.cat; }
       html += '<div class="cmdk-item" role="option" id="cmdk-' + i + '" data-href="' + t.href + '" aria-selected="false">' +
         '<div class="tile-icon">' + t.icon + '</div><div><strong>' + ND.esc(t.name) + '</strong><span>' + ND.esc(t.short) + '</span></div><span class="ret">↵</span></div>';
     });
     cmdList.innerHTML = html || '<div class="cmdk-empty">' + T('No tools match') + ' “' + ND.esc(q) + '”</div>';
+    cmdList.querySelectorAll('[data-try]').forEach((b) => b.addEventListener('click', () => { cmdInput.value = b.dataset.try; renderCmdk(); cmdInput.focus(); }));
+    bindItems();
+    cmdIndex = 0; select(0);
+  }
+  function bindItems() {
     cmdItems = ND.$$('.cmdk-item', cmdList);
     cmdItems.forEach((el, i) => {
-      el.addEventListener('mousemove', () => select(i));
-      el.addEventListener('click', () => { location.href = el.dataset.href; });
+      el.onmousemove = () => select(i);
+      el.onclick = () => activate(el);
     });
-    cmdIndex = 0; select(0);
+  }
+  function activate(el, alt) {
+    if (!el) return;
+    if (alt && el.dataset.more) { location.href = el.dataset.more; return; }
+    if (el.dataset.copy != null) { ND.copy(el.dataset.copy, null, T('Copied')); closeCmdk(); return; }
+    if (el.dataset.href) location.href = el.dataset.href;
   }
 
   function select(i) {

@@ -8,3 +8,5 @@ Before=slices.target
 [Slice]
 CPUWeight=30
 IOWeight=50
+MemoryHigh=700M
+MemoryMax=900M

@@ -90,6 +90,12 @@ TOOLS = [
          lede="Send a password, API key or private note through a link that works exactly once. It’s encrypted in your browser — we only ever hold ciphertext we can’t read.",
          desc="Share passwords and secrets with end-to-end encrypted, self-destructing one-time links. Encrypted in your browser with AES-256; the key never reaches the server.",
          keywords="share secret password one-time link self-destruct burn encrypted send note"),
+    dict(slug="link-checker", name="Link Checker", title="Link <em>Checker</em>",
+         cat="Security", icon="shield", offline=False, new=True,
+         short="Is this link a scam? Checked privately, with an NCA second opinion.",
+         lede="Paste a link from a message before you open it. We check it against known malware and phishing lists and for the tricks scammers use — without the link ever leaving your device.",
+         desc="Check whether a link is a scam or malware before you open it: known-threat lists, fake Absher, Saudi Post and bank sites, look-alike letters and more — privately, plus an official second opinion from NCA Tahqaq.",
+         keywords="link checker url scanner phishing scam malware safe check suspicious sms whatsapp nca tahqaq haseen"),
     dict(slug="hash-generator", name="Hash Generator", title="Hash <em>Generator</em>",
          cat="Security", icon="hash",
          short="MD5, SHA-1, SHA-256/384/512 for text or files.",
@@ -155,7 +161,7 @@ CAT_META = {
     "Everyday": dict(slug="everyday", name="Everyday", title="Everyday <em>tools</em>", icon="sparkle",
                      blurb="Practical helpers for daily life — units, Hijri dates and how fast your internet really is."),
 }
-FEATURED = ["password-generator", "share", "speed-test"]
+FEATURED = ["password-generator", "link-checker", "speed-test"]
 
 # ---------------------------------------------------------------------------
 # Template pieces
@@ -230,7 +236,9 @@ def tools_menu():
                         for t in TOOLS if t["cat"] == c)
         cols += (f'<div class="menu-col"><a class="menu-cat" href="/{m["slug"]}/">{m["name"]}</a>'
                  f'<div class="menu-items">{items}</div></div>')
-    return f'<div class="menu" id="toolsMenu" hidden><div class="wrap"><div class="menu-grid">{cols}</div></div></div>'
+    return (f'<div class="menu" id="toolsMenu" hidden><div class="wrap"><div class="menu-grid">{cols}</div>'
+            f'<div class="menu-foot"><a href="/suggest/">{ICONS["sparkle"]}<span>Missing something? Suggest a tool</span></a>'
+            f'<a href="/widgets/">{ICONS["calendar"]}<span>iPhone widgets</span></a></div></div></div>')
 
 
 def header(active=None):
@@ -270,7 +278,7 @@ def footer():
     </div>
     <div class="foot-big" aria-hidden="true">nicely<em>done</em></div>
     <div class="foot-bottom">
-      <span>© {year} {SITE} · <a href="/about/">About &amp; trust</a> · <a href="/widgets/">iPhone widgets</a> · <a href="{GITHUB}" rel="noopener">Source on GitHub</a></span>
+      <span>© {year} {SITE} · <a href="/about/">About &amp; trust</a> · <a href="/widgets/">iPhone widgets</a> · <a href="/suggest/">Suggest a tool</a> · <a href="{GITHUB}" rel="noopener">Source on GitHub</a></span>
       <span>Private by design · No tracking, no third parties</span>
     </div>
   </div>
@@ -281,6 +289,7 @@ def footer():
 def scripts(page_script=""):
     return (f"<script>window.ND_TOOLS={tools_json()};</script>\n"
             f'<script src="/assets/site.js?v={{V}}"></script>\n'
+            f'<script src="/assets/answers.js?v={{V}}"></script>\n'
             f"{page_script}\n</body>\n</html>\n")
 
 
@@ -377,6 +386,7 @@ def tool_row(t):
 PREVIEWS = {
     "password-generator": '<div class="tile-preview" id="tilePw" aria-hidden="true">k7#Qm<b>9</b>vX!pL2<b>@</b>wR4z</div>',
     "share": '<div class="tile-preview" aria-hidden="true">nicelydone.qd.je/s/#<b>••••••••</b></div>',
+    "link-checker": '<div class="tile-preview" aria-hidden="true">absher-sa.<b>info</b>/verify → <b>Likely a scam</b></div>',
     "speed-test": '<div class="tile-preview" id="tileSpeed" aria-hidden="true">↓ <b>—</b> Mbps · ↑ <b>—</b> Mbps · <b>—</b> ms</div>',
 }
 
@@ -452,7 +462,10 @@ def build_home():
         </div>
       </div>
       <div class="cat-groups">{groups}</div>
+      <div class="callouts">
+      <a class="widget-callout reveal" href="/suggest/"><span class="tile-icon">{ICONS['sparkle']}</span><span class="tr-text"><strong>Missing a tool?</strong><span>Suggest it, or vote for the ideas you’d use most.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
       <a class="widget-callout reveal" href="/widgets/"><span class="tile-icon">{ICONS['calendar']}</span><span class="tr-text"><strong>On iPhone? Add the widgets</strong><span>The Hijri date and one-tap passwords on your Home Screen and Lock Screen.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
+      </div>
     </div>
   </section>
 
@@ -555,6 +568,7 @@ EXTRA_PAGES = [
     ("profile", "Your profile", "Manage your Nicely Done account.", None, True),
     ("admin", "Admin", "Nicely Done administration.", None, True),
     ("s", "A secret for you", "Someone shared a one-time secret with you.", None, True),
+    ("suggest", "Suggest a tool", "Suggest a tool for Nicely Done or vote for the ideas you’d use — the most-wanted get built first.", None, False),
     ("widgets", "iPhone widgets", "Hijri date and password widgets for your iPhone Home Screen and Lock Screen — private, open source, run on your phone.", None, False),
 ]
 
@@ -713,7 +727,7 @@ def main():
     (DIST / ".nojekyll").write_text("")
     (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /s/\nDisallow: /ar/s/\nDisallow: /api/\n\nSitemap: {ORIGIN}/sitemap.xml\n")
     today = datetime.date.today().isoformat()
-    urls = ["/"] + [f"/{CAT_META[c]['slug']}/" for c in CATS] + [f"/{t['slug']}/" for t in TOOLS] + ["/about/", "/widgets/"]
+    urls = ["/"] + [f"/{CAT_META[c]['slug']}/" for c in CATS] + [f"/{t['slug']}/" for t in TOOLS] + ["/about/", "/widgets/", "/suggest/"]
     (DIST / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
         + "".join(

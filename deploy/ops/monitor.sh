@@ -22,6 +22,16 @@ if [ ! -f "$STATE/cert-checked" ] || [ -n "$(find "$STATE/cert-checked" -mmin +1
     [ "$days" -lt 14 ] && "$here/notify.sh" "⚠️ nicelydone.qd.je certificate expires in $days days" "Caddy should renew automatically — check: journalctl -u caddy"
   fi
 fi
+# New tool suggestions waiting for review: notify once per new suggestion id.
+last=$(cat "$STATE/suggest-last" 2>/dev/null || echo 0)
+row=$(mysql -N -e "SELECT COUNT(*), COALESCE(MAX(id),0) FROM passforge.suggestions WHERE status='pending'" 2>/dev/null)
+pending=${row%%[[:space:]]*}; maxid=${row##*[[:space:]]}
+if [ -n "$maxid" ] && [ "${maxid:-0}" -gt "$last" ] 2>/dev/null; then
+  echo "$maxid" > "$STATE/suggest-last"
+  title=$(mysql -N -e "SELECT title FROM passforge.suggestions WHERE id=$maxid" 2>/dev/null)
+  "$here/notify.sh" "💡 New tool suggestion" "“$title” — $pending waiting for review: https://nicelydone.qd.je/admin/"
+fi
+
 # Speed-test egress budget (Oracle Always Free: 10 TB/month outbound). Alert once per threshold per month.
 m=$(date -u +%Y-%m)
 bytes=$(mysql -N -e "SELECT bytes FROM passforge.speed_usage WHERE month='$m'" 2>/dev/null || echo 0)

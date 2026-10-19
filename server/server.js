@@ -338,6 +338,8 @@ api.get('/admin/tokens', admin, wrap(async (req, res) => {
 
 require('./secrets')(api, { db, wrap, limiter, sha256, readUser });
 require('./speedtest')(api, { db, wrap });
+require('./linkcheck')(api, { limiter });
+require('./suggestions')(api, { db, wrap, limiter, admin });
 
 api.use((req, res) => res.status(404).json({ error: 'Not found' }));
 api.use((err, req, res, next) => { // eslint-disable-line no-unused-vars

@@ -14,6 +14,9 @@
       </div>
       <div class="table-wrap"><table class="data"><thead><tr><th>ID</th><th>Username</th><th>Email</th><th>Status</th><th>Joined</th><th></th></tr></thead><tbody id="users"></tbody></table></div>
 
+      <h2 class="h2" style="font-size:1.8rem;margin:40px 0 14px">Tool suggestions <span class="badge" id="pendingBadge" hidden></span></h2>
+      <div class="table-wrap"><table class="data"><thead><tr><th>Suggestion</th><th>Status</th><th>Votes</th><th>Date</th><th></th></tr></thead><tbody id="sugg"></tbody></table></div>
+
       <h2 class="h2" style="font-size:1.8rem;margin:40px 0 14px">Recent email tokens</h2>
       <div class="table-wrap"><table class="data"><thead><tr><th>User</th><th>Type</th><th>State</th><th>Created</th><th>Expires</th></tr></thead><tbody id="tokens"></tbody></table></div>
     </div>
@@ -47,6 +50,22 @@
     if(v){const r=await ND.api('/admin/users/'+v.dataset.verify+'/verify',{method:'PUT'});ND.toast(r.ok?'User verified':(r.data.error||'Failed'));if(r.ok)load();}
     if(del){if(!confirm(ND.f('Delete user “{name}”? This can’t be undone.',{name:del.dataset.name})))return;const r=await ND.api('/admin/users/'+del.dataset.del,{method:'DELETE'});ND.toast(r.ok?'User deleted':(r.data.error||'Failed'));if(r.ok)load();}
   });
+  async function loadSugg(){
+    const r=await ND.api('/admin/suggestions');if(!r.ok)return;
+    const pend=r.data.filter(x=>x.status==='pending').length;
+    $('#pendingBadge').hidden=!pend;$('#pendingBadge').textContent=ND.f('{n} waiting for review',{n:pend});
+    const S={pending:'<span class="badge info">Pending</span>',open:'<span class="badge ok">Public</span>',planned:'<span class="badge info">Planned</span>',done:'<span class="badge ok">Done</span>',declined:'<span class="badge">Declined</span>'};
+    const act=(id,st,txt)=>'<button class="btn btn-sm" data-s="'+id+'" data-st="'+st+'">'+txt+'</button> ';
+    $('#sugg').innerHTML=r.data.length?r.data.map(x=>'<tr><td style="white-space:normal;min-width:240px"><b>'+ND.esc(x.title)+'</b>'+(x.details?'<div class="faint" style="font-size:.82rem">'+ND.esc(x.details)+'</div>':'')+'</td><td>'+S[x.status]+'</td><td class="mono">'+x.votes+'</td><td>'+d(x.created_at)+'</td><td style="text-align:end;white-space:nowrap">'+
+      (x.status==='pending'?act(x.id,'open','Approve'):'')+(x.status!=='planned'&&x.status!=='pending'?act(x.id,'planned','Planned'):'')+(x.status!=='done'&&x.status!=='pending'?act(x.id,'done','Done'):'')+(x.status!=='declined'?act(x.id,'declined','Decline'):'')+
+      '<button class="btn btn-sm btn-danger" data-sdel="'+x.id+'">Delete</button></td></tr>').join(''):'<tr><td colspan="5" class="faint">No suggestions yet.</td></tr>';
+  }
+  $('#sugg').addEventListener('click',async e=>{
+    const b=e.target.closest('[data-st]'),del=e.target.closest('[data-sdel]');
+    if(b){const r=await ND.api('/admin/suggestions/'+b.dataset.s,{method:'PUT',body:{status:b.dataset.st}});ND.toast(r.ok?'Updated':(r.data.error||'Failed'));loadSugg();}
+    if(del&&confirm(ND.t('Delete this suggestion?'))){const r=await ND.api('/admin/suggestions/'+del.dataset.sdel,{method:'DELETE'});ND.toast(r.ok?'Deleted':(r.data.error||'Failed'));loadSugg();}
+  });
+  ND.me.then(m=>{if(m&&m.admin)loadSugg();});
   ND.me.then(m=>{if(m===null)deny('Accounts aren’t available on this deployment.');else if(!m)deny('Please sign in with an admin account.');else load();});
 })();
 </script>
