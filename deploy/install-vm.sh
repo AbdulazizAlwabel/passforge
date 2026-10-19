@@ -38,6 +38,11 @@ if ! sudo test -f $APP/server/.env; then
 fi
 # Schema migrations (idempotent: CREATE TABLE IF NOT EXISTS …)
 for m in "$BUNDLE"/server/migrations/*.sql; do sudo mysql passforge < "$m"; done
+# Secrets added in later versions (never overwrite existing values)
+if ! sudo grep -q '^TOTP_ENC_KEY=.\{64\}' $APP/server/.env; then
+  sudo sed -i '/^TOTP_ENC_KEY=/d' $APP/server/.env
+  echo "TOTP_ENC_KEY=$(openssl rand -hex 32)" | sudo tee -a $APP/server/.env >/dev/null
+fi
 # MariaDB only on localhost
 if ! grep -qs '^bind-address' /etc/my.cnf.d/nicelydone.cnf; then
   printf '[mysqld]\nbind-address=127.0.0.1\nskip-name-resolve\n' | sudo tee /etc/my.cnf.d/nicelydone.cnf >/dev/null

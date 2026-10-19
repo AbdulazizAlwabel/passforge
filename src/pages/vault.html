@@ -1,0 +1,337 @@
+<!-- @badges -->
+<span class="badge ok">{{icon:lock}}Zero-knowledge — encrypted on your device</span>
+<span class="badge">{{icon:user}}Free account</span>
+
+<!-- @tool -->
+<div class="panel vault" id="vault" data-state="loading">
+
+  <!-- loading -->
+  <div class="vs" data-s="loading"><div class="empty-state"><span class="spin big-spin"></span></div></div>
+
+  <!-- offline / signed out -->
+  <div class="vs" data-s="offline"><div class="empty-state">{{icon:offline}}<p>The vault needs our server, which isn’t reachable right now.</p></div></div>
+  <div class="vs" data-s="signedout">
+    <div class="vault-hero">
+      <div class="vault-mark">{{icon:lock}}</div>
+      <h2 class="h2">A private place for your <em>secrets</em></h2>
+      <p class="muted">Logins, notes and API keys — encrypted in your browser with a passphrase only you know. We store scrambled data we can’t read, and sync it to every device you sign in on.</p>
+      <div class="row" style="justify-content:center;margin-top:20px">
+        <a class="btn btn-primary" href="/account/?next=/vault/">Sign in</a>
+        <a class="btn" href="/account/#register">Create a free account</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- create -->
+  <div class="vs" data-s="create">
+    <div class="vault-narrow">
+      <p class="eyebrow"><span class="dot"></span>Step 1 of 2</p>
+      <h2 class="h2" style="margin-top:14px">Choose a vault <em>passphrase</em></h2>
+      <p class="muted">It encrypts everything in your vault. It’s separate from your account password, and we never see it — so we can’t reset it for you.</p>
+      <form id="createForm" class="vform" novalidate>
+        <div class="field">
+          <label class="label" for="cp1">Passphrase <button type="button" class="link" id="cpSuggest" style="font-size:.82rem">Suggest one</button></label>
+          <div class="input-wrap"><input class="input" type="password" id="cp1" autocomplete="new-password" minlength="10"><button type="button" class="in-btn" data-eye="cp1" aria-label="Show password">{{icon:eye}}</button></div>
+          <div class="meter" id="cpMeter" data-level="0" style="margin-top:6px"><i></i><i></i><i></i><i></i><i></i></div>
+          <span class="hint" id="cpHint">At least 10 characters. A few random words work well.</span>
+        </div>
+        <div class="field"><label class="label" for="cp2">Confirm passphrase</label><input class="input" type="password" id="cp2" autocomplete="new-password"></div>
+        <div class="msg err" hidden></div>
+        <button class="btn btn-primary btn-block" type="submit">Continue</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- recovery key -->
+  <div class="vs" data-s="recovery">
+    <div class="vault-narrow">
+      <p class="eyebrow"><span class="dot"></span>Step 2 of 2</p>
+      <h2 class="h2" style="margin-top:14px">Save your <em>recovery key</em></h2>
+      <p class="muted">If you ever forget your passphrase, this key is the only other way into your vault. Store it somewhere safe and offline — a password manager, or printed on paper.</p>
+      <div class="rk" id="rk" dir="ltr"></div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="rkCopy">{{icon:copy}}Copy</button>
+        <button class="btn" id="rkDownload">{{icon:file}}Download as a file</button>
+      </div>
+      <label class="chip" style="margin-top:18px;display:inline-block"><input type="checkbox" id="rkSaved"><span>I’ve saved my recovery key somewhere safe</span></label>
+      <div class="msg err" id="rkErr" hidden style="margin-top:12px"></div>
+      <button class="btn btn-primary btn-block" id="rkDone" disabled style="margin-top:16px">Create my vault</button>
+    </div>
+  </div>
+
+  <!-- locked -->
+  <div class="vs" data-s="locked">
+    <div class="vault-narrow" style="text-align:center">
+      <div class="vault-mark">{{icon:lock}}</div>
+      <h2 class="h2">Your vault is <em>locked</em></h2>
+      <p class="muted" id="lockedSub"></p>
+      <form id="unlockForm" class="vform" novalidate style="text-align:start">
+        <div class="field" data-mode="pass">
+          <label class="label" for="up">Vault passphrase</label>
+          <div class="input-wrap"><input class="input" type="password" id="up" autocomplete="current-password"><button type="button" class="in-btn" data-eye="up" aria-label="Show password">{{icon:eye}}</button></div>
+        </div>
+        <div class="field" data-mode="recov" hidden>
+          <label class="label" for="ur">Recovery key</label>
+          <input class="input mono-in" id="ur" autocomplete="off" spellcheck="false" placeholder="XXXX-XXXX-XXXX-…">
+        </div>
+        <div class="msg err" hidden></div>
+        <button class="btn btn-primary btn-block" type="submit">{{icon:lock}}Unlock</button>
+        <button type="button" class="link" id="toggleRecov" style="font-size:.85rem;align-self:center">Forgot your passphrase? Use your recovery key</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- open -->
+  <div class="vs" data-s="open">
+    <div class="vbar">
+      <div class="input-wrap vsearch">{{icon:search}}<input class="input" id="q" placeholder="Search your vault…" autocomplete="off"></div>
+      <div class="row vbar-actions">
+        <div class="seg" role="group" aria-label="New item">
+          <button data-new="login">{{icon:user}}<span>Login</span></button>
+          <button data-new="note">{{icon:file}}<span>Note</span></button>
+          <button data-new="secret">{{icon:key}}<span>Secret</span></button>
+        </div>
+        <button class="icon-btn" id="healthBtn" aria-label="Vault health" title="Vault health">{{icon:shield}}</button>
+        <button class="icon-btn" id="settingsBtn" aria-label="Vault settings" title="Vault settings">{{icon:gear}}</button>
+        <button class="btn btn-sm" id="lockBtn">{{icon:lock}}Lock</button>
+      </div>
+    </div>
+    <div class="vgrid">
+      <div class="vlist" id="list"></div>
+      <div class="vdetail" id="detail"></div>
+    </div>
+    <div class="vfoot faint" id="vfoot"></div>
+  </div>
+</div>
+
+<!-- @aside -->
+<div class="panel">
+  <h4>How the vault protects you</h4>
+  <ul>
+    <li>Your passphrase turns into an encryption key with 600,000 rounds of PBKDF2 — in your browser, never sent.</li>
+    <li>Every item is encrypted with AES-256-GCM before it leaves your device.</li>
+    <li>We store only scrambled data. Even with full access to our server, nobody can read your vault.</li>
+    <li>It locks itself after 10 minutes without activity.</li>
+  </ul>
+</div>
+<div class="panel">
+  <h4>Keep two things safe</h4>
+  <p>Your vault passphrase and your recovery key each open the vault on their own. If both are lost, nobody can recover the data — that’s what zero-knowledge means.</p>
+</div>
+
+<!-- @about -->
+<h2>Why a zero-knowledge vault?</h2>
+<p>Most online “vaults” can read what you store: they hold the keys. Here, the key is created and kept on your device, so a database leak, a rogue admin or a court order would only ever reveal ciphertext. Turn on <a class="link" href="/profile/">two-factor sign-in</a> as well, so nobody can even reach your encrypted data without your phone.</p>
+
+<!-- @script -->
+<script src="/assets/vault-crypto.js?v={V}"></script>
+<script>
+(function(){
+  const $=ND.$,$$=ND.$$;
+  const V=$('#vault');
+  const show=s=>{V.dataset.state=s;$$('.vs',V).forEach(x=>x.hidden=x.dataset.s!==s);};
+  let meta=null,session=null,items=[],current=null,pending=null,idle=null,clipT=null;
+  const ICON={login:'{{icon:user}}',note:'{{icon:file}}',secret:'{{icon:key}}'};
+  const TYPE={login:'Login',note:'Note',secret:'Secret'};
+  const LOC=ND.lang==='ar'?'ar-u-nu-latn':undefined;
+  const nItems=n=>ND.count(n,{one:'encrypted item',other:'encrypted items'},{one:'عنصر مشفّر',two:'عنصران مشفّران',few:'عناصر مشفّرة',many:'عنصرًا مشفّرًا',other:'عنصر مشفّر'});
+  const level=pw=>{if(!pw)return 0;let p=0;if(/[a-z]/.test(pw))p+=26;if(/[A-Z]/.test(pw))p+=26;if(/\d/.test(pw))p+=10;if(/[^A-Za-z0-9]/.test(pw))p+=33;const b=pw.length*Math.log2(p||1);return b<28?1:b<45?2:b<64?3:b<90?4:5;};
+  const genPw=n=>{const A='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*-_=+?';let s='';for(let i=0;i<n;i++)s+=A[ND.randInt(A.length)];return s;};
+  const genPhrase=()=>{const W=window.ND_WORDS;if(!W)return genPw(20);return Array.from({length:6},()=>W[ND.randInt(W.length)]).join('-');};
+  $$('[data-eye]').forEach(b=>b.addEventListener('click',()=>{const i=$('#'+b.dataset.eye),s=i.type==='password';i.type=s?'text':'password';b.innerHTML=s?'{{icon:eye_off}}':'{{icon:eye}}';}));
+  const err=(form,msg)=>{const e=form.querySelector('.msg.err');e.textContent=msg;e.hidden=!msg;};
+  const busy=(btn,on)=>{if(on){btn._h=btn.innerHTML;btn.innerHTML='<span class="spin"></span>';btn.disabled=true;}else{btn.innerHTML=btn._h||btn.innerHTML;btn.disabled=false;}};
+
+  /* ---------- load ---------- */
+  async function load(){
+    const me=await ND.me;
+    if(me===null)return show('offline');
+    if(!me)return show('signedout');
+    const r=await ND.api('/vault');
+    if(!r.ok)return show(r.status===401?'signedout':'offline');
+    meta=r.data;
+    if(!meta.exists)return show('create');
+    $('#lockedSub').textContent=nItems(meta.items.length)+' · '+ND.f('signed in as {user}',{user:me.username});
+    show('locked');setTimeout(()=>$('#up').focus(),50);
+  }
+
+  /* ---------- create ---------- */
+  $('#cp1').addEventListener('input',async()=>{const v=$('#cp1').value;$('#cpMeter').dataset.level=v.length<10?Math.min(level(v),2):level(v);
+    const my=++load.seq;if(v.length>=8){const n=await ND.pwned(v);if(my===load.seq)$('#cpHint').textContent=n>0?ND.t('⚠ This passphrase appeared in data breaches — choose another.'):ND.t('At least 10 characters. A few random words work well.');}});
+  load.seq=0;
+  $('#cpSuggest').addEventListener('click',()=>{const p=genPhrase();$('#cp1').value=$('#cp2').value=p;$('#cp1').type=$('#cp2').type='text';$('#cpMeter').dataset.level=level(p);ND.copy(p,null,'Passphrase copied — save it in a safe place');});
+  $('#createForm').addEventListener('submit',async e=>{
+    e.preventDefault();const f=e.target,a=$('#cp1').value,b=$('#cp2').value;
+    if(a.length<10)return err(f,ND.t('Use at least 10 characters.'));
+    if(level(a)<3)return err(f,ND.t('That passphrase is too easy to guess. Try a few random words.'));
+    if(a!==b)return err(f,ND.t('The two passphrases don’t match.'));
+    err(f,'');const btn=f.querySelector('[type=submit]');busy(btn,true);
+    pending=await NDVault.create(a);busy(btn,false);
+    $('#rk').textContent=pending.recoveryKey;$('#rkSaved').checked=false;$('#rkDone').disabled=true;show('recovery');
+  });
+  $('#rkSaved').addEventListener('change',e=>{$('#rkDone').disabled=!e.target.checked;});
+  $('#rkCopy').addEventListener('click',e=>ND.copy(pending.recoveryKey,e.currentTarget,'Recovery key copied'));
+  $('#rkDownload').addEventListener('click',()=>{
+    const txt='Nicely Done — vault recovery key\n\n'+pending.recoveryKey+'\n\nCreated: '+new Date().toISOString().slice(0,10)+'\nUse it at https://nicelydone.qd.je/vault/ if you forget your passphrase.\nKeep it private and offline. Anyone with this key and your account can open your vault.\n';
+    const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/plain'}));a.download='nicelydone-vault-recovery-key.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+  });
+  $('#rkDone').addEventListener('click',async e=>{
+    const btn=e.currentTarget;busy(btn,true);
+    const r=await ND.api('/vault',{method:'POST',body:pending.payload});busy(btn,false);
+    if(!r.ok){$('#rkErr').textContent=r.data.error||ND.t('Something went wrong.');$('#rkErr').hidden=false;return;}
+    meta={exists:true,...pending.payload,items:[]};session=pending.session;pending=null;items=[];openVault();ND.toast('Vault created');
+  });
+
+  /* ---------- unlock ---------- */
+  let recovMode=false;
+  $('#toggleRecov').addEventListener('click',()=>{recovMode=!recovMode;$('[data-mode="pass"]').hidden=recovMode;$('[data-mode="recov"]').hidden=!recovMode;
+    $('#toggleRecov').textContent=recovMode?ND.t('Use your passphrase instead'):ND.t('Forgot your passphrase? Use your recovery key');(recovMode?$('#ur'):$('#up')).focus();});
+  $('#unlockForm').addEventListener('submit',async e=>{
+    e.preventDefault();const f=e.target,btn=f.querySelector('[type=submit]');err(f,'');busy(btn,true);
+    const s=recovMode?await NDVault.unlockWithRecovery(meta,$('#ur').value):await NDVault.unlock(meta,$('#up').value);
+    if(!s){busy(btn,false);return err(f,recovMode?ND.t('That recovery key doesn’t open this vault.'):ND.t('Wrong passphrase.'));}
+    session=s;items=[];
+    for(const it of meta.items){try{items.push(Object.assign(await s.decrypt(it.data),{id:it.id,updated:it.updated_at}));}catch(x){items.push({id:it.id,type:'note',title:ND.t('Unreadable item'),broken:true});}}
+    busy(btn,false);$('#up').value='';$('#ur').value='';openVault();
+    if(recovMode){$('#toggleRecov').click();settings(true);}
+  });
+
+  /* ---------- open vault ---------- */
+  function openVault(){show('open');current=null;renderList();renderDetail();armIdle();$('#q').focus();}
+  function lock(msg){$('#lockedSub').textContent=msg||nItems(items.length);if(session)session.close();session=null;items=[];current=null;$('#list').innerHTML='';$('#detail').innerHTML='';clearTimeout(idle);
+    ND.api('/vault').then(r=>{if(r.ok&&r.data.exists){meta=r.data;$('#lockedSub').textContent=msg||nItems(meta.items.length);}});show('locked');}
+  $('#lockBtn').addEventListener('click',()=>lock());
+  function armIdle(){clearTimeout(idle);idle=setTimeout(()=>{if(session)lock(ND.t('Locked after 10 minutes without activity.'));},10*60*1000);}
+  ['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{if(session)armIdle();},{passive:true}));
+
+  const subOf=x=>x.type==='login'?(x.username||x.url||''):x.type==='secret'?ND.t('Secret'):(x.body||'').split('\n')[0].slice(0,60);
+  function renderList(){
+    const q=$('#q').value.trim().toLowerCase();
+    const list=items.filter(x=>!q||[x.title,x.url,x.username,x.notes,x.body].some(v=>(v||'').toLowerCase().includes(q)))
+      .sort((a,b)=>(a.title||'').localeCompare(b.title||'',ND.lang));
+    $('#list').innerHTML=list.length?list.map(x=>'<button class="vitem'+(current&&current.id===x.id?' on':'')+'" data-id="'+x.id+'"><span class="tile-icon">'+(ICON[x.type]||ICON.note)+'</span><span class="vi-text"><strong>'+ND.esc(x.title||ND.t('Untitled'))+'</strong><span>'+ND.esc(subOf(x))+'</span></span></button>').join('')
+      :'<div class="empty-state" style="padding:36px 12px">'+(items.length?'<p>'+ND.t('Nothing matches your search.')+'</p>':'{{icon:lock}}<p>'+ND.t('Your vault is empty. Add a login, note or secret above.')+'</p>')+'</div>';
+    $('#vfoot').textContent=nItems(items.length)+' · '+ND.t('locks after 10 minutes idle');
+  }
+  $('#q').addEventListener('input',renderList);
+  $('#list').addEventListener('click',e=>{const b=e.target.closest('.vitem');if(!b)return;current=items.find(x=>x.id===b.dataset.id);renderList();renderDetail();});
+  $$('[data-new]').forEach(b=>b.addEventListener('click',()=>{current={id:null,type:b.dataset.new,title:'',url:'',username:'',password:b.dataset.new==='login'?genPw(20):'',notes:'',body:'',value:''};renderList();renderDetail(true);}));
+
+  const field=(k,label,val,opts={})=>'<div class="field"><label class="label" for="f_'+k+'">'+ND.t(label)+(opts.tools?'<span class="ftools">'+opts.tools+'</span>':'')+'</label>'+
+    (opts.area?'<textarea class="textarea'+(opts.mono?' mono-in':'')+'" id="f_'+k+'" rows="'+(opts.rows||4)+'">'+ND.esc(val||'')+'</textarea>'
+      :'<div class="input-wrap"><input class="input'+(opts.mono?' mono-in':'')+'" id="f_'+k+'" type="'+(opts.secret?'password':'text')+'" value="'+ND.esc(val||'')+'" autocomplete="off" spellcheck="false">'+(opts.secret?'<button type="button" class="in-btn" data-eye2="f_'+k+'" aria-label="'+ND.esc(ND.t('Show password'))+'">{{icon:eye}}</button>':'')+'</div>')+'</div>';
+  function renderDetail(isNew){
+    const d=$('#detail'),x=current;
+    if(!x){d.innerHTML='<div class="empty-state vdetail-empty">{{icon:shield}}<p>'+ND.t('Select an item, or create one with the buttons above.')+'</p></div>';d.classList.remove('active');return;}
+    d.classList.add('active');
+    let html='<form id="itemForm" class="vform" novalidate><div class="row between"><span class="badge">'+(ICON[x.type]||'')+ND.t(TYPE[x.type]||'Note')+'</span><button type="button" class="btn btn-ghost btn-sm vback">'+ND.t('Close')+'</button></div>';
+    html+=field('title','Title',x.title);
+    if(x.type==='login'){
+      html+=field('url','Website',x.url,{mono:true,tools:x.url&&/^https?:\/\//i.test(x.url)?'<a class="link" href="'+ND.esc(x.url)+'" target="_blank" rel="noopener noreferrer">'+ND.t('Open')+'</a>':''});
+      html+=field('username','Username or email',x.username,{tools:'<button type="button" class="link" data-copyf="username">'+ND.t('Copy')+'</button>'});
+      html+=field('password','Password',x.password,{secret:true,mono:true,tools:'<button type="button" class="link" data-gen>'+ND.t('Generate')+'</button> · <button type="button" class="link" data-copyf="password">'+ND.t('Copy')+'</button>'});
+      html+='<div class="meter" id="ipMeter" data-level="'+level(x.password)+'"><i></i><i></i><i></i><i></i><i></i></div>';
+      html+=field('notes','Notes',x.notes,{area:true,rows:3});
+    } else if(x.type==='secret'){
+      html+=field('value','Secret value',x.value,{secret:true,mono:true,tools:'<button type="button" class="link" data-copyf="value">'+ND.t('Copy')+'</button>'});
+      html+=field('notes','Notes',x.notes,{area:true,rows:3});
+    } else {
+      html+=field('body','Note',x.body,{area:true,rows:10});
+    }
+    html+='<div class="msg err" hidden></div><div class="row"><button class="btn btn-primary" type="submit">{{icon:lock}}'+ND.t('Save encrypted')+'</button>'+(x.id?'<button type="button" class="btn btn-danger" data-del>'+ND.t('Delete')+'</button>':'')+'</div>';
+    if(x.updated)html+='<p class="hint">'+ND.f('Last saved {when}',{when:new Date(x.updated).toLocaleString(LOC,{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})})+'</p>';
+    d.innerHTML=html+'</form>';
+    d.querySelector('.vback').addEventListener('click',()=>{current=null;renderList();renderDetail();});
+    d.querySelectorAll('[data-eye2]').forEach(b=>b.addEventListener('click',()=>{const i=$('#'+b.dataset.eye2),s=i.type==='password';i.type=s?'text':'password';b.innerHTML=s?'{{icon:eye_off}}':'{{icon:eye}}';}));
+    const pw=$('#f_password');if(pw)pw.addEventListener('input',()=>{$('#ipMeter').dataset.level=level(pw.value);});
+    d.querySelectorAll('[data-copyf]').forEach(b=>b.addEventListener('click',()=>{const v=$('#f_'+b.dataset.copyf).value;if(!v)return;
+      ND.copy(v,null,b.dataset.copyf==='username'?'Copied':'Copied — the clipboard clears in 30 seconds');
+      if(b.dataset.copyf!=='username'){clearTimeout(clipT);clipT=setTimeout(()=>{if(document.hasFocus())navigator.clipboard.writeText('').catch(()=>{});},30000);}}));
+    const g=d.querySelector('[data-gen]');if(g)g.addEventListener('click',()=>{const v=genPw(20);pw.value=v;pw.type='text';$('#ipMeter').dataset.level=level(v);});
+    const del=d.querySelector('[data-del]');if(del)del.addEventListener('click',async()=>{if(!confirm(ND.t('Delete this item? This can’t be undone.')))return;
+      const r=await ND.api('/vault/items/'+x.id,{method:'DELETE'});if(!r.ok)return ND.toast(r.data.error||'Something went wrong.');
+      items=items.filter(i=>i.id!==x.id);current=null;renderList();renderDetail();ND.toast('Deleted');});
+    $('#itemForm').addEventListener('submit',async e=>{
+      e.preventDefault();const f=e.target,btn=f.querySelector('[type=submit]');
+      const val=k=>{const el=$('#f_'+k);return el?el.value:'';};
+      const obj={type:x.type,title:val('title').trim()};
+      if(x.type==='login')Object.assign(obj,{url:val('url').trim(),username:val('username'),password:val('password'),notes:val('notes')});
+      else if(x.type==='secret')Object.assign(obj,{value:val('value'),notes:val('notes')});
+      else obj.body=val('body');
+      if(!obj.title)return err(f,ND.t('Give it a title.'));
+      err(f,'');busy(btn,true);
+      const id=x.id||NDVault.newId();
+      const r=await ND.api('/vault/items/'+id,{method:'PUT',body:{data:await session.encrypt(obj)}});busy(btn,false);
+      if(!r.ok)return err(f,r.data.error||ND.t('Something went wrong.'));
+      const saved=Object.assign(obj,{id,updated:new Date().toISOString()});
+      const i=items.findIndex(it=>it.id===id);if(i>=0)items[i]=saved;else items.push(saved);
+      current=saved;renderList();renderDetail();ND.toast('Saved — encrypted on this device');
+    });
+    if(isNew)$('#f_title').focus();
+  }
+
+  /* ---------- health ---------- */
+  $('#healthBtn').addEventListener('click',async()=>{
+    const logins=items.filter(x=>x.type==='login'&&x.password);
+    current=null;renderList();const d=$('#detail');d.classList.add('active');
+    d.innerHTML='<div class="vform"><div class="row between"><h3 class="h2" style="font-size:1.6rem">'+ND.t('Vault health')+'</h3><button type="button" class="btn btn-ghost btn-sm vback">'+ND.t('Close')+'</button></div><div id="hBody"><div class="empty-state"><span class="spin big-spin"></span><p>'+ND.t('Checking your passwords privately…')+'</p></div></div></div>';
+    d.querySelector('.vback').addEventListener('click',()=>{renderDetail();});
+    const counts={};logins.forEach(x=>{counts[x.password]=(counts[x.password]||0)+1;});
+    const rows=[];
+    for(const x of logins){const issues=[];
+      if(level(x.password)<3)issues.push(ND.t('Weak'));
+      if(counts[x.password]>1)issues.push(ND.t('Reused'));
+      const n=await ND.pwned(x.password);if(n>0)issues.push(ND.t('Leaked'));
+      rows.push({x,issues});}
+    const bad=rows.filter(r=>r.issues.length);
+    const score=logins.length?Math.round(100*(logins.length-bad.length)/logins.length):100;
+    $('#hBody').innerHTML='<div class="health-score"><b>'+score+'</b><span>/ 100</span></div><p class="muted">'+(logins.length?ND.f('{bad} of {n} passwords need attention.',{bad:bad.length,n:logins.length}):ND.t('Add some logins and they’ll be checked here.'))+'</p>'+
+      '<p class="hint">'+ND.t('Leak checks send only the first 5 characters of each password’s hash to Have I Been Pwned.')+'</p>'+
+      '<div class="list" style="margin-top:14px">'+bad.map(r=>'<button class="list-item hrow" data-id="'+r.x.id+'"><span class="txt" style="font-family:var(--font-sans)">'+ND.esc(r.x.title)+'</span>'+r.issues.map(i=>'<span class="badge bad">'+ND.esc(i)+'</span>').join(' ')+'</button>').join('')+'</div>';
+    $('#hBody').querySelectorAll('.hrow').forEach(b=>b.addEventListener('click',()=>{current=items.find(x=>x.id===b.dataset.id);renderList();renderDetail();}));
+  });
+
+  /* ---------- settings ---------- */
+  $('#settingsBtn').addEventListener('click',()=>settings(false));
+  function settings(fromRecovery){
+    current=null;renderList();const d=$('#detail');d.classList.add('active');
+    d.innerHTML='<div class="vform"><div class="row between"><h3 class="h2" style="font-size:1.6rem">'+ND.t('Vault settings')+'</h3><button type="button" class="btn btn-ghost btn-sm vback">'+ND.t('Close')+'</button></div>'+
+      (fromRecovery?'<div class="msg info">{{icon:alert}}<span>'+ND.t('You unlocked with your recovery key. Set a new passphrase now — and you’ll get a fresh recovery key.')+'</span></div>':'')+
+      '<form id="ppForm" class="vform" novalidate><p class="panel-title" style="margin:0">'+ND.t('Change passphrase')+'</p>'+
+      field('np1','New passphrase','',{secret:true})+field('np2','Confirm new passphrase','',{secret:true})+field('acct','Your account password','',{secret:true})+
+      '<label class="chip"><input type="checkbox" id="newRk"'+(fromRecovery?' checked disabled':'')+'><span>'+ND.t('Also create a new recovery key')+'</span></label>'+
+      '<div class="msg err" hidden></div><button class="btn btn-primary" type="submit">'+ND.t('Update passphrase')+'</button></form>'+
+      '<div class="divider"></div><p class="panel-title" style="margin:0 0 10px">'+ND.t('Export')+'</p><p class="hint">'+ND.t('Downloads every item decrypted, as a JSON file. Anyone with the file can read it — keep it safe and delete it when done.')+'</p><button class="btn" id="exportBtn" style="margin-top:10px">{{icon:file}}'+ND.t('Download decrypted export')+'</button>'+
+      '<div class="divider"></div><p class="panel-title" style="margin:0 0 10px;color:var(--danger)">'+ND.t('Delete vault')+'</p><p class="hint">'+ND.t('Permanently deletes every item in your vault.')+'</p><button class="btn btn-danger" id="delVault" style="margin-top:10px">'+ND.t('Delete vault…')+'</button></div>';
+    d.querySelector('.vback').addEventListener('click',()=>renderDetail());
+    d.querySelectorAll('[data-eye2]').forEach(b=>b.addEventListener('click',()=>{const i=$('#'+b.dataset.eye2),s=i.type==='password';i.type=s?'text':'password';}));
+    $('#ppForm').addEventListener('submit',async e=>{
+      e.preventDefault();const f=e.target,a=$('#f_np1').value,b2=$('#f_np2').value,btn=f.querySelector('[type=submit]');
+      if(a.length<10)return err(f,ND.t('Use at least 10 characters.'));
+      if(level(a)<3)return err(f,ND.t('That passphrase is too easy to guess. Try a few random words.'));
+      if(a!==b2)return err(f,ND.t('The two passphrases don’t match.'));
+      err(f,'');busy(btn,true);
+      const fresh=$('#newRk').checked,wr=await session.rewrap(a,fresh);
+      const body={kdf_salt:wr.kdf_salt,kdf_iterations:wr.kdf_iterations,wrapped_pass:wr.wrapped_pass,wrapped_recov:fresh?wr.wrapped_recov:meta.wrapped_recov,password:$('#f_acct').value};
+      const r=await ND.api('/vault/keys',{method:'PUT',body});busy(btn,false);
+      if(!r.ok)return err(f,r.data.error||ND.t('Something went wrong.'));
+      Object.assign(meta,body);delete meta.password;
+      if(fresh){pending={recoveryKey:wr.recoveryKey};$('#detail').innerHTML='<div class="vform"><h3 class="h2" style="font-size:1.6rem">'+ND.t('Your new recovery key')+'</h3><p class="muted">'+ND.t('Your old recovery key no longer works. Save this one now — it won’t be shown again.')+'</p><div class="rk" dir="ltr">'+ND.esc(wr.recoveryKey)+'</div><div class="row"><button class="btn" id="rk2c">{{icon:copy}}'+ND.t('Copy')+'</button><button class="btn" id="rk2d">{{icon:file}}'+ND.t('Download as a file')+'</button><button class="btn btn-primary" id="rk2ok">'+ND.t('Done')+'</button></div></div>';
+        $('#rk2c').addEventListener('click',e=>ND.copy(wr.recoveryKey,e.currentTarget,'Recovery key copied'));$('#rk2d').addEventListener('click',()=>$('#rkDownload').click());$('#rk2ok').addEventListener('click',()=>{pending=null;renderDetail();});}
+      ND.toast('Passphrase updated');
+    });
+    $('#exportBtn').addEventListener('click',()=>{
+      const data=JSON.stringify({exported:new Date().toISOString(),items:items.filter(x=>!x.broken).map(({id,updated,...rest})=>rest)},null,2);
+      const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type:'application/json'}));a.download='nicelydone-vault-export.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    });
+    $('#delVault').addEventListener('click',async()=>{
+      const pw=prompt(ND.t('This permanently deletes your whole vault. Type your account password to confirm.'));if(!pw)return;
+      const r=await ND.api('/vault',{method:'DELETE',body:{password:pw}});if(!r.ok)return ND.toast(r.data.error||'Something went wrong.');
+      if(session)session.close();session=null;items=[];meta={exists:false};show('create');ND.toast('Vault deleted');
+    });
+  }
+  window.addEventListener('pagehide',()=>{if(session)session.close();});
+  load();
+})();
+</script>
+<script src="/assets/words.js?v={V}"></script>

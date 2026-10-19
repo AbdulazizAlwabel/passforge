@@ -167,6 +167,8 @@ function admin(req, res, next) {
   auth(req, res, () => (isAdmin(req.user) ? next() : res.status(403).json({ error: 'Access denied' })));
 }
 
+const twofa = require('./twofa')(api, { db, wrap, limiter, auth, sha256, bcrypt, jwt, JWT_SECRET, setSession, SITE_NAME: 'Nicely Done' });
+
 api.get('/health', wrap(async (req, res) => {
   await db.query('SELECT 1');
   res.json({ ok: true });
@@ -210,6 +212,7 @@ api.post('/login', strict, wrap(async (req, res) => {
   const user = rows[0];
   const ok = await bcrypt.compare(password, user ? user.password : DUMMY_HASH);
   if (!user || !ok) return res.status(401).json({ error: 'Invalid email or password' });
+  if (user.totp_enabled) return res.json({ twofa: true, ticket: twofa.ticketFor(user) });
   setSession(res, user);
   res.json({ message: 'Signed in', username: user.username });
 }));
@@ -302,7 +305,7 @@ api.delete('/account', strict, auth, wrap(async (req, res) => {
 }));
 
 api.get('/admin/users', admin, wrap(async (req, res) => {
-  const [rows] = await db.query('SELECT id, username, email, verified, created_at FROM users ORDER BY created_at DESC');
+  const [rows] = await db.query('SELECT id, username, email, verified, totp_enabled, created_at FROM users ORDER BY created_at DESC');
   res.json(rows.map((r) => ({ ...r, verified: !!r.verified })));
 }));
 api.put('/admin/users/:id/verify', admin, wrap(async (req, res) => {
@@ -337,6 +340,7 @@ api.get('/admin/tokens', admin, wrap(async (req, res) => {
 }));
 
 require('./secrets')(api, { db, wrap, limiter, sha256, readUser });
+require('./vault')(api, { db, wrap, limiter, auth, bcrypt });
 require('./speedtest')(api, { db, wrap });
 require('./linkcheck')(api, { limiter });
 require('./suggestions')(api, { db, wrap, limiter, admin });

@@ -30,6 +30,18 @@
         <p class="auth-switch">New here? <a href="#register" class="link" data-go="register">Create an account</a></p>
       </div>
 
+      <!-- Two-factor step -->
+      <div data-view="twofa" hidden>
+        <h2 class="h2">Two-factor <em>code</em></h2>
+        <p class="muted" id="tfaHelp">Open your authenticator app and enter the 6-digit code for Nicely Done.</p>
+        <form id="tfaForm" novalidate>
+          <div class="field"><label class="label" for="tfaIn" id="tfaLabel">6-digit code</label><input class="input mono-in code-input" id="tfaIn" inputmode="numeric" autocomplete="one-time-code" maxlength="11" placeholder="123456"></div>
+          <div class="msg err" hidden></div>
+          <button class="btn btn-primary btn-block" type="submit">Verify and sign in</button>
+        </form>
+        <p class="auth-switch"><button type="button" class="link" id="tfaRecov">Lost your phone? Use a recovery code</button></p>
+      </div>
+
       <!-- Register -->
       <div data-view="register" hidden>
         <h2 class="h2">Create your <em>account</em></h2>
@@ -94,8 +106,15 @@
   $('#loginForm').addEventListener('submit',e=>{e.preventDefault();
     const id=$('#lEmail').value.trim(),pw=$('#lPass').value;
     if(!id||!pw){const er=e.target.querySelector('.msg.err');er.textContent='Enter your email (or username) and password.';er.hidden=false;return;}
-    submit(e.target,'/login',{email:id,password:pw},()=>{location.href=nextUrl();});
+    submit(e.target,'/login',{email:id,password:pw},d=>{if(d.twofa){ticket=d.ticket;go('twofa');return;}location.href=nextUrl();});
   });
+  let ticket=null,recov=false;
+  $('#tfaRecov').addEventListener('click',()=>{recov=!recov;$('#tfaLabel').textContent=recov?ND.t('Recovery code'):ND.t('6-digit code');$('#tfaIn').placeholder=recov?'xxxxx-xxxxx':'123456';$('#tfaIn').inputMode=recov?'text':'numeric';
+    $('#tfaRecov').textContent=recov?ND.t('Use your authenticator app instead'):ND.t('Lost your phone? Use a recovery code');$('#tfaIn').value='';$('#tfaIn').focus();});
+  $('#tfaIn').addEventListener('input',()=>{const v=$('#tfaIn').value.replace(/\s/g,'');if(!recov&&/^\d{6}$/.test(v))$('#tfaForm').requestSubmit();});
+  $('#tfaForm').addEventListener('submit',e=>{e.preventDefault();const code=$('#tfaIn').value.replace(/\s/g,'');
+    if(!code){const er=e.target.querySelector('.msg.err');er.textContent=ND.t('Enter the code.');er.hidden=false;return;}
+    submit(e.target,'/login/2fa',{ticket,code},()=>{location.href=nextUrl();});});
   $('#regForm').addEventListener('submit',e=>{e.preventDefault();
     const er=e.target.querySelector('.msg.err');
     const u=$('#rUser').value.trim(),em=$('#rEmail').value.trim(),pw=$('#rPass').value;

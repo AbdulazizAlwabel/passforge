@@ -40,6 +40,43 @@
         </div>
       </div>
 
+      <div class="panel" style="margin-top:20px" id="tfaPanel">
+        <div class="panel-body">
+          <div class="row between"><p class="panel-title" style="margin:0">Two-factor sign-in</p><span id="tfaBadge"></span></div>
+          <p class="muted" style="font-size:.92rem;max-width:60ch;margin-top:8px">Ask for a 6-digit code from an authenticator app (Google Authenticator, Microsoft Authenticator, 1Password, Authy…) every time you sign in. Even someone with your password can’t get in without your phone.</p>
+          <div id="tfaOff" hidden style="margin-top:16px"><button class="btn btn-primary" id="tfaStart">{{icon:shield}}Turn on two-factor sign-in</button></div>
+          <div id="tfaSetup" hidden style="margin-top:18px">
+            <div class="tfa-setup">
+              <div class="qr" id="tfaQr" aria-label="QR code"></div>
+              <div style="flex:1;min-width:220px">
+                <ol class="steps" style="margin-top:0">
+                  <li><span>Open your authenticator app and scan this QR code.</span></li>
+                  <li><span>Can’t scan? Enter this key instead:</span></li>
+                </ol>
+                <div class="row" style="gap:8px"><code class="tfa-secret" id="tfaSecret" dir="ltr"></code><button class="copy" id="tfaCopy">{{icon:copy}}Copy</button></div>
+                <form id="tfaConfirm" novalidate style="margin-top:16px;display:flex;flex-direction:column;gap:10px;max-width:280px">
+                  <label class="label" for="tfaCode">Enter the 6-digit code it shows</label>
+                  <input class="input mono-in code-input" id="tfaCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" pattern="[0-9]{6}" placeholder="123456">
+                  <div class="msg err" hidden></div>
+                  <div class="row"><button class="btn btn-primary" type="submit">Confirm</button><button class="btn btn-ghost" type="button" id="tfaCancel">Cancel</button></div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div id="tfaCodes" hidden style="margin-top:18px">
+            <div class="msg ok">{{icon:check}}<span>Two-factor sign-in is on. Save these recovery codes — each one works once if you lose your phone.</span></div>
+            <div class="rcodes" id="rcodes" dir="ltr"></div>
+            <div class="row"><button class="btn" id="rcCopy">{{icon:copy}}Copy</button><button class="btn" id="rcDownload">{{icon:file}}Download</button><button class="btn btn-primary" id="rcDone">I’ve saved them</button></div>
+          </div>
+          <div id="tfaOn" hidden style="margin-top:16px">
+            <p class="hint" id="rcLeft"></p>
+            <div class="row" style="margin-top:10px"><button class="btn" id="rcNew">New recovery codes</button><button class="btn btn-danger" id="tfaOffBtn">Turn off</button></div>
+          </div>
+        </div>
+      </div>
+
+      <a class="panel vault-link" href="/vault/" style="margin-top:20px"><span class="tile-icon">{{icon:lock}}</span><span class="tr-text"><strong>Your encrypted vault</strong><span>Logins, notes and secrets — encrypted on your device, synced to your account.</span></span><span class="tr-go">{{icon:chev}}</span></a>
+
       <div class="panel" style="margin-top:20px">
         <div class="panel-body">
           <p class="panel-title">Sessions</p>
@@ -69,6 +106,7 @@
 </section>
 
 <!-- @script -->
+<script src="/assets/vendor/qrcode.js?v={V}"></script>
 <script>
 (function(){
   const $=ND.$;
@@ -102,6 +140,39 @@
   let pwnT,pwnSeq=0;
   function warnLeak(input,el){clearTimeout(pwnT);const my=++pwnSeq;el.hidden=true;const v=input.value;if(v.length<6)return;pwnT=setTimeout(async()=>{const n=await ND.pwned(v);if(my===pwnSeq&&n>0){el.textContent=ND.f('⚠ This password appeared in {count} — please choose a different one.',{count:ND.count(n,{one:'data breach',other:'data breaches'},{one:'تسريب',two:'تسريبين',few:'تسريبات',many:'تسريبًا',other:'تسريب'})});el.hidden=false;}},500);}
   $('#nw').addEventListener('input',()=>warnLeak($('#nw'),$('#warn')));
+  /* ---------- two-factor sign-in ---------- */
+  let codes=[];
+  async function tfaLoad(){
+    const r=await ND.api('/2fa/status');if(!r.ok){$('#tfaPanel').hidden=true;return;}
+    const st=r.data;if(!st.available){$('#tfaPanel').hidden=true;return;}
+    $('#tfaBadge').innerHTML=st.enabled?'<span class="badge ok">{{icon:check}}'+ND.t('On')+'</span>':'<span class="badge">'+ND.t('Off')+'</span>';
+    $('#tfaOff').hidden=st.enabled;$('#tfaOn').hidden=!st.enabled;$('#tfaSetup').hidden=true;
+    $('#rcLeft').textContent=ND.f('{n} of 10 recovery codes left.',{n:st.recoveryLeft});
+  }
+  $('#tfaStart').addEventListener('click',async e=>{
+    const r=await ND.api('/2fa/setup',{method:'POST'});if(!r.ok)return ND.toast(r.data.error||'Something went wrong.');
+    const q=qrcode(0,'M');q.addData(r.data.uri);q.make();$('#tfaQr').innerHTML=q.createSvgTag({cellSize:5,margin:3,scalable:true});
+    $('#tfaSecret').textContent=r.data.secret.match(/.{1,4}/g).join(' ');$('#tfaCopy').onclick=ev=>ND.copy(r.data.secret,ev.currentTarget,'Key copied');
+    $('#tfaOff').hidden=true;$('#tfaSetup').hidden=false;$('#tfaCode').value='';$('#tfaCode').focus();
+  });
+  $('#tfaCancel').addEventListener('click',()=>{$('#tfaSetup').hidden=true;$('#tfaOff').hidden=false;});
+  $('#tfaConfirm').addEventListener('submit',async e=>{
+    e.preventDefault();const f=e.target,er=f.querySelector('.msg.err'),btn=f.querySelector('[type=submit]');er.hidden=true;
+    btn.disabled=true;const r=await ND.api('/2fa/enable',{method:'POST',body:{code:$('#tfaCode').value.replace(/\s/g,'')}});btn.disabled=false;
+    if(!r.ok){er.textContent=r.data.error||'Something went wrong.';er.hidden=false;return;}
+    showCodes(r.data.recoveryCodes);
+  });
+  function showCodes(list){codes=list;$('#rcodes').innerHTML=list.map(c=>'<span>'+ND.esc(c)+'</span>').join('');$('#tfaSetup').hidden=true;$('#tfaOn').hidden=true;$('#tfaCodes').hidden=false;}
+  $('#rcCopy').addEventListener('click',e=>ND.copy(codes.join('\n'),e.currentTarget,'Recovery codes copied'));
+  $('#rcDownload').addEventListener('click',()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['Nicely Done — two-factor recovery codes\n\n'+codes.join('\n')+'\n\nEach code works once. Keep them private.\n'],{type:'text/plain'}));a.download='nicelydone-recovery-codes.txt';a.click();});
+  $('#rcDone').addEventListener('click',()=>{codes=[];$('#tfaCodes').hidden=true;tfaLoad();});
+  $('#rcNew').addEventListener('click',async()=>{const pw=prompt(ND.t('Enter your account password to create new recovery codes. The old ones will stop working.'));if(!pw)return;
+    const r=await ND.api('/2fa/recovery-codes',{method:'POST',body:{password:pw}});if(!r.ok)return ND.toast(r.data.error||'Something went wrong.');showCodes(r.data.recoveryCodes);});
+  $('#tfaOffBtn').addEventListener('click',async()=>{const pw=prompt(ND.t('Enter your account password to turn off two-factor sign-in.'));if(!pw)return;
+    const code=prompt(ND.t('Enter the current 6-digit code from your authenticator app.'));if(!code)return;
+    const r=await ND.api('/2fa/disable',{method:'POST',body:{password:pw,code:code.replace(/\s/g,'')}});ND.toast(r.ok?r.data.message:(r.data.error||'Something went wrong.'));tfaLoad();});
+  ND.me.then(m=>{if(m)tfaLoad();});
+
   $('#logoutAll').addEventListener('click',async()=>{if(!confirm('Sign out on every device, including this one?'))return;const r=await ND.api('/logout-all',{method:'POST'});if(r.ok)location.href=ND.url('/account/?signedout=1');else ND.toast(r.data.error||'Something went wrong.');});
   $('#delOpen').addEventListener('click',()=>{$('#delForm').hidden=false;$('#delOpen').hidden=true;$('#delPw').focus();});
   $('#delCancel').addEventListener('click',()=>{$('#delForm').hidden=true;$('#delOpen').hidden=false;$('#delPw').value='';});

@@ -31,6 +31,8 @@ def ic(body):
 
 ICONS = {
     "lock": ic('<rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/><circle cx="12" cy="16" r="1.2" fill="currentColor"/>'),
+    "key": ic('<circle cx="8" cy="15" r="4"/><path d="m10.8 12.2 8.7-8.7M16 7l2.5 2.5M18.5 4.5 21 7"/>'),
+    "gear": ic('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/>'),
     "shield": ic('<path d="M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z"/><path d="m9 12 2.2 2.2L15.5 10"/>'),
     "hash": ic('<path d="M5 9h15M4 15h15M10 3 8 21M16 3l-2 18"/>'),
     "user": ic('<circle cx="12" cy="8" r="4"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/>'),
@@ -96,6 +98,12 @@ TOOLS = [
          lede="Paste a link from a message before you open it. We check it against known malware and phishing lists and for the tricks scammers use — without the link ever leaving your device.",
          desc="Check whether a link is a scam or malware before you open it: known-threat lists, fake Absher, Saudi Post and bank sites, look-alike letters and more — privately, plus an official second opinion from NCA Tahqaq.",
          keywords="link checker url scanner phishing scam malware safe check suspicious sms whatsapp nca tahqaq haseen"),
+    dict(slug="vault", name="Encrypted Vault", title="Encrypted <em>Vault</em>",
+         cat="Security", icon="lock", offline=False, local=False, new=True,
+         short="Logins, notes and secrets — encrypted on your device, synced to your account.",
+         lede="A zero-knowledge vault for your logins, notes and API keys. Everything is encrypted in your browser before it’s saved, so only you can ever read it — not us, and not anyone who breaks into our server.",
+         desc="A free zero-knowledge password and secrets vault: logins, notes and API keys encrypted in your browser with AES-256 before syncing. We can’t read it. Includes a password health check.",
+         keywords="vault password manager encrypted notes secrets api keys zero knowledge sync store"),
     dict(slug="hash-generator", name="Hash Generator", title="Hash <em>Generator</em>",
          cat="Security", icon="hash",
          short="MD5, SHA-1, SHA-256/384/512 for text or files.",
