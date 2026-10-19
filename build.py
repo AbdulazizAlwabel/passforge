@@ -160,6 +160,11 @@ FEATURED = ["password-generator", "share", "speed-test"]
 # ---------------------------------------------------------------------------
 # Template pieces
 # ---------------------------------------------------------------------------
+SEO = json.loads((SRC / "seo.json").read_text())
+VERIFY_META = "".join(
+    f'\n<meta name="{n}" content="{html.escape(SEO[k])}">'
+    for k, n in (("google", "google-site-verification"), ("bing", "msvalidate.01")) if SEO.get(k))
+
 THEME_BOOT = ("<script>(function(){try{var t=JSON.parse(localStorage.getItem('nd:theme'));"
               "if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script>")
 
@@ -184,7 +189,7 @@ def head(title, desc, path, extra_fonts="", jsonld=None, noindex=False):
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
-<link rel="canonical" href="{url}">{robots}
+<link rel="canonical" href="{url}">{robots}{VERIFY_META if path == "/" else ""}
 <meta name="theme-color" content="#0b0c0b">
 <meta name="color-scheme" content="dark light">
 <meta property="og:type" content="website">
