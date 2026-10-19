@@ -78,7 +78,7 @@ sudo install -d -m 755 /opt/nicelydone-ops /etc/nicelydone
 sudo install -m 755 "$BUNDLE"/deploy/ops/*.sh /opt/nicelydone-ops/
 sudo install -m 644 "$BUNDLE"/deploy/ops/nicelydone-*.service "$BUNDLE"/deploy/ops/nicelydone-*.timer /etc/systemd/system/
 if ! sudo test -f /etc/nicelydone/ops.env; then
-  printf '# Where alerts go (a Hermes target, e.g. photon:any;-;+9665XXXXXXXX). Empty = log only.\nNOTIFY_TARGET=\nNOTIFY_USER=opc\n' | sudo tee /etc/nicelydone/ops.env >/dev/null
+  printf '# Where alerts go — a Hermes target in double quotes, e.g. "photon:any;-;+9665XXXXXXXX". Empty = log only.\nNOTIFY_TARGET=\nNOTIFY_USER=opc\n' | sudo tee /etc/nicelydone/ops.env >/dev/null
   sudo chmod 600 /etc/nicelydone/ops.env
 fi
 
