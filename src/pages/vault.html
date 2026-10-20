@@ -131,8 +131,9 @@
   const V=$('#vault');
   const show=s=>{V.dataset.state=s;$$('.vs',V).forEach(x=>x.hidden=x.dataset.s!==s);};
   let meta=null,session=null,items=[],current=null,pending=null,idle=null,clipT=null;
-  const ICON={login:'{{icon:user}}',note:'{{icon:file}}',secret:'{{icon:key}}'};
-  const TYPE={login:'Login',note:'Note',secret:'Secret'};
+  const ICON={login:'{{icon:user}}',note:'{{icon:file}}',secret:'{{icon:key}}',signature:'{{icon:pen}}'};
+  const TYPE={login:'Login',note:'Note',secret:'Secret',signature:'Signature'};
+  const SIG_OK=/^data:image\/png;base64,[A-Za-z0-9+/=]+$/;
   const LOC=ND.lang==='ar'?'ar-u-nu-latn':undefined;
   const nItems=n=>ND.count(n,{one:'encrypted item',other:'encrypted items'},{one:'عنصر مشفّر',two:'عنصران مشفّران',few:'عناصر مشفّرة',many:'عنصرًا مشفّرًا',other:'عنصر مشفّر'});
   const level=pw=>{if(!pw)return 0;let p=0;if(/[a-z]/.test(pw))p+=26;if(/[A-Z]/.test(pw))p+=26;if(/\d/.test(pw))p+=10;if(/[^A-Za-z0-9]/.test(pw))p+=33;const b=pw.length*Math.log2(p||1);return b<28?1:b<45?2:b<64?3:b<90?4:5;};
@@ -204,7 +205,7 @@
   function armIdle(){clearTimeout(idle);idle=setTimeout(()=>{if(session)lock(ND.t('Locked after 10 minutes without activity.'));},10*60*1000);}
   ['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{if(session)armIdle();},{passive:true}));
 
-  const subOf=x=>x.type==='login'?(x.username||x.url||''):x.type==='secret'?ND.t('Secret'):(x.body||'').split('\n')[0].slice(0,60);
+  const subOf=x=>x.type==='login'?(x.username||x.url||''):x.type==='secret'?ND.t('Secret'):x.type==='signature'?ND.t('Signature — use it in PDF Studio'):(x.body||'').split('\n')[0].slice(0,60);
   function renderList(){
     const q=$('#q').value.trim().toLowerCase();
     const list=items.filter(x=>!q||[x.title,x.url,x.username,x.notes,x.body].some(v=>(v||'').toLowerCase().includes(q)))
@@ -232,6 +233,9 @@
       html+=field('password','Password',x.password,{secret:true,mono:true,tools:'<button type="button" class="link" data-gen>'+ND.t('Generate')+'</button> · <button type="button" class="link" data-copyf="password">'+ND.t('Copy')+'</button>'});
       html+='<div class="meter" id="ipMeter" data-level="'+level(x.password)+'"><i></i><i></i><i></i><i></i><i></i></div>';
       html+=field('notes','Notes',x.notes,{area:true,rows:3});
+    } else if(x.type==='signature'){
+      html+=SIG_OK.test(x.image||'')?'<div class="sig-prev"><img src="'+x.image+'" alt="'+ND.esc(ND.t('Signature'))+'"></div>':'';
+      html+='<p class="hint">'+ND.t('Saved from PDF Studio. Open a PDF there, press “Sign”, then “Use one from my vault”.')+'</p>';
     } else if(x.type==='secret'){
       html+=field('value','Secret value',x.value,{secret:true,mono:true,tools:'<button type="button" class="link" data-copyf="value">'+ND.t('Copy')+'</button>'});
       html+=field('notes','Notes',x.notes,{area:true,rows:3});
@@ -257,6 +261,7 @@
       const obj={type:x.type,title:val('title').trim()};
       if(x.type==='login')Object.assign(obj,{url:val('url').trim(),username:val('username'),password:val('password'),notes:val('notes')});
       else if(x.type==='secret')Object.assign(obj,{value:val('value'),notes:val('notes')});
+      else if(x.type==='signature')obj.image=x.image;
       else obj.body=val('body');
       if(!obj.title)return err(f,ND.t('Give it a title.'));
       err(f,'');busy(btn,true);

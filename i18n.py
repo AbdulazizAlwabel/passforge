@@ -169,7 +169,9 @@ class Translator:
                     self.js_candidates.setdefault(self.norm(val), where)
                 return lit
             return q + self.escape_js(t, q) + q
-        return JS_STR_RE.sub(rep, code)
+        # Code between /*i18n:off*/ and /*i18n:on*/ is data (e.g. word lists), never translated.
+        parts = re.split(r"(/\*i18n:off\*/[\s\S]*?/\*i18n:on\*/)", code)
+        return "".join(p if p.startswith("/*i18n:off*/") else JS_STR_RE.sub(rep, p) for p in parts)
 
     @staticmethod
     def unescape_js(s):

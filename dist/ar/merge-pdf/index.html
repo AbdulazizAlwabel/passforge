@@ -27,8 +27,8 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preload" href="/assets/fonts/geist-normal-300-700-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/instrument-serif-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=176a81de62">
-<link rel="stylesheet" href="/assets/site.css?v=176a81de62">
+<link rel="stylesheet" href="/assets/fonts.css?v=dff2fd464f">
+<link rel="stylesheet" href="/assets/site.css?v=dff2fd464f">
 <script>(function(){try{var t=JSON.parse(localStorage.getItem('nd:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script>
 <link rel="alternate" hreflang="en" href="https://nicelydone.qd.je/merge-pdf/">
 <link rel="alternate" hreflang="ar" href="https://nicelydone.qd.je/ar/merge-pdf/">
@@ -82,6 +82,9 @@
       <span data-for="split">أفلت ملف PDF <em>لتقسيمه</em></span>
       <span data-for="images">أفلت صورك أو <em>مستنداتك الممسوحة</em></span>
       <span data-for="topng">أفلت ملف PDF <em>لتحويله</em></span>
+      <span data-for="sign">أفلت ملف PDF <em>لتوقيعه</em></span>
+      <span data-for="numbers">أفلت ملف PDF <em>لترقيم صفحاته</em></span>
+      <span data-for="watermark">أفلت ملف PDF <em>لختمه بعلامة مائية</em></span>
     </h2>
     <p class="muted st-empty-sub" id="dropSub">
       <span data-for="organize">دمج وتقسيم وترتيب وتدوير وتحويل — كل ذلك داخل متصفحك.</span>
@@ -89,6 +92,9 @@
       <span data-for="split">اختر صفحات أو نطاقات، واحصل على كل جزء كملف PDF مستقل.</span>
       <span data-for="images">JPG أو PNG أو WebP أو HEIC — تصبح كل صورة صفحة في ملف PDF واحد مرتّب.</span>
       <span data-for="topng">تصبح كل صفحة صورة PNG أو JPG واضحة.</span>
+      <span data-for="sign">املأ النماذج، وأضف النصوص والتواريخ، ووقّع — على الصفحة مباشرة.</span>
+      <span data-for="numbers">اختر مكان الأرقام وشكلها — وتتحدّث المصغّرات فورًا.</span>
+      <span data-for="watermark">اختم كل الصفحات بكلمة «سري» أو «مسودة» أو بكلماتك.</span>
     </p>
     <div class="row st-empty-cta">
       <button class="btn btn-primary" type="button" id="pick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>اختر الملفات</button>
@@ -113,6 +119,7 @@
         <div class="st-menu-wrap">
           <button class="icon-btn" type="button" id="moreBtn" aria-label="إجراءات أخرى" aria-haspopup="menu" aria-expanded="false" title="إجراءات أخرى"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="19" cy="12" r="1.2" fill="currentColor"/></svg></button>
           <div class="st-menu" id="moreMenu" role="menu" hidden>
+            <button role="menuitem" type="button" data-act="stamp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21h14"/><path d="M6.5 17h11a1.5 1.5 0 0 0 1.5-1.5v-.8a2.7 2.7 0 0 0-2.7-2.7H14l.5-3.6a2.6 2.6 0 1 0-5 0l.5 3.6H7.7A2.7 2.7 0 0 0 5 14.7v.8A1.5 1.5 0 0 0 6.5 17Z"/></svg><span>أرقام الصفحات والعلامة المائية</span></button>
             <button role="menuitem" type="button" data-act="blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg><span>إدراج صفحة فارغة</span></button>
             <button role="menuitem" type="button" data-act="dup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></svg><span>تكرار المحدد</span></button>
             <button role="menuitem" type="button" data-act="reverse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></svg><span>عكس الترتيب</span></button>
@@ -124,7 +131,9 @@
         </div>
       </div>
       <div class="st-group st-group-end">
-        <label class="st-zoom" title="حجم المصغّرات"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M11 8v6M8 11h6"/></svg><input type="range" class="range" id="zoom" min="110" max="280" step="10" aria-label="حجم المصغّرات"></label>
+
+        <button class="btn btn-sm" type="button" id="signBtn" title="تعبئة وتوقيع (افتح صفحة لتحريرها)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.4 3.6a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg><span>تعبئة وتوقيع</span></button>
+        <button class="icon-btn" type="button" id="stampBtn" aria-label="أرقام الصفحات والعلامة المائية" title="أرقام الصفحات والعلامة المائية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21h14"/><path d="M6.5 17h11a1.5 1.5 0 0 0 1.5-1.5v-.8a2.7 2.7 0 0 0-2.7-2.7H14l.5-3.6a2.6 2.6 0 1 0-5 0l.5 3.6H7.7A2.7 2.7 0 0 0 5 14.7v.8A1.5 1.5 0 0 0 6.5 17Z"/></svg></button>
         <button class="btn btn-sm" type="button" id="splitBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/></svg><span>تقسيم</span></button>
         <button class="btn btn-sm" type="button" id="imgBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg><span>إلى صور</span></button>
         <div class="st-save">
@@ -143,7 +152,8 @@
     <div class="st-status">
       <span id="stCount"></span>
       <span id="stSel" hidden><span id="stSelN"></span> · <button type="button" class="link" id="clearSel">مسح</button></span>
-      <span class="faint st-hint" id="stHint">اسحب الصفحات لترتيبها · انقر مرتين للمعاينة</span>
+      <label class="st-zoom" title="حجم المصغّرات"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M11 8v6M8 11h6"/></svg><input type="range" class="range" id="zoom" min="110" max="280" step="10" aria-label="حجم المصغّرات"></label>
+      <span class="faint st-hint" id="stHint">اسحب الصفحات لترتيبها · انقر مرتين على صفحة لتعبئتها أو توقيعها أو إضافة نص</span>
     </div>
   </div>
 
@@ -234,19 +244,121 @@
     </form>
   </dialog>
 
-  <dialog class="st-dlg st-viewer" id="dlgView" aria-label="معاينة الصفحة">
+  <dialog class="st-dlg st-viewer" id="dlgView" aria-label="تحرير الصفحة">
     <div class="st-view-top">
       <span class="st-view-title" id="viewTitle" dir="auto"></span>
-      <div class="row" style="gap:6px">
+      <div class="seg st-tools" role="toolbar" aria-label="أُضيف إلى الصفحة">
+        <button type="button" data-tool="select" aria-pressed="true" title="تحديد وتحريك (V)" aria-label="تحديد وتحريك"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4.5 4.5 6.4 16 2.3-6.7 6.7-2.3Z"/></svg></button>
+        <button type="button" data-tool="text" aria-pressed="false" title="إضافة نص (T)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V5h16v2M9 19h6M12 5v14"/></svg><span>نص</span></button>
+        <button type="button" data-tool="sign" aria-pressed="false" title="أضف توقيعك (S)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.4 3.6a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg><span>توقيع</span></button>
+        <button type="button" data-tool="date" aria-pressed="false" title="أضف تاريخ اليوم"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="M15.5 13.2a2.6 2.6 0 1 0 0 4.6 3.3 3.3 0 1 1 0-4.6Z"/></svg><span>التاريخ</span></button>
+        <button type="button" data-tool="check" aria-pressed="false" title="أضف علامة صح" aria-label="صح"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button>
+        <button type="button" data-tool="cross" aria-pressed="false" title="أضف علامة خطأ" aria-label="خطأ"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div class="row st-view-acts" style="gap:6px">
         <button class="icon-btn" type="button" id="vRotL" aria-label="تدوير لليسار"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
         <button class="icon-btn" type="button" id="vRotR" aria-label="تدوير لليمين"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>
         <button class="icon-btn" type="button" id="vDel" aria-label="حذف الصفحة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>
-        <button class="icon-btn" type="button" id="vClose" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        <button class="btn btn-primary btn-sm" type="button" id="vClose">اكتمل</button>
       </div>
     </div>
-    <div class="st-view-stage" id="viewStage"><canvas id="viewCanvas"></canvas><span class="spin big-spin" id="viewSpin"></span></div>
+    <div class="st-view-stage" id="viewStage">
+      <div class="st-pagebox" id="pageBox"><canvas id="viewCanvas"></canvas><div class="st-layer" id="layer"></div></div>
+      <span class="spin big-spin" id="viewSpin"></span>
+      <div class="st-formhint st-placehint" id="placeHint" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.4 3.6a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg><span>انقر على الصفحة حيث تريد وضع توقيعك</span></div>
+      <div class="st-formhint" id="formHint" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.5 2.5M15.2 15.2l2.5 2.5M6.3 17.7l2.5-2.5M15.2 8.8l2.5-2.5"/></svg><span>في هذه الصفحة حقول نموذج — انقر على أحدها لتعبئته.</span></div>
+    </div>
+    <div class="st-mkbar" id="mkbar" hidden></div>
     <button class="st-view-nav prev" type="button" id="vPrev" aria-label="الصفحة السابقة"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
     <button class="st-view-nav next" type="button" id="vNext" aria-label="الصفحة التالية"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+  </dialog>
+
+  <dialog class="st-dlg st-signdlg" id="dlgSign" aria-labelledby="dlgSignT">
+    <form method="dialog" class="st-dlg-form">
+      <header><h3 id="dlgSignT">توقيعك</h3><button class="icon-btn" value="cancel" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></header>
+      <div class="st-dlg-body">
+        <div class="seg" role="group" aria-label="طريقة التوقيع">
+          <button type="button" data-stab="draw" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.4 3.6a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg>رسم</button>
+          <button type="button" data-stab="type" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V5h16v2M9 19h6M12 5v14"/></svg>كتابة الاسم</button>
+          <button type="button" data-stab="upload" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg>صورة</button>
+        </div>
+        <div class="sg-pane" data-pane="draw">
+          <div class="sg-pad"><canvas id="sigPad" aria-label="لوحة التوقيع"></canvas><span class="sg-line"></span><span class="sg-hint" id="padHint">وقّع هنا بالفأرة أو بإصبعك أو بالقلم</span></div>
+          <div class="row between sg-padbar">
+            <div class="sg-inks" role="group" aria-label="لون الحبر"><button type="button" data-ink="black" aria-pressed="true" aria-label="حبر أسود" style="--ink:#16181d"></button><button type="button" data-ink="blue" aria-pressed="false" aria-label="حبر أزرق" style="--ink:#1d4ed8"></button></div>
+            <div class="row" style="gap:4px"><button type="button" class="btn btn-ghost btn-sm" id="padUndo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>تراجع عن الخط</button><button type="button" class="btn btn-ghost btn-sm" id="padClear">مسح</button></div>
+          </div>
+        </div>
+        <div class="sg-pane" data-pane="type" hidden>
+          <input class="input" id="sigName" placeholder="اكتب اسمك" autocomplete="name" dir="auto" maxlength="60">
+          <div class="sg-fonts" id="sigFonts" role="radiogroup" aria-label="نمط الخط اليدوي"></div>
+        </div>
+        <div class="sg-pane" data-pane="upload" hidden>
+          <label class="dropzone sg-drop" id="sigDrop"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg><span>اختر صورة لتوقيعك على ورقة بيضاء</span><input type="file" accept="image/*" id="sigFile" hidden></label>
+          <div class="sg-upprev" id="sigUpPrev" hidden><canvas id="sigUpCv"></canvas></div>
+          <div class="field" id="sigThrField" hidden><label class="label" for="sigThr">إزالة الخلفية <span class="val" id="sigThrV"></span></label><input type="range" class="range" id="sigThr" min="120" max="245" value="200"></div>
+        </div>
+        <div class="sg-saved" id="sigSaved" hidden><span class="label">التوقيعات المحفوظة</span><div class="sg-list" id="sigList"></div></div>
+        <div class="sg-vault" id="sigVault" hidden>
+          <label class="chip"><input type="checkbox" id="sigToVault"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/><circle cx="12" cy="16" r="1.2" fill="currentColor"/></svg>احفظه في خزنتي المشفّرة</span></label>
+          <button type="button" class="link" id="sigFromVault">استخدم توقيعًا من خزنتي</button>
+        </div>
+      </div>
+      <footer><span class="faint">أُنشئ على هذا الجهاز — دون أي رفع.</span><button class="btn btn-ghost" value="cancel">إلغاء</button><button class="btn btn-primary" value="ok" id="sigOk" disabled>استخدم التوقيع</button></footer>
+    </form>
+  </dialog>
+
+  <dialog class="st-dlg" id="dlgVaultUnlock" aria-labelledby="dlgVuT">
+    <form method="dialog" class="st-dlg-form">
+      <header><h3 id="dlgVuT">افتح خزنتك</h3></header>
+      <div class="st-dlg-body">
+        <p class="muted" style="font-size:.92rem">توقيعاتك المحفوظة مشفّرة تشفيرًا تامًا بين الطرفين. أدخل عبارة مرور خزنتك — تُستخدم على هذا الجهاز فقط.</p>
+        <div class="field"><label class="label" for="vuPass">عبارة مرور الخزنة</label><input class="input" type="password" id="vuPass" autocomplete="current-password"></div>
+        <div class="msg err" id="vuErr" hidden></div>
+      </div>
+      <footer><button class="btn btn-ghost" value="cancel">إلغاء</button><button class="btn btn-primary" value="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/><circle cx="12" cy="16" r="1.2" fill="currentColor"/></svg>فتح</button></footer>
+    </form>
+  </dialog>
+
+  <dialog class="st-dlg st-side" id="dlgStamp" aria-labelledby="dlgStampT">
+    <form method="dialog" class="st-dlg-form">
+      <header><h3 id="dlgStampT">أرقام الصفحات والعلامة المائية</h3><button class="icon-btn" value="cancel" aria-label="إغلاق"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></header>
+      <div class="st-dlg-body">
+        <section class="sp-sec">
+          <label class="sp-toggle"><input type="checkbox" id="numOn"><span class="sp-sw" aria-hidden="true"></span><strong>أرقام الصفحات</strong></label>
+          <div class="sp-body" id="numBody" hidden>
+            <div class="field"><span class="label">الموضع</span>
+              <div class="sp-pos" role="group" aria-label="الموضع">
+                <button type="button" data-pos="tl" aria-label="أعلى اليسار"></button><button type="button" data-pos="tc" aria-label="أعلى الوسط"></button><button type="button" data-pos="tr" aria-label="أعلى اليمين"></button>
+                <button type="button" data-pos="bl" aria-label="أسفل اليسار"></button><button type="button" data-pos="bc" aria-label="أسفل الوسط"></button><button type="button" data-pos="br" aria-label="أسفل اليمين"></button>
+              </div>
+            </div>
+            <div class="field"><span class="label">النمط</span>
+              <div class="seg sp-wrap" role="group" aria-label="النمط"><button type="button" data-nf="n">1</button><button type="button" data-nf="nN">1 / 12</button><button type="button" data-nf="page">صفحة 1 من 12</button><button type="button" data-nf="dash">– 1 –</button></div>
+            </div>
+            <div class="sp-row">
+              <div class="field"><label class="label" for="numStart">البدء من</label><input class="input mono-in" id="numStart" type="number" min="0" max="9999" value="1" inputmode="numeric" dir="ltr"></div>
+              <div class="field"><span class="label">الحجم</span><div class="seg" role="group" aria-label="الحجم"><button type="button" data-nsz="8">S</button><button type="button" data-nsz="10">M</button><button type="button" data-nsz="13">L</button></div></div>
+            </div>
+            <label class="chip"><input type="checkbox" id="numSkip"><span>تخطَّ الصفحة الأولى (الغلاف)</span></label>
+          </div>
+        </section>
+        <section class="sp-sec">
+          <label class="sp-toggle"><input type="checkbox" id="wmOn"><span class="sp-sw" aria-hidden="true"></span><strong>علامة مائية</strong></label>
+          <div class="sp-body" id="wmBody" hidden>
+            <div class="field"><label class="label" for="wmText">نص</label><input class="input" id="wmText" dir="auto" maxlength="60" autocomplete="off"></div>
+            <div class="sp-row">
+              <div class="field"><span class="label">الاتجاه</span><div class="seg" role="group" aria-label="الاتجاه"><button type="button" data-wst="diag">مائلة</button><button type="button" data-wst="flat">أفقية</button></div></div>
+              <div class="field"><span class="label">اللون</span><div class="sg-inks" role="group" aria-label="اللون"><button type="button" data-wc="gray" aria-label="رمادي" style="--ink:#8a8f98"></button><button type="button" data-wc="red" aria-label="أحمر" style="--ink:#d32f2f"></button><button type="button" data-wc="blue" aria-label="أزرق" style="--ink:#1d4ed8"></button></div></div>
+            </div>
+            <div class="field"><label class="label" for="wmOp">الشفافية <span class="val" id="wmOpV"></span></label><input type="range" class="range" id="wmOp" min="6" max="60" value="18"></div>
+            <div class="field" id="wmScopeF"><span class="label">الصفحات</span><div class="seg" role="group" aria-label="الصفحات"><button type="button" data-wsc="all">كل الصفحات</button><button type="button" data-wsc="sel" id="wmSelBtn">الصفحات المحددة</button></div></div>
+          </div>
+        </section>
+        <p class="hint">تتحدّث المصغّرات أثناء اختيارك.</p>
+      </div>
+      <footer><button class="btn btn-primary" value="ok">اكتمل</button></footer>
+    </form>
   </dialog>
 
   <dialog class="st-dlg" id="dlgKeys" aria-labelledby="dlgKeysT">
@@ -259,7 +371,8 @@
         <div><span>نقل الصفحات المحددة</span><span><span class="kbd">Alt</span> + <span class="kbd">←</span> <span class="kbd">→</span></span></div>
         <div><span>تدوير لليمين / لليسار</span><span><span class="kbd">R</span> / <span class="kbd">Shift</span> <span class="kbd">R</span></span></div>
         <div><span>حذف المحدد</span><span><span class="kbd">Del</span></span></div>
-        <div><span>معاينة الصفحة</span><span><span class="kbd">Enter</span> أو نقرة مزدوجة</span></div>
+        <div><span>تحرير الصفحة (تعبئة، توقيع، إضافة نص)</span><span><span class="kbd">Enter</span> أو نقرة مزدوجة</span></div>
+        <div><span>في المحرّر: نص / تحديد</span><span><span class="kbd">T</span> / <span class="kbd">V</span></span></div>
         <div><span>تراجع / إعادة</span><span><span class="kbd">Ctrl</span> <span class="kbd">Z</span> / <span class="kbd">Ctrl</span> <span class="kbd">Shift</span> <span class="kbd">Z</span></span></div>
         <div><span>إضافة ملفات</span><span><span class="kbd">Ctrl</span> <span class="kbd">O</span> أو لصق</span></div>
         <div><span>تنزيل PDF</span><span><span class="kbd">Ctrl</span> <span class="kbd">S</span></span></div>
@@ -282,6 +395,8 @@
   <details><summary>هل هناك حد للحجم أو عدد الصفحات؟</summary><p>لا توجد حدود مصطنعة — لا سقف يومي ولا باقة «احترافية». الحد الوحيد هو ذاكرة جهازك: مئات الصفحات لا مشكلة فيها على حاسوب محمول أو جوال حديث.</p></details>
   <details><summary>هل يفتح ملفات PDF المحمية بكلمة مرور؟</summary><p>نعم. إذا احتاج الملف إلى كلمة مرور لفتحه فستُسأل عنها، وتُستخدم على جهازك فقط. أما الملفات التي تُفتح بحرية لكنها تمنع التعديل (وهذا شائع في كشوف الحسابات البنكية) فتُعالَج تلقائيًا. وتُحفظ الصفحات التي تنزّلها دون الحماية.</p></details>
   <details><summary>هل تُحفظ الروابط والنصوص والجودة؟</summary><p>نعم. تُنسخ الصفحات كما هي تمامًا — يبقى النص قابلًا للتحديد والبحث، ولا يُعاد ضغط شيء. الصور التي تضيفها وحدها تُحوَّل، وفقط إذا اخترت «ملف أصغر». أما الإشارات المرجعية في الملفات الأصلية فلا تُنقل عند الدمج.</p></details>
+  <details><summary>هل يمكنني تعبئة النماذج وتوقيع المستندات؟</summary><p>نعم. انقر مرتين على صفحة (أو اضغط «تعبئة وتوقيع») لتكتب في حقول النموذج، وتضيف النصوص والتواريخ وعلامات الصح، وتضع توقيعك — مرسومًا بإصبعك أو مكتوبًا بخط يدوي أو مأخوذًا من صورة. والنص العربي مدعوم. ويمكنك حفظ توقيعاتك في خزنتك المشفّرة تشفيرًا تامًا لإعادة استخدامها.</p></details>
+  <details><summary>هل التوقيع المنشأ هنا ملزم قانونيًا؟</summary><p>هو صورة لتوقيعك توضع على الصفحة — تمامًا كتوقيع ورقة مطبوعة ثم مسحها ضوئيًا. وهذا مقبول في كثير من المستندات اليومية، لكن بعض العقود والخدمات الحكومية تتطلب توقيعًا رقميًا معتمدًا (مثلًا عبر نفاذ). وإن كنت في شك فاسأل الجهة التي تطلب المستند.</p></details>
   <details><summary>هل يعمل على آيفون وأندرويد؟</summary><p>نعم. اضغط لتحديد الصفحات، واضغط مطوّلًا على صفحة لسحبها، والصور من ألبوم الكاميرا مباشرة — بما فيها صور آيفون بصيغة HEIC في Safari — تصبح صفحات PDF.</p></details>
 </div></div></div></section>
   <section class="section" style="padding-top:0">
@@ -307,10 +422,11 @@
     </div>
   </div>
 </footer>
-<script>window.ND_TOOLS=[{"name": "مولّد كلمات المرور", "short": "كلمات مرور وعبارات مرور آمنة تشفيريًا وغير منحازة.", "cat": "الأمان والخصوصية", "href": "/ar/password-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"11\" width=\"16\" height=\"10\" rx=\"2.5\"/><path d=\"M8 11V7.5a4 4 0 0 1 8 0V11\"/><circle cx=\"12\" cy=\"16\" r=\"1.2\" fill=\"currentColor\"/><\/svg>", "keywords": "random secure strong passphrase diceware generate كلمة مرور كلمات سر عشوائية قوية عبارة توليد مولد"}, {"name": "فاحص القوة", "short": "الإنتروبيا، تقدير زمن الكسر، واكتشاف الأنماط.", "cat": "الأمان والخصوصية", "href": "/ar/strength-checker/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z\"/><path d=\"m9 12 2.2 2.2L15.5 10\"/><\/svg>", "keywords": "password strength test entropy crack time analyse قوة كلمة المرور فحص اختبار تسريب اختراق كسر"}, {"name": "سرّ لمرة واحدة", "short": "شارك كلمة مرور عبر رابط يُدمِّر نفسه.", "cat": "الأمان والخصوصية", "href": "/ar/share/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L12 5.6\"/><path d=\"M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2\"/><\/svg>", "keywords": "share secret password one-time link self-destruct burn encrypted send note مشاركة سر كلمة مرور رابط مرة واحدة تدمير ذاتي مشفر إرسال ملاحظة"}, {"name": "فاحص الروابط", "short": "هل هذا الرابط احتيالي؟ فحص خاص، مع رأي ثانٍ من الهيئة الوطنية للأمن السيبراني.", "cat": "الأمان والخصوصية", "href": "/ar/link-checker/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z\"/><path d=\"m9 12 2.2 2.2L15.5 10\"/><\/svg>", "keywords": "link checker url scanner phishing scam malware safe check suspicious sms whatsapp nca tahqaq haseen فحص الروابط رابط احتيال تصيد مشبوه آمن رسالة واتساب تحقق حصين الأمن السيبراني"}, {"name": "الخزنة المشفّرة", "short": "بيانات الدخول والملاحظات والأسرار — مشفّرة على جهازك ومتزامنة مع حسابك.", "cat": "الأمان والخصوصية", "href": "/ar/vault/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"11\" width=\"16\" height=\"10\" rx=\"2.5\"/><path d=\"M8 11V7.5a4 4 0 0 1 8 0V11\"/><circle cx=\"12\" cy=\"16\" r=\"1.2\" fill=\"currentColor\"/><\/svg>", "keywords": "vault password manager encrypted notes secrets api keys zero knowledge sync store"}, {"name": "مولّد التجزئة", "short": "MD5 وSHA-1 وSHA-256/384/512 للنصوص أو الملفات.", "cat": "الأمان والخصوصية", "href": "/ar/hash-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 9h15M4 15h15M10 3 8 21M16 3l-2 18\"/><\/svg>", "keywords": "md5 sha1 sha256 sha512 checksum digest file verify تجزئة هاش بصمة مجموع اختباري ملف تحقق"}, {"name": "مولّد أسماء المستخدمين", "short": "أسماء مميّزة بخمسة أساليب.", "cat": "الأمان والخصوصية", "href": "/ar/username-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4.5 21a7.5 7.5 0 0 1 15 0\"/><\/svg>", "keywords": "username handle gamertag nickname name اسم مستخدم لقب ألعاب اسم مستعار"}, {"name": "ترميز Base64", "short": "ترميز Base64 وفكّه — قياسي أو آمن للروابط.", "cat": "للمطوّرين", "href": "/ar/base64-tool/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m16 18 6-6-6-6M8 6l-6 6 6 6\"/><\/svg>", "keywords": "base64 encode decode url-safe data url btoa atob ترميز فك ترميز تشفير نص"}, {"name": "منسّق JSON", "short": "نسّق JSON وتحقّق منه واضغطه ورتّبه.", "cat": "للمطوّرين", "href": "/ar/json-formatter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1\"/><\/svg>", "keywords": "json format beautify validate minify pretty print lint تنسيق تحقق ضغط ترتيب"}, {"name": "محوّل حالة الأحرف", "short": "camelCase وsnake_case وTitle Case وغيرها — كلها دفعة واحدة.", "cat": "للمطوّرين", "href": "/ar/text-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 7V5h16v2M9 19h6M12 5v14\"/><\/svg>", "keywords": "case convert camel snake kebab pascal title upper lower حالة الأحرف تحويل نص كبيرة صغيرة"}, {"name": "IP والشبكة", "short": "عنوان IP العام، وتفاصيل المتصفح، وحاسبة الشبكات الفرعية.", "cat": "للمطوّرين", "href": "/ar/ip-network/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18\"/><\/svg>", "keywords": "ip address my ip subnet cidr calculator network mask عنوان آي بي شبكة فرعية حاسبة قناع"}, {"name": "استوديو PDF", "short": "دمج ملفات PDF وتقسيمها وترتيبها وتدويرها وتحويلها — دون رفعها.", "cat": "يومية", "href": "/ar/pdf-studio/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "pdf merge combine join split extract reorder rotate delete pages jpg png image to pdf convert organize دمج تقسيم تدوير تحويل صور ملف"}, {"name": "محوّل الوحدات", "short": "عشر فئات — الوزن والطول والحرارة والبيانات وغيرها.", "cat": "يومية", "href": "/ar/unit-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 17 17 3l4 4L7 21z\"/><path d=\"m7 13 2 2M10 10l2 2M13 7l2 2\"/><\/svg>", "keywords": "convert units kg lb km miles celsius fahrenheit تحويل وحدات وزن طول حرارة كيلو رطل ميل مئوية"}, {"name": "اختبار السرعة", "short": "اختبار سرعة إنترنت خاص — بلا أطراف ثالثة.", "cat": "يومية", "href": "/ar/speed-test/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4.9 18.5a9 9 0 1 1 14.2 0\"/><path d=\"m12 14 4-5\"/><circle cx=\"12\" cy=\"14\" r=\"1.6\" fill=\"currentColor\"/><\/svg>", "keywords": "speed test internet bandwidth download upload ping latency jitter bufferbloat mbps اختبار سرعة الإنترنت تنزيل رفع بنق زمن الاستجابة"}, {"name": "محوّل التاريخ الهجري", "short": "هجري أم القرى ⇄ ميلادي، مع تقويم مزدوج.", "cat": "يومية", "href": "/ar/date-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"5\" width=\"17\" height=\"15.5\" rx=\"2.5\"/><path d=\"M8 3v4M16 3v4M3.5 10h17\"/><path d=\"M15.5 13.2a2.6 2.6 0 1 0 0 4.6 3.3 3.3 0 1 1 0-4.6Z\"/><\/svg>", "keywords": "hijri islamic gregorian date convert umm al-qura calendar هجري ميلادي تاريخ تحويل أم القرى تقويم رمضان"}, {"name": "دمج PDF", "short": "اجمع ملفات PDF في ملف واحد — بخصوصية، في متصفحك.", "cat": "يومية", "href": "/ar/merge-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "merge pdf combine pdf join pdf files into one"}, {"name": "تقسيم PDF", "short": "قسّم ملف PDF إلى أجزاء أو استخرج صفحات منه.", "cat": "يومية", "href": "/ar/split-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "split pdf extract pages separate pdf cut pdf"}, {"name": "تحويل JPG إلى PDF", "short": "حوّل الصور والمستندات الممسوحة إلى ملف PDF واحد.", "cat": "يومية", "href": "/ar/jpg-to-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "jpg to pdf image to pdf png to pdf photo to pdf heic to pdf scan to pdf"}, {"name": "تحويل PDF إلى JPG", "short": "احفظ صفحات PDF كصور JPG أو PNG واضحة.", "cat": "يومية", "href": "/ar/pdf-to-jpg/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "pdf to jpg pdf to png pdf to image convert pdf pages to images"}];</script>
+<script>window.ND_TOOLS=[{"name": "مولّد كلمات المرور", "short": "كلمات مرور وعبارات مرور آمنة تشفيريًا وغير منحازة.", "cat": "الأمان والخصوصية", "href": "/ar/password-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"11\" width=\"16\" height=\"10\" rx=\"2.5\"/><path d=\"M8 11V7.5a4 4 0 0 1 8 0V11\"/><circle cx=\"12\" cy=\"16\" r=\"1.2\" fill=\"currentColor\"/><\/svg>", "keywords": "random secure strong passphrase diceware generate كلمة مرور كلمات سر عشوائية قوية عبارة توليد مولد"}, {"name": "فاحص القوة", "short": "الإنتروبيا، تقدير زمن الكسر، واكتشاف الأنماط.", "cat": "الأمان والخصوصية", "href": "/ar/strength-checker/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z\"/><path d=\"m9 12 2.2 2.2L15.5 10\"/><\/svg>", "keywords": "password strength test entropy crack time analyse قوة كلمة المرور فحص اختبار تسريب اختراق كسر"}, {"name": "سرّ لمرة واحدة", "short": "شارك كلمة مرور عبر رابط يُدمِّر نفسه.", "cat": "الأمان والخصوصية", "href": "/ar/share/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L12 5.6\"/><path d=\"M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2\"/><\/svg>", "keywords": "share secret password one-time link self-destruct burn encrypted send note مشاركة سر كلمة مرور رابط مرة واحدة تدمير ذاتي مشفر إرسال ملاحظة"}, {"name": "فاحص الروابط", "short": "هل هذا الرابط احتيالي؟ فحص خاص، مع رأي ثانٍ من الهيئة الوطنية للأمن السيبراني.", "cat": "الأمان والخصوصية", "href": "/ar/link-checker/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z\"/><path d=\"m9 12 2.2 2.2L15.5 10\"/><\/svg>", "keywords": "link checker url scanner phishing scam malware safe check suspicious sms whatsapp nca tahqaq haseen فحص الروابط رابط احتيال تصيد مشبوه آمن رسالة واتساب تحقق حصين الأمن السيبراني"}, {"name": "الخزنة المشفّرة", "short": "بيانات الدخول والملاحظات والأسرار — مشفّرة على جهازك ومتزامنة مع حسابك.", "cat": "الأمان والخصوصية", "href": "/ar/vault/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"11\" width=\"16\" height=\"10\" rx=\"2.5\"/><path d=\"M8 11V7.5a4 4 0 0 1 8 0V11\"/><circle cx=\"12\" cy=\"16\" r=\"1.2\" fill=\"currentColor\"/><\/svg>", "keywords": "vault password manager encrypted notes secrets api keys zero knowledge sync store"}, {"name": "مولّد التجزئة", "short": "MD5 وSHA-1 وSHA-256/384/512 للنصوص أو الملفات.", "cat": "الأمان والخصوصية", "href": "/ar/hash-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 9h15M4 15h15M10 3 8 21M16 3l-2 18\"/><\/svg>", "keywords": "md5 sha1 sha256 sha512 checksum digest file verify تجزئة هاش بصمة مجموع اختباري ملف تحقق"}, {"name": "مولّد أسماء المستخدمين", "short": "أسماء مميّزة بخمسة أساليب.", "cat": "الأمان والخصوصية", "href": "/ar/username-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4.5 21a7.5 7.5 0 0 1 15 0\"/><\/svg>", "keywords": "username handle gamertag nickname name اسم مستخدم لقب ألعاب اسم مستعار"}, {"name": "ترميز Base64", "short": "ترميز Base64 وفكّه — قياسي أو آمن للروابط.", "cat": "للمطوّرين", "href": "/ar/base64-tool/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m16 18 6-6-6-6M8 6l-6 6 6 6\"/><\/svg>", "keywords": "base64 encode decode url-safe data url btoa atob ترميز فك ترميز تشفير نص"}, {"name": "منسّق JSON", "short": "نسّق JSON وتحقّق منه واضغطه ورتّبه.", "cat": "للمطوّرين", "href": "/ar/json-formatter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1\"/><\/svg>", "keywords": "json format beautify validate minify pretty print lint تنسيق تحقق ضغط ترتيب"}, {"name": "محوّل حالة الأحرف", "short": "camelCase وsnake_case وTitle Case وغيرها — كلها دفعة واحدة.", "cat": "للمطوّرين", "href": "/ar/text-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 7V5h16v2M9 19h6M12 5v14\"/><\/svg>", "keywords": "case convert camel snake kebab pascal title upper lower حالة الأحرف تحويل نص كبيرة صغيرة"}, {"name": "IP والشبكة", "short": "عنوان IP العام، وتفاصيل المتصفح، وحاسبة الشبكات الفرعية.", "cat": "للمطوّرين", "href": "/ar/ip-network/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18\"/><\/svg>", "keywords": "ip address my ip subnet cidr calculator network mask عنوان آي بي شبكة فرعية حاسبة قناع"}, {"name": "استوديو PDF", "short": "دمج ملفات PDF وتقسيمها وترتيبها وتدويرها وتحويلها — دون رفعها.", "cat": "يومية", "href": "/ar/pdf-studio/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "pdf merge combine join split extract reorder rotate delete pages jpg png image to pdf convert organize sign signature fill form page numbers watermark دمج تقسيم تدوير تحويل صور ملف"}, {"name": "محوّل الوحدات", "short": "عشر فئات — الوزن والطول والحرارة والبيانات وغيرها.", "cat": "يومية", "href": "/ar/unit-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 17 17 3l4 4L7 21z\"/><path d=\"m7 13 2 2M10 10l2 2M13 7l2 2\"/><\/svg>", "keywords": "convert units kg lb km miles celsius fahrenheit تحويل وحدات وزن طول حرارة كيلو رطل ميل مئوية"}, {"name": "اختبار السرعة", "short": "اختبار سرعة إنترنت خاص — بلا أطراف ثالثة.", "cat": "يومية", "href": "/ar/speed-test/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4.9 18.5a9 9 0 1 1 14.2 0\"/><path d=\"m12 14 4-5\"/><circle cx=\"12\" cy=\"14\" r=\"1.6\" fill=\"currentColor\"/><\/svg>", "keywords": "speed test internet bandwidth download upload ping latency jitter bufferbloat mbps اختبار سرعة الإنترنت تنزيل رفع بنق زمن الاستجابة"}, {"name": "محوّل التاريخ الهجري", "short": "هجري أم القرى ⇄ ميلادي، مع تقويم مزدوج.", "cat": "يومية", "href": "/ar/date-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"5\" width=\"17\" height=\"15.5\" rx=\"2.5\"/><path d=\"M8 3v4M16 3v4M3.5 10h17\"/><path d=\"M15.5 13.2a2.6 2.6 0 1 0 0 4.6 3.3 3.3 0 1 1 0-4.6Z\"/><\/svg>", "keywords": "hijri islamic gregorian date convert umm al-qura calendar هجري ميلادي تاريخ تحويل أم القرى تقويم رمضان"}, {"name": "دمج PDF", "short": "اجمع ملفات PDF في ملف واحد — بخصوصية، في متصفحك.", "cat": "يومية", "href": "/ar/merge-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "merge pdf combine pdf join pdf files into one"}, {"name": "تقسيم PDF", "short": "قسّم ملف PDF إلى أجزاء أو استخرج صفحات منه.", "cat": "يومية", "href": "/ar/split-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "split pdf extract pages separate pdf cut pdf"}, {"name": "تحويل JPG إلى PDF", "short": "حوّل الصور والمستندات الممسوحة إلى ملف PDF واحد.", "cat": "يومية", "href": "/ar/jpg-to-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "jpg to pdf image to pdf png to pdf photo to pdf heic to pdf scan to pdf"}, {"name": "توقيع PDF", "short": "املأ ملفات PDF ووقّعها — ارسم توقيعك أو اكتبه أو ارفع صورته.", "cat": "يومية", "href": "/ar/sign-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "sign pdf signature fill pdf form e-sign add text to pdf tick date esign توقيع تعبئة نموذج"}, {"name": "ترقيم صفحات PDF", "short": "رقّم صفحات ملف PDF في المكان الذي تريده تمامًا.", "cat": "يومية", "href": "/ar/add-page-numbers/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "add page numbers pdf number pages pagination ترقيم صفحات"}, {"name": "علامة مائية على PDF", "short": "اختم صفحات PDF بكلمة «سري» أو «مسودة» أو نص من اختيارك.", "cat": "يومية", "href": "/ar/watermark-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "watermark pdf confidential draft stamp text علامة مائية سري"}, {"name": "تحويل PDF إلى JPG", "short": "احفظ صفحات PDF كصور JPG أو PNG واضحة.", "cat": "يومية", "href": "/ar/pdf-to-jpg/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "pdf to jpg pdf to png pdf to image convert pdf pages to images"}];</script>
 <script>window.ND_I18N={"Search tools…":"ابحث في الأدوات…","Search tools":"ابحث في الأدوات","navigate":"للتنقل","open":"للفتح","No tools match":"لا توجد أدوات مطابقة لـ","Copied to clipboard":"تم النسخ إلى الحافظة","Your profile":"ملفك الشخصي","Can’t reach the server. Check your connection and try again.":"تعذّر الوصول إلى الخادم. تحقّق من اتصالك وحاول مجددًا.","Accounts are not available on this deployment right now.":"الحسابات غير متاحة حاليًا.","All fields are required":"جميع الحقول مطلوبة","Username must be 3–30 letters, numbers, _ . or -":"يجب أن يكون اسم المستخدم من 3 إلى 30 حرفًا من الأحرف الإنجليزية أو الأرقام أو _ . -","Enter a valid email address":"أدخل بريدًا إلكترونيًا صالحًا","Password must be 8–128 characters":"يجب أن تكون كلمة المرور بين 8 و128 حرفًا","That username or email is already registered":"اسم المستخدم أو البريد مسجّل مسبقًا","Account created! Check your email to verify it.":"تم إنشاء الحساب! تحقّق من بريدك لتأكيده.","Email and password are required":"البريد الإلكتروني وكلمة المرور مطلوبان","Invalid email or password":"البريد الإلكتروني أو كلمة المرور غير صحيحة","Signed in":"تم تسجيل الدخول","Signed out":"تم تسجيل الخروج","Not signed in":"لم تسجّل الدخول","Your session has expired. Please sign in again.":"انتهت جلستك. يرجى تسجيل الدخول مجددًا.","Access denied":"تم رفض الوصول","Too many attempts. Please wait a few minutes and try again.":"محاولات كثيرة جدًا. انتظر بضع دقائق ثم حاول مجددًا.","Cross-site request blocked":"تم حظر طلب من موقع آخر","Your email is already verified":"بريدك موثّق مسبقًا","Verification email sent":"تم إرسال بريد التحقق","Email is required":"البريد الإلكتروني مطلوب","If that email has an account, a reset link is on its way.":"إن كان لهذا البريد حساب، فرابط إعادة التعيين في الطريق إليك.","This reset link is invalid or has expired. Please request a new one.":"رابط إعادة التعيين غير صالح أو منتهي الصلاحية. يرجى طلب رابط جديد.","Password reset successfully":"تمت إعادة تعيين كلمة المرور بنجاح","Account not found":"الحساب غير موجود","Both fields are required":"كلا الحقلين مطلوب","New password must be 8–128 characters":"يجب أن تكون كلمة المرور الجديدة بين 8 و128 حرفًا","Current password is incorrect":"كلمة المرور الحالية غير صحيحة","Password updated":"تم تحديث كلمة المرور","User not found":"المستخدم غير موجود","User verified":"تم توثيق المستخدم","You can’t delete your own account here":"لا يمكنك حذف حسابك من هنا","User deleted":"تم حذف المستخدم","Not found":"غير موجود","Something went wrong on our side":"حدث خطأ من جهتنا","Malformed request":"طلب غير صالح","That’s too large.":"الحجم كبير جدًا.","Invalid or too large secret":"السر غير صالح أو كبير جدًا","Invalid expiry":"مدة صلاحية غير صالحة","Invalid password parameters":"معاملات كلمة المرور غير صالحة","This secret doesn’t exist.":"هذا السر غير موجود.","This secret has already been viewed.":"تمت مشاهدة هذا السر مسبقًا.","This secret has expired.":"انتهت صلاحية هذا السر.","This secret was destroyed by its creator.":"دمّر مُنشئ هذا السر سرّه.","Too many wrong passwords — the secret has been destroyed.":"كلمات مرور خاطئة كثيرة — تم تدمير السر.","Wrong password.":"كلمة مرور خاطئة.","You can’t destroy this secret.":"لا يمكنك تدمير هذا السر.","Secret destroyed":"تم تدمير السر","Password updated — other devices have been signed out":"تم تحديث كلمة المرور — وتم تسجيل الخروج من الأجهزة الأخرى","Signed out on every device":"تم تسجيل الخروج من كل الأجهزة","Password is incorrect":"كلمة المرور غير صحيحة","Admin accounts can’t be deleted here":"لا يمكن حذف حسابات المدراء من هنا","Your account has been deleted":"تم حذف حسابك","The speed test is resting for the rest of the month.":"اختبار السرعة في استراحة حتى نهاية الشهر.","Script copied — paste it into a new Scriptable script":"تم نسخ السكربت — الصقه في سكربت جديد داخل Scriptable","Sign in as the owner to get this widget":"سجّل الدخول كمالك للحصول على هذه الودجت","Search tools or type pw 24, 10 km in mi, 15% of 200…":"ابحث في الأدوات أو اكتب: كلمة مرور 24، 10 كم الى ميل، 15% من 200…","Try":"جرّب","copy":"نسخ","Copied":"تم النسخ","of":"من","Today":"اليوم","Unix time now":"وقت يونكس الآن","Decoded Base64":"Base64 بعد فك الترميز","Is this link safe?":"هل هذا الرابط آمن؟","Check it privately with the Link Checker":"افحصه بخصوصية في فاحص الروابط","Strong password · {n} characters":"كلمة مرور قوية · {n} حرفًا","PIN · {n} digits":"رمز PIN · {n} أرقام","Unit Converter":"محوّل الوحدات","Hijri Date Converter":"محوّل التاريخ الهجري","Hash Generator":"مولّد التجزئة","Password Generator":"مولّد كلمات المرور","Vote":"صوّت","Thanks! Your suggestion will appear once it’s reviewed.":"شكرًا! سيظهر اقتراحك بعد مراجعته.","Please take a moment and try again.":"تمهّل لحظة ثم حاول مجددًا.","Give the tool a short name (4–80 characters).":"اكتب اسمًا قصيرًا للأداة (من 4 إلى 80 حرفًا).","Keep the details under 500 characters.":"اجعل التفاصيل أقل من 500 حرف.","Please describe the tool without links.":"يُرجى وصف الأداة دون روابط.","Invalid status":"حالة غير صالحة","Two-factor sign-in isn’t available right now.":"الدخول بخطوتين غير متاح الآن.","Two-factor sign-in is already on.":"الدخول بخطوتين مفعّل بالفعل.","Start the setup again.":"ابدأ الإعداد من جديد.","That code didn’t match. Check your phone’s time and try the newest code.":"الرمز غير مطابق. تحقّق من وقت هاتفك وجرّب أحدث رمز.","Two-factor sign-in is on":"تم تفعيل الدخول بخطوتين","Two-factor sign-in is off":"تم إيقاف الدخول بخطوتين","Turn on two-factor sign-in first.":"فعّل الدخول بخطوتين أولًا.","That code didn’t match.":"الرمز غير مطابق.","Your sign-in expired. Please start again.":"انتهت مهلة تسجيل الدخول. ابدأ من جديد.","Too many attempts. Please start again.":"محاولات كثيرة جدًا. ابدأ من جديد.","Invalid vault parameters":"بيانات الخزنة غير صالحة","You already have a vault.":"لديك خزنة بالفعل.","Vault created":"تم إنشاء الخزنة","No vault yet.":"لا توجد خزنة بعد.","Vault keys updated":"تم تحديث مفاتيح الخزنة","Invalid item":"عنصر غير صالح","Your vault is full (1,000 items).":"خزنتك ممتلئة (1,000 عنصر).","Saved":"تم الحفظ","Deleted":"تم الحذف","Vault deleted":"تم حذف الخزنة"};</script>
-<script src="/assets/site.js?v=176a81de62"></script>
-<script src="/assets/answers.js?v=176a81de62"></script>
+<script src="/assets/site.js?v=dff2fd464f"></script>
+<script src="/assets/answers.js?v=dff2fd464f"></script>
+<script src="/assets/vault-crypto.js?v=dff2fd464f"></script>
 <script>
 (function(){
   'use strict';
@@ -390,9 +506,18 @@
   }
 
   /* ---------- Undo ---------- */
-  const snap=()=>({pages:pages.map(p=>({...p})),sel:[...selected]});
+  const cloneP=p=>({...p,marks:p.marks?p.marks.map(m=>({...m})):undefined});
+  const snap=()=>({pages:pages.map(cloneP),sel:[...selected],forms:{...formEdits},stamps:JSON.stringify(stamps)});
   function commit(before){undoStack.push(before||snap());if(undoStack.length>200)undoStack.shift();redoStack.length=0;syncBar();}
-  function restore(st){pages=st.pages.map(p=>({...p}));selected.clear();st.sel.forEach(id=>selected.add(id));render({flip:true});}
+  function restore(st){
+    pages=st.pages.map(cloneP);selected.clear();st.sel.forEach(id=>selected.add(id));
+    Object.keys(formEdits).forEach(k=>delete formEdits[k]);Object.assign(formEdits,st.forms||{});
+    stamps=JSON.parse(st.stamps||'{"numbers":null,"watermark":null}');
+    if(stamps.numbers)numState={...stamps.numbers};if(stamps.watermark)wmState={...stamps.watermark};
+    render({flip:true});
+    if(view.open){selMark=null;const p=curPage();if(p)buildLayer(p);else view.close();}
+    if(dlgStamp.open)syncStampUI();
+  }
   function undo(){if(!undoStack.length)return;redoStack.push(snap());restore(undoStack.pop());say(ND.t('تم التراجع'));}
   function redo(){if(!redoStack.length)return;undoStack.push(snap());restore(redoStack.pop());say(ND.t('تمت الإعادة'));}
 
@@ -414,6 +539,7 @@
     let doc;
     try{doc=await task.promise;}catch(e){if(skipped)return null;throw e;}
     s.doc=doc;s.count=doc.numPages;
+    try{const md=await doc.getMetadata();s.hasForm=!!(md&&md.info&&md.info.IsAcroFormPresent);}catch(e){s.hasForm=false;}
     const p1=await doc.getPage(1),v=p1.getViewport({scale:1});
     s.sizes[0]=[v.width,v.height];
     sources.set(s.id,s);
@@ -473,6 +599,9 @@
       pages.splice(idx,0,...added);
       render({flip:true});
       say(ND.f('تمت إضافة {pages}',{pages:nPages(added.length)}));
+      const formSrc=[...new Set(added.map(p=>p.src))].map(id=>sources.get(id)).find(x=>x.hasForm);
+      if(formSrc&&!presetDone)ND.toast(ND.t('في ملف PDF هذا حقول نموذج — انقر مرتين على صفحة لتعبئتها.'));
+      runPreset();
     }else renderFiles();
     if(!pages.length)leaveWork();
   }
@@ -532,23 +661,22 @@
     }
   }
   function layoutCard(c,p){
-    const geo=fitBox(p,thumbW,thumbW*1.32),cv=c.querySelector('canvas');
+    const geo=fitBox(p,thumbW,thumbW*1.32);
     if(c._ang==null||((c._ang%360)+360)%360!==p.rot)c._ang=p.rot;
-    cv.style.width=geo.w+'px';cv.style.height=geo.h+'px';
-    cv.style.transform='translate(-50%,-50%) rotate('+c._ang+'deg)';
+    c.querySelectorAll('canvas').forEach(cv=>{cv.style.width=geo.w+'px';cv.style.height=geo.h+'px';cv.style.transform='translate(-50%,-50%) rotate('+c._ang+'deg)';});
   }
 
   /* ---------- Rendering the grid ---------- */
   function makeCard(p){
     const c=document.createElement('div');
     c.className='pg';c.dataset.id=p.id;c.setAttribute('role','option');c.tabIndex=-1;
-    c.innerHTML='<div class="pg-paper"><canvas></canvas><span class="pg-load"></span></div>'+
+    c.innerHTML='<div class="pg-paper"><canvas></canvas><canvas class="pg-ov" aria-hidden="true"></canvas></div>'+
       '<div class="pg-meta"><span class="pg-num"></span><span class="pg-src" dir="auto"></span></div>'+
       '<span class="pg-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></span>'+
       '<div class="pg-tools">'+
         '<button type="button" data-a="rotl" tabindex="-1" aria-label="'+ND.esc(ND.t('تدوير لليسار'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>'+
         '<button type="button" data-a="rotr" tabindex="-1" aria-label="'+ND.esc(ND.t('تدوير لليمين'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>'+
-        '<button type="button" data-a="view" tabindex="-1" aria-label="'+ND.esc(ND.t('معاينة'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M11 8v6M8 11h6"/></svg></button>'+
+        '<button type="button" data-a="view" tabindex="-1" aria-label="'+ND.esc(ND.t('تحرير الصفحة'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.4 3.6a2.1 2.1 0 1 1 3 3L7 19l-4 1 1-4Z"/></svg></button>'+
         '<button type="button" data-a="del" tabindex="-1" aria-label="'+ND.esc(ND.t('حذف الصفحة'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>'+
       '</div>';
     c._need=true;c._vis=false;
@@ -575,7 +703,8 @@
       c.style.setProperty('--c',s.color);
       const sel=selected.has(p.id);c.classList.toggle('sel',sel);c.setAttribute('aria-selected',sel);
       c.setAttribute('aria-label',ND.f('صفحة {n} من {total}',{n:i+1,total:pages.length})+' — '+label);
-      layoutCard(c,p);
+      layoutCard(c,p);paintOv(c,p,i);
+      c.classList.toggle('has-edits',!!(p.marks&&p.marks.length)||fieldEdited(p));
       if(grid.children[i]!==c)grid.insertBefore(c,grid.children[i]||null);
     });
     exiting.forEach(([el,l,t])=>{
@@ -599,7 +728,7 @@
     pages.forEach(p=>{if(p.src!=='blank')used.set(p.src,(used.get(p.src)||0)+1);});
     let h='';
     used.forEach((n,id)=>{const s=sources.get(id);
-      h+='<span class="st-file" style="--c:'+s.color+'"><button type="button" class="st-file-main" data-src="'+id+'" title="'+ND.esc(ND.t('تحديد هذه الصفحات'))+'"><i></i><span class="st-file-name" dir="auto">'+ND.esc(s.name)+'</span><small>'+ND.esc(s.kind==='image'?ND.t('صورة'):nPages(n))+'</small></button>'+
+      h+='<span class="st-file" style="--c:'+s.color+'"><button type="button" class="st-file-main" data-src="'+id+'" title="'+ND.esc(ND.t('تحديد هذه الصفحات'))+'"><i></i><span class="st-file-name" dir="auto">'+ND.esc(s.name)+'</span><small>'+ND.esc(s.kind==='image'?ND.t('صورة'):nPages(n))+'</small>'+(s.hasForm?'<span class="st-form-tag">'+ND.esc(ND.t('نموذج'))+'</span>':'')+'</button>'+
         '<button type="button" class="st-file-x" data-x="'+id+'" aria-label="'+ND.esc(ND.f('إزالة {name}',{name:s.name}))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></span>';});
     (loadingNames||[]).forEach(n=>{h+='<span class="st-file loading"><span class="st-file-main"><span class="spin"></span><span class="st-file-name" dir="auto">'+ND.esc(n)+'</span></span></span>';});
     $('#files').innerHTML=h;
@@ -616,9 +745,10 @@
     const hasImg=pages.some(p=>srcOf(p).kind==='image');
     $('#imgOptsBtn').hidden=!hasImg;
     if(hasImg)$('#imgOptsLabel').textContent=({fit:ND.t('بحجم الصورة'),a4:'A4',letter:'Letter'})[imgOpts.size]+(imgOpts.quality==='small'?' · '+ND.t('أصغر'):'');
-    $('#save').disabled=$('#splitBtn').disabled=$('#imgBtn').disabled=!pages.length||!!loading;
+    $('#save').disabled=$('#splitBtn').disabled=$('#imgBtn').disabled=$('#signBtn').disabled=$('#stampBtn').disabled=!pages.length||!!loading;
+    $('#signBtn').classList.toggle('btn-primary',PRESET==='sign');
     $('#splitBtn').classList.toggle('btn-primary',PRESET==='split');$('#imgBtn').classList.toggle('btn-primary',PRESET==='topng');
-    $('#save').classList.toggle('btn-primary',PRESET!=='split'&&PRESET!=='topng');
+    $('#save').classList.toggle('btn-primary',PRESET!=='split'&&PRESET!=='topng'&&PRESET!=='sign');
   }
   function enterWork(){if(S.dataset.state!=='work'){S.dataset.state='work';drop.hidden=true;work.hidden=false;
     requestAnimationFrame(()=>{if(work.getBoundingClientRect().top>innerHeight*0.35)work.scrollIntoView({behavior:REDUCED?'auto':'smooth',block:'start'});});grid.style.setProperty('--tw',thumbW+'px');$('#zoom').value=thumbW;$('#zoom').style.setProperty('--p',((thumbW-110)/170*100)+'%');}}
@@ -668,7 +798,7 @@
   function duplicate(){
     if(!selected.size)return ND.toast(ND.t('حدّد الصفحات المراد تكرارها أولًا.'));
     const before=snap(),out=[],fresh=[];
-    pages.forEach(p=>{out.push(p);if(selected.has(p.id)){const d={...p,id:uid('p')};out.push(d);fresh.push(d.id);}});
+    pages.forEach(p=>{out.push(p);if(selected.has(p.id)){const d={...cloneP(p),id:uid('p')};if(d.marks)d.marks.forEach(m=>{m.id=uid('m');});out.push(d);fresh.push(d.id);}});
     commit(before);pages=out;selected.clear();fresh.forEach(id=>selected.add(id));render({flip:true});
   }
   function reverse(){
@@ -849,6 +979,14 @@
     const f=[...(e.clipboardData?.files||[])];if(f.length){e.preventDefault();addFiles(f);}
   });
 
+  let presetDone=false;
+  function runPreset(){
+    if(presetDone||!pages.length)return;presetDone=true;
+    if(PRESET==='sign')setTimeout(()=>openViewer(pages[0].id),350);
+    else if(PRESET==='numbers')setTimeout(()=>openStamp('numbers'),350);
+    else if(PRESET==='watermark')setTimeout(()=>openStamp('watermark'),350);
+  }
+
   /* ---------- Toolbar ---------- */
   $('#rotL').addEventListener('click',()=>rotate(targets(),-90));
   $('#rotR').addEventListener('click',()=>rotate(targets(),90));
@@ -865,7 +1003,7 @@
   $('#zoom').addEventListener('input',e=>{
     thumbW=+e.target.value;e.target.style.setProperty('--p',((thumbW-110)/170*100)+'%');
     grid.style.setProperty('--tw',thumbW+'px');pages.forEach(p=>{const c=cards.get(p.id);if(c)layoutCard(c,p);});
-    clearTimeout(zoomT);zoomT=setTimeout(()=>{ND.store.set('pdf-thumb',thumbW);cards.forEach(invalidate);},220);
+    clearTimeout(zoomT);zoomT=setTimeout(()=>{ND.store.set('pdf-thumb',thumbW);cards.forEach(invalidate);refreshOverlays();},220);
   });
   // More menu
   const menu=$('#moreMenu'),moreBtn=$('#moreBtn');
@@ -877,42 +1015,607 @@
   menu.addEventListener('click',e=>{
     const b=e.target.closest('[data-act]');if(!b)return;closeMenu();
     const a=b.dataset.act;
-    if(a==='blank')insertBlank();else if(a==='dup')duplicate();else if(a==='reverse')reverse();
+    if(a==='stamp')openStamp();else if(a==='blank')insertBlank();else if(a==='dup')duplicate();else if(a==='reverse')reverse();
     else if(a==='odd')selectWhere(i=>i%2===0);else if(a==='even')selectWhere(i=>i%2===1);
     else if(a==='keys')$('#dlgKeys').showModal();
     else if(a==='reset'){if(confirm(ND.t('إزالة كل الصفحات والبدء من جديد؟'))){pages=[];selected.clear();undoStack.length=redoStack.length=0;render();leaveWork();}}
   });
 
-  /* ---------- Preview ---------- */
-  const view=$('#dlgView');let viewId=null,viewTok=0;
-  function openViewer(id){viewId=id;if(!view.open)view.showModal();showView();}
+  /* ---------- Page content: added items, form fields, page numbers, watermark ---------- */
+  // Coordinates of items on a page are in points, in the page’s own orientation (before the user’s
+  // rotation), with the origin at the top-left. Page numbers and the watermark are laid out in the
+  // orientation the page is finally shown in, so they always read upright.
+  const FONTS={sans:"Geist, 'IBM Plex Sans Arabic', system-ui, sans-serif",serif:"Amiri, 'Noto Naskh Arabic', Georgia, serif",hand:"Caveat, 'Aref Ruqaa', cursive"};
+  const FONT_ORDER=['sans','serif','hand'];
+  const INK={black:'#16181d',blue:'#1d4ed8',red:'#c62828'};
+  const WMC={gray:'#8a8f98',red:'#d32f2f',blue:'#1d4ed8'};
+  const STD="Helvetica, Arial, 'Liberation Sans', sans-serif";
+  const RTL_RE=/[֐-ࣿיִ-﷿ﹰ-﻿]/;
+  const isRtlText=t=>{const m=String(t).match(/[A-Za-zÀ-ɏ֐-ࣿיִ-﷿ﹰ-﻿]/);return !!m&&RTL_RE.test(m[0]);};
+  const winAnsi=t=>/^[\x20-\x7E\xA0-\xFF]*$/.test(t);
+  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+  const markFont=(m,sz)=>(m.bold?'700 ':'500 ')+(sz==null?m.size:sz)+'px '+FONTS[m.font||'sans'];
+  const mctx=document.createElement('canvas').getContext('2d');
+  const formEdits={};                                  // 'sourceId|fieldName' → string | boolean
+  let stamps={numbers:null,watermark:null};
+  const NUM_DEF={pos:'bc',format:'n',start:1,size:10,skipFirst:false};
+  const WM_DEF={text:ND.t('سري'),style:'diag',color:'gray',opacity:0.18,scope:'all',ids:[]};
+  let numState={...NUM_DEF},wmState={...WM_DEF};
+  const lastText={size:12,font:'sans',color:'black',bold:false};
+
+  const imgCache=new Map();
+  function imgFor(src){let im=imgCache.get(src);if(!im){im=new Image();im.src=src;im._ready=im.decode().then(()=>true,()=>false);imgCache.set(src,im);}return im;}
+  async function prepMarks(p){
+    const fonts=new Set(),waits=[];
+    (p.marks||[]).forEach(m=>{if(m.kind==='text')fonts.add(markFont(m,16));else if(m.kind==='image')waits.push(imgFor(m.src)._ready);});
+    if(stamps.watermark||stamps.numbers)fonts.add('700 16px '+FONTS.sans);
+    await Promise.all(waits.concat([...fonts].map(f=>document.fonts.load(f,'Aa بب').catch(()=>{}))));
+  }
+  function measure(m){
+    mctx.font=markFont(m);
+    const lines=String(m.text||'').split('\n');
+    m.w=Math.max(m.size*0.8,...lines.map(l=>mctx.measureText(l).width))+m.size*0.3;
+    m.h=lines.length*m.size*1.3;
+  }
+  function drawTextLines(ctx,text,x,y,w,size,font,color,k,align){
+    ctx.font=font.replace(/[\d.]+px/,size*k+'px');ctx.fillStyle=color;ctx.textBaseline='top';
+    const rtl=isRtlText(text);ctx.direction=rtl?'rtl':'ltr';
+    const al=align||(rtl?'right':'left');ctx.textAlign=al==='center'?'center':al;
+    const ax=al==='center'?x+w/2:al==='right'?x+w-size*0.15:x+size*0.15;
+    String(text).split('\n').forEach((ln,i)=>ctx.fillText(ln,ax*k,(y+i*size*1.3+size*0.15)*k));
+  }
+  function drawMark(ctx,m,k){
+    ctx.save();
+    if(m.kind==='text')drawTextLines(ctx,m.text,m.x,m.y,m.w,m.size,markFont(m),INK[m.color]||INK.black,k);
+    else if(m.kind==='image'){const im=imgFor(m.src);if(im.complete&&im.naturalWidth){ctx.imageSmoothingQuality='high';ctx.drawImage(im,m.x*k,m.y*k,m.w*k,m.h*k);}}
+    else{
+      const x=m.x*k,y=m.y*k,w=m.w*k,h=m.h*k;
+      ctx.strokeStyle=INK[m.color]||INK.black;ctx.lineWidth=Math.max(1,w*0.12);ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();
+      if(m.kind==='check'){ctx.moveTo(x+w*.14,y+h*.55);ctx.lineTo(x+w*.4,y+h*.8);ctx.lineTo(x+w*.88,y+h*.2);}
+      else{ctx.moveTo(x+w*.2,y+h*.2);ctx.lineTo(x+w*.8,y+h*.8);ctx.moveTo(x+w*.8,y+h*.2);ctx.lineTo(x+w*.2,y+h*.8);}
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+  const fieldSize=f=>f.multi?Math.min(11,f.h*0.42):clamp(f.h*0.62,6,12);
+  const fieldText=(f,v)=>f.type==='combo'?((f.options.find(o=>o.v===v)||{}).t||v||''):(v==null?'':String(v));
+  function drawField(ctx,f,v,k,cover){
+    const x=f.x*k,y=f.y*k,w=f.w*k,h=f.h*k;
+    ctx.save();
+    if(f.type==='check'||f.type==='radio'){
+      const on=f.type==='check'?!!v:v===f.option;
+      if(cover){ctx.fillStyle='#fff';ctx.fillRect(x+0.5,y+0.5,w-1,h-1);ctx.strokeStyle='#8b9099';ctx.lineWidth=Math.max(0.6,k*0.7);
+        if(f.type==='radio'){ctx.beginPath();ctx.arc(x+w/2,y+h/2,Math.min(w,h)/2-1,0,7);ctx.stroke();}else ctx.strokeRect(x+1,y+1,w-2,h-2);}
+      if(on){if(f.type==='radio'){ctx.fillStyle=INK.black;ctx.beginPath();ctx.arc(x+w/2,y+h/2,Math.min(w,h)*0.24,0,7);ctx.fill();}
+        else drawMark(ctx,{kind:'check',x:f.x,y:f.y,w:f.w,h:f.h,color:'black'},k);}
+    }else{
+      if(cover){ctx.fillStyle='#fff';ctx.fillRect(x,y,w,h);}
+      const t=fieldText(f,v),sz=fieldSize(f);
+      ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();
+      const lines=t.split('\n').length,top=f.multi?f.y+1:f.y+(f.h-lines*sz*1.3)/2;
+      drawTextLines(ctx,t,f.x,top,f.w,sz,(winAnsi(t)?'400 10px '+STD:'400 10px '+FONTS.sans),INK.black,k);
+    }
+    ctx.restore();
+  }
+  const numApplies=i=>!!stamps.numbers&&!(stamps.numbers.skipFirst&&i===0);
+  const wmApplies=p=>!!stamps.watermark&&(stamps.watermark.scope==='all'||stamps.watermark.ids.includes(p.id));
+  function numLabel(i){
+    const st=stamps.numbers,n=i+st.start,N=pages.length+st.start-1;
+    return st.format==='n'?String(n):st.format==='nN'?n+' / '+N:st.format==='dash'?'– '+n+' –':ND.f('صفحة {n} من {total}',{n,total:N});
+  }
+  function numGeom(fw,fh,label){
+    const st=stamps.numbers,size=st.size,font=winAnsi(label)?'400 10px '+STD:'500 10px '+FONTS.sans;
+    mctx.font=font.replace('10px',size+'px');
+    const w=mctx.measureText(label).width,h=size*1.3,mg=Math.max(18,Math.min(fw,fh)*0.045);
+    const x=st.pos[1]==='l'?mg:st.pos[1]==='r'?fw-mg-w:(fw-w)/2,y=st.pos[0]==='t'?mg*0.75:fh-mg*0.75-h;
+    return {x,y,w,h,size,font,label};
+  }
+  function wmGeom(fw,fh){
+    const wm=stamps.watermark,font=(winAnsi(wm.text)?'700 100px '+STD:'700 100px '+FONTS.sans);
+    mctx.font=font;const tw=Math.max(1,mctx.measureText(wm.text).width);
+    const ang=wm.style==='diag'?-Math.atan2(fh,fw):0,span=wm.style==='diag'?Math.hypot(fw,fh)*0.66:fw*0.74;
+    const size=Math.min(span/tw*100,fh*0.28,240);
+    return {cx:fw/2,cy:fh/2,ang,size,font,w:tw*size/100,h:size*1.3};
+  }
+  function finalDims(p){const [W,H]=pageSize(p),q=p.rot%180!==0;return {W,H,fw:q?H:W,fh:q?W:H};}
+  function drawStamps(ctx,p,i,k){
+    const wm=wmApplies(p),num=numApplies(i);if(!wm&&!num)return;
+    const {W,H,fw,fh}=finalDims(p);
+    ctx.save();ctx.translate(W*k/2,H*k/2);ctx.rotate(-p.rot*Math.PI/180);ctx.translate(-fw*k/2,-fh*k/2);
+    if(wm){const g=wmGeom(fw,fh),w=stamps.watermark;ctx.save();ctx.globalAlpha=w.opacity;ctx.translate(g.cx*k,g.cy*k);ctx.rotate(g.ang);
+      drawTextLines(ctx,w.text,-g.w/2-g.size*0.15,-g.h/2,g.w+g.size*0.3,g.size,g.font,WMC[w.color],k,'center');ctx.restore();}
+    if(num){const g=numGeom(fw,fh,numLabel(i));drawTextLines(ctx,g.label,g.x-g.size*0.15,g.y,g.w+g.size*0.3,g.size,g.font,'#2b2d31',k,'center');}
+    ctx.restore();
+  }
+  function fieldEdited(p){const s=srcOf(p);return !!(s.fields&&s.fields.some(f=>f.page===p.index&&(s.id+'|'+f.name) in formEdits));}
+  const hasOverlay=(p,i)=>!!((p.marks&&p.marks.length)||numApplies(i)||wmApplies(p)||fieldEdited(p));
+  function drawOverlay(ctx,p,i,k){
+    const s=srcOf(p);
+    if(s.fields)s.fields.forEach(f=>{const key=s.id+'|'+f.name;if(f.page===p.index&&key in formEdits)drawField(ctx,f,formEdits[key],k,true);});
+    (p.marks||[]).forEach(m=>drawMark(ctx,m,k));
+    drawStamps(ctx,p,i,k);
+  }
+  function ovKey(p,i){
+    const s=srcOf(p);
+    return JSON.stringify([p.marks||0,numApplies(i)?[stamps.numbers,numLabel(i)]:0,wmApplies(p)?stamps.watermark:0,p.rot,
+      fieldEdited(p)?Object.keys(formEdits).filter(k=>k.startsWith(s.id+'|')).map(k=>[k,formEdits[k]]):0,s.kind==='image'?imgOpts:0,thumbW]);
+  }
+  async function paintOv(c,p,i){
+    if(!c)return;
+    const ov=c.querySelector('.pg-ov');
+    if(!hasOverlay(p,i)){if(ov.width){ov.width=ov.height=0;}c._ovKey='';return;}
+    const key=ovKey(p,i);if(c._ovKey===key)return;c._ovKey=key;
+    await prepMarks(p);if(c._ovKey!==key)return;
+    const geo=fitBox(p,thumbW,thumbW*1.32);
+    ov.width=Math.max(1,Math.round(geo.w*DPR));ov.height=Math.max(1,Math.round(geo.h*DPR));
+    drawOverlay(ov.getContext('2d'),p,i,ov.width/pageSize(p)[0]);
+  }
+  let ovT=0;
+  function refreshOverlays(){cancelAnimationFrame(ovT);ovT=requestAnimationFrame(()=>pages.forEach((p,i)=>paintOv(cards.get(p.id),p,i)));}
+
+  /* ---------- Form fields (read with pdf.js, filled with pdf-lib on export) ---------- */
+  async function loadFields(s,index){
+    s._fp=s._fp||new Set();if(s._fp.has(index))return;s._fp.add(index);
+    const page=await s.doc.getPage(index+1),v=page.getViewport({scale:1});
+    let anns=[];try{anns=await page.getAnnotations({intent:'display'});}catch(e){}
+    s.fields=s.fields||[];
+    for(const a of anns){
+      if(a.subtype!=='Widget'||!a.fieldName||a.hidden)continue;
+      const [x1,y1]=v.convertToViewportPoint(a.rect[0],a.rect[1]),[x2,y2]=v.convertToViewportPoint(a.rect[2],a.rect[3]);
+      const box={x:Math.min(x1,x2),y:Math.min(y1,y2),w:Math.abs(x2-x1),h:Math.abs(y2-y1)};
+      if(a.fieldType==='Sig'){(s.sigSlots=s.sigSlots||[]).push({page:index,...box});continue;}
+      if(a.readOnly||a.pushButton)continue;
+      let f=null;
+      if(a.fieldType==='Tx')f={type:'text',multi:!!a.multiLine,value:a.fieldValue||'',max:a.maxLen||0};
+      else if(a.fieldType==='Btn'&&a.checkBox)f={type:'check',value:!!a.fieldValue&&String(a.fieldValue).toLowerCase()!=='off'};
+      else if(a.fieldType==='Btn'&&a.radioButton)f={type:'radio',option:a.buttonValue,value:a.fieldValue};
+      else if(a.fieldType==='Ch'&&!a.multiSelect)f={type:'combo',options:(a.options||[]).map(o=>({v:o.exportValue,t:o.displayValue||o.exportValue})),value:Array.isArray(a.fieldValue)?a.fieldValue[0]:a.fieldValue};
+      if(f)s.fields.push(Object.assign(f,{aid:a.id,name:a.fieldName,page:index},box));
+    }
+  }
+  const fieldVal=(s,f)=>{const k=s.id+'|'+f.name;return k in formEdits?formEdits[k]:f.value;};
+
+  /* ---------- Page editor ---------- */
+  const view=$('#dlgView'),layer=$('#layer'),pageBox=$('#pageBox'),mkbar=$('#mkbar');
+  let viewId=null,viewTok=0,ek=1,tool='select',selMark=null;
+  const curPage=()=>pageById(viewId);
+  const curMark=()=>{const p=curPage();return p&&p.marks?p.marks.find(m=>m.id===selMark):null;};
+  function openViewer(id,opt){
+    viewId=id;selMark=null;setTool('select');
+    if(!view.open)view.showModal();
+    return showView().then(()=>{if(opt&&opt.sign)openSign();});
+  }
   async function showView(){
-    const p=pageById(viewId);if(!p){view.close();return;}
+    const p=curPage();if(!p){view.close();return;}
     const i=pages.indexOf(p),s=srcOf(p),tok=++viewTok;
     $('#viewTitle').textContent=ND.f('صفحة {n} من {total}',{n:i+1,total:pages.length})+(s.kind==='blank'?'':' · '+s.name);
     $('#vPrev').disabled=i===0;$('#vNext').disabled=i===pages.length-1;
-    $('#viewSpin').hidden=false;
+    $('#viewSpin').hidden=false;layer.innerHTML='';mkbar.hidden=true;$('#formHint').hidden=true;
     const stage=$('#viewStage'),cv=$('#viewCanvas');
-    const W=stage.clientWidth-24,H=stage.clientHeight-24;
-    const geo=fitBox(p,W,H),pxW=Math.round(geo.w*DPR),pxH=Math.round(geo.h*DPR);
+    const geo=fitBox(p,stage.clientWidth-48,stage.clientHeight-48),pxW=Math.round(geo.w*DPR),pxH=Math.round(geo.h*DPR);
+    ek=geo.k;
     const off=document.createElement('canvas');off.width=pxW;off.height=pxH;
-    if(s.kind==='pdf'){const page=await s.doc.getPage(p.index+1);const v1=page.getViewport({scale:1});
-      await page.render({canvas:off,viewport:page.getViewport({scale:pxW/v1.width}),background:'#ffffff'}).promise;}
+    if(s.kind==='pdf'){const lib=await pdfjs(),page=await s.doc.getPage(p.index+1);const v1=page.getViewport({scale:1});
+      await page.render({canvas:off,viewport:page.getViewport({scale:pxW/v1.width}),background:'#ffffff',annotationMode:lib.AnnotationMode.ENABLE_FORMS}).promise;
+      await loadFields(s,p.index);}
     else paintPage(off.getContext('2d'),p,pxW/pageSize(p)[0]);
     if(tok!==viewTok)return;
-    cv.width=pxW;cv.height=pxH;cv.getContext('2d').drawImage(off,0,0);
-    cv.style.width=geo.w+'px';cv.style.height=geo.h+'px';cv.style.transform='translate(-50%,-50%) rotate('+p.rot+'deg)';
+    cv.width=pxW;cv.height=pxH;cv.getContext('2d').drawImage(off,0,0);off.width=off.height=0;
+    pageBox.style.width=geo.w+'px';pageBox.style.height=geo.h+'px';
+    pageBox.style.transform='translate(-50%,-50%) rotate('+p.rot+'deg)';
     $('#viewSpin').hidden=true;
+    buildLayer(p);
+    const nf=(s.fields||[]).filter(f=>f.page===p.index).length;
+    $('#formHint').hidden=!nf;
   }
-  const step=d=>{const i=pages.findIndex(p=>p.id===viewId)+d;if(i>=0&&i<pages.length){viewId=pages[i].id;showView();}};
+  const px=v=>v*ek+'px';
+  function place(el,b){el.style.left=px(b.x);el.style.top=px(b.y);el.style.width=px(b.w);el.style.height=px(b.h);}
+  function buildLayer(p){
+    layer.innerHTML='';const s=srcOf(p);
+    (s.fields||[]).filter(f=>f.page===p.index).forEach(f=>layer.appendChild(fieldEl(s,f)));
+    (p.marks||[]).forEach(m=>layer.appendChild(markEl(m)));
+    syncMkbar();
+  }
+  function fieldEl(s,f){
+    const key=s.id+'|'+f.name,v=fieldVal(s,f);let el;
+    if(f.type==='text'){
+      el=document.createElement(f.multi?'textarea':'input');el.value=v||'';if(f.max)el.maxLength=f.max;el.dir='auto';el.spellcheck=false;
+      el.style.fontSize=px(fieldSize(f));
+      el.addEventListener('focus',()=>{el._before=snap();el._was=el.value;});
+      el.addEventListener('input',()=>{formEdits[key]=el.value;refreshOverlays();});
+      el.addEventListener('blur',()=>{if(el.value!==el._was)commit(el._before);});
+    }else if(f.type==='check'||f.type==='radio'){
+      el=document.createElement('button');el.type='button';
+      const on=f.type==='check'?!!v:v===f.option;el.setAttribute('aria-pressed',String(on));
+      if(f.type==='check'&&on)el.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>';
+      el.addEventListener('click',()=>{const b=snap();formEdits[key]=f.type==='check'?!fieldVal(s,f):f.option;commit(b);buildLayer(curPage());refreshOverlays();
+        const nx=layer.querySelector('[data-aid="'+f.aid+'"]');if(nx)nx.focus();});
+    }else{
+      el=document.createElement('select');
+      el.appendChild(new Option('',''));f.options.forEach(o=>el.appendChild(new Option(o.t,o.v)));el.value=v||'';
+      el.style.fontSize=px(fieldSize(f));
+      el.addEventListener('change',()=>{const b=snap();formEdits[key]=el.value;commit(b);refreshOverlays();});
+    }
+    el.className='fld fld-'+f.type;el.dataset.aid=f.aid;el.title=f.name;el.setAttribute('aria-label',f.name);
+    place(el,f);return el;
+  }
+  const CHECK_SVG='<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M14 55 40 80 88 20" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  const CROSS_SVG='<svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M20 20 80 80M80 20 20 80" fill="none" stroke="currentColor" stroke-width="12" stroke-linecap="round"/></svg>';
+  function styleText(t,m){t.style.font=markFont(m,m.size*ek);t.style.lineHeight='1.3';t.style.padding='0 '+px(m.size*0.15);}
+  function markEl(m){
+    const el=document.createElement('div');el.className='mk mk-'+m.kind+(selMark===m.id?' on':'');el.dataset.mid=m.id;el.style.color=INK[m.color]||'';
+    if(m.kind==='text'){const t=document.createElement('div');t.className='mk-txt';t.dir='auto';t.textContent=m.text;styleText(t,m);el.appendChild(t);}
+    else if(m.kind==='image'){const im=document.createElement('img');im.src=m.src;im.alt='';im.draggable=false;el.appendChild(im);}
+    else el.innerHTML=m.kind==='check'?CHECK_SVG:CROSS_SVG;
+    el.insertAdjacentHTML('beforeend','<span class="mk-h" aria-hidden="true"></span>');
+    place(el,m);return el;
+  }
+  const markNode=m=>layer.querySelector('[data-mid="'+m.id+'"]');
+  function selectMark(id){
+    selMark=id;layer.querySelectorAll('.mk').forEach(el=>el.classList.toggle('on',el.dataset.mid===id));syncMkbar();
+  }
+  function setTool(t){
+    tool=t;view.querySelectorAll('[data-tool]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.tool===t)));
+    layer.classList.toggle('tool-on',t!=='select');
+  }
+  // Screen ↔ page conversions (the page box may be rotated)
+  function toPage(cx,cy){
+    const r=pageBox.getBoundingClientRect(),p=curPage(),[W,H]=pageSize(p);
+    const [ux,uy]=vecToPage(cx-(r.left+r.width/2),cy-(r.top+r.height/2));
+    return [ux+W/2,uy+H/2];
+  }
+  function vecToPage(dx,dy){const a=-curPage().rot*Math.PI/180,c=Math.cos(a),s=Math.sin(a);return [(dx*c-dy*s)/ek,(dx*s+dy*c)/ek];}
+  function todayStr(){return new Date().toLocaleDateString(ND.lang==='ar'?'ar-u-nu-latn':'en-GB',{day:'2-digit',month:'2-digit',year:'numeric'}).replace(/[‎‏؜]/g,'');}
+  function addMark(kind,x,y,extra){
+    const p=curPage(),before=snap(),[W,H]=pageSize(p);
+    const m={id:uid('m'),kind,color:lastText.color};
+    if(kind==='text'||kind==='date'){Object.assign(m,{kind:'text',text:kind==='date'?todayStr():'',size:lastText.size,font:lastText.font,bold:lastText.bold});measure(m);m.x=x-m.size*0.15;m.y=y-m.h/2;}
+    else if(kind==='check'||kind==='cross'){m.color='black';m.w=m.h=14;m.x=x-7;m.y=y-7;}
+    else Object.assign(m,extra);
+    m.x=clamp(m.x,0,W-Math.min(m.w,W));m.y=clamp(m.y,0,H-Math.min(m.h,H));
+    (p.marks=p.marks||[]).push(m);
+    commit(before);
+    buildLayer(p);selectMark(m.id);refreshOverlays();
+    if(m.kind==='text'&&!m.text)startEdit(m,true);
+    if(kind!=='check'&&kind!=='cross')setTool('select');
+    say(ND.t('Added to the page'));
+    return m;
+  }
+  function removeMark(m,dropUndo){
+    const p=curPage(),b=snap();
+    p.marks=(p.marks||[]).filter(x=>x.id!==m.id);
+    if(dropUndo)undoStack.pop();else commit(b);
+    selMark=null;buildLayer(p);refreshOverlays();syncBar();
+  }
+  function startEdit(m,isNew){
+    const el=markNode(m),t=el&&el.querySelector('.mk-txt');if(!t)return;
+    const before=snap(),was=m.text;
+    el.classList.add('editing');selectMark(m.id);
+    t.contentEditable='plaintext-only';if(t.contentEditable!=='plaintext-only')t.contentEditable='true';
+    t.focus();const r=document.createRange();r.selectNodeContents(t);r.collapse(false);const sl=getSelection();sl.removeAllRanges();sl.addRange(r);
+    t.oninput=()=>{m.text=t.innerText.replace(/\n$/,'');measure(m);place(el,m);syncMkbar();refreshOverlays();};
+    t.onkeydown=e=>{if(e.key.toLowerCase()==='escape'||(e.key.toLowerCase()==='enter'&&(e.ctrlKey||e.metaKey))){e.preventDefault();e.stopPropagation();t.blur();}};
+    t.onblur=()=>{
+      t.contentEditable='false';el.classList.remove('editing');t.oninput=t.onblur=t.onkeydown=null;
+      m.text=t.innerText.replace(/\n$/,'');measure(m);place(el,m);
+      if(!m.text.trim()){removeMark(m,isNew);return;}
+      if(!isNew&&m.text!==was)commit(before);
+      refreshOverlays();syncMkbar();
+    };
+  }
+  // pointer: place, move, resize
+  let act=null;
+  layer.addEventListener('pointerdown',e=>{
+    if(e.target.closest('.fld')||e.button>0)return;
+    const p=curPage();if(!p)return;
+    const node=e.target.closest('.mk');
+    if(node){
+      const m=(p.marks||[]).find(x=>x.id===node.dataset.mid);if(!m||node.classList.contains('editing'))return;
+      e.preventDefault();const wasSel=selMark===m.id;selectMark(m.id);
+      act={type:e.target.classList.contains('mk-h')?'resize':'move',m,sx:e.clientX,sy:e.clientY,o:{...m},before:snap(),moved:false,wasSel,pid:e.pointerId};
+      layer.setPointerCapture(e.pointerId);return;
+    }
+    if(document.activeElement&&layer.contains(document.activeElement))document.activeElement.blur();
+    if(tool==='select'){selectMark(null);return;}
+    if(tool==='sign'){openSign(toPage(e.clientX,e.clientY));return;}
+    if(tool==='place'&&pending){e.preventDefault();const g=pending.g;sigAt=toPage(e.clientX,e.clientY);endPlacing();placeSigAt(g);return;}
+    e.preventDefault();const [x,y]=toPage(e.clientX,e.clientY);addMark(tool,x,y);
+  });
+  function endPlacing(){pending=null;ghost.remove();$('#placeHint').hidden=true;if(tool==='place')setTool('select');}
+  layer.addEventListener('pointermove',e=>{
+    if(pending&&!act){const [x,y]=toPage(e.clientX,e.clientY);ghost.hidden=false;ghost.style.left=px(x-pending.w/2);ghost.style.top=px(y-pending.h/2);return;}
+    if(!act||e.pointerId!==act.pid)return;
+    if(!act.moved&&Math.hypot(e.clientX-act.sx,e.clientY-act.sy)<3)return;
+    act.moved=true;
+    const [dx,dy]=vecToPage(e.clientX-act.sx,e.clientY-act.sy),m=act.m,o=act.o,[W,H]=pageSize(curPage());
+    if(act.type==='move'){m.x=clamp(o.x+dx,-o.w*0.4,W-o.w*0.6);m.y=clamp(o.y+dy,-o.h*0.4,H-o.h*0.6);}
+    else{const sc=Math.max(0.2,(o.w+dx)/o.w);
+      if(m.kind==='text'){m.size=clamp(o.size*sc,5,160);measure(m);lastText.size=Math.round(m.size);}
+      else{m.w=clamp(o.w*sc,6,W*1.2);m.h=m.w*o.h/o.w;}}
+    const el=markNode(m);place(el,m);if(m.kind==='text')styleText(el.querySelector('.mk-txt'),m);syncMkbar();
+  });
+  const endAct=e=>{
+    if(!act||e.pointerId!==act.pid)return;const a=act;act=null;
+    if(a.moved){commit(a.before);refreshOverlays();}
+    else if(a.wasSel&&a.m.kind==='text')startEdit(a.m);
+  };
+  layer.addEventListener('pointerup',endAct);layer.addEventListener('pointercancel',endAct);
+  layer.addEventListener('dblclick',e=>{const node=e.target.closest('.mk-text');if(!node)return;const m=curMark();if(m)startEdit(m);});
+
+  // floating bar for the selected item
+  function syncMkbar(){
+    const m=curMark(),el=m&&markNode(m);
+    if(!m||!el){mkbar.hidden=true;return;}
+    const kind=m.kind;
+    if(mkbar.dataset.for!==m.id+kind+(m.color||'')+(m.font||'')+(m.bold?1:0)){
+      mkbar.dataset.for=m.id+kind+(m.color||'')+(m.font||'')+(m.bold?1:0);
+      let h='';
+      if(kind==='text'){
+        h+='<button type="button" data-mb="smaller" aria-label="'+ND.esc(ND.t('تصغير النص'))+'">A−</button><span class="mb-size" id="mbSize"></span><button type="button" data-mb="bigger" aria-label="'+ND.esc(ND.t('تكبير النص'))+'">A+</button><span class="mb-sep"></span>'+
+          '<button type="button" data-mb="font" class="mb-font" style="font-family:'+ND.esc(FONTS[m.font||'sans'])+'" aria-label="'+ND.esc(ND.t('تغيير الخط'))+'">'+'<span>أب</span></button>'+
+          '<button type="button" data-mb="bold" class="mb-bold" aria-pressed="'+!!m.bold+'" aria-label="'+ND.esc(ND.t('عريض'))+'">B</button><span class="mb-sep"></span>';
+      }
+      if(kind!=='image')h+=Object.keys(INK).map(c=>'<button type="button" class="mb-ink" data-mb="ink" data-c="'+c+'" style="--ink:'+INK[c]+'" aria-pressed="'+(m.color===c)+'" aria-label="'+ND.esc(ND.t(c==='black'?'أسود':c==='blue'?'أزرق':'أحمر'))+'"></button>').join('')+'<span class="mb-sep"></span>';
+      h+='<button type="button" data-mb="dup" aria-label="'+ND.esc(ND.t('تكرار'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></svg></button><button type="button" data-mb="del" class="mb-del" aria-label="'+ND.esc(ND.t('إزالة'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>';
+      mkbar.innerHTML=h;
+    }
+    const sz=mkbar.querySelector('#mbSize');if(sz)sz.textContent=Math.round(m.size);
+    mkbar.hidden=false;
+    const r=el.getBoundingClientRect(),d=view.getBoundingClientRect(),bw=mkbar.offsetWidth,bh=mkbar.offsetHeight;
+    let top=r.top-d.top-bh-10;if(top<64)top=r.bottom-d.top+10;
+    mkbar.style.top=top+'px';mkbar.style.left=clamp(r.left-d.left+r.width/2-bw/2,8,d.width-bw-8)+'px';
+  }
+  mkbar.addEventListener('pointerdown',e=>e.preventDefault());   // keep text editing focus
+  mkbar.addEventListener('click',e=>{
+    const b=e.target.closest('[data-mb]'),m=curMark();if(!b||!m)return;
+    const a=b.dataset.mb,before=snap(),p=curPage();
+    if(a==='del'){removeMark(m);return;}
+    if(a==='dup'){const d={...m,id:uid('m'),x:m.x+12,y:m.y+12};p.marks.push(d);commit(before);buildLayer(p);selectMark(d.id);refreshOverlays();return;}
+    if(a==='smaller'||a==='bigger'){m.size=clamp(Math.round(m.size*(a==='bigger'?1.15:0.87)),5,160);measure(m);lastText.size=m.size;}
+    else if(a==='font'){m.font=FONT_ORDER[(FONT_ORDER.indexOf(m.font||'sans')+1)%FONT_ORDER.length];measure(m);lastText.font=m.font;document.fonts.load(markFont(m,16),'Aa بب').then(()=>{measure(m);const el=markNode(m);if(el){place(el,m);styleText(el.querySelector('.mk-txt'),m);}refreshOverlays();});}
+    else if(a==='bold'){m.bold=!m.bold;measure(m);lastText.bold=m.bold;}
+    else if(a==='ink'){m.color=b.dataset.c;if(m.kind==='text')lastText.color=m.color;}
+    commit(before);
+    const el=markNode(m);if(el){place(el,m);el.style.color=INK[m.color]||'';const t=el.querySelector('.mk-txt');if(t)styleText(t,m);}
+    syncMkbar();refreshOverlays();
+  });
+
+  // keyboard inside the editor
+  let nudgeBefore=null,nudgeT=0;
+  // Editor keys work wherever focus is while the editor is open (but not inside its own sub-dialogs).
+  document.addEventListener('keydown',e=>{
+    if(!view.open||document.querySelector('dialog[open]:not(#dlgView)'))return;
+    const k=e.key.toLowerCase(),mod=e.ctrlKey||e.metaKey;
+    if(e.target.isContentEditable)return;
+    if(e.target.closest&&e.target.closest('.fld')){if(k==='escape'){e.preventDefault();e.target.blur();}return;}
+    if(mod&&k==='z'){e.preventDefault();e.shiftKey?redo():undo();return;}
+    if(mod&&k==='y'){e.preventDefault();redo();return;}
+    const m=curMark();
+    if(m){
+      if(k==='delete'||k==='backspace'){e.preventDefault();removeMark(m);return;}
+      if(k.startsWith('arrow')){
+        e.preventDefault();const st=e.shiftKey?10:1;
+        const sx=k==='arrowleft'?-st:k==='arrowright'?st:0,sy=k==='arrowup'?-st:k==='arrowdown'?st:0;
+        const [dx,dy]=vecToPage(sx*ek,sy*ek);
+        if(!nudgeBefore)nudgeBefore=snap();m.x+=dx;m.y+=dy;place(markNode(m),m);syncMkbar();
+        clearTimeout(nudgeT);nudgeT=setTimeout(()=>{commit(nudgeBefore);nudgeBefore=null;refreshOverlays();},500);return;
+      }
+      if(k==='escape'){e.preventDefault();selectMark(null);return;}
+      if(k==='enter'&&m.kind==='text'){e.preventDefault();startEdit(m);return;}
+    }
+    if(k==='escape'){e.preventDefault();if(pending){const g=pending.g;endPlacing();sigAt=null;placeSigAt(g);return;}if(tool!=='select')setTool('select');else view.close();return;}
+    const f=RTL?'arrowleft':'arrowright',b=RTL?'arrowright':'arrowleft';
+    if(k===f){e.preventDefault();step(1);}else if(k===b){e.preventDefault();step(-1);}
+    else if(k==='r'&&!mod){e.preventDefault();e.shiftKey?$('#vRotL').click():$('#vRotR').click();}
+    else if(k==='t'&&!mod){e.preventDefault();setTool('text');}
+    else if(k==='v'&&!mod){e.preventDefault();setTool('select');}
+    else if(k==='s'&&!mod){e.preventDefault();openSign();}
+  });
+  view.querySelectorAll('[data-tool]').forEach(b=>b.addEventListener('click',()=>{
+    if(b.dataset.tool==='sign'){openSign();return;}
+    setTool(tool===b.dataset.tool&&b.dataset.tool!=='select'?'select':b.dataset.tool);
+  }));
+  const step=d=>{const i=pages.findIndex(p=>p.id===viewId)+d;if(i>=0&&i<pages.length){if(pending)endPlacing();if(document.activeElement)document.activeElement.blur();viewId=pages[i].id;selMark=null;showView();}};
   $('#vPrev').addEventListener('click',()=>step(-1));$('#vNext').addEventListener('click',()=>step(1));
   $('#vClose').addEventListener('click',()=>view.close());
-  $('#vRotL').addEventListener('click',()=>{const p=pageById(viewId);rotate([p],-90);showView();});
-  $('#vRotR').addEventListener('click',()=>{const p=pageById(viewId);rotate([p],90);showView();});
+  $('#vRotL').addEventListener('click',()=>{rotate([curPage()],-90);showView();});
+  $('#vRotR').addEventListener('click',()=>{rotate([curPage()],90);showView();});
   $('#vDel').addEventListener('click',()=>{const i=pages.findIndex(p=>p.id===viewId);removePages([viewId]);if(!pages.length){view.close();return;}viewId=pages[Math.min(i,pages.length-1)].id;showView();});
-  view.addEventListener('keydown',e=>{const k=e.key.toLowerCase(),f=RTL?'arrowleft':'arrowright',b=RTL?'arrowright':'arrowleft';if(k==='escape'){e.preventDefault();view.close();}else if(k===f){e.preventDefault();step(1);}else if(k===b){e.preventDefault();step(-1);}else if(e.key.toLowerCase()==='r'){e.preventDefault();e.shiftKey?$('#vRotL').click():$('#vRotR').click();}});
-  view.addEventListener('click',e=>{if(e.target===view||e.target.id==='viewStage')view.close();});
-  view.addEventListener('close',()=>{const c=cards.get(viewId);if(c)setFocus(viewId,true);});
+  // Esc is handled by the editor itself (stop editing → deselect → close), never by the browser directly
+  view.addEventListener('cancel',e=>{e.preventDefault();});
+  view.addEventListener('close',()=>{if(pending)endPlacing();if(document.activeElement&&layer.contains(document.activeElement))document.activeElement.blur();selMark=null;mkbar.hidden=true;const c=cards.get(viewId);if(c)setFocus(viewId,true);refreshOverlays();});
+  window.addEventListener('resize',()=>{if(view.open)showView();});
+
+  /* ---------- Signatures ---------- */
+  const dlgSign=$('#dlgSign'),pad=$('#sigPad');
+  const SIG_FONTS=[{id:'vibes',f:"'Great Vibes', 'Aref Ruqaa', cursive",l:'أنيق'},{id:'caveat',f:"Caveat, 'Aref Ruqaa', cursive",l:'عفوي'},{id:'ruqaa',f:"'Aref Ruqaa', serif",l:'رقعة'}];
+  let sigTab='draw',strokes=[],stroke=null,ink='black',sigFont='vibes',upCanvas=null,upBmp=null,savedSigs=[],sigPick=null,sigAt=null;
+  let vaultSess=null,vaultMeta=null;
+  function padFit(){const r=pad.getBoundingClientRect();if(!r.width)return;const d=Math.min(window.devicePixelRatio||1,2);pad.width=Math.round(r.width*d);pad.height=Math.round(r.height*d);drawPad();}
+  function drawStrokes(ctx,W,H,list){
+    const base=W*0.0058;
+    list.forEach(st=>{
+      const pts=st.pts;if(!pts.length)return;
+      ctx.strokeStyle=ctx.fillStyle=INK[st.ink];ctx.lineCap='round';ctx.lineJoin='round';
+      if(pts.length===1){ctx.beginPath();ctx.arc(pts[0][0]*W,pts[0][1]*H,base*0.7,0,7);ctx.fill();return;}
+      let w=base,px0=pts[0][0]*W,py0=pts[0][1]*H;
+      for(let i=1;i<pts.length;i++){
+        const [x,y,t]=pts[i],[x0,y0,t0]=pts[i-1];
+        const v=Math.hypot((x-x0)*W,(y-y0)*H)/Math.max(1,t-t0);
+        w=w*0.65+clamp(base*(1.5-v*0.35),base*0.45,base*1.6)*0.35;
+        const mx=(x0+x)/2*W,my=(y0+y)/2*H;
+        ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(px0,py0);ctx.quadraticCurveTo(x0*W,y0*H,mx,my);ctx.stroke();
+        px0=mx;py0=my;
+      }
+      const l=pts[pts.length-1];ctx.beginPath();ctx.moveTo(px0,py0);ctx.lineTo(l[0]*W,l[1]*H);ctx.stroke();
+    });
+  }
+  function drawPad(){const ctx=pad.getContext('2d');ctx.clearRect(0,0,pad.width,pad.height);drawStrokes(ctx,pad.width,pad.height,strokes);$('#padHint').hidden=!!strokes.length;}
+  const padPt=e=>{const r=pad.getBoundingClientRect();return [(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height,e.timeStamp];};
+  pad.addEventListener('pointerdown',e=>{e.preventDefault();pad.setPointerCapture(e.pointerId);stroke={ink,pts:[padPt(e)]};strokes.push(stroke);sigPick=null;markSaved();drawPad();syncSigOk();});
+  pad.addEventListener('pointermove',e=>{if(!stroke)return;(e.getCoalescedEvents?e.getCoalescedEvents():[e]).forEach(ev=>stroke.pts.push(padPt(ev)));drawPad();});
+  const padUp=()=>{if(stroke){stroke=null;syncSigOk();}};
+  pad.addEventListener('pointerup',padUp);pad.addEventListener('pointercancel',padUp);
+  $('#padUndo').addEventListener('click',()=>{strokes.pop();drawPad();syncSigOk();});
+  $('#padClear').addEventListener('click',()=>{strokes=[];drawPad();syncSigOk();});
+  dlgSign.querySelectorAll('[data-ink]').forEach(b=>b.addEventListener('click',()=>{ink=b.dataset.ink;dlgSign.querySelectorAll('[data-ink]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));strokes.forEach(s=>{s.ink=ink;});drawPad();}));
+  function setSigTab(t){sigTab=t;sigPick=null;markSaved();dlgSign.querySelectorAll('[data-stab]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.stab===t)));dlgSign.querySelectorAll('[data-pane]').forEach(p=>{p.hidden=p.dataset.pane!==t;});if(t==='draw')requestAnimationFrame(padFit);if(t==='type')setTimeout(()=>$('#sigName').focus(),30);syncSigOk();}
+  dlgSign.querySelectorAll('[data-stab]').forEach(b=>b.addEventListener('click',()=>setSigTab(b.dataset.stab)));
+  function renderFonts(){
+    const name=$('#sigName').value.trim()||ND.t('اسمك');
+    $('#sigFonts').innerHTML=SIG_FONTS.map(o=>'<button type="button" role="radio" class="sg-font" data-sf="'+o.id+'" aria-checked="'+(sigFont===o.id)+'"><span class="sg-font-n" dir="auto" style="font-family:'+ND.esc(o.f)+'">'+ND.esc(name)+'</span><small>'+ND.esc(ND.t(o.l))+'</small></button>').join('');
+  }
+  $('#sigName').addEventListener('input',()=>{renderFonts();syncSigOk();});
+  $('#sigFonts').addEventListener('click',e=>{const b=e.target.closest('[data-sf]');if(!b)return;sigFont=b.dataset.sf;renderFonts();syncSigOk();});
+  // upload: remove the paper background
+  $('#sigFile').addEventListener('change',async e=>{
+    const f=e.target.files[0];e.target.value='';if(!f)return;
+    try{upBmp=await createImageBitmap(f,{imageOrientation:'from-image'});}catch(x){ND.toast(ND.t('تعذّر فتح هذه الصورة.'));return;}
+    $('#sigUpPrev').hidden=$('#sigThrField').hidden=false;renderUpload();syncSigOk();
+  });
+  $('#sigThr').addEventListener('input',()=>{renderUpload();});
+  function renderUpload(){
+    if(!upBmp)return;
+    const k=Math.min(1,1400/Math.max(upBmp.width,upBmp.height)),w=Math.round(upBmp.width*k),h=Math.round(upBmp.height*k);
+    const c=document.createElement('canvas');c.width=w;c.height=h;const ctx=c.getContext('2d');ctx.drawImage(upBmp,0,0,w,h);
+    const d=ctx.getImageData(0,0,w,h),a=d.data,thr=+$('#sigThr').value;
+    for(let i=0;i<a.length;i+=4){const l=0.299*a[i]+0.587*a[i+1]+0.114*a[i+2];const al=clamp((thr-l)/22,0,1);a[i+3]=Math.round(a[i+3]*al);
+      if(al>0){a[i]=Math.min(a[i],l*0.75);a[i+1]=Math.min(a[i+1],l*0.75);a[i+2]=Math.min(a[i+2],l*0.75);}}
+    ctx.putImageData(d,0,0);upCanvas=c;
+    $('#sigThrV').textContent=Math.round((thr-120)/1.25)+'%';
+    const pv=$('#sigUpCv'),pr=pv.parentElement.getBoundingClientRect(),pk=Math.min((pr.width||460)/w,160/h);
+    pv.width=Math.round(w*pk*2);pv.height=Math.round(h*pk*2);pv.style.width=w*pk+'px';pv.style.height=h*pk+'px';
+    pv.getContext('2d').drawImage(c,0,0,pv.width,pv.height);
+  }
+  function trim(c){
+    const ctx=c.getContext('2d'),{width:w,height:h}=c,a=ctx.getImageData(0,0,w,h).data;
+    let x0=w,y0=h,x1=-1,y1=-1;
+    for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(a[(y*w+x)*4+3]>16){if(x<x0)x0=x;if(x>x1)x1=x;if(y<y0)y0=y;if(y>y1)y1=y;}
+    if(x1<0)return null;
+    const padd=Math.round(Math.max(x1-x0,y1-y0)*0.04)+4;x0=Math.max(0,x0-padd);y0=Math.max(0,y0-padd);x1=Math.min(w-1,x1+padd);y1=Math.min(h-1,y1+padd);
+    const tw=x1-x0+1,th=y1-y0+1,k=Math.min(1,1100/tw,500/th),o=document.createElement('canvas');o.width=Math.round(tw*k);o.height=Math.round(th*k);
+    const octx=o.getContext('2d');octx.imageSmoothingQuality='high';octx.drawImage(c,x0,y0,tw,th,0,0,o.width,o.height);
+    return {src:o.toDataURL('image/png'),w:o.width,h:o.height};
+  }
+  async function currentSig(){
+    if(sigPick)return sigPick;
+    if(sigTab==='draw'){if(!strokes.length)return null;const c=document.createElement('canvas');c.width=1800;c.height=Math.round(1800*pad.height/Math.max(1,pad.width));drawStrokes(c.getContext('2d'),c.width,c.height,strokes);return trim(c);}
+    if(sigTab==='type'){const name=$('#sigName').value.trim();if(!name)return null;const o=SIG_FONTS.find(x=>x.id===sigFont);
+      await document.fonts.load('120px '+o.f,name).catch(()=>{});
+      const c=document.createElement('canvas'),ctx=c.getContext('2d');ctx.font='120px '+o.f;const w=Math.ceil(ctx.measureText(name).width)+120;
+      c.width=Math.min(4000,w);c.height=300;ctx.font='120px '+o.f;ctx.fillStyle=INK[ink];ctx.textBaseline='middle';ctx.direction=isRtlText(name)?'rtl':'ltr';ctx.textAlign='center';ctx.fillText(name,c.width/2,150);
+      return trim(c);}
+    if(sigTab==='upload'&&upCanvas)return trim(upCanvas);
+    return null;
+  }
+  function syncSigOk(){$('#sigOk').disabled=!(sigPick||(sigTab==='draw'&&strokes.length)||(sigTab==='type'&&$('#sigName').value.trim())||(sigTab==='upload'&&upCanvas));}
+  function markSaved(){$('#sigList').querySelectorAll('.sg-chip').forEach(b=>b.setAttribute('aria-pressed',String(!!sigPick&&b.dataset.i==String(savedSigs.indexOf(sigPick)))));}
+  function renderSaved(){
+    $('#sigSaved').hidden=!savedSigs.length;
+    $('#sigList').innerHTML=savedSigs.map((g,i)=>'<button type="button" class="sg-chip" data-i="'+i+'" aria-pressed="false" aria-label="'+ND.esc(ND.t('استخدم هذا التوقيع'))+'"><img src="'+ND.esc(g.src)+'" alt="">'+(g.vault?'<span class="sg-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/><circle cx="12" cy="16" r="1.2" fill="currentColor"/></svg></span>':'')+'</button>').join('');
+  }
+  $('#sigList').addEventListener('click',e=>{const b=e.target.closest('.sg-chip');if(!b)return;sigPick=savedSigs[+b.dataset.i];markSaved();syncSigOk();});
+  async function openSign(at){
+    sigAt=at||null;sigPick=null;
+    renderFonts();renderSaved();
+    const me=await ND.me;$('#sigVault').hidden=!me;$('#sigToVault').checked=false;
+    dlgSign.showModal();setSigTab(savedSigs.length?sigTab:'draw');requestAnimationFrame(padFit);
+  }
+  dlgSign.addEventListener('close',async()=>{
+    if(dlgSign.returnValue!=='ok')return;
+    const g=await currentSig();if(!g){ND.toast(ND.t('ارسم توقيعًا أو اكتبه أو اختره أولًا.'));return;}
+    if(!savedSigs.some(x=>x.src===g.src))savedSigs.unshift({...g});
+    if($('#sigToVault').checked&&!g.vault)saveSigToVault(g);
+    placeSig(g);
+  });
+  let pending=null;const ghost=document.createElement('img');ghost.className='st-sig-ghost';ghost.alt='';
+  function placeSig(g){
+    const p=curPage();if(!p)return;
+    const s=srcOf(p),slot=(s.sigSlots||[]).find(z=>z.page===p.index&&!(p.marks||[]).some(m=>m.slot===z.x+','+z.y));
+    if(!slot&&!sigAt){
+      const [W,H]=pageSize(p);let w=Math.min(170,W*0.32),h=w*g.h/g.w;if(h>H*0.18){h=H*0.18;w=h*g.w/g.h;}
+      pending={g,w,h};ghost.src=g.src;ghost.style.width=px(w);ghost.style.height=px(h);ghost.hidden=true;layer.appendChild(ghost);
+      setTool('place');$('#placeHint').hidden=false;return;
+    }
+    placeSigAt(g,slot);
+  }
+  function placeSigAt(g,slot){
+    const p=curPage();if(!p)return;
+    const [W,H]=pageSize(p);
+    let w,h,x,y;
+    if(slot){const k=Math.min(slot.w/g.w,slot.h/g.h)*0.92;w=g.w*k;h=g.h*k;x=slot.x+(slot.w-w)/2;y=slot.y+(slot.h-h)/2;}
+    else{w=Math.min(170,W*0.32);h=w*g.h/g.w;if(h>H*0.18){h=H*0.18;w=h*g.w/g.h;}
+      if(sigAt){x=sigAt[0]-w/2;y=sigAt[1]-h/2;}else{x=(W-w)/2;y=H*0.72-h/2;}}
+    addMark('image',0,0,{src:g.src,w,h,x,y,sig:true,slot:slot?slot.x+','+slot.y:undefined});
+  }
+  // vault: signatures are stored end-to-end encrypted, like every vault item
+  async function unlockVault(){
+    if(vaultSess)return vaultSess;
+    const r=await ND.api('/vault');
+    if(!r.ok){ND.toast(r.data&&r.data.error||ND.t('خزنتك غير متاحة الآن.'));return null;}
+    if(!r.data.exists){ND.toast(ND.t('أنشئ خزنتك أولًا — يستغرق ذلك دقيقة.'));window.open(ND.url('/vault/'),'_blank','noopener');return null;}
+    vaultMeta=r.data;
+    const d=$('#dlgVaultUnlock');$('#vuErr').hidden=true;$('#vuPass').value='';
+    for(;;){
+      const ok=await new Promise(res=>{d.onclose=()=>res(d.returnValue==='ok');d.showModal();$('#vuPass').focus();});
+      if(!ok)return null;
+      const s2=await NDVault.unlock(vaultMeta,$('#vuPass').value);
+      if(s2){vaultSess=s2;return s2;}
+      $('#vuErr').textContent=ND.t('عبارة المرور خاطئة.');$('#vuErr').hidden=false;$('#vuPass').value='';
+    }
+  }
+  $('#sigFromVault').addEventListener('click',async()=>{
+    const s2=await unlockVault();if(!s2)return;
+    let n=0;
+    for(const it of vaultMeta.items){try{const o=await s2.decrypt(it.data);
+      if(o.type==='signature'&&/^data:image\/png;base64,/.test(o.image||'')&&!savedSigs.some(x=>x.src===o.image)){const im=imgFor(o.image);await im._ready;savedSigs.push({src:o.image,w:im.naturalWidth,h:im.naturalHeight,vault:true});n++;}}catch(e){}}
+    renderSaved();ND.toast(n?ND.f('تم تحميل {n} من التوقيعات من خزنتك',{n}):ND.t('لا توجد توقيعات في خزنتك بعد.'));
+  });
+  async function saveSigToVault(g){
+    const s2=await unlockVault();if(!s2)return;
+    const data=await s2.encrypt({type:'signature',title:ND.t('توقيع')+' · '+todayStr(),image:g.src});
+    if(data.length>140000){ND.toast(ND.t('هذا التوقيع أكبر من أن يُحفظ في الخزنة.'));return;}
+    const r=await ND.api('/vault/items/'+NDVault.newId(),{method:'PUT',body:{data}});
+    if(r.ok){g.vault=true;ND.toast(ND.t('حُفظ في خزنتك — مشفّرًا على هذا الجهاز'));}else ND.toast(r.data.error||ND.t('حدث خطأ ما.'));
+  }
+  window.addEventListener('pagehide',()=>{if(vaultSess)vaultSess.close();});
+
+  /* ---------- Page numbers & watermark ---------- */
+  const dlgStamp=$('#dlgStamp');let stampBefore=null;
+  function syncStampUI(){
+    $('#numOn').checked=!!stamps.numbers;$('#numBody').hidden=!stamps.numbers;
+    $('#wmOn').checked=!!stamps.watermark;$('#wmBody').hidden=!stamps.watermark;
+    const n=stamps.numbers||numState,w=stamps.watermark||wmState;
+    syncSeg(dlgStamp,'data-pos',n.pos);syncSeg(dlgStamp,'data-nf',n.format);syncSeg(dlgStamp,'data-nsz',n.size);
+    $('#numStart').value=n.start;$('#numSkip').checked=n.skipFirst;
+    $('#wmText').value=w.text;syncSeg(dlgStamp,'data-wst',w.style);syncSeg(dlgStamp,'data-wc',w.color);syncSeg(dlgStamp,'data-wsc',w.scope);
+    $('#wmOp').value=Math.round(w.opacity*100);$('#wmOpV').textContent=Math.round(w.opacity*100)+'%';$('#wmOp').style.setProperty('--p',((w.opacity*100-6)/54*100)+'%');
+    $('#wmSelBtn').disabled=!selected.size&&w.scope!=='sel';
+  }
+  function applyStamps(){
+    if(stamps.numbers)stamps.numbers={...numState};
+    if(stamps.watermark)stamps.watermark={...wmState,ids:wmState.scope==='sel'?wmState.ids:[]};
+    syncStampUI();refreshOverlays();
+  }
+  function openStamp(focus){
+    stampBefore=snap();
+    if(focus==='numbers'&&!stamps.numbers)stamps.numbers={...numState};
+    if(focus==='watermark'&&!stamps.watermark)stamps.watermark={...wmState};
+    syncStampUI();refreshOverlays();dlgStamp.showModal();
+    if(focus==='watermark')setTimeout(()=>{$('#wmText').focus();$('#wmText').select();},40);
+  }
+  dlgStamp.addEventListener('close',()=>{if(stampBefore&&stampBefore.stamps!==JSON.stringify(stamps))commit(stampBefore);stampBefore=null;});
+  $('#numOn').addEventListener('change',e=>{stamps.numbers=e.target.checked?{...numState}:null;syncStampUI();refreshOverlays();});
+  $('#wmOn').addEventListener('change',e=>{stamps.watermark=e.target.checked?{...wmState}:null;syncStampUI();refreshOverlays();if(e.target.checked)$('#wmText').focus();});
+  [['data-pos','pos'],['data-nf','format'],['data-nsz','size']].forEach(([attr,key])=>dlgStamp.querySelectorAll('['+attr+']').forEach(b=>b.addEventListener('click',()=>{const v=b.getAttribute(attr);numState[key]=key==='size'?+v:v;applyStamps();})));
+  $('#numStart').addEventListener('input',e=>{numState.start=clamp(parseInt(e.target.value,10)||0,0,9999);applyStamps();});
+  $('#numSkip').addEventListener('change',e=>{numState.skipFirst=e.target.checked;applyStamps();});
+  $('#wmText').addEventListener('input',e=>{wmState.text=e.target.value.slice(0,60)||' ';applyStamps();});
+  [['data-wst','style'],['data-wc','color']].forEach(([attr,key])=>dlgStamp.querySelectorAll('['+attr+']').forEach(b=>b.addEventListener('click',()=>{wmState[key]=b.getAttribute(attr);applyStamps();})));
+  dlgStamp.querySelectorAll('[data-wsc]').forEach(b=>b.addEventListener('click',()=>{wmState.scope=b.dataset.wsc;if(wmState.scope==='sel')wmState.ids=[...selected];applyStamps();}));
+  $('#wmOp').addEventListener('input',e=>{wmState.opacity=+e.target.value/100;applyStamps();});
+  $('#stampBtn').addEventListener('click',()=>openStamp());
+  $('#signBtn').addEventListener('click',()=>{if(!pages.length)return;const p=pages.find(x=>selected.has(x.id))||pages[0];openViewer(p.id);});
 
   /* ---------- Busy overlay ---------- */
   function busy(msg,frac,sub){const b=$('#busy');if(msg===false){b.hidden=true;return;}b.hidden=false;$('#busyMsg').textContent=msg;$('#busyBar').style.width=Math.round((frac||0)*100)+'%';$('#busySub').textContent=sub||'';}
@@ -920,7 +1623,11 @@
   /* ---------- Building PDFs ---------- */
   const libDocs=new Map();
   async function libDocFor(s){
-    if(libDocs.has(s.id))return libDocs.get(s.id);
+    // A PDF with form fields is filled and flattened for the current values, so the answers survive merging.
+    const fv=s.hasForm?JSON.stringify(Object.keys(formEdits).filter(k=>k.startsWith(s.id+'|')).sort().map(k=>[k,formEdits[k]])):'';
+    const key=s.id+'#'+fv;
+    if(libDocs.has(key))return libDocs.get(key);
+    for(const k of [...libDocs.keys()])if(k.startsWith(s.id+'#'))libDocs.delete(k);
     const {PDFDocument}=await pdflib();
     let d;
     try{d=await PDFDocument.load(s.bytes,{updateMetadata:false});}
@@ -928,7 +1635,87 @@
       if(!/encrypt/i.test(e.message||'')&&e.name!=='EncryptedPDFError')throw e;
       d=await PDFDocument.load(s.bytes,{updateMetadata:false,password:s.password||''});
     }
-    libDocs.set(s.id,d);return d;
+    if(s.hasForm)applyForm(s,d);
+    libDocs.set(key,d);return d;
+  }
+  function applyForm(s,d){
+    s._overlayFields=[];
+    let form;try{form=d.getForm();}catch(e){return;}
+    const byName=new Map();(s.fields||[]).forEach(f=>{if(!byName.has(f.name))byName.set(f.name,[]);byName.get(f.name).push(f);});
+    byName.forEach((defs,name)=>{
+      const key=s.id+'|'+name;if(!(key in formEdits))return;
+      const v=formEdits[key],f=defs[0];
+      try{
+        if(f.type==='text'){const t=String(v==null?'':v),fl=form.getTextField(name);
+          // pdf-lib’s built-in fonts can’t shape Arabic: such answers are drawn on the page instead
+          if(winAnsi(t.replace(/\n/g,' ')))fl.setText(t);else{form.removeField(fl);s._overlayFields.push(...defs);}}
+        else if(f.type==='combo'){const fl=form.getDropdown(name),t=fieldText(f,v);
+          if(winAnsi(String(v||''))&&winAnsi(t)){if(v)fl.select(v);else fl.clear();}else{form.removeField(fl);s._overlayFields.push(...defs);}}
+        else if(f.type==='check'){const fl=form.getCheckBox(name);v?fl.check():fl.uncheck();}
+        else if(f.type==='radio'){if(v)form.getRadioGroup(name).select(v);}
+      }catch(e){console.warn('form field',name,e);}
+    });
+    try{form.updateFieldAppearances();}catch(e){console.warn('appearances',e);}
+    try{form.flatten({updateFieldAppearances:false});}catch(e){console.warn('flatten',e);}
+  }
+  // Map page coordinates (top-left origin, page’s own orientation) to PDF user space.
+  async function mapperFor(p){
+    const s=srcOf(p);
+    if(s.kind==='pdf'){const page=await s.doc.getPage(p.index+1),v=page.getViewport({scale:1});return {pt:(x,y)=>v.convertToPdfPoint(x,y),base:page.rotate||0};}
+    const [,H]=pageSize(p);return {pt:(x,y)=>[x,H-y],base:0};
+  }
+  // Bottom-left corner and angle for a box centred where it should be, turned by angCW (clockwise, page space).
+  function pdfPlace(M,box,angCW){
+    const c=M.pt(box.x+box.w/2,box.y+box.h/2),th=((M.base-angCW)%360+360)%360,r=th*Math.PI/180,co=Math.cos(r),si=Math.sin(r);
+    return {x:c[0]-(co*box.w/2-si*box.h/2),y:c[1]-(si*box.w/2+co*box.h/2),th,co,si};
+  }
+  const dataBytes=u=>Uint8Array.from(atob(u.split(',')[1]),c=>c.charCodeAt(0));
+  async function overlayToPdf(out,pg,p,gi,C,L){
+    const s=srcOf(p),marks=p.marks||[],fo=(s._overlayFields||[]).filter(f=>f.page===p.index);
+    const num=numApplies(gi),wm=wmApplies(p);
+    if(!marks.length&&!fo.length&&!num&&!wm)return;
+    const M=await mapperFor(p),{degrees,rgb,StandardFonts}=L;
+    await prepMarks(p);
+    const asImage=async(box,angCW,key,paint,opacity)=>{
+      let img=C.img.get(key);
+      if(!img){
+        const k=Math.min(4,4000/Math.max(box.w,box.h,1)),cv=document.createElement('canvas');
+        cv.width=Math.max(1,Math.ceil(box.w*k));cv.height=Math.max(1,Math.ceil(box.h*k));
+        paint(cv.getContext('2d'),k);
+        const blob=await new Promise(r=>cv.toBlob(r,'image/png'));cv.width=cv.height=0;
+        img=await out.embedPng(new Uint8Array(await blob.arrayBuffer()));C.img.set(key,img);
+      }
+      const P=pdfPlace(M,box,angCW);
+      pg.drawImage(img,{x:P.x,y:P.y,width:box.w,height:box.h,rotate:degrees(P.th),opacity:opacity==null?1:opacity});
+    };
+    for(const f of fo){const v=formEdits[s.id+'|'+f.name];
+      await asImage(f,0,'f'+JSON.stringify([f.type,f.w,f.h,f.multi,v]),(ctx,k)=>drawField(ctx,{...f,x:0,y:0},v,k,false));}
+    for(const m of marks){
+      if(m.kind==='image'&&/^data:image\/png;base64,/.test(m.src)){
+        let img=C.img.get(m.src);if(!img){img=await out.embedPng(dataBytes(m.src));C.img.set(m.src,img);}
+        const P=pdfPlace(M,m,0);pg.drawImage(img,{x:P.x,y:P.y,width:m.w,height:m.h,rotate:degrees(P.th)});continue;
+      }
+      await asImage(m,0,'m'+JSON.stringify({...m,id:0,x:0,y:0}),(ctx,k)=>drawMark(ctx,{...m,x:0,y:0},k));
+    }
+    if(!num&&!wm)return;
+    // page numbers and watermark are laid out upright in the page’s final orientation
+    const {W,H,fw,fh}=finalDims(p),a=-p.rot*Math.PI/180,ca=Math.cos(a),sa=Math.sin(a);
+    const toBase=(fx,fy)=>{const dx=fx-fw/2,dy=fy-fh/2;return [W/2+dx*ca-dy*sa,H/2+dx*sa+dy*ca];};
+    const vector=async(text,cx,cy,size,bold,color,angFinalCW,opacity)=>{
+      const fk=bold?'HB':'H';let font=C.font.get(fk);if(!font){font=await out.embedFont(bold?StandardFonts.HelveticaBold:StandardFonts.Helvetica);C.font.set(fk,font);}
+      const w=font.widthOfTextAtSize(text,size),[bx,by]=toBase(cx,cy),box={x:bx-w/2,y:by-size/2,w,h:size};
+      const P=pdfPlace(M,box,angFinalCW-p.rot),d=size*0.22,hex=color.replace('#','');
+      pg.drawText(text,{x:P.x-P.si*d,y:P.y+P.co*d,size,font,rotate:degrees(P.th),opacity,
+        color:rgb(parseInt(hex.slice(0,2),16)/255,parseInt(hex.slice(2,4),16)/255,parseInt(hex.slice(4,6),16)/255)});
+    };
+    if(wm){const g=wmGeom(fw,fh),w=stamps.watermark,ang=g.ang*180/Math.PI;
+      if(winAnsi(w.text))await vector(w.text,g.cx,g.cy,g.size,true,WMC[w.color],ang,w.opacity);
+      else{const [bx,by]=toBase(g.cx,g.cy),bw=g.w+g.size*0.4,bh=g.size*1.5,box={x:bx-bw/2,y:by-bh/2,w:bw,h:bh};
+        await asImage(box,ang-p.rot,'w'+JSON.stringify([w.text,w.color,g.size]),(ctx,k)=>drawTextLines(ctx,w.text,0,(bh-g.h)/2,bw,g.size,g.font,WMC[w.color],k,'center'),w.opacity);}}
+    if(num){const g=numGeom(fw,fh,numLabel(gi)),cx=g.x+g.w/2,cy=g.y+g.h/2;
+      if(winAnsi(g.label))await vector(g.label,cx,cy,g.size,false,'#2b2d31',0,1);
+      else{const [bx,by]=toBase(cx,cy),bw=g.w+g.size*0.6,bh=g.h,box={x:bx-bw/2,y:by-bh/2,w:bw,h:bh};
+        await asImage(box,-p.rot,'n'+JSON.stringify([g.label,g.size]),(ctx,k)=>drawTextLines(ctx,g.label,0,0,bw,g.size,g.font,'#2b2d31',k,'center'));}}
   }
   async function imageBytesFor(s){
     if(s._embed)return s._embed;
@@ -957,7 +1744,7 @@
       const pp=await out.copyPages(doc,idxs.map(i=>list[i].index));
       idxs.forEach((i,k)=>{copied[i]=pp[k];});
     }
-    const embeds=new Map();
+    const embeds=new Map(),C={img:new Map(),font:new Map()};
     for(let i=0;i<list.length;i++){
       const p=list[i],s=srcOf(p);let pg;
       if(s.kind==='pdf'){pg=out.addPage(copied[i]);pg.setRotation(degrees(((pg.getRotation().angle+p.rot)%360+360)%360));}
@@ -968,6 +1755,7 @@
         pg.drawImage(img,{x:L2.x,y:L2.page[1]-L2.y-L2.h,width:L2.w,height:L2.h});
         if(p.rot)pg.setRotation(degrees(p.rot));
       }else{pg=out.addPage(A4);if(p.rot)pg.setRotation(degrees(p.rot));}
+      await overlayToPdf(out,pg,p,pages.indexOf(p),C,L);
       if(onStep&&i%8===7){onStep((i+1)/list.length);await tick();}
     }
     return out.save({useObjectStreams:true});
@@ -1090,6 +1878,8 @@
     const cv=document.createElement('canvas');
     if(s.kind==='pdf'){const page=await s.doc.getPage(p.index+1);const vp=page.getViewport({scale:k});cv.width=Math.round(vp.width);cv.height=Math.round(vp.height);await page.render({canvas:cv,viewport:vp,background:'#ffffff'}).promise;}
     else{cv.width=Math.round(w*k);cv.height=Math.round(h*k);paintPage(cv.getContext('2d'),p,k);}
+    const gi=pages.indexOf(p);
+    if(hasOverlay(p,gi)){await prepMarks(p);drawOverlay(cv.getContext('2d'),p,gi,cv.width/w);}
     let outCv=cv;
     if(p.rot){const r=document.createElement('canvas'),q90=p.rot%180!==0;r.width=q90?cv.height:cv.width;r.height=q90?cv.width:cv.height;
       const c=r.getContext('2d');c.translate(r.width/2,r.height/2);c.rotate(p.rot*Math.PI/180);c.drawImage(cv,-cv.width/2,-cv.height/2);outCv=r;}
@@ -1139,7 +1929,7 @@
   $$('.st-dlg:not(.st-viewer)',S).forEach(d=>d.addEventListener('click',e=>{if(e.target===d)d.close('cancel');}));
   window.addEventListener('beforeunload',e=>{if(pages.length&&undoStack.length){e.preventDefault();e.returnValue='';}});
   // Testing hook (read-only)
-  window.__studio={get pages(){return pages.map(p=>({...p,name:srcOf(p).name,kind:srcOf(p).kind}));},get selected(){return [...selected];}};
+  window.__studio={get sources(){return [...sources.values()].filter(s=>s.kind!=='blank').map(s=>({name:s.name,hasForm:!!s.hasForm,fields:(s.fields||[]).length}));},get stamps(){return JSON.parse(JSON.stringify(stamps));},get forms(){return {...formEdits};},get pages(){return pages.map(p=>({...p,name:srcOf(p).name,kind:srcOf(p).kind}));},get selected(){return [...selected];}};
 })();
 </script>
 </body>

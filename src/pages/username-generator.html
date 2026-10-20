@@ -47,6 +47,7 @@
 <script>
 (function(){
   const $=ND.$,$$=ND.$$;
+  /*i18n:off*/ // usernames are built from these English words in every language
   const A={
     professional:['Prime','Clear','Bright','Noble','Swift','Sharp','Keen','Bold','True','Calm','Steady','Astute','Lucid','Vivid','Civic','Exact','Solid','Grand','Modern','Polar'],
     gamer:['Dark','Shadow','Neon','Cyber','Ghost','Storm','Blaze','Iron','Void','Sonic','Toxic','Feral','Rogue','Frost','Venom','Hyper','Rapid','Crimson','Phantom','Savage'],
@@ -61,6 +62,7 @@
     friendly:['Panda','Otter','Bunny','Muffin','Sprout','Pebble','Biscuit','Mango','Puffin','Koala','Cupcake','Daisy','Noodle','Button','Waffle','Clover','Teacup','Pickle','Bean','Marble'],
     techie:['Dev','Ops','Coder','Hacker','Ninja','Wizard','Smith','Bot','Logic','Script','Packet','Socket','Commit','Branch','Kernel','Cloud','Matrix','Signal','Daemon','Lab']
   };
+  /*i18n:on*/
   let style='professional';
   const cap=s=>s.charAt(0).toUpperCase()+s.slice(1).toLowerCase();
   function one(){
