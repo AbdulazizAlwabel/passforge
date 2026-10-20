@@ -1,0 +1,1 @@
+Tesseract LSTM models (tessdata_best int) — Apache License 2.0 — https://github.com/tesseract-ocr/tessdata_best

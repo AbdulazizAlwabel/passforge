@@ -26,8 +26,8 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preload" href="/assets/fonts/geist-normal-300-700-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/instrument-serif-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=dff2fd464f">
-<link rel="stylesheet" href="/assets/site.css?v=dff2fd464f">
+<link rel="stylesheet" href="/assets/fonts.css?v=2503a8d202">
+<link rel="stylesheet" href="/assets/site.css?v=2503a8d202">
 <script>(function(){try{var t=JSON.parse(localStorage.getItem('nd:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script>
 <link rel="alternate" hreflang="en" href="https://nicelydone.qd.je/jpg-to-pdf/">
 <link rel="alternate" hreflang="ar" href="https://nicelydone.qd.je/ar/jpg-to-pdf/">
@@ -84,6 +84,11 @@
       <span data-for="sign">Drop the PDF to <em>sign</em></span>
       <span data-for="numbers">Drop the PDF to <em>number</em></span>
       <span data-for="watermark">Drop the PDF to <em>watermark</em></span>
+      <span data-for="compress">Drop the PDF to <em>shrink</em></span>
+      <span data-for="protect">Drop the PDF to <em>protect</em></span>
+      <span data-for="unlock">Drop the PDF to <em>unlock</em></span>
+      <span data-for="redact">Drop the PDF to <em>redact</em></span>
+      <span data-for="ocr">Drop the scan to <em>read</em></span>
     </h2>
     <p class="muted st-empty-sub" id="dropSub">
       <span data-for="organize">Merge, split, reorder, rotate and convert — all inside your browser.</span>
@@ -94,6 +99,11 @@
       <span data-for="sign">Fill in forms, add text and dates, and sign — right on the page.</span>
       <span data-for="numbers">Choose where the numbers go and how they look — the thumbnails update instantly.</span>
       <span data-for="watermark">Stamp CONFIDENTIAL, DRAFT or your own words across every page.</span>
+      <span data-for="compress">Make big scans and photo-heavy PDFs small enough to email — text stays sharp.</span>
+      <span data-for="protect">Lock it with a password (AES-256) and choose whether it can be copied or edited.</span>
+      <span data-for="unlock">Type the password once and save a copy that opens without it.</span>
+      <span data-for="redact">Black out ID numbers, IBANs, phone numbers or anything you choose — removed for good, not just covered.</span>
+      <span data-for="ocr">Turn scanned pages into text you can copy, search and edit — Arabic and English.</span>
     </p>
     <div class="row st-empty-cta">
       <button class="btn btn-primary" type="button" id="pick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>Choose files</button>
@@ -119,6 +129,9 @@
           <button class="icon-btn" type="button" id="moreBtn" aria-label="More actions" aria-haspopup="menu" aria-expanded="false" title="More actions"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="19" cy="12" r="1.2" fill="currentColor"/></svg></button>
           <div class="st-menu" id="moreMenu" role="menu" hidden>
             <button role="menuitem" type="button" data-act="stamp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21h14"/><path d="M6.5 17h11a1.5 1.5 0 0 0 1.5-1.5v-.8a2.7 2.7 0 0 0-2.7-2.7H14l.5-3.6a2.6 2.6 0 1 0-5 0l.5 3.6H7.7A2.7 2.7 0 0 0 5 14.7v.8A1.5 1.5 0 0 0 6.5 17Z"/></svg><span>Page numbers &amp; watermark</span></button>
+            <button role="menuitem" type="button" data-act="ocr"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V5h16v2M9 19h6M12 5v14"/></svg><span>Recognise text (OCR)</span></button>
+            <button role="menuitem" type="button" data-act="find"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3 3.9M6.6 6.6C3.6 8.4 2 12 2 12s3.6 7 10 7a9.6 9.6 0 0 0 5.4-1.6M3 3l18 18"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg><span>Find &amp; redact</span></button>
+            <button role="menuitem" type="button" data-act="dlopts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/><circle cx="12" cy="16" r="1.2" fill="currentColor"/></svg><span>Compress or add a password</span></button>
             <button role="menuitem" type="button" data-act="blank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg><span>Insert blank page</span></button>
             <button role="menuitem" type="button" data-act="dup"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></svg><span>Duplicate selected</span></button>
             <button role="menuitem" type="button" data-act="reverse"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4 3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7"/></svg><span>Reverse order</span></button>
@@ -137,7 +150,7 @@
         <button class="btn btn-sm" type="button" id="imgBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/></svg><span>To images</span></button>
         <div class="st-save">
           <div class="st-name" dir="ltr"><input class="input" id="outName" spellcheck="false" autocomplete="off" aria-label="File name" dir="auto"><span>.pdf</span></div>
-          <button class="btn btn-primary btn-sm" type="button" id="save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg><span>Download PDF</span></button>
+          <div class="st-dl"><button class="btn btn-primary btn-sm" type="button" id="save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg><span>Download PDF</span></button><button class="btn btn-primary btn-sm st-dl-more" type="button" id="saveOpts" aria-label="Download options" title="Download options"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button></div>
         </div>
       </div>
     </div>
@@ -253,8 +266,10 @@
         <button type="button" data-tool="date" aria-pressed="false" title="Add today’s date"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M8 3v4M16 3v4M3.5 10h17"/><path d="M15.5 13.2a2.6 2.6 0 1 0 0 4.6 3.3 3.3 0 1 1 0-4.6Z"/></svg><span>Date</span></button>
         <button type="button" data-tool="check" aria-pressed="false" title="Add a tick" aria-label="Tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></button>
         <button type="button" data-tool="cross" aria-pressed="false" title="Add a cross" aria-label="Cross"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+        <button type="button" data-tool="redact" aria-pressed="false" title="Redact: drag over anything to black it out for good"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="5" rx="1" fill="currentColor" stroke="none"/><path d="M3 15h10M3 19h14"/></svg><span>Redact</span></button>
       </div>
       <div class="row st-view-acts" style="gap:6px">
+        <button class="icon-btn" type="button" id="vFind" aria-label="Find &amp; redact" title="Find &amp; redact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
         <button class="icon-btn" type="button" id="vRotL" aria-label="Rotate left"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
         <button class="icon-btn" type="button" id="vRotR" aria-label="Rotate right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>
         <button class="icon-btn" type="button" id="vDel" aria-label="Delete page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>
@@ -316,6 +331,78 @@
         <div class="msg err" id="vuErr" hidden></div>
       </div>
       <footer><button class="btn btn-ghost" value="cancel">Cancel</button><button class="btn btn-primary" value="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/><circle cx="12" cy="16" r="1.2" fill="currentColor"/></svg>Unlock</button></footer>
+    </form>
+  </dialog>
+
+  <dialog class="st-dlg" id="dlgDl" aria-labelledby="dlgDlT">
+    <form method="dialog" class="st-dlg-form">
+      <header><h3 id="dlgDlT">Download options</h3><button class="icon-btn" value="cancel" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></header>
+      <div class="st-dlg-body">
+        <div class="field"><span class="label">Compression <span class="faint" id="dlSize"></span></span>
+          <div class="seg" role="group" aria-label="Compression"><button type="button" data-cmp="off">Off</button><button type="button" data-cmp="balanced">Balanced</button><button type="button" data-cmp="strong">Smallest</button></div>
+          <span class="hint">Shrinks photos and scans inside the PDF. Text and drawings stay sharp.</span>
+        </div>
+        <section class="sp-sec">
+          <label class="sp-toggle"><input type="checkbox" id="dlProtect"><span class="sp-sw" aria-hidden="true"></span><strong>Protect with a password</strong></label>
+          <div class="sp-body" id="dlPwBody" hidden>
+            <div class="sp-row">
+              <div class="field"><label class="label" for="dlPw1">Password</label><input class="input" type="password" id="dlPw1" autocomplete="new-password"></div>
+              <div class="field"><label class="label" for="dlPw2">Confirm</label><input class="input" type="password" id="dlPw2" autocomplete="new-password"></div>
+            </div>
+            <label class="chip"><input type="checkbox" id="dlRestrict"><span>Also block copying text and editing</span></label>
+            <span class="hint">Encrypted with AES-256. There’s no way to recover a lost password — keep it safe.</span>
+          </div>
+        </section>
+        <section class="sp-sec">
+          <label class="sp-toggle"><input type="checkbox" id="dlOcr"><span class="sp-sw" aria-hidden="true"></span><strong>Make scanned pages searchable</strong></label>
+          <div class="sp-body" id="dlOcrBody" hidden>
+            <div class="seg" role="group" aria-label="Language"><button type="button" data-olang="ara+eng">Arabic + English</button><button type="button" data-olang="eng">English only</button></div>
+            <span class="hint">Recognises the text on scanned pages (on this device) and adds it invisibly, so you can search and copy it. Pages that already have text are left alone.</span>
+          </div>
+        </section>
+        <div class="msg info" id="dlRedactNote" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/></svg><span>Pages with redactions are saved as images, so the blacked-out text is really gone.</span></div>
+        <div class="msg err" id="dlErr" hidden></div>
+      </div>
+      <footer><button class="btn btn-ghost" value="ok">Save settings</button><button class="btn btn-primary" value="save"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Download PDF</button></footer>
+    </form>
+  </dialog>
+
+  <dialog class="st-dlg" id="dlgOcr" aria-labelledby="dlgOcrT">
+    <form method="dialog" class="st-dlg-form">
+      <header><h3 id="dlgOcrT">Recognise text</h3><button class="icon-btn" value="cancel" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></header>
+      <div class="st-dlg-body">
+        <p class="muted" style="font-size:.92rem">Reads the text on scanned pages and photos — right here, on this device. The first time, the recogniser (about 8 MB) is downloaded once.</p>
+        <div class="sp-row">
+          <div class="field"><span class="label">Language</span><div class="seg" role="group" aria-label="Language"><button type="button" data-olang="ara+eng">Arabic + English</button><button type="button" data-olang="eng">English only</button></div></div>
+          <div class="field"><span class="label">Pages</span><div class="seg" role="group" aria-label="Pages"><button type="button" data-ow="all">All pages</button><button type="button" data-ow="sel" id="ocrSelBtn">Selected</button></div></div>
+        </div>
+        <button type="button" class="btn btn-primary" id="ocrStart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7V5h16v2M9 19h6M12 5v14"/></svg>Start reading</button>
+        <div id="ocrProg" hidden><div class="st-prog" style="width:100%"><i id="ocrBar"></i></div><p class="hint" id="ocrMsg" aria-live="polite"></p></div>
+        <textarea class="textarea" id="ocrOut" rows="10" readonly dir="auto" hidden aria-label="Recognised text"></textarea>
+        <div class="row" id="ocrActs" hidden><button type="button" class="btn btn-sm" id="ocrCopy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></svg>Copy all</button><button type="button" class="btn btn-sm" id="ocrTxt"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Download .txt</button></div>
+        <label class="chip"><input type="checkbox" id="ocrSearchable"><span>Make the PDF searchable when I download it</span></label>
+      </div>
+      <footer><button class="btn btn-primary" value="ok">Done</button></footer>
+    </form>
+  </dialog>
+
+  <dialog class="st-dlg" id="dlgFind" aria-labelledby="dlgFindT">
+    <form method="dialog" class="st-dlg-form">
+      <header><h3 id="dlgFindT">Find &amp; redact</h3><button class="icon-btn" value="cancel" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg></button></header>
+      <div class="st-dlg-body">
+        <div class="fd-pats">
+          <label class="chip"><input type="checkbox" data-pat="id" checked><span>National ID / Iqama</span></label>
+          <label class="chip"><input type="checkbox" data-pat="iban" checked><span>IBAN</span></label>
+          <label class="chip"><input type="checkbox" data-pat="phone" checked><span>Phone numbers</span></label>
+          <label class="chip"><input type="checkbox" data-pat="email" checked><span>Email addresses</span></label>
+          <label class="chip"><input type="checkbox" data-pat="card"><span>Card numbers</span></label>
+        </div>
+        <div class="field"><label class="label" for="findWords">Other words or names <span class="faint">comma-separated</span></label><input class="input" id="findWords" dir="auto" autocomplete="off" placeholder="e.g. Abdulaziz, 1445"></div>
+        <label class="chip"><input type="checkbox" id="findOcr"><span>Search scanned pages too (uses text recognition)</span></label>
+        <p class="hint" id="findMsg" aria-live="polite"></p>
+        <div class="fd-res" id="findRes"></div>
+      </div>
+      <footer><button type="button" class="btn btn-primary" id="findRun"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Find</button><button class="btn btn-primary" value="ok" id="findGo" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="5" rx="1" fill="currentColor" stroke="none"/><path d="M3 15h10M3 19h14"/></svg>Redact selected</button></footer>
     </form>
   </dialog>
 
@@ -396,6 +483,9 @@
   <details><summary>Will links, text and quality be preserved?</summary><p>Yes. Pages are copied exactly — text stays selectable and searchable, and nothing is re-compressed. Only images you add are converted, and only if you choose “Smaller file”. Bookmarks from the original files aren’t carried over when merging.</p></details>
   <details><summary>Can I fill in forms and sign documents?</summary><p>Yes. Double-click a page (or press “Fill &amp; sign”) to type into its form fields, add text, dates and ticks, and place your signature — drawn with your finger, typed in handwriting, or taken from a photo. Arabic text is supported. You can keep your signatures in your end-to-end encrypted vault to reuse them.</p></details>
   <details><summary>Is a signature made here legally binding?</summary><p>It’s a picture of your signature placed on the page — the same as signing a printout and scanning it. That’s accepted for many everyday documents, but some contracts and government services require a certified digital signature (for example through Nafath). If in doubt, ask whoever needs the document.</p></details>
+  <details><summary>How much smaller will compression make my file?</summary><p>It depends on what’s inside. Scans and photo-heavy PDFs often shrink by 70–95%, because their pictures are re-encoded at a sensible resolution. PDFs that are mostly text are already small and barely change. Text, fonts and drawings are never touched, so they stay perfectly sharp.</p></details>
+  <details><summary>Is redaction really permanent?</summary><p>Yes. Pages with redactions aren’t just covered with black boxes — they’re rebuilt from a picture of the page with the boxes painted in, so the hidden text, its fonts and anything underneath are not in the downloaded file at all. Other pages keep their text. Always check the result before you share it.</p></details>
+  <details><summary>How good is the text recognition?</summary><p>Very good on clear printed text in Arabic and English — scans, photos of documents and screenshots. It can’t read handwriting, and Eastern Arabic digits (٠١٢٣) are sometimes misread, so check important numbers. It runs on your device; the first time, the recogniser (about 8 MB) is downloaded once and then works offline.</p></details>
   <details><summary>Does it work on iPhone and Android?</summary><p>Yes. Tap to select pages, press and hold a page to drag it, and photos straight from your camera roll — including iPhone HEIC photos in Safari — become PDF pages.</p></details>
 </div></div></div></section>
   <section class="section" style="padding-top:0">
@@ -421,10 +511,10 @@
     </div>
   </div>
 </footer>
-<script>window.ND_TOOLS=[{"name": "Password Generator", "short": "Unbiased, cryptographically secure passwords & passphrases.", "cat": "Security & privacy", "href": "/password-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"11\" width=\"16\" height=\"10\" rx=\"2.5\"/><path d=\"M8 11V7.5a4 4 0 0 1 8 0V11\"/><circle cx=\"12\" cy=\"16\" r=\"1.2\" fill=\"currentColor\"/><\/svg>", "keywords": "random secure strong passphrase diceware generate"}, {"name": "Strength Checker", "short": "Entropy, crack-time estimates and pattern detection.", "cat": "Security & privacy", "href": "/strength-checker/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z\"/><path d=\"m9 12 2.2 2.2L15.5 10\"/><\/svg>", "keywords": "password strength test entropy crack time analyse"}, {"name": "One-Time Secret", "short": "Share a password through a link that self-destructs.", "cat": "Security & privacy", "href": "/share/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L12 5.6\"/><path d=\"M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2\"/><\/svg>", "keywords": "share secret password one-time link self-destruct burn encrypted send note"}, {"name": "Link Checker", "short": "Is this link a scam? Checked privately, with an NCA second opinion.", "cat": "Security & privacy", "href": "/link-checker/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z\"/><path d=\"m9 12 2.2 2.2L15.5 10\"/><\/svg>", "keywords": "link checker url scanner phishing scam malware safe check suspicious sms whatsapp nca tahqaq haseen"}, {"name": "Encrypted Vault", "short": "Logins, notes and secrets — encrypted on your device, synced to your account.", "cat": "Security & privacy", "href": "/vault/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"11\" width=\"16\" height=\"10\" rx=\"2.5\"/><path d=\"M8 11V7.5a4 4 0 0 1 8 0V11\"/><circle cx=\"12\" cy=\"16\" r=\"1.2\" fill=\"currentColor\"/><\/svg>", "keywords": "vault password manager encrypted notes secrets api keys zero knowledge sync store"}, {"name": "Hash Generator", "short": "MD5, SHA-1, SHA-256/384/512 for text or files.", "cat": "Security & privacy", "href": "/hash-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 9h15M4 15h15M10 3 8 21M16 3l-2 18\"/><\/svg>", "keywords": "md5 sha1 sha256 sha512 checksum digest file verify"}, {"name": "Username Generator", "short": "Distinctive handles in five personalities.", "cat": "Security & privacy", "href": "/username-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4.5 21a7.5 7.5 0 0 1 15 0\"/><\/svg>", "keywords": "username handle gamertag nickname name"}, {"name": "Base64 Encoder", "short": "Encode and decode Base64 — standard or URL-safe.", "cat": "Developer", "href": "/base64-tool/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m16 18 6-6-6-6M8 6l-6 6 6 6\"/><\/svg>", "keywords": "base64 encode decode url-safe data url btoa atob"}, {"name": "JSON Formatter", "short": "Format, validate, minify and sort JSON.", "cat": "Developer", "href": "/json-formatter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1\"/><\/svg>", "keywords": "json format beautify validate minify pretty print lint"}, {"name": "Text Case Converter", "short": "camelCase, snake_case, Title Case and more — all at once.", "cat": "Developer", "href": "/text-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 7V5h16v2M9 19h6M12 5v14\"/><\/svg>", "keywords": "case convert camel snake kebab pascal title upper lower"}, {"name": "IP & Network", "short": "Your public IP, browser details and a subnet calculator.", "cat": "Developer", "href": "/ip-network/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18\"/><\/svg>", "keywords": "ip address my ip subnet cidr calculator network mask"}, {"name": "PDF Studio", "short": "Merge, split, reorder, rotate and convert PDFs — without uploading them.", "cat": "Everyday", "href": "/pdf-studio/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "pdf merge combine join split extract reorder rotate delete pages jpg png image to pdf convert organize sign signature fill form page numbers watermark دمج تقسيم تدوير تحويل صور ملف"}, {"name": "Unit Converter", "short": "Ten categories — weight, length, temperature, data and more.", "cat": "Everyday", "href": "/unit-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 17 17 3l4 4L7 21z\"/><path d=\"m7 13 2 2M10 10l2 2M13 7l2 2\"/><\/svg>", "keywords": "convert units kg lb km miles celsius fahrenheit"}, {"name": "Speed Test", "short": "Private internet speed test — no third parties.", "cat": "Everyday", "href": "/speed-test/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4.9 18.5a9 9 0 1 1 14.2 0\"/><path d=\"m12 14 4-5\"/><circle cx=\"12\" cy=\"14\" r=\"1.6\" fill=\"currentColor\"/><\/svg>", "keywords": "speed test internet bandwidth download upload ping latency jitter bufferbloat mbps"}, {"name": "Hijri Date Converter", "short": "Umm al-Qura Hijri ⇄ Gregorian, with a dual calendar.", "cat": "Everyday", "href": "/date-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"5\" width=\"17\" height=\"15.5\" rx=\"2.5\"/><path d=\"M8 3v4M16 3v4M3.5 10h17\"/><path d=\"M15.5 13.2a2.6 2.6 0 1 0 0 4.6 3.3 3.3 0 1 1 0-4.6Z\"/><\/svg>", "keywords": "hijri islamic gregorian date convert umm al-qura calendar"}, {"name": "Merge PDF", "short": "Combine PDFs into one — privately, in your browser.", "cat": "Everyday", "href": "/merge-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "merge pdf combine pdf join pdf files into one"}, {"name": "Split PDF", "short": "Split a PDF into parts or extract pages.", "cat": "Everyday", "href": "/split-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "split pdf extract pages separate pdf cut pdf"}, {"name": "JPG to PDF", "short": "Turn photos and scans into one PDF.", "cat": "Everyday", "href": "/jpg-to-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "jpg to pdf image to pdf png to pdf photo to pdf heic to pdf scan to pdf"}, {"name": "Sign PDF", "short": "Fill in and sign PDFs — draw, type or upload your signature.", "cat": "Everyday", "href": "/sign-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "sign pdf signature fill pdf form e-sign add text to pdf tick date esign توقيع تعبئة نموذج"}, {"name": "Add Page Numbers", "short": "Number the pages of a PDF, exactly where you want.", "cat": "Everyday", "href": "/add-page-numbers/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "add page numbers pdf number pages pagination ترقيم صفحات"}, {"name": "Watermark PDF", "short": "Stamp CONFIDENTIAL, DRAFT or your own text on PDF pages.", "cat": "Everyday", "href": "/watermark-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "watermark pdf confidential draft stamp text علامة مائية سري"}, {"name": "PDF to JPG", "short": "Save PDF pages as sharp JPG or PNG images.", "cat": "Everyday", "href": "/pdf-to-jpg/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "pdf to jpg pdf to png pdf to image convert pdf pages to images"}];</script>
-<script src="/assets/site.js?v=dff2fd464f"></script>
-<script src="/assets/answers.js?v=dff2fd464f"></script>
-<script src="/assets/vault-crypto.js?v=dff2fd464f"></script>
+<script>window.ND_TOOLS=[{"name": "Password Generator", "short": "Unbiased, cryptographically secure passwords & passphrases.", "cat": "Security & privacy", "href": "/password-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"11\" width=\"16\" height=\"10\" rx=\"2.5\"/><path d=\"M8 11V7.5a4 4 0 0 1 8 0V11\"/><circle cx=\"12\" cy=\"16\" r=\"1.2\" fill=\"currentColor\"/><\/svg>", "keywords": "random secure strong passphrase diceware generate"}, {"name": "Strength Checker", "short": "Entropy, crack-time estimates and pattern detection.", "cat": "Security & privacy", "href": "/strength-checker/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z\"/><path d=\"m9 12 2.2 2.2L15.5 10\"/><\/svg>", "keywords": "password strength test entropy crack time analyse"}, {"name": "One-Time Secret", "short": "Share a password through a link that self-destructs.", "cat": "Security & privacy", "href": "/share/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L12 5.6\"/><path d=\"M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2\"/><\/svg>", "keywords": "share secret password one-time link self-destruct burn encrypted send note"}, {"name": "Link Checker", "short": "Is this link a scam? Checked privately, with an NCA second opinion.", "cat": "Security & privacy", "href": "/link-checker/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z\"/><path d=\"m9 12 2.2 2.2L15.5 10\"/><\/svg>", "keywords": "link checker url scanner phishing scam malware safe check suspicious sms whatsapp nca tahqaq haseen"}, {"name": "Encrypted Vault", "short": "Logins, notes and secrets — encrypted on your device, synced to your account.", "cat": "Security & privacy", "href": "/vault/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"11\" width=\"16\" height=\"10\" rx=\"2.5\"/><path d=\"M8 11V7.5a4 4 0 0 1 8 0V11\"/><circle cx=\"12\" cy=\"16\" r=\"1.2\" fill=\"currentColor\"/><\/svg>", "keywords": "vault password manager encrypted notes secrets api keys zero knowledge sync store"}, {"name": "Hash Generator", "short": "MD5, SHA-1, SHA-256/384/512 for text or files.", "cat": "Security & privacy", "href": "/hash-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 9h15M4 15h15M10 3 8 21M16 3l-2 18\"/><\/svg>", "keywords": "md5 sha1 sha256 sha512 checksum digest file verify"}, {"name": "Username Generator", "short": "Distinctive handles in five personalities.", "cat": "Security & privacy", "href": "/username-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4.5 21a7.5 7.5 0 0 1 15 0\"/><\/svg>", "keywords": "username handle gamertag nickname name"}, {"name": "Base64 Encoder", "short": "Encode and decode Base64 — standard or URL-safe.", "cat": "Developer", "href": "/base64-tool/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m16 18 6-6-6-6M8 6l-6 6 6 6\"/><\/svg>", "keywords": "base64 encode decode url-safe data url btoa atob"}, {"name": "JSON Formatter", "short": "Format, validate, minify and sort JSON.", "cat": "Developer", "href": "/json-formatter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1\"/><\/svg>", "keywords": "json format beautify validate minify pretty print lint"}, {"name": "Text Case Converter", "short": "camelCase, snake_case, Title Case and more — all at once.", "cat": "Developer", "href": "/text-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 7V5h16v2M9 19h6M12 5v14\"/><\/svg>", "keywords": "case convert camel snake kebab pascal title upper lower"}, {"name": "IP & Network", "short": "Your public IP, browser details and a subnet calculator.", "cat": "Developer", "href": "/ip-network/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18\"/><\/svg>", "keywords": "ip address my ip subnet cidr calculator network mask"}, {"name": "PDF Studio", "short": "Merge, split, reorder, rotate and convert PDFs — without uploading them.", "cat": "Everyday", "href": "/pdf-studio/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "pdf merge combine join split extract reorder rotate delete pages jpg png image to pdf convert organize sign signature fill form page numbers watermark دمج تقسيم تدوير تحويل صور ملف"}, {"name": "Unit Converter", "short": "Ten categories — weight, length, temperature, data and more.", "cat": "Everyday", "href": "/unit-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 17 17 3l4 4L7 21z\"/><path d=\"m7 13 2 2M10 10l2 2M13 7l2 2\"/><\/svg>", "keywords": "convert units kg lb km miles celsius fahrenheit"}, {"name": "Speed Test", "short": "Private internet speed test — no third parties.", "cat": "Everyday", "href": "/speed-test/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4.9 18.5a9 9 0 1 1 14.2 0\"/><path d=\"m12 14 4-5\"/><circle cx=\"12\" cy=\"14\" r=\"1.6\" fill=\"currentColor\"/><\/svg>", "keywords": "speed test internet bandwidth download upload ping latency jitter bufferbloat mbps"}, {"name": "Hijri Date Converter", "short": "Umm al-Qura Hijri ⇄ Gregorian, with a dual calendar.", "cat": "Everyday", "href": "/date-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"5\" width=\"17\" height=\"15.5\" rx=\"2.5\"/><path d=\"M8 3v4M16 3v4M3.5 10h17\"/><path d=\"M15.5 13.2a2.6 2.6 0 1 0 0 4.6 3.3 3.3 0 1 1 0-4.6Z\"/><\/svg>", "keywords": "hijri islamic gregorian date convert umm al-qura calendar"}, {"name": "Merge PDF", "short": "Combine PDFs into one — privately, in your browser.", "cat": "Everyday", "href": "/merge-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "merge pdf combine pdf join pdf files into one"}, {"name": "Split PDF", "short": "Split a PDF into parts or extract pages.", "cat": "Everyday", "href": "/split-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "split pdf extract pages separate pdf cut pdf"}, {"name": "JPG to PDF", "short": "Turn photos and scans into one PDF.", "cat": "Everyday", "href": "/jpg-to-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "jpg to pdf image to pdf png to pdf photo to pdf heic to pdf scan to pdf"}, {"name": "Sign PDF", "short": "Fill in and sign PDFs — draw, type or upload your signature.", "cat": "Everyday", "href": "/sign-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "sign pdf signature fill pdf form e-sign add text to pdf tick date esign توقيع تعبئة نموذج"}, {"name": "Add Page Numbers", "short": "Number the pages of a PDF, exactly where you want.", "cat": "Everyday", "href": "/add-page-numbers/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "add page numbers pdf number pages pagination ترقيم صفحات"}, {"name": "Watermark PDF", "short": "Stamp CONFIDENTIAL, DRAFT or your own text on PDF pages.", "cat": "Everyday", "href": "/watermark-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "watermark pdf confidential draft stamp text علامة مائية سري"}, {"name": "Compress PDF", "short": "Shrink PDFs for email — scans and photos get smaller, text stays sharp.", "cat": "Everyday", "href": "/compress-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "compress pdf reduce pdf size shrink pdf smaller pdf email تصغير ضغط حجم"}, {"name": "Protect PDF", "short": "Add a password to a PDF (AES-256) and block copying or editing.", "cat": "Everyday", "href": "/protect-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "protect pdf password encrypt pdf lock pdf aes secure حماية كلمة مرور تشفير"}, {"name": "Unlock PDF", "short": "Remove the password from a PDF you can open.", "cat": "Everyday", "href": "/unlock-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "unlock pdf remove password decrypt pdf restrictions فك حماية إزالة كلمة مرور"}, {"name": "Redact PDF", "short": "Black out IDs, IBANs and personal details — removed for good.", "cat": "Everyday", "href": "/redact-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "redact pdf black out hide personal data id number iban privacy remove text إخفاء حجب بيانات"}, {"name": "PDF OCR", "short": "Read text from scans — Arabic and English — and make PDFs searchable.", "cat": "Everyday", "href": "/ocr-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "ocr pdf scan to text arabic ocr english image to text searchable pdf تحويل صورة إلى نص قراءة نص عربي"}, {"name": "PDF to JPG", "short": "Save PDF pages as sharp JPG or PNG images.", "cat": "Everyday", "href": "/pdf-to-jpg/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "pdf to jpg pdf to png pdf to image convert pdf pages to images"}];</script>
+<script src="/assets/site.js?v=2503a8d202"></script>
+<script src="/assets/answers.js?v=2503a8d202"></script>
+<script src="/assets/vault-crypto.js?v=2503a8d202"></script>
 <script>
 (function(){
   'use strict';
@@ -471,7 +561,8 @@
   const isPdf=f=>/\.pdf$/i.test(f.name)||f.type==='application/pdf';
   const isImg=f=>/^image\//.test(f.type)||/\.(jpe?g|png|webp|gif|bmp|avif|heic|heif|tiff?)$/i.test(f.name);
   const baseName=n=>(n||'').replace(/\.[^.]+$/,'').trim();
-  const fmtSize=b=>b<1024?b+' B':b<1048576?(b/1024).toFixed(0)+' KB':(b/1048576).toFixed(b<10485760?1:0)+' MB';
+  // sizes read left-to-right even inside Arabic sentences («8.7 MB», not «MB 8.7»)
+  const fmtSize=b=>{const t=b<1024?b+' B':b<1048576?(b/1024).toFixed(0)+' KB':(b/1048576).toFixed(b<10485760?1:0)+' MB';return RTL?'\u2066'+t+'\u2069':t;};
   const say=msg=>{$('#live').textContent='';requestAnimationFrame(()=>{$('#live').textContent=msg;});};
   const tick=()=>new Promise(r=>setTimeout(r,0));
   const nPages=n=>ND.count(n,{one:'page',other:'pages'},{one:'صفحة',two:'صفحتان',few:'صفحات',many:'صفحة',other:'صفحة'});
@@ -744,7 +835,7 @@
     $('#imgOptsBtn').hidden=!hasImg;
     if(hasImg)$('#imgOptsLabel').textContent=({fit:ND.t('Fit the image'),a4:'A4',letter:'Letter'})[imgOpts.size]+(imgOpts.quality==='small'?' · '+ND.t('Smaller'):'');
     $('#save').disabled=$('#splitBtn').disabled=$('#imgBtn').disabled=$('#signBtn').disabled=$('#stampBtn').disabled=!pages.length||!!loading;
-    $('#signBtn').classList.toggle('btn-primary',PRESET==='sign');
+    $('#signBtn').classList.toggle('btn-primary',PRESET==='sign');$('#saveOpts').disabled=$('#save').disabled;
     $('#splitBtn').classList.toggle('btn-primary',PRESET==='split');$('#imgBtn').classList.toggle('btn-primary',PRESET==='topng');
     $('#save').classList.toggle('btn-primary',PRESET!=='split'&&PRESET!=='topng'&&PRESET!=='sign');
   }
@@ -983,6 +1074,11 @@
     if(PRESET==='sign')setTimeout(()=>openViewer(pages[0].id),350);
     else if(PRESET==='numbers')setTimeout(()=>openStamp('numbers'),350);
     else if(PRESET==='watermark')setTimeout(()=>openStamp('watermark'),350);
+    else if(PRESET==='compress')setTimeout(()=>openDl(),350);
+    else if(PRESET==='protect')setTimeout(()=>openDl('password'),350);
+    else if(PRESET==='unlock')ND.toast(ND.t('Unlocked on this device — download to save a copy without the password.'));
+    else if(PRESET==='redact')setTimeout(()=>{openViewer(pages[0].id).then(()=>{setTool('redact');openFind();});},350);
+    else if(PRESET==='ocr')setTimeout(()=>openOcr(),350);
   }
 
   /* ---------- Toolbar ---------- */
@@ -1013,7 +1109,7 @@
   menu.addEventListener('click',e=>{
     const b=e.target.closest('[data-act]');if(!b)return;closeMenu();
     const a=b.dataset.act;
-    if(a==='stamp')openStamp();else if(a==='blank')insertBlank();else if(a==='dup')duplicate();else if(a==='reverse')reverse();
+    if(a==='stamp')openStamp();else if(a==='ocr')openOcr();else if(a==='find')openFind();else if(a==='dlopts')openDl();else if(a==='blank')insertBlank();else if(a==='dup')duplicate();else if(a==='reverse')reverse();
     else if(a==='odd')selectWhere(i=>i%2===0);else if(a==='even')selectWhere(i=>i%2===1);
     else if(a==='keys')$('#dlgKeys').showModal();
     else if(a==='reset'){if(confirm(ND.t('Remove all pages and start over?'))){pages=[];selected.clear();undoStack.length=redoStack.length=0;render();leaveWork();}}
@@ -1066,6 +1162,7 @@
     ctx.save();
     if(m.kind==='text')drawTextLines(ctx,m.text,m.x,m.y,m.w,m.size,markFont(m),INK[m.color]||INK.black,k);
     else if(m.kind==='image'){const im=imgFor(m.src);if(im.complete&&im.naturalWidth){ctx.imageSmoothingQuality='high';ctx.drawImage(im,m.x*k,m.y*k,m.w*k,m.h*k);}}
+    else if(m.kind==='redact'){ctx.fillStyle='#000';ctx.fillRect(m.x*k,m.y*k,m.w*k,m.h*k);}
     else{
       const x=m.x*k,y=m.y*k,w=m.w*k,h=m.h*k;
       ctx.strokeStyle=INK[m.color]||INK.black;ctx.lineWidth=Math.max(1,w*0.12);ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();
@@ -1244,7 +1341,7 @@
     const el=document.createElement('div');el.className='mk mk-'+m.kind+(selMark===m.id?' on':'');el.dataset.mid=m.id;el.style.color=INK[m.color]||'';
     if(m.kind==='text'){const t=document.createElement('div');t.className='mk-txt';t.dir='auto';t.textContent=m.text;styleText(t,m);el.appendChild(t);}
     else if(m.kind==='image'){const im=document.createElement('img');im.src=m.src;im.alt='';im.draggable=false;el.appendChild(im);}
-    else el.innerHTML=m.kind==='check'?CHECK_SVG:CROSS_SVG;
+    else if(m.kind!=='redact')el.innerHTML=m.kind==='check'?CHECK_SVG:CROSS_SVG;
     el.insertAdjacentHTML('beforeend','<span class="mk-h" aria-hidden="true"></span>');
     place(el,m);return el;
   }
@@ -1275,7 +1372,7 @@
     commit(before);
     buildLayer(p);selectMark(m.id);refreshOverlays();
     if(m.kind==='text'&&!m.text)startEdit(m,true);
-    if(kind!=='check'&&kind!=='cross')setTool('select');
+    if(kind!=='check'&&kind!=='cross'&&kind!=='redact')setTool('select');
     say(ND.t('Added to the page'));
     return m;
   }
@@ -1316,6 +1413,7 @@
     if(document.activeElement&&layer.contains(document.activeElement))document.activeElement.blur();
     if(tool==='select'){selectMark(null);return;}
     if(tool==='sign'){openSign(toPage(e.clientX,e.clientY));return;}
+    if(tool==='redact'){e.preventDefault();const [x,y]=toPage(e.clientX,e.clientY);act={type:'draw',x,y,m:null,before:snap(),pid:e.pointerId,moved:false};layer.setPointerCapture(e.pointerId);return;}
     if(tool==='place'&&pending){e.preventDefault();const g=pending.g;sigAt=toPage(e.clientX,e.clientY);endPlacing();placeSigAt(g);return;}
     e.preventDefault();const [x,y]=toPage(e.clientX,e.clientY);addMark(tool,x,y);
   });
@@ -1323,17 +1421,28 @@
   layer.addEventListener('pointermove',e=>{
     if(pending&&!act){const [x,y]=toPage(e.clientX,e.clientY);ghost.hidden=false;ghost.style.left=px(x-pending.w/2);ghost.style.top=px(y-pending.h/2);return;}
     if(!act||e.pointerId!==act.pid)return;
+    if(act.type==='draw'){
+      const [x,y]=toPage(e.clientX,e.clientY),p=curPage();
+      if(!act.m){if(Math.hypot(x-act.x,y-act.y)<3)return;act.m={id:uid('m'),kind:'redact',color:'black',x:act.x,y:act.y,w:1,h:1};(p.marks=p.marks||[]).push(act.m);layer.appendChild(markEl(act.m));selectMark(act.m.id);}
+      const m=act.m;m.x=Math.min(x,act.x);m.y=Math.min(y,act.y);m.w=Math.abs(x-act.x);m.h=Math.abs(y-act.y);place(markNode(m),m);act.moved=true;return;
+    }
     if(!act.moved&&Math.hypot(e.clientX-act.sx,e.clientY-act.sy)<3)return;
     act.moved=true;
     const [dx,dy]=vecToPage(e.clientX-act.sx,e.clientY-act.sy),m=act.m,o=act.o,[W,H]=pageSize(curPage());
     if(act.type==='move'){m.x=clamp(o.x+dx,-o.w*0.4,W-o.w*0.6);m.y=clamp(o.y+dy,-o.h*0.4,H-o.h*0.6);}
     else{const sc=Math.max(0.2,(o.w+dx)/o.w);
       if(m.kind==='text'){m.size=clamp(o.size*sc,5,160);measure(m);lastText.size=Math.round(m.size);}
+      else if(m.kind==='redact'){const [dw,dh]=[dx,dy];m.w=Math.max(4,o.w+dw);m.h=Math.max(4,o.h+dh);}
       else{m.w=clamp(o.w*sc,6,W*1.2);m.h=m.w*o.h/o.w;}}
     const el=markNode(m);place(el,m);if(m.kind==='text')styleText(el.querySelector('.mk-txt'),m);syncMkbar();
   });
   const endAct=e=>{
     if(!act||e.pointerId!==act.pid)return;const a=act;act=null;
+    if(a.type==='draw'){
+      if(!a.m){const p=curPage();a.m={id:uid('m'),kind:'redact',color:'black',x:a.x-60,y:a.y-8,w:120,h:16};(p.marks=p.marks||[]).push(a.m);buildLayer(p);selectMark(a.m.id);}
+      else if(a.m.w<2||a.m.h<2){a.m.w=Math.max(a.m.w,6);a.m.h=Math.max(a.m.h,6);}
+      commit(a.before);refreshOverlays();syncMkbar();return;
+    }
     if(a.moved){commit(a.before);refreshOverlays();}
     else if(a.wasSel&&a.m.kind==='text')startEdit(a.m);
   };
@@ -1353,7 +1462,7 @@
           '<button type="button" data-mb="font" class="mb-font" style="font-family:'+ND.esc(FONTS[m.font||'sans'])+'" aria-label="'+ND.esc(ND.t('Change font'))+'">'+'<span>Aa</span></button>'+
           '<button type="button" data-mb="bold" class="mb-bold" aria-pressed="'+!!m.bold+'" aria-label="'+ND.esc(ND.t('Bold'))+'">B</button><span class="mb-sep"></span>';
       }
-      if(kind!=='image')h+=Object.keys(INK).map(c=>'<button type="button" class="mb-ink" data-mb="ink" data-c="'+c+'" style="--ink:'+INK[c]+'" aria-pressed="'+(m.color===c)+'" aria-label="'+ND.esc(ND.t(c==='black'?'Black':c==='blue'?'Blue':'Red'))+'"></button>').join('')+'<span class="mb-sep"></span>';
+      if(kind!=='image'&&kind!=='redact')h+=Object.keys(INK).map(c=>'<button type="button" class="mb-ink" data-mb="ink" data-c="'+c+'" style="--ink:'+INK[c]+'" aria-pressed="'+(m.color===c)+'" aria-label="'+ND.esc(ND.t(c==='black'?'Black':c==='blue'?'Blue':'Red'))+'"></button>').join('')+'<span class="mb-sep"></span>';
       h+='<button type="button" data-mb="dup" aria-label="'+ND.esc(ND.t('Duplicate'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2.5"/><path d="M16 8V5.5A2.5 2.5 0 0 0 13.5 3h-8A2.5 2.5 0 0 0 3 5.5v8A2.5 2.5 0 0 0 5.5 16H8"/></svg></button><button type="button" data-mb="del" class="mb-del" aria-label="'+ND.esc(ND.t('Remove'))+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg></button>';
       mkbar.innerHTML=h;
     }
@@ -1416,6 +1525,7 @@
   const step=d=>{const i=pages.findIndex(p=>p.id===viewId)+d;if(i>=0&&i<pages.length){if(pending)endPlacing();if(document.activeElement)document.activeElement.blur();viewId=pages[i].id;selMark=null;showView();}};
   $('#vPrev').addEventListener('click',()=>step(-1));$('#vNext').addEventListener('click',()=>step(1));
   $('#vClose').addEventListener('click',()=>view.close());
+  $('#vFind').addEventListener('click',()=>openFind());
   $('#vRotL').addEventListener('click',()=>{rotate([curPage()],-90);showView();});
   $('#vRotR').addEventListener('click',()=>{rotate([curPage()],90);showView();});
   $('#vDel').addEventListener('click',()=>{const i=pages.findIndex(p=>p.id===viewId);removePages([viewId]);if(!pages.length){view.close();return;}viewId=pages[Math.min(i,pages.length-1)].id;showView();});
@@ -1615,6 +1725,281 @@
   $('#stampBtn').addEventListener('click',()=>openStamp());
   $('#signBtn').addEventListener('click',()=>{if(!pages.length)return;const p=pages.find(x=>selected.has(x.id))||pages[0];openViewer(p.id);});
 
+  /* ---------- Download options: compression, password, searchable text ---------- */
+  const dlOpts={compress:PRESET==='compress'?'balanced':'off',protect:false,password:'',restrict:false,ocr:PRESET==='ocr',lang:'ara+eng'};
+  const dlgDl=$('#dlgDl');
+  function syncDl(){
+    syncSeg(dlgDl,'data-cmp',dlOpts.compress);syncSeg(dlgDl,'data-olang',dlOpts.lang);
+    $('#dlProtect').checked=dlOpts.protect;$('#dlPwBody').hidden=!dlOpts.protect;$('#dlRestrict').checked=dlOpts.restrict;
+    $('#dlOcr').checked=dlOpts.ocr;$('#dlOcrBody').hidden=!dlOpts.ocr;
+    const red=pages.some(hasRedact);$('#dlRedactNote').hidden=!red;
+    const on=dlOpts.compress!=='off'||dlOpts.protect||dlOpts.ocr;
+    $('#saveOpts').classList.toggle('on',on);
+    const bits=[];if(dlOpts.compress!=='off')bits.push(ND.t('compressed'));if(dlOpts.protect)bits.push(ND.t('password'));if(dlOpts.ocr)bits.push(ND.t('searchable'));
+    $('#saveOpts').title=bits.length?ND.t('Download options')+' — '+bits.join(' · '):ND.t('Download options');
+  }
+  function pwError(){
+    if(!dlOpts.protect)return '';
+    const a=$('#dlPw1').value,b=$('#dlPw2').value;
+    if(a.length<4)return ND.t('Use at least 4 characters for the password.');
+    if(a!==b)return ND.t('The two passwords don’t match.');
+    return '';
+  }
+  function openDl(focus){
+    syncDl();$('#dlPw1').value=$('#dlPw2').value=dlOpts.password;$('#dlErr').hidden=true;
+    const total=[...new Set(pages.map(p=>p.src))].map(id=>sources.get(id)).reduce((n,s)=>n+(s.bytes?s.bytes.length:0),0);
+    $('#dlSize').textContent=total?ND.f('Your files: {size}',{size:fmtSize(total)}):'';
+    dlgDl.showModal();
+    if(focus==='password'){dlOpts.protect=true;syncDl();setTimeout(()=>$('#dlPw1').focus(),40);}
+  }
+  dlgDl.querySelectorAll('[data-cmp]').forEach(b=>b.addEventListener('click',()=>{dlOpts.compress=b.dataset.cmp;syncDl();}));
+  dlgDl.querySelectorAll('[data-olang]').forEach(b=>b.addEventListener('click',()=>{dlOpts.lang=b.dataset.olang;syncDl();}));
+  $('#dlProtect').addEventListener('change',e=>{dlOpts.protect=e.target.checked;syncDl();if(dlOpts.protect)$('#dlPw1').focus();});
+  $('#dlRestrict').addEventListener('change',e=>{dlOpts.restrict=e.target.checked;});
+  $('#dlOcr').addEventListener('change',e=>{dlOpts.ocr=e.target.checked;syncDl();});
+  dlgDl.addEventListener('close',()=>{
+    if(dlgDl.returnValue!=='ok'&&dlgDl.returnValue!=='save')return;
+    const err=pwError();
+    if(err){$('#dlErr').textContent=err;$('#dlErr').hidden=false;dlgDl.showModal();return;}
+    dlOpts.password=dlOpts.protect?$('#dlPw1').value:'';syncDl();
+    if(dlgDl.returnValue==='save')savePdf();
+  });
+  $('#saveOpts').addEventListener('click',()=>openDl());
+
+  /* ---------- Text on pages: existing text (pdf.js) and OCR (Tesseract, on this device) ---------- */
+  const OCR_BASE='/assets/vendor/ocr-1/';
+  /*i18n:off*/const TESS_RECOG='recognizing text';/*i18n:on*/
+  const ocrCache=new Map();                         // 'src:index' → {text, words:[{text,x,y,w,h}], layer:Uint8Array}
+  const textCache=new Map();                        // 'src:index' → {items, text}
+  let tessP=null,tessLang='',ocrLog=null;
+  function loadScript(src){return new Promise((res,rej)=>{if(window.Tesseract)return res();const s=document.createElement('script');s.src=src;s.onload=res;s.onerror=()=>rej(new Error('script'));document.head.appendChild(s);});}
+  function tess(lang){
+    if(tessP&&tessLang===lang)return tessP;
+    if(tessP)tessP.then(w=>w.terminate()).catch(()=>{});
+    tessLang=lang;
+    tessP=loadScript(OCR_BASE+'tesseract.min.js').then(()=>window.Tesseract.createWorker(lang.split('+'),1,{
+      workerPath:OCR_BASE+'worker.min.js',corePath:OCR_BASE+'core',langPath:OCR_BASE+'lang',workerBlobURL:false,gzip:true,
+      logger:m=>{if(ocrLog)ocrLog(m);}})).then(async w=>{await w.setParameters({user_defined_dpi:'300'});return w;});
+    tessP.catch(()=>{tessP=null;});
+    return tessP;
+  }
+  window.addEventListener('pagehide',()=>{if(tessP)tessP.then(w=>w.terminate()).catch(()=>{});});
+  async function pageText(p){
+    const s=srcOf(p),key=p.src+':'+p.index;
+    if(textCache.has(key))return textCache.get(key);
+    let r={items:[],text:''};
+    if(s.kind==='pdf'){
+      const page=await s.doc.getPage(p.index+1),v=page.getViewport({scale:1}),tc=await page.getTextContent();
+      r.items=tc.items.filter(it=>it.str&&it.str.trim()).map(it=>{
+        const [x1,y1]=v.convertToViewportPoint(it.transform[4],it.transform[5]),h=Math.hypot(it.transform[2],it.transform[3])||it.height||10;
+        const [x2]=v.convertToViewportPoint(it.transform[4]+it.width,it.transform[5]);
+        return {str:it.str,x:Math.min(x1,x2),y:y1-h*0.88,w:Math.abs(x2-x1),h:h*1.12,base:y1,rtl:it.dir==='rtl'};
+      });
+      r.text=lines(r.items).map(l=>l.str).join('\n');
+    }
+    textCache.set(key,r);return r;
+  }
+  const hasText=async p=>(await pageText(p)).text.replace(/\s/g,'').length>=12;
+  // group positioned runs into reading lines, keeping a map from each character back to its box
+  function lines(items){
+    const ls=[];
+    items.slice().sort((a,b)=>a.base-b.base||a.x-b.x).forEach(it=>{
+      let l=ls.find(L=>Math.abs(L.base-it.base)<Math.max(2,it.h*0.35));
+      if(!l){l={base:it.base,items:[]};ls.push(l);}l.items.push(it);
+    });
+    return ls.map(l=>{
+      const rtl=l.items.filter(i=>i.rtl).length>l.items.length/2;
+      l.items.sort((a,b)=>rtl?b.x-a.x:a.x-b.x);
+      let str='';const map=[];
+      l.items.forEach((it,k)=>{
+        if(k){str+=' ';map.push(null);}
+        const n=it.str.length;
+        for(let c=0;c<n;c++){map.push({it,c,n});str+=it.str[c];}
+      });
+      return {str,map};
+    });
+  }
+  function boxFor(line,a,b){
+    let x0=Infinity,y0=Infinity,x1=-Infinity,y1=-Infinity;
+    for(let i=a;i<b;i++){const m=line.map[i];if(!m)continue;const it=m.it,cw=it.w/m.n,cx=it.rtl?it.x+it.w-(m.c+1)*cw:it.x+m.c*cw;
+      x0=Math.min(x0,cx);x1=Math.max(x1,cx+cw);y0=Math.min(y0,it.y);y1=Math.max(y1,it.y+it.h);}
+    return x0<Infinity?{x:x0-1.5,y:y0-1,w:x1-x0+3,h:y1-y0+2}:null;
+  }
+  // render a page at 300 DPI (or its redacted raster) and recognise it
+  async function renderForOcr(p,canvas){
+    const s=srcOf(p),[W,H]=pageSize(p),k=Math.min(300/72,4200/Math.max(W,H));
+    const cv=canvas||document.createElement('canvas');
+    if(!canvas){
+      if(s.kind==='pdf'){const page=await s.doc.getPage(p.index+1);const vp=page.getViewport({scale:k});cv.width=Math.round(vp.width);cv.height=Math.round(vp.height);await page.render({canvas:cv,viewport:vp,background:'#ffffff'}).promise;}
+      else{cv.width=Math.round(W*k);cv.height=Math.round(H*k);paintPage(cv.getContext('2d'),p,k);}
+    }
+    return {cv,k:cv.width/W};
+  }
+  async function ocrPage(p,opt){
+    opt=opt||{};
+    const key=p.src+':'+p.index+':'+dlOpts.lang;
+    if(!opt.canvas&&ocrCache.has(key))return ocrCache.get(key);
+    const w=await tess(dlOpts.lang);
+    const {cv,k}=await renderForOcr(p,opt.canvas);
+    const dpi=Math.round(k*72);await w.setParameters({user_defined_dpi:String(dpi)});
+    const r=await w.recognize(cv,{},{text:true,blocks:true,pdf:true});
+    if(!opt.canvas){cv.width=cv.height=0;}
+    const words=[];
+    (r.data.blocks||[]).forEach(b=>b.paragraphs.forEach(pa=>pa.lines.forEach(l=>{
+      const lw=l.words.map(wd=>({str:wd.text.replace(/[‎‏]/g,''),x:wd.bbox.x0/k,y:wd.bbox.y0/k,w:(wd.bbox.x1-wd.bbox.x0)/k,h:(wd.bbox.y1-wd.bbox.y0)/k,base:wd.bbox.y1/k,rtl:/[؀-ۿ]/.test(wd.text)}));
+      words.push(...lw);
+    })));
+    const out={text:r.data.text.replace(/[‎‏]/g,'').trim(),words,layer:r.data.pdf?new Uint8Array(r.data.pdf):null,conf:r.data.confidence};
+    if(!opt.canvas)ocrCache.set(key,out);
+    return out;
+  }
+  /*i18n:off*/ // PDF structure names and engine status codes — never translate
+  // keep only Tesseract’s invisible text: drop the picture it draws underneath
+  async function textLayerDoc(bytes,L){
+    const d=await L.PDFDocument.load(bytes),pg=d.getPage(0),node=pg.node,C=d.context;
+    const c=node.get(L.PDFName.of('Contents')),arr=c instanceof L.PDFArray?c.asArray():[c];
+    let src='';arr.forEach(ref=>{const st=C.lookup(ref);src+=String.fromCharCode.apply(null,Array.from(L.decodePDFRawStream(st).decode()))+'\n';});
+    src=src.replace(/q[^Q]*?\/Im\d+\s+Do\s*Q/g,'');
+    const bytesOut=Uint8Array.from(src,ch=>ch.charCodeAt(0)&255);
+    node.set(L.PDFName.of('Contents'),C.register(C.flateStream(bytesOut)));
+    const res=node.Resources();if(res)res.delete(L.PDFName.of('XObject'));
+    return d;
+  }
+  /*i18n:on*/
+
+  /* ---------- Recognise text dialog ---------- */
+  const dlgOcr=$('#dlgOcr');let ocrRun=0;
+  function openOcr(){
+    $('#ocrSelBtn').disabled=!selected.size;syncSeg(dlgOcr,'data-olang',dlOpts.lang);syncSeg(dlgOcr,'data-ow',selected.size?'sel':'all');
+    $('#ocrOut').hidden=true;$('#ocrProg').hidden=true;$('#ocrStart').hidden=false;$('#ocrActs').hidden=true;$('#ocrSearchable').checked=dlOpts.ocr;
+    dlgOcr.showModal();
+  }
+  dlgOcr.querySelectorAll('[data-olang]').forEach(b=>b.addEventListener('click',()=>{dlOpts.lang=b.dataset.olang;syncSeg(dlgOcr,'data-olang',dlOpts.lang);syncDl();}));
+  dlgOcr.querySelectorAll('[data-ow]').forEach(b=>b.addEventListener('click',()=>syncSeg(dlgOcr,'data-ow',b.dataset.ow)));
+  $('#ocrSearchable').addEventListener('change',e=>{dlOpts.ocr=e.target.checked;syncDl();});
+  $('#ocrStart').addEventListener('click',async()=>{
+    const run=++ocrRun,which=dlgOcr.querySelector('[data-ow][aria-pressed="true"]').dataset.ow;
+    const list=which==='sel'&&selected.size?pages.filter(p=>selected.has(p.id)):pages.slice();
+    $('#ocrStart').hidden=true;$('#ocrProg').hidden=false;$('#ocrOut').hidden=false;$('#ocrOut').value='';
+    const bar=$('#ocrBar'),msg=$('#ocrMsg');let done=0,scanned=0;const parts=[];
+    ocrLog=m=>{if(run!==ocrRun)return;if(m.status===TESS_RECOG)bar.style.width=Math.round(((done+m.progress)/list.length)*100)+'%';
+      else if(/loading/.test(m.status))msg.textContent=ND.t('Loading the text recogniser (first time only)…');};
+    try{
+      for(const p of list){
+        if(run!==ocrRun||!dlgOcr.open)return;
+        const n=pages.indexOf(p)+1;
+        msg.textContent=ND.f('Reading page {n} of {total}…',{n:done+1,total:list.length});
+        let text;
+        if(await hasText(p))text=(await pageText(p)).text;
+        else if(srcOf(p).kind==='blank')text='';
+        else{text=(await ocrPage(p)).text;scanned++;}
+        parts.push('— '+ND.f('Page {n}',{n})+' —\n'+(text||ND.t('(no text found)')));
+        $('#ocrOut').value=parts.join('\n\n');done++;bar.style.width=Math.round(done/list.length*100)+'%';
+      }
+      msg.textContent=scanned?ND.f('Done — {n} scanned pages recognised on this device.',{n:scanned}):ND.t('Done — these pages already contain text.');
+      $('#ocrActs').hidden=false;
+    }catch(e){console.error(e);msg.textContent=ND.t('The text recogniser couldn’t start. Check your connection the first time you use it.');}
+    finally{ocrLog=null;}
+  });
+  $('#ocrCopy').addEventListener('click',e=>ND.copy($('#ocrOut').value,e.currentTarget,'Text copied'));
+  $('#ocrTxt').addEventListener('click',()=>download(new Blob([$('#ocrOut').value],{type:'text/plain;charset=utf-8'}),outBase()+'.txt','text/plain'));
+  dlgOcr.addEventListener('close',()=>{ocrRun++;});
+
+  /* ---------- Find & redact ---------- */
+  const dlgFind=$('#dlgFind');let found=[];
+  const toAscii=t=>t.replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+  const luhn=n=>{const d=n.replace(/\D/g,'');if(d.length<13||d.length>19)return false;let s=0;for(let i=0;i<d.length;i++){let x=+d[d.length-1-i];if(i%2){x*=2;if(x>9)x-=9;}s+=x;}return s%10===0;};
+  const PAT={
+    id:{re:/(?<![\d])[12]\d{9}(?![\d])/g},
+    iban:{re:/\bSA\d{2}(?:[ ]?[0-9A-Z]{4}){5}\b/gi},
+    phone:{re:/(?<![\d])(?:(?:\+|00)966[ -]?|0)5\d(?:[ -]?\d){7}(?![\d])/g},
+    email:{re:/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g},
+    card:{re:/(?<![\d])\d(?:[ -]?\d){12,18}(?![\d])/g,ok:luhn},
+  };
+  const mask=t=>t.length<=4?'••••':t.slice(0,2)+'•'.repeat(Math.max(2,t.length-4))+t.slice(-2);
+  function openFind(){$('#findRes').innerHTML='';$('#findGo').hidden=true;$('#findRun').hidden=false;$('#findMsg').textContent='';dlgFind.showModal();}
+  $('#findRun').addEventListener('click',async()=>{
+    const kinds=[...dlgFind.querySelectorAll('[data-pat]:checked')].map(c=>c.dataset.pat);
+    const words=$('#findWords').value.split(/[,،\n]/).map(w=>w.trim()).filter(w=>w.length>1);
+    const useOcr=$('#findOcr').checked;
+    if(!kinds.length&&!words.length){$('#findMsg').textContent=ND.t('Choose what to look for, or type some words.');return;}
+    found=[];$('#findRun').disabled=true;
+    try{
+      for(let i=0;i<pages.length;i++){
+        const p=pages[i];$('#findMsg').textContent=ND.f('Searching page {n} of {total}…',{n:i+1,total:pages.length});
+        let items=(await pageText(p)).items;
+        if(items.length<3&&useOcr&&srcOf(p).kind!=='blank')items=(await ocrPage(p)).words;
+        for(const line of lines(items)){
+          const asc=toAscii(line.str);
+          const taken=[];
+          const hit=(a,b,kind)=>{if(taken.some(([x,y])=>a<y&&b>x))return;const box=boxFor(line,a,b);if(!box)return;taken.push([a,b]);found.push({p,box,kind,text:line.str.slice(a,b)});};
+          kinds.forEach(k=>{PAT[k].re.lastIndex=0;let m;while((m=PAT[k].re.exec(asc))){if(!PAT[k].ok||PAT[k].ok(m[0]))hit(m.index,m.index+m[0].length,k);}});
+          words.forEach(w=>{const lw=toAscii(w).toLowerCase(),la=asc.toLowerCase();let at=la.indexOf(lw);while(at>=0){hit(at,at+lw.length,'word');at=la.indexOf(lw,at+lw.length);}});
+        }
+      }
+    }catch(e){console.error(e);}
+    $('#findRun').disabled=false;
+    const LBL={id:ND.t('ID number'),iban:'IBAN',phone:ND.t('Phone'),email:ND.t('Email'),card:ND.t('Card'),word:ND.t('Word')};
+    if(!found.length){$('#findMsg').textContent=ND.t('Nothing found. Scanned pages need “Search scanned pages too”.');$('#findRes').innerHTML='';return;}
+    $('#findMsg').textContent=ND.f('Found {n} — untick any you want to keep.',{n:found.length});
+    $('#findRes').innerHTML=found.map((f,i)=>'<label class="fd-row"><input type="checkbox" checked data-fi="'+i+'"><span class="fd-k">'+ND.esc(LBL[f.kind])+'</span><span class="fd-t" dir="auto">'+ND.esc(mask(f.text.trim()))+'</span><span class="faint">'+ND.esc(ND.f('Page {n}',{n:pages.indexOf(f.p)+1}))+'</span></label>').join('');
+    $('#findRun').hidden=true;$('#findGo').hidden=false;
+  });
+  dlgFind.addEventListener('close',()=>{
+    if(dlgFind.returnValue!=='ok'||!found.length)return;
+    const pick=[...dlgFind.querySelectorAll('[data-fi]:checked')].map(c=>found[+c.dataset.fi]);if(!pick.length)return;
+    const before=snap();
+    pick.forEach(f=>{(f.p.marks=f.p.marks||[]).push({id:uid('m'),kind:'redact',x:f.box.x,y:f.box.y,w:f.box.w,h:f.box.h,color:'black'});});
+    commit(before);render();refreshOverlays();if(view.open)buildLayer(curPage());
+    ND.toast(ND.f('{n} redactions added — check them, then download',{n:pick.length}));
+  });
+  const hasRedact=p=>!!(p.marks&&p.marks.some(m=>m.kind==='redact'));
+
+  /*i18n:off*/ // PDF structure names and engine status codes — never translate
+  /* ---------- Compression: re-encode oversized images inside the PDF ---------- */
+  async function compressDoc(out,L,level,onStep){
+    const dpi=level==='strong'?100:150,q=level==='strong'?0.55:0.72;
+    const C=out.context,N=n=>L.PDFName.of(n);
+    let maxPt=0;out.getPages().forEach(pg=>{const {width,height}=pg.getSize();maxPt=Math.max(maxPt,width,height);});
+    const maxPx=Math.max(600,Math.round(maxPt/72*dpi));
+    const masks=new Set();
+    C.enumerateIndirectObjects().forEach(([,o])=>{if(o instanceof L.PDFRawStream||o instanceof L.PDFDict){const d=o.dict||o;const sm=d.get(N('SMask'));if(sm instanceof L.PDFRef)masks.add(sm.toString());}});
+    const list=C.enumerateIndirectObjects().filter(([ref,o])=>o instanceof L.PDFRawStream&&o.dict.get(N('Subtype'))===N('Image')&&!masks.has(ref.toString()));
+    let saved=0,done=0;
+    for(const [ref,st] of list){
+      done++;if(onStep&&done%4===0){onStep(done/list.length);await tick();}
+      try{
+        const d=st.dict,f=C.lookup(d.get(N('Filter'))),w=d.get(N('Width'))?.asNumber(),h=d.get(N('Height'))?.asNumber();
+        if(!w||!h||w*h<160000)continue;
+        if(d.get(N('ImageMask'))||d.get(N('Decode'))||d.get(N('Mask')) instanceof L.PDFArray)continue;
+        const cs=C.lookup(d.get(N('ColorSpace'))),csN=cs instanceof L.PDFName?cs.toString():cs instanceof L.PDFArray?(C.lookup(cs.get(0))||cs.get(0)).toString():'';
+        let ncomp=csN==='/DeviceRGB'?3:csN==='/DeviceGray'?1:0;
+        if(!ncomp&&csN==='/ICCBased'){const icc=C.lookup(cs.get(1));const n=icc&&icc.dict&&icc.dict.get(N('N'));ncomp=n?n.asNumber():0;if(ncomp!==1&&ncomp!==3)ncomp=0;}
+        if(!ncomp)continue;
+        let bmp;
+        const fname=f instanceof L.PDFName?f.toString():f instanceof L.PDFArray&&f.size()===1?f.get(0).toString():'';
+        if(fname==='/DCTDecode'){bmp=await createImageBitmap(new Blob([st.contents],{type:'image/jpeg'}));}
+        else if(fname==='/FlateDecode'&&!d.get(N('DecodeParms'))&&(d.get(N('BitsPerComponent'))?.asNumber()===8)){
+          const raw=L.decodePDFRawStream(st).decode();if(raw.length<w*h*ncomp)continue;
+          const id=new ImageData(w,h),px=id.data;
+          for(let i=0,j=0;i<w*h;i++,j+=ncomp){if(ncomp===3){px[i*4]=raw[j];px[i*4+1]=raw[j+1];px[i*4+2]=raw[j+2];}else{px[i*4]=px[i*4+1]=px[i*4+2]=raw[j];}px[i*4+3]=255;}
+          bmp=await createImageBitmap(id);
+        }else continue;
+        const s=Math.min(1,maxPx/Math.max(w,h)),nw=Math.max(1,Math.round(w*s)),nh=Math.max(1,Math.round(h*s));
+        const cv=document.createElement('canvas');cv.width=nw;cv.height=nh;const x=cv.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(bmp,0,0,nw,nh);bmp.close&&bmp.close();
+        const blob=await new Promise(r=>cv.toBlob(r,'image/jpeg',q));cv.width=cv.height=0;
+        const jpg=new Uint8Array(await blob.arrayBuffer());
+        if(jpg.length>=st.contents.length*0.92)continue;
+        const nd=C.obj({Type:'XObject',Subtype:'Image',Width:nw,Height:nh,ColorSpace:'DeviceRGB',BitsPerComponent:8,Filter:'DCTDecode'});
+        const sm=d.get(N('SMask'));if(sm)nd.set(N('SMask'),sm);
+        const intent=d.get(N('Intent'));if(intent)nd.set(N('Intent'),intent);
+        C.assign(ref,L.PDFRawStream.of(nd,jpg));saved+=st.contents.length-jpg.length;
+      }catch(e){console.warn('compress image',e);}
+    }
+    return saved;
+  }
+  /*i18n:on*/
+
   /* ---------- Busy overlay ---------- */
   function busy(msg,frac,sub){const b=$('#busy');if(msg===false){b.hidden=true;return;}b.hidden=false;$('#busyMsg').textContent=msg;$('#busyBar').style.width=Math.round((frac||0)*100)+'%';$('#busySub').textContent=sub||'';}
 
@@ -1729,13 +2114,15 @@
     cv.width=cv.height=0;
     return (s._embed={type,bytes:new Uint8Array(await blob.arrayBuffer())});
   }
-  async function buildPdf(list,title,onStep){
+  async function buildPdf(list,title,onStep,opts){
+    opts=opts||dlOpts;
     const L=await pdflib(),{PDFDocument,degrees}=L;
     const out=await PDFDocument.create();
     out.setTitle(title);out.setProducer('Nicely Done PDF Studio');out.setCreator('Nicely Done PDF Studio — nicelydone.qd.je');
-    // copy PDF pages per source, in one pass each, then place in order
+    // Copy PDF pages per source, in one pass each. Redacted pages are never copied: their original
+    // content (text, images, hidden layers) must not reach the output file at all.
     const bySrc=new Map();
-    list.forEach((p,i)=>{if(srcOf(p).kind==='pdf'){if(!bySrc.has(p.src))bySrc.set(p.src,[]);bySrc.get(p.src).push(i);}});
+    list.forEach((p,i)=>{if(srcOf(p).kind==='pdf'&&!hasRedact(p)){if(!bySrc.has(p.src))bySrc.set(p.src,[]);bySrc.get(p.src).push(i);}});
     const copied=new Array(list.length);
     for(const [sid,idxs] of bySrc){
       const doc=await libDocFor(sources.get(sid));
@@ -1743,8 +2130,10 @@
       idxs.forEach((i,k)=>{copied[i]=pp[k];});
     }
     const embeds=new Map(),C={img:new Map(),font:new Map()};
+    const step=async(i,label)=>{if(onStep){onStep(i/list.length,label);await tick();}};
     for(let i=0;i<list.length;i++){
-      const p=list[i],s=srcOf(p);let pg;
+      const p=list[i],s=srcOf(p),gi=pages.indexOf(p);let pg;
+      if(hasRedact(p)){await step(i,ND.t('Redacting…'));await rasterPage(out,p,gi,L,opts);continue;}
       if(s.kind==='pdf'){pg=out.addPage(copied[i]);pg.setRotation(degrees(((pg.getRotation().angle+p.rot)%360+360)%360));}
       else if(s.kind==='image'){
         const L2=imageLayout(s);pg=out.addPage(L2.page);
@@ -1753,10 +2142,39 @@
         pg.drawImage(img,{x:L2.x,y:L2.page[1]-L2.y-L2.h,width:L2.w,height:L2.h});
         if(p.rot)pg.setRotation(degrees(p.rot));
       }else{pg=out.addPage(A4);if(p.rot)pg.setRotation(degrees(p.rot));}
-      await overlayToPdf(out,pg,p,pages.indexOf(p),C,L);
-      if(onStep&&i%8===7){onStep((i+1)/list.length);await tick();}
+      await overlayToPdf(out,pg,p,gi,C,L);
+      if(opts.ocr&&s.kind!=='blank'&&!(await hasText(p))){
+        await step(i,ND.f('Recognising text — page {n} of {total}',{n:i+1,total:list.length}));
+        const o=await ocrPage(p);if(o.layer)await addTextLayer(out,pg,await mapperFor(p),p,o.layer,L);
+      }
+      if(i%8===7)await step(i+1);
+    }
+    if(opts.compress&&opts.compress!=='off'){await step(list.length,ND.t('Compressing images…'));await compressDoc(out,L,opts.compress,f=>onStep&&onStep(0.9+f*0.08,ND.t('Compressing images…')));}
+    if(opts.protect&&opts.password){
+      const owner=Array.from(crypto.getRandomValues(new Uint8Array(18)),b=>b.toString(36)).join('');
+      out.encrypt({userPassword:opts.password,ownerPassword:owner,permissions:opts.restrict?
+        {printing:'highResolution',copying:false,modifying:false,annotating:false,fillingForms:true,contentAccessibility:true,documentAssembly:false}:
+        {printing:'highResolution',copying:true,modifying:true,annotating:true,fillingForms:true,contentAccessibility:true,documentAssembly:true}});
     }
     return out.save({useObjectStreams:true});
+  }
+  async function addTextLayer(out,pg,M,p,bytes,L){
+    try{
+      const [W,H]=pageSize(p),d=await textLayerDoc(bytes,L),[emb]=await out.embedPdf(d,[0]),P=pdfPlace(M,{x:0,y:0,w:W,h:H},0);
+      pg.drawPage(emb,{x:P.x,y:P.y,width:W,height:H,rotate:L.degrees(P.th)});
+    }catch(e){console.warn('text layer',e);}
+  }
+  // A redacted page is rebuilt from a picture of itself with the boxes painted in, so nothing underneath survives.
+  async function rasterPage(out,p,gi,L,opts){
+    const s=srcOf(p),[W,H]=pageSize(p),k=Math.min(200/72,5000/Math.max(W,H)),cv=document.createElement('canvas');
+    if(s.kind==='pdf'){const page=await s.doc.getPage(p.index+1),vp=page.getViewport({scale:k});cv.width=Math.round(vp.width);cv.height=Math.round(vp.height);await page.render({canvas:cv,viewport:vp,background:'#ffffff'}).promise;}
+    else{cv.width=Math.round(W*k);cv.height=Math.round(H*k);paintPage(cv.getContext('2d'),p,k);}
+    await prepMarks(p);drawOverlay(cv.getContext('2d'),p,gi,cv.width/W);
+    const blob=await new Promise(r=>cv.toBlob(r,'image/jpeg',0.9));
+    const img=await out.embedJpg(new Uint8Array(await blob.arrayBuffer()));
+    const pg=out.addPage([W,H]);pg.drawImage(img,{x:0,y:0,width:W,height:H});if(p.rot)pg.setRotation(L.degrees(p.rot));
+    if(opts.ocr){try{const o=await ocrPage(p,{canvas:cv});if(o.layer)await addTextLayer(out,pg,{pt:(x,y)=>[x,H-y],base:0},p,o.layer,L);}catch(e){console.warn(e);}}
+    cv.width=cv.height=0;
   }
   function download(bytes,name,type){
     const blob=bytes instanceof Blob?bytes:new Blob([bytes],{type});
@@ -1774,10 +2192,13 @@
     if(!pages.length||loading)return;
     guard(async()=>{
       busy(ND.t('Building your PDF…'),0.05,nPages(pages.length));await tick();
-      const bytes=await buildPdf(pages,outBase(),f=>busy(ND.t('Building your PDF…'),0.05+f*0.85,nPages(pages.length)));
+      const bytes=await buildPdf(pages,outBase(),(f,label)=>busy(label||ND.t('Building your PDF…'),0.05+f*0.9,nPages(pages.length)));
       busy(ND.t('Building your PDF…'),1);
       const size=download(bytes,outBase()+'.pdf','application/pdf');
-      ND.toast(ND.f('Saved {name} · {size}',{name:outBase()+'.pdf',size:fmtSize(size)}));
+      const before=[...new Set(pages.map(p=>p.src))].map(id=>sources.get(id)).reduce((n,x)=>n+(x.bytes?x.bytes.length:0),0);
+      const extra=[];if(dlOpts.protect)extra.push(ND.t('password-protected'));if(dlOpts.ocr)extra.push(ND.t('searchable'));
+      if(dlOpts.compress!=='off'&&before)ND.toast(ND.f('Saved {name} · {size} (was {was})',{name:outBase()+'.pdf',size:fmtSize(size),was:fmtSize(before)})+(extra.length?' · '+extra.join(' · '):''));
+      else ND.toast(ND.f('Saved {name} · {size}',{name:outBase()+'.pdf',size:fmtSize(size)})+(extra.length?' · '+extra.join(' · '):''));
     });
   }
   $('#save').addEventListener('click',savePdf);
@@ -1927,7 +2348,7 @@
   $$('.st-dlg:not(.st-viewer)',S).forEach(d=>d.addEventListener('click',e=>{if(e.target===d)d.close('cancel');}));
   window.addEventListener('beforeunload',e=>{if(pages.length&&undoStack.length){e.preventDefault();e.returnValue='';}});
   // Testing hook (read-only)
-  window.__studio={get sources(){return [...sources.values()].filter(s=>s.kind!=='blank').map(s=>({name:s.name,hasForm:!!s.hasForm,fields:(s.fields||[]).length}));},get stamps(){return JSON.parse(JSON.stringify(stamps));},get forms(){return {...formEdits};},get pages(){return pages.map(p=>({...p,name:srcOf(p).name,kind:srcOf(p).kind}));},get selected(){return [...selected];}};
+  window.__studio={get dl(){return {...dlOpts};},get ocrCount(){return ocrCache.size;},get sources(){return [...sources.values()].filter(s=>s.kind!=='blank').map(s=>({name:s.name,hasForm:!!s.hasForm,fields:(s.fields||[]).length}));},get stamps(){return JSON.parse(JSON.stringify(stamps));},get forms(){return {...formEdits};},get pages(){return pages.map(p=>({...p,name:srcOf(p).name,kind:srcOf(p).kind}));},get selected(){return [...selected];}};
 })();
 </script>
 </body>

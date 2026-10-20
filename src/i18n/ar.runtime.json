@@ -103,5 +103,9 @@
  "Your vault is full (1,000 items).": "خزنتك ممتلئة (1,000 عنصر).",
  "Saved": "تم الحفظ",
  "Deleted": "تم الحذف",
- "Vault deleted": "تم حذف الخزنة"
+ "Vault deleted": "تم حذف الخزنة",
+ "compressed": "مضغوط",
+ "password": "بكلمة مرور",
+ "searchable": "قابل للبحث",
+ "password-protected": "محمي بكلمة مرور"
 }
