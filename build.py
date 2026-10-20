@@ -31,6 +31,19 @@ def ic(body):
 
 ICONS = {
     "lock": ic('<rect x="4" y="11" width="16" height="10" rx="2.5"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11"/><circle cx="12" cy="16" r="1.2" fill="currentColor"/>'),
+    "rotl": ic('<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>'),
+    "rotr": ic('<path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/>'),
+    "trash": ic('<path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/>'),
+    "plus": ic('<path d="M12 5v14M5 12h14"/>'),
+    "undo": ic('<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>'),
+    "redo": ic('<path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/>'),
+    "scissors": ic('<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.1 15.9M14.5 14.5 20 20M8.1 8.1 12 12"/>'),
+    "image": ic('<rect x="3" y="3" width="18" height="18" rx="2.5"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.1-3.1a2 2 0 0 0-2.8 0L6 21"/>'),
+    "download": ic('<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>'),
+    "more": ic('<circle cx="5" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="19" cy="12" r="1.2" fill="currentColor"/>'),
+    "pages": ic('<path d="M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z"/><path d="M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9"/>'),
+    "zoom": ic('<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M11 8v6M8 11h6"/>'),
+    "keyboard": ic('<rect x="2" y="5" width="20" height="14" rx="2.5"/><path d="M6 9h.01M10 9h.01M14 9h.01M18 9h.01M6 13h.01M18 13h.01M9 15.5h6"/>'),
     "key": ic('<circle cx="8" cy="15" r="4"/><path d="m10.8 12.2 8.7-8.7M16 7l2.5 2.5M18.5 4.5 21 7"/>'),
     "gear": ic('<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z"/>'),
     "shield": ic('<path d="M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z"/><path d="m9 12 2.2 2.2L15.5 10"/>'),
@@ -140,6 +153,12 @@ TOOLS = [
          lede="Your public IP and network at a glance, browser and device details, and a live IPv4 subnet calculator.",
          desc="See your public IP address, ISP and location, browser details, and calculate IPv4 subnets (CIDR, mask, broadcast, host range).",
          keywords="ip address my ip subnet cidr calculator network mask"),
+    dict(slug="pdf-studio", name="PDF Studio", title="PDF <em>Studio</em>", title_ar="استوديو <em>PDF</em>",
+         cat="Everyday", icon="pages", new=True,
+         short="Merge, split, reorder, rotate and convert PDFs — without uploading them.",
+         lede="Merge, split, reorder, rotate and convert PDFs and photos — all inside your browser. Your files never leave your device, so it’s safe for contracts, statements and IDs.",
+         desc="Free private PDF editor in your browser: merge PDFs, split pages, reorder, rotate and delete pages, convert JPG to PDF and PDF to JPG. No uploads — files never leave your device.",
+         keywords="pdf merge combine join split extract reorder rotate delete pages jpg png image to pdf convert organize دمج تقسيم تدوير تحويل صور ملف"),
     dict(slug="unit-converter", name="Unit Converter", title="Unit <em>Converter</em>",
          cat="Everyday", icon="ruler",
          short="Ten categories — weight, length, temperature, data and more.",
@@ -160,6 +179,32 @@ TOOLS = [
          keywords="hijri islamic gregorian date convert umm al-qura calendar"),
 ]
 TOOL_BY_SLUG = {t["slug"]: t for t in TOOLS}
+
+# Task-focused entry points into PDF Studio: same studio, preset for one job. Not listed in menus,
+# but searchable (Ctrl K) and in the sitemap — these are the words people search for.
+_studio = TOOL_BY_SLUG["pdf-studio"]
+PDF_VARIANTS = [dict(_studio, parent="pdf-studio", new=False, **v) for v in [
+    dict(slug="merge-pdf", preset="merge", name="Merge PDF", title="Merge <em>PDF</em>",
+         short="Combine PDFs into one — privately, in your browser.",
+         lede="Combine several PDFs into one, in exactly the order you want. Drag pages around, drop the ones you don’t need — without uploading anything.",
+         desc="Merge PDF files online for free without uploading them: combine PDFs into one, reorder and remove pages, all privately in your browser.",
+         keywords="merge pdf combine pdf join pdf files into one"),
+    dict(slug="split-pdf", preset="split", name="Split PDF", title="Split <em>PDF</em>",
+         short="Split a PDF into parts or extract pages.",
+         lede="Split a PDF into separate files by page ranges, every page or equal parts — or pull out just the pages you need. Nothing is uploaded.",
+         desc="Split PDF files for free without uploading: extract pages, split by ranges, every page or into equal parts — privately in your browser.",
+         keywords="split pdf extract pages separate pdf cut pdf"),
+    dict(slug="jpg-to-pdf", preset="images", name="JPG to PDF", title="JPG to <em>PDF</em>",
+         short="Turn photos and scans into one PDF.",
+         lede="Turn photos, scans and screenshots into a single, tidy PDF — A4 or Letter pages, with margins, ready to email. Your photos stay on your device.",
+         desc="Convert JPG, PNG, WebP and HEIC images to PDF for free, privately in your browser. Choose A4 or Letter, margins and file size. No uploads.",
+         keywords="jpg to pdf image to pdf png to pdf photo to pdf heic to pdf scan to pdf"),
+    dict(slug="pdf-to-jpg", preset="topng", name="PDF to JPG", title="PDF to <em>JPG</em>",
+         short="Save PDF pages as sharp JPG or PNG images.",
+         lede="Turn every page of a PDF into a sharp JPG, PNG or WebP image — at screen or print resolution. Converted on your device, never uploaded.",
+         desc="Convert PDF to JPG, PNG or WebP images for free, privately in your browser — choose 72, 150 or 300 DPI. No uploads, no watermarks.",
+         keywords="pdf to jpg pdf to png pdf to image convert pdf pages to images"),
+]]
 CATS = ["Security", "Developer", "Everyday"]
 CAT_META = {
     "Security": dict(slug="security", name="Security & privacy", title="Security &amp; <em>privacy</em>", icon="shield",
@@ -167,9 +212,9 @@ CAT_META = {
     "Developer": dict(slug="developer", name="Developer", title="Developer <em>tools</em>", icon="code",
                       blurb="Encoders, formatters and network helpers for everyday development — instant, offline, nothing uploaded."),
     "Everyday": dict(slug="everyday", name="Everyday", title="Everyday <em>tools</em>", icon="sparkle",
-                     blurb="Practical helpers for daily life — units, Hijri dates and how fast your internet really is."),
+                     blurb="Practical helpers for daily life — PDFs, units, Hijri dates and how fast your internet really is."),
 }
-FEATURED = ["password-generator", "link-checker", "speed-test"]
+FEATURED = ["pdf-studio", "password-generator", "link-checker"]
 
 # ---------------------------------------------------------------------------
 # Template pieces
@@ -186,7 +231,7 @@ THEME_BOOT = ("<script>(function(){try{var t=JSON.parse(localStorage.getItem('nd
 def tools_json():
     return json.dumps([
         dict(name=t["name"], short=t["short"], cat=CAT_META[t["cat"]]["name"], href=f"/{t['slug']}/",
-             icon=ICONS[t["icon"]], keywords=t["keywords"]) for t in TOOLS
+             icon=ICONS[t["icon"]], keywords=t["keywords"]) for t in TOOLS + PDF_VARIANTS
     ], ensure_ascii=False).replace("</", "<\\/")
 
 
@@ -258,7 +303,7 @@ def header(active=None):
     <nav class="nav" aria-label="Primary">
       <a class="nav-link menu-btn" href="/#tools" data-menu="toolsMenu" aria-expanded="false" aria-controls="toolsMenu"{tools_cur}>Tools {ICONS['chev']}</a>
       <a class="nav-link" href="/about/"{about_cur}>About</a>
-      <a class="btn btn-sm" data-account hidden href="/account/">Sign in</a>
+      <a class="btn btn-sm" data-account hidden href="/account/" aria-label="Sign in">{ICONS['user']}<span>Sign in</span></a>
       <button class="search-trigger" data-search aria-label="Search tools">{ICONS['search']}<span>Search tools…</span><span class="kbd"><span data-mod>Ctrl</span>K</span></button>
       <a class="icon-btn lang-switch" href="{{ALT_HREF}}" hreflang="{{ALT_LANG}}" lang="{{ALT_LANG}}" aria-label="{{ALT_LABEL}}">{{ALT_TEXT}}</a>
       <button class="icon-btn theme-toggle" data-theme-toggle aria-label="Toggle colour theme">{ICONS['moon']}{ICONS['sun']}</button>
@@ -316,7 +361,7 @@ def render_icons(text):
 
 
 def build_tool(t):
-    src = (SRC / "pages" / f"{t['slug']}.html").read_text()
+    src = (SRC / "pages" / f"{t.get('parent', t['slug'])}.html").read_text().replace("{PRESET}", t.get("preset", "organize"))
     s = split_sections(render_icons(src))
     path = f"/{t['slug']}/"
     jsonld = {
@@ -341,11 +386,14 @@ def build_tool(t):
     about = s.get("about", "")
     about_html = f'<section class="section" style="padding-top:0"><div class="wrap"><div class="prose reveal">{about}</div></div></section>' if about else ""
 
+    parent_crumb = (f'<a href="/{t["parent"]}/">{TOOL_BY_SLUG[t["parent"]]["name"]}</a>{ICONS["chev"]}' if t.get("parent")
+                    else f'<a href="/{CAT_META[t["cat"]]["slug"]}/">{CAT_META[t["cat"]]["name"]}</a>{ICONS["chev"]}')
+    ar_title = f' data-ar-title="{html.escape(t["title_ar"])}"' if t.get("title_ar") and not t.get("parent") else ""
     page = head(f"{t['name']} — {SITE}", t["desc"], path, extra, jsonld) + header() + f"""<main id="main">
   <section class="tool-hero">
     <div class="wrap">
-      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{ICONS['chev']}<a href="/{CAT_META[t['cat']]['slug']}/">{CAT_META[t['cat']]['name']}</a>{ICONS['chev']}<span aria-current="page">{t['name']}</span></nav>
-      <h1 class="h1">{t['title']}</h1>
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{ICONS['chev']}{parent_crumb}<span aria-current="page">{t['name']}</span></nav>
+      <h1 class="h1"{ar_title}>{t['title']}</h1>
       <p class="lede">{t['lede']}</p>
       <div class="tool-badges">
         {local_badge}
@@ -395,6 +443,7 @@ PREVIEWS = {
     "password-generator": '<div class="tile-preview" id="tilePw" aria-hidden="true">k7#Qm<b>9</b>vX!pL2<b>@</b>wR4z</div>',
     "share": '<div class="tile-preview" aria-hidden="true">nicelydone.qd.je/s/#<b>••••••••</b></div>',
     "link-checker": '<div class="tile-preview" aria-hidden="true">absher-sa.<b>info</b>/verify → <b>Likely a scam</b></div>',
+    "pdf-studio": '<div class="tile-preview" aria-hidden="true">a.pdf + photo.jpg → <b>one PDF</b></div>',
     "speed-test": '<div class="tile-preview" id="tileSpeed" aria-hidden="true">↓ <b>—</b> Mbps · ↑ <b>—</b> Mbps · <b>—</b> ms</div>',
 }
 
@@ -662,10 +711,14 @@ def finish(html_src, rel, lang):
     alts = (f'<link rel="alternate" hreflang="en" href="{en}">\n<link rel="alternate" hreflang="ar" href="{ar}">\n'
             f'<link rel="alternate" hreflang="x-default" href="{en}">')
     out = html_src.replace("<!--HREFLANG-->", alts if rel != "404.html" else "")
+    # Arabic word order sometimes differs from the English runs (e.g. “PDF Studio” → “استوديو PDF”).
+    ar_title = lambda m: f'<h1 class="h1">{html.unescape(m.group(1))}</h1>' if lang == "ar" else f'<h1 class="h1">{m.group(2)}</h1>'
     if lang == "en":
+        out = re.sub(r'<h1 class="h1" data-ar-title="([^"]*)">(.*?)</h1>', ar_title, out)
         return (out.replace("{ALT_HREF}", "/ar" + path).replace("{ALT_LANG}", "ar")
                    .replace("{ALT_LABEL}", "العربية").replace("{ALT_TEXT}", "ع"))
     out = TR.page(out, rel)
+    out = re.sub(r'<h1 class="h1" data-ar-title="([^"]*)">(.*?)</h1>', ar_title, out)
     out = out.replace('<script src="/assets/site.js', '<script>window.ND_I18N=' + RUNTIME_AR + ';</script>\n<script src="/assets/site.js', 1)
     out = out.replace('<html lang="en" class="no-js">', '<html lang="ar" dir="rtl" class="no-js">', 1)
     is_file = lambda p: re.search(r"\.(?!html\b)[A-Za-z0-9]{1,12}(?:$|[?#])", p.split("/")[-1] or "") is not None
@@ -713,7 +766,7 @@ def main():
                            + Path(__file__).read_bytes()).hexdigest()[:10]
 
     pages = {"index.html": build_home(), "404.html": build_404()}
-    for t in TOOLS:
+    for t in TOOLS + PDF_VARIANTS:
         pages[f"{t['slug']}/index.html"] = build_tool(t)
     for slug, *rest in EXTRA_PAGES:
         pages[f"{slug}/index.html"] = build_page(slug, *rest)
@@ -735,7 +788,7 @@ def main():
     (DIST / ".nojekyll").write_text("")
     (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /s/\nDisallow: /ar/s/\nDisallow: /api/\n\nSitemap: {ORIGIN}/sitemap.xml\n")
     today = datetime.date.today().isoformat()
-    urls = ["/"] + [f"/{CAT_META[c]['slug']}/" for c in CATS] + [f"/{t['slug']}/" for t in TOOLS] + ["/about/", "/widgets/", "/suggest/"]
+    urls = ["/"] + [f"/{CAT_META[c]['slug']}/" for c in CATS] + [f"/{t['slug']}/" for t in TOOLS + PDF_VARIANTS] + ["/about/", "/widgets/", "/suggest/"]
     (DIST / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
         + "".join(

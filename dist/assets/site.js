@@ -26,7 +26,11 @@
   /* Template with {placeholders}; the template itself is translated. */
   ND.f = (t, v) => T(t).replace(/\{(\w+)\}/g, (m, k) => (v && k in v ? v[k] : m));
   /* Number + plural noun, e.g. ND.count(3, {...}, {...}) → "3 days" / "3 أيام" */
-  ND.count = (n, en, ar) => n.toLocaleString(ND.lang === 'ar' ? 'en-US' : undefined) + ' ' + ND.pl(n, en, ar);
+  ND.count = (n, en, ar) => {
+    // Arabic duals stand alone: «ملفان», not «2 ملفان».
+    if (ND.lang === 'ar' && ar && ar.two && n === 2) return ar.two;
+    return n.toLocaleString(ND.lang === 'ar' ? 'en-US' : undefined) + ' ' + ND.pl(n, en, ar);
+  };
 
   /* ---------- Utilities ---------- */
   ND.$ = (s, el) => (el || document).querySelector(s);
@@ -358,7 +362,7 @@
   }
 
   /* ---------- Offline support ---------- */
-  if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
   }
 })();

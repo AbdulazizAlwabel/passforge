@@ -24,7 +24,7 @@ TAGNAME_RE = re.compile(r"^</?\s*([a-zA-Z0-9]+)")
 ATTR_RE = re.compile(r'(\s(?:placeholder|aria-label|title|alt|content|data-label)=")([^"]*)(")')
 SCRIPT_RE = re.compile(r"(<script\b[^>]*>)(.*?)(</script>)", re.S | re.I)
 STYLE_RE = re.compile(r"(<style\b[^>]*>.*?</style>)", re.S | re.I)
-JS_STR_RE = re.compile(r"""'(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"|`(?:[^`\\$]|\\.)*`""")
+JS_STR_RE = re.compile(r"""'(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"|`(?:[^`\\]|\\.)*`""")
 LATIN_WORD = re.compile(r"[A-Za-z]{2,}")
 WS = re.compile(r"\s+")
 
@@ -147,6 +147,8 @@ class Translator:
             if after.startswith(":") and before in ("{", ",") and q != "`":
                 return lit  # object key, not a ternary branch
             body = lit[1:-1]
+            if q == "`" and "${" in body:
+                return lit  # template with interpolation: code, not a translatable string
             val = self.unescape_js(body)
             if not LATIN_WORD.search(val):
                 return lit
