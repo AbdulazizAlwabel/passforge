@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# ImageMagick 6 shim: `magick compare|identify …` → `compare|identify …`, everything else → `convert …`
+case "${1:-}" in compare|identify|mogrify) c=$1; shift; exec "$c" "$@";; *) exec convert "$@";; esac

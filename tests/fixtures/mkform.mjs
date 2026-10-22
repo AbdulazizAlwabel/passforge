@@ -1,0 +1,20 @@
+import { PDFDocument, StandardFonts, rgb } from '../../src/assets/vendor/pdf-studio-1/pdf-lib.esm.min.js';
+import fs from 'fs';
+const d = await PDFDocument.create(); const font = await d.embedFont(StandardFonts.Helvetica); const bold = await d.embedFont(StandardFonts.HelveticaBold);
+const p = d.addPage([595.28, 841.89]); const form = d.getForm();
+p.drawText('Application form', { x: 50, y: 780, size: 24, font: bold });
+const label = (t, y) => p.drawText(t, { x: 50, y: y + 6, size: 12, font });
+label('Full name', 720); const name = form.createTextField('fullName'); name.addToPage(p, { x: 160, y: 715, width: 300, height: 24 });
+label('Email', 680); const em = form.createTextField('email'); em.setText('prefilled@example.com'); em.addToPage(p, { x: 160, y: 675, width: 300, height: 24 });
+label('Notes', 610); const notes = form.createTextField('notes'); notes.enableMultiline(); notes.addToPage(p, { x: 160, y: 560, width: 300, height: 70 });
+label('I agree', 520); const cb = form.createCheckBox('agree'); cb.addToPage(p, { x: 160, y: 515, width: 18, height: 18 });
+label('City', 480); const dd = form.createDropdown('city'); dd.addOptions(['Riyadh', 'Jeddah', 'Dammam']); dd.addToPage(p, { x: 160, y: 475, width: 150, height: 24 });
+label('Plan', 440); const rg = form.createRadioGroup('plan'); rg.addOptionToPage('basic', p, { x: 160, y: 435, width: 16, height: 16 }); rg.addOptionToPage('pro', p, { x: 230, y: 435, width: 16, height: 16 });
+p.drawText('Basic', { x: 180, y: 438, size: 11, font }); p.drawText('Pro', { x: 250, y: 438, size: 11, font });
+label('Signature', 380); p.drawRectangle({ x: 160, y: 340, width: 240, height: 60, borderColor: rgb(0.6, 0.6, 0.6), borderWidth: 1 });
+fs.writeFileSync(process.argv[2] + '/form.pdf', await d.save());
+// a page with /Rotate 90 and a non-zero mediabox origin, for placement tests
+const r = await PDFDocument.create(); const rp = r.addPage([842, 595]); rp.setMediaBox(100, 50, 842, 595);
+rp.drawText('ROTATED PAGE', { x: 300, y: 350, size: 30, font: await r.embedFont(StandardFonts.HelveticaBold) }); rp.setRotation({ type: 'degrees', angle: 90 });
+fs.writeFileSync(process.argv[2] + '/rot-offset.pdf', await r.save());
+console.log('ok');

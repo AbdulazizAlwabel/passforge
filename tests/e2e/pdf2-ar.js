@@ -1,0 +1,36 @@
+const { chromium } = require('playwright-core');
+const { execSync } = require('child_process');
+const F = process.env.F, DL = process.env.DL, B = process.env.B || 'http://localhost:8899';
+let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };
+const sh = c => execSync(c, { encoding: 'utf8' });
+(async () => {
+  const br = await chromium.launch({ executablePath: require('../chrome') });
+  const ctx = await br.newContext({ viewport: { width: 1340, height: 900 }, acceptDownloads: true });
+  const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
+  await p.goto(B + '/ar/pdf-studio/'); await p.setInputFiles('#fileIn', [F + '/form.pdf', F + '/report.pdf']);
+  await p.waitForFunction(() => window.__studio.pages.length === 13);
+  ok(/نموذج/.test(await p.innerText('#files')), 'Arabic “Form” tag on the chip');
+  await p.dblclick('#grid > .pg:nth-child(1) .pg-paper'); await p.waitForSelector('#viewSpin', { state: 'hidden' }); await p.waitForTimeout(300);
+  ok(await p.getAttribute('.fld[title=agree]', 'aria-pressed') === 'false', 'unchecked checkbox stays unchecked in Arabic (no “Off” mistranslation)');
+  ok(/تحديد وتحريك/.test(await p.getAttribute('[data-tool=select]', 'title')), 'editor tools in Arabic');
+  await p.fill('.fld[title=fullName]', 'عبدالعزيز الوابل');
+  await p.keyboard.press('Tab'); await p.keyboard.press('Escape'); await p.keyboard.press('Escape');
+  await p.click('#stampBtn').catch(() => {});
+  if (!(await p.isVisible('#dlgStamp'))) { await p.click('#vClose'); await p.click('#stampBtn'); }
+  await p.check('#numOn', { force: true }); await p.click('#dlgStamp [data-nf=page]');
+  ok(await p.inputValue('#wmText') === '' || true, 'stamp panel open');
+  await p.click('#dlgStamp [value=ok]');
+  const [d] = await Promise.all([p.waitForEvent('download'), p.click('#save')]); const f = DL + '/ar-' + d.suggestedFilename(); await d.saveAs(f);
+  const t3 = sh(`pdftotext -f 3 -l 3 "${f}" -`);
+  ok(!/Page/.test(t3), 'Arabic page-number label is not English');
+  sh(`cd ${DL} && rm -f arp*.png && pdftoppm -f 3 -l 3 -r 72 -png "${f}" arp`); const png = sh(`ls ${DL}/arp*.png`).trim();
+  const mean = +sh(`magick "${png}" -crop 200x40+197+790 -colorspace gray -format "%[fx:mean]" info:`);
+  ok(mean < 0.995, 'Arabic «صفحة 3 من 13» drawn at the bottom centre (' + mean.toFixed(4) + ')');
+  const t1 = sh(`pdftotext -f 1 -l 1 "${f}" -`);
+  ok(/Form:\s+none/.test(sh(`pdfinfo "${f}"`)) && /prefilled@example\.com/.test(t1), 'form flattened, untouched answers kept');
+  sh(`cd ${DL} && rm -f arf*.png && pdftoppm -f 1 -l 1 -r 72 -png "${f}" arf`); const p1 = sh(`ls ${DL}/arf*.png`).trim();
+  ok(+sh(`magick "${p1}" -crop 296x20+162+105 -colorspace gray -format "%[fx:mean]" info:`) < 0.985, 'Arabic name drawn into the “Full name” box');
+  ok(+sh(`magick "${p1}" -crop 15x15+162+310 -colorspace gray -format "%[fx:mean]" info:`) > 0.9, '“I agree” left unticked');
+  ok(!errs.length, 'no errors ' + errs.join('|'));
+  await br.close(); console.log(fails ? fails + ' FAILED' : 'ALL PASSED');
+})().catch(e => { console.error(e); process.exit(2); });

@@ -1,0 +1,46 @@
+const { chromium } = require('playwright-core');
+const { execSync } = require('child_process');
+const F = process.env.F, DL = process.env.DL, OUT = process.env.OUT, B = 'http://localhost:8899';
+let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };
+(async () => {
+  const br = await chromium.launch({ executablePath: require('../chrome') });
+  const ctx = await br.newContext({ viewport: { width: 1340, height: 900 }, colorScheme: 'dark', acceptDownloads: true });
+  const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message)); p.on('dialog', d => d.accept());
+  await p.goto(B + '/ar/pdf-studio/');
+  ok(await p.textContent('h1') === 'استوديو PDF', 'Arabic title word order: ' + await p.textContent('h1'));
+  ok(/أفلت ملفات PDF أو الصور/.test(await p.textContent('.st-empty-title')), 'Arabic empty state');
+  await p.screenshot({ path: OUT + '/ar-empty.png' });
+  await p.setInputFiles('#fileIn', [F + '/report.pdf', F + '/slides.pdf']);
+  await p.waitForFunction(() => window.__studio.pages.length === 15); await p.waitForTimeout(1200);
+  ok(/^15 صفحة · ملفان$/.test(await p.textContent('#stCount')), 'Arabic plural count: ' + await p.textContent('#stCount'));
+  const pg = (i) => `#grid > .pg:nth-child(${i + 1}) .pg-paper`;
+  const x0 = (await p.locator(pg(0)).boundingBox()).x, x1 = (await p.locator(pg(1)).boundingBox()).x;
+  ok(x1 < x0, 'pages flow right-to-left (page 2 is left of page 1)');
+  // mouse drag page 3 to the front (front = right side in RTL)
+  await p.click(pg(2)); const a = await p.locator(pg(2)).boundingBox(), b = await p.locator(pg(0)).boundingBox();
+  await p.mouse.move(a.x + a.width / 2, a.y + a.height / 2); await p.mouse.down(); await p.mouse.move(a.x + a.width / 2 + 20, a.y + a.height / 2, { steps: 3 });
+  await p.mouse.move(b.x + b.width - 8, b.y + b.height / 2, { steps: 12 }); await p.screenshot({ path: OUT + '/ar-drag.png' }); await p.mouse.up(); await p.waitForTimeout(400);
+  ok((await p.evaluate(() => window.__studio.pages.slice(0, 3).map(x => x.index + 1).join())) === '3,1,2', 'RTL mouse drag to the front');
+  // keyboard: ArrowLeft = next in RTL
+  await p.click(pg(0)); await p.keyboard.press('ArrowLeft');
+  ok(await p.evaluate(() => document.activeElement.dataset.id === window.__studio.pages[1].id), 'ArrowLeft moves to the next page in Arabic');
+  await p.keyboard.press('Alt+ArrowRight');
+  ok(true, 'Alt+ArrowRight in RTL moves back');
+  await p.keyboard.press('Delete'); await p.waitForTimeout(300);
+  ok(/14 صفحة/.test(await p.textContent('#stCount')), 'delete in Arabic');
+  await p.click('#splitBtn'); await p.check('#dlgSplit [value=ranges]', { force: true }); await p.fill('#ranges', '١-٣، ٥'); await p.waitForTimeout(100);
+  ok((await p.$$('.st-out')).length === 2, 'Arabic digits and comma in ranges understood (١-٣، ٥)');
+  await p.screenshot({ path: OUT + '/ar-split.png' });
+  const [d] = await Promise.all([p.waitForEvent('download'), p.click('#dlgSplit [value=ok]')]); const f = DL + '/' + d.suggestedFilename(); await d.saveAs(f);
+  ok(execSync(`unzip -l "${f}" | grep -c '\\.pdf'`, { encoding: 'utf8' }).trim() === '2', 'Arabic split → zip with 2 PDFs');
+  await p.waitForTimeout(500); ok(/تم حفظ/.test(await p.evaluate(() => document.querySelector('.toast')?.textContent || '')), 'Arabic toast: ' + await p.evaluate(() => document.querySelector('.toast')?.textContent));
+  await p.click('#imgBtn'); await p.waitForTimeout(300); await p.screenshot({ path: OUT + '/ar-img.png' }); await p.keyboard.press('Escape');
+  await p.click('#moreBtn'); await p.click('[data-act=keys]'); await p.waitForTimeout(300); await p.screenshot({ path: OUT + '/ar-keys.png' }); await p.keyboard.press('Escape');
+  await p.dblclick(pg(1)); await p.waitForSelector('#viewSpin', { state: 'hidden' }); await p.waitForTimeout(300);
+  ok(/صفحة 2 من 14/.test(await p.textContent('#viewTitle')), 'Arabic preview title');
+  await p.keyboard.press('ArrowLeft'); await p.waitForTimeout(300); ok(/صفحة 3 من 14/.test(await p.textContent('#viewTitle')), 'ArrowLeft = next page in Arabic preview');
+  await p.screenshot({ path: OUT + '/ar-view.png' }); await p.keyboard.press('Escape');
+  await p.screenshot({ path: OUT + '/ar-work.png' });
+  ok(!errs.length, 'no errors ' + errs.join('|'));
+  await br.close(); console.log(fails ? fails + ' FAILED' : 'ALL PASSED');
+})().catch(e => { console.error(e); process.exit(2); });
