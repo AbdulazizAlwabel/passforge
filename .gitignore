@@ -4,3 +4,7 @@ server/.env
 legacy-passforge.zip
 i18n-missing.txt
 i18n-missing-js.txt
+
+# tests
+tests/.work/
+tests/node_modules/

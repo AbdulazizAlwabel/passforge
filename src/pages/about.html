@@ -1,79 +1,98 @@
 <!-- @body -->
 <section class="tool-hero">
   <div class="wrap">
-    <p class="eyebrow reveal"><span class="dot"></span>Trust &amp; transparency</p>
-    <h1 class="display reveal" style="--d:80ms;margin-top:24px;max-width:14ch">Don’t trust us. <em>Verify.</em></h1>
-    <p class="lede reveal" style="--d:160ms;margin-top:24px">Every tool here is built so you can check exactly what leaves your browser — in about ten seconds, with tools you already have.</p>
+    <p class="eyebrow reveal"><span class="dot"></span>About Nicely Done</p>
+    <h1 class="display reveal" style="--d:80ms;margin-top:24px;max-width:15ch">Hi, I’m <em>Abdulaziz.</em></h1>
+    <p class="lede reveal" style="--d:160ms;margin-top:24px">I make these tools on my own — no company, no investors, no ads. Here’s why, what I promise you, and how you can check that I keep my word.</p>
   </div>
 </section>
 
 <section class="wrap" style="padding-bottom:40px">
   <div class="about-sec reveal">
-    <div class="num">01<h2>How the tools work</h2></div>
+    <div class="num">01<h2>Why I built this</h2></div>
+    <div class="prose" style="display:flex;gap:20px;align-items:flex-start">
+      <span class="avatar lg">A</span>
+      <div>
+        <p style="color:var(--text)">Most tool websites aren’t honest.</p>
+        <p>You find a site to shrink a PDF or turn a photo into a document. You spend ten minutes on it — and then, right at the end, it asks you to pay, or to sign up, or it simply won’t let you download your own file. Along the way it has uploaded your contract or your ID to some computer you know nothing about.</p>
+        <p>That really annoyed me. So I took the matter into my own hands and built the tools myself — the way I think they should work: free, simple, and on your own device.</p>
+        <p>It began with one password generator I could trust for my own accounts. Today it’s a whole set of tools, and I keep adding the ones people ask for.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-sec reveal">
+    <div class="num">02<h2>My promise to you</h2></div>
     <div class="prose">
-      <p>Every generator, checker and converter — passwords, hashes, Base64, JSON and the rest — runs <b style="color:var(--text)">entirely as JavaScript inside your browser</b>. Nothing you type, paste or generate is sent anywhere, because there’s no server-side processing to send it to.</p>
-      <div class="panel" style="padding:24px;margin-top:22px">
-        <p class="panel-title" style="margin-bottom:4px">Verify it yourself, right now</p>
+      <ul class="promise-list">
+        <li><b>Free, for real.</b> No “pay to download” at the end, no trial that runs out, no premium version hiding the good bits.</li>
+        <li><b>Your files stay yours.</b> PDFs, photos and anything you type are handled on your phone or computer. They’re not uploaded to me or anyone else.</li>
+        <li><b>No ads, no tracking.</b> No analytics, no tracking cookies, no advertising scripts. I don’t know who visits, and I don’t want to.</li>
+        <li><b>No account needed.</b> Every tool works without signing up. An account is only for the extras that need one, like the vault.</li>
+        <li><b>Honest about limits.</b> If a tool can’t do something, it says so.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="about-sec reveal">
+    <div class="num">03<h2>Check it yourself</h2></div>
+    <div class="prose">
+      <p>You don’t have to take my word for it. On a computer, it takes about ten seconds:</p>
+      <div class="panel" style="padding:24px;margin-top:18px">
         <ol class="steps">
-          <li><span>Open any tool, e.g. the <a class="link" href="/password-generator/">Password Generator</a>.</span></li>
+          <li><span>Open any tool — the <a class="link" href="/pdf-studio/">PDF Studio</a> is a good one to try.</span></li>
           <li><span>Press <span class="kbd">F12</span> (or right-click → Inspect) and open the <b style="color:var(--text)">Network</b> tab.</span></li>
-          <li><span>Clear the log, then generate a few passwords.</span></li>
-          <li><span>Watch the list stay empty: no fetch, no XHR, nothing leaves the page. You can even switch off Wi-Fi first — it keeps working.</span></li>
+          <li><span>Add a file and work on it. Nothing gets sent — the list only shows the page’s own files loading.</span></li>
+          <li><span>Or simply turn off your Wi-Fi after the page has loaded. It keeps working.</span></li>
         </ol>
       </div>
     </div>
   </div>
 
   <div class="about-sec reveal">
-    <div class="num">02<h2>What talks to a server</h2></div>
+    <div class="num">04<h2>What does go online</h2></div>
     <div class="prose">
-      <p>Vague privacy claims are how bad actors get away with lying, so here’s the precise list:</p>
+      <p>A few things can’t work without the internet. Here is exactly what they send, in plain words:</p>
       <div class="scope">
-        <div><span>Pages, fonts and icons</span><span class="badge ok">Our server only — no third-party CDNs or font services</span></div>
-        <div><span>Password, passphrase &amp; PIN generator</span><span class="badge ok">Local only</span></div>
-        <div><span>Hash generator · Username generator</span><span class="badge ok">Local only</span></div>
-        <div><span>Strength checker — leaked-password check</span><span class="badge info">5 hash characters to Have I Been Pwned (optional)</span></div>
-        <div><span>Base64 · JSON · Text case · Unit · Hijri date</span><span class="badge ok">Local only</span></div>
-        <div><span>Subnet calculator</span><span class="badge ok">Local only</span></div>
-        <div><span>Speed test</span><span class="badge info">Our server only — results stay in your browser; nothing logged</span></div>
-        <div><span>One-time secret links</span><span class="badge info">Our server — encrypted ciphertext only, key never sent</span></div>
-        <div><span>Your public IP lookup (IP &amp; Network page)</span><span class="badge info">Public IP service</span></div>
-        <div><span>Sign in · Sign up · Profile</span><span class="badge info">Our server — only if you create an account</span></div>
+        <div><span>Pages, fonts and icons</span><span class="badge ok">From my own server — no outside companies</span></div>
+        <div><span>PDF Studio, password, hash, text and date tools</span><span class="badge ok">Nothing — all on your device</span></div>
+        <div><span>Reading text from scans (the first time)</span><span class="badge ok">Downloads the reader from my server once — your scans stay on your device</span></div>
+        <div><span>Leaked-password check</span><span class="badge info">5 scrambled characters to Have I Been Pwned — never the password</span></div>
+        <div><span>Link checker</span><span class="badge info">A few scrambled characters of the link — never the link itself</span></div>
+        <div><span>One-time secret links</span><span class="badge info">Locked text only — the key never reaches me</span></div>
+        <div><span>Vault</span><span class="badge info">Locked data only — I can’t open it</span></div>
+        <div><span>Speed test</span><span class="badge info">My server only — your results stay with you</span></div>
+        <div><span>Your IP address (IP &amp; Network page)</span><span class="badge info">A public IP service</span></div>
+        <div><span>Sign in and your account</span><span class="badge info">My server — only if you make an account</span></div>
       </div>
-      <p>For the speed test, your IP address is held in memory — never on disk — for up to an hour, only to pace repeat tests fairly. It is not logged or linked to anything.</p>
-      <p>You never need an account to use any tool. There are no analytics, no advertising scripts and no tracking cookies; the only cookie is the sign-in session, and only if you sign in.</p>
+      <p>For the speed test, your IP address is kept in memory — never saved — for up to an hour, only so one person can’t hog the test. The only cookie on the site is the sign-in one, and only if you sign in.</p>
     </div>
   </div>
 
   <div class="about-sec reveal">
-    <div class="num">03<h2>Open source</h2></div>
+    <div class="num">05<h2>All the code is public</h2></div>
     <div class="prose">
-      <p>“Trust us” is a weak claim from a security tool. “Read the code” is a strong one — it’s the same reason open-source password managers earn trust. The full source is public:</p>
+      <p>Anyone can read every line of how this site works — that’s the best proof that it does what I say.</p>
       <a class="panel" href="{GITHUB}" rel="noopener" style="display:flex;align-items:center;gap:16px;padding:20px 22px;margin-top:18px">
         <div class="tile-icon" style="flex:none">{{icon:code}}</div>
-        <div style="flex:1;min-width:0"><b style="color:var(--text);font-weight:500" class="mono">github.com/AbdulazizAlwabel/passforge</b><br><span class="faint" style="font-size:.88rem">Read every line, or fork it and run your own copy.</span></div>
+        <div style="flex:1;min-width:0"><b style="color:var(--text);font-weight:500" class="mono">github.com/AbdulazizAlwabel/passforge</b><br><span class="faint" style="font-size:.88rem">Read the code, or run your own copy.</span></div>
         <span class="tile-go" style="position:static">{{icon:arrow}}</span>
       </a>
     </div>
   </div>
 
   <div class="about-sec reveal">
-    <div class="num">04<h2>Connection security</h2></div>
+    <div class="num">06<h2>For the technical folks</h2></div>
     <div class="prose">
-      <p>The whole site — every page, the API and all assets — is served over HTTPS. Account passwords are hashed with bcrypt (cost 12) and never stored or logged in plain text; sessions use an HTTP-only, same-site cookie that page scripts can’t read; one-time email links are stored only as SHA-256 hashes and expire.</p>
-      <p>Randomness for every generator comes from <code>crypto.getRandomValues</code> with rejection sampling, so every character is equally likely.</p>
+      <p>Everything is served over HTTPS. Account passwords are hashed with bcrypt (cost 12); sessions use an HTTP-only, same-site cookie; email links are stored only as SHA-256 hashes and expire. Two-factor sign-in uses standard TOTP codes. The vault and one-time secrets are encrypted in your browser with AES-256-GCM, so the server only ever holds data it can’t read. Generators use <code>crypto.getRandomValues</code> with rejection sampling, so every character is equally likely.</p>
+      <p class="faint" style="margin-top:14px;font-size:.85rem">Passphrases use the EFF Short Wordlist (CC BY 3.0 US). PDF Studio uses pdf.js, pdf-lib and Tesseract.js — all open source.</p>
     </div>
   </div>
 
   <div class="about-sec reveal">
-    <div class="num">05<h2>Who built this</h2></div>
-    <div class="prose" style="display:flex;gap:20px;align-items:flex-start">
-      <span class="avatar lg">A</span>
-      <div>
-        <p style="color:var(--text)">Built by a solo developer, not a company.</p>
-        <p>It started as a personal itch: most “free online tools” sites are ad-stuffed and vague about what they do with your input. I wanted a password generator I’d actually trust for my own accounts — so I built one, made the logic auditable, and put it up for anyone who wants the same thing. No funding, no data resale, no dark patterns. Just tools that do the one thing they say they do, nicely.</p>
-        <p class="faint" style="margin-top:14px;font-size:.85rem">Passphrases use the EFF Short Wordlist (CC BY 3.0 US).</p>
-      </div>
+    <div class="num">07<h2>Say hello</h2></div>
+    <div class="prose">
+      <p>Missing a tool, found a bug, or just want to say something? <a class="link" href="/suggest/">Suggest it here</a> — I read every one. You can also see <a class="link" href="/whats-new/">what I’ve added lately</a>.</p>
     </div>
   </div>
 </section>

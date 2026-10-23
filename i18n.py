@@ -32,6 +32,7 @@ WS = re.compile(r"\s+")
 KEEP = re.compile(r"^(?:Ctrl|K|R|C|F12|esc|nicely|done|nicelydone\.qd\.je|Nicely Done|MD5|SHA-\d+|SHA-\d+/\d+/\d+|"
                   r"Base64|JSON|IPv4|IPv6|CIDR|UTF-8|AES-256-GCM|PBKDF2|ZeroSSL|EFF|JWT|API|URL|HTTP|HTTPS|"
                   r"\{ALT_\w+\}|/verify →|absher-sa\.|absher-sa\.info|alrajhl\.com|spl-delivery\.top|info|Tahqaq|SHA-256|Scriptable|GitHub|Script|Parameter|iPhone|Hijri|Site|widgets|date|status|nicelydone\.qd\.je/s/#|Mbps|Mbps ·|Mbps · ↑|[A-Za-z0-9_.\-/:@#%+]{1,3}|k7#Qm|vX!pL2|wR4z|null|&nbsp;|AH|CE|English|EN|Il1O0|ABC|abc|github\.com/AbdulazizAlwabel/passforge|crypto\.getRandomValues|kB|MB|GB|TB|KiB|MiB|GiB|TiB|°[CFR]|K|OK)$")
+KEEP_NAMED = re.compile(KEEP.pattern.replace(r"|[A-Za-z0-9_.\-/:@#%+]{1,3}", ""))
 
 
 class Translator:
@@ -60,7 +61,10 @@ class Translator:
         if not k or not LATIN_WORD.search(re.sub(r"<[^>]+>", " ", k)):
             return
         plain = self.norm(re.sub(r"<[^>]+>", " ", k))
-        if KEEP.match(plain) or all(KEEP.match(w) for w in plain.split()):
+        words = plain.split()
+        # short plain words ("Fix a PDF") only count as kept when they stand alone
+        shorts = [w for w in words if w.isalpha() and not KEEP_NAMED.match(w)]
+        if KEEP.match(plain) or (all(KEEP.match(w) for w in words) and len(shorts) < 2):
             return
         self.missing.setdefault(k, where)
 

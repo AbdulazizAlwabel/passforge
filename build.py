@@ -93,92 +93,92 @@ MARK = ('<svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">'
 TOOLS = [
     dict(slug="password-generator", name="Password Generator", title="Password <em>Generator</em>",
          cat="Security", icon="lock",
-         short="Unbiased, cryptographically secure passwords & passphrases.",
-         lede="Strong passwords and memorable passphrases, generated with your device’s cryptographic random source. Nothing is sent, stored, or logged.",
+         short="Strong passwords in one tap — nobody else ever sees them.",
+         lede="Make a strong password, or an easy-to-remember passphrase, in one tap. It’s made on your phone or computer — nothing is sent, saved or seen by anyone, not even me.",
          desc="Generate strong, cryptographically secure random passwords and passphrases in your browser. Adjustable length, character sets, and entropy meter. Nothing leaves your device.",
          keywords="random secure strong passphrase diceware generate"),
     dict(slug="strength-checker", name="Strength Checker", title="Password <em>Strength</em>",
          cat="Security", icon="shield",
-         short="Entropy, crack-time estimates and pattern detection.",
-         lede="See how a password holds up against real attacks — entropy, crack time across attack scenarios, and the patterns that weaken it.",
+         short="How long would your password survive a real attack?",
+         lede="Type a password and see how long it would take someone to crack it — and exactly what makes it weak. Nothing you type leaves your device.",
          desc="Check password strength privately in your browser: entropy bits, crack time estimates for online and offline attacks, common-password and pattern detection.",
          keywords="password strength test entropy crack time analyse"),
     dict(slug="share", name="One-Time Secret", title="One-time <em>secrets</em>",
          cat="Security", icon="link", offline=False, new=True,
-         short="Share a password through a link that self-destructs.",
-         lede="Send a password, API key or private note through a link that works exactly once. It’s encrypted in your browser — we only ever hold ciphertext we can’t read.",
+         short="Send a password with a link that works once, then disappears.",
+         lede="Need to send someone a password or a private note? Make a link that opens once and then destroys itself. It’s locked before it leaves your phone — even I can’t read it.",
          desc="Share passwords and secrets with end-to-end encrypted, self-destructing one-time links. Encrypted in your browser with AES-256; the key never reaches the server.",
          keywords="share secret password one-time link self-destruct burn encrypted send note"),
     dict(slug="link-checker", name="Link Checker", title="Link <em>Checker</em>",
          cat="Security", icon="shield", offline=False, new=True,
-         short="Is this link a scam? Checked privately, with an NCA second opinion.",
-         lede="Paste a link from a message before you open it. We check it against known malware and phishing lists and for the tricks scammers use — without the link ever leaving your device.",
+         short="Got a strange link in a message? Check it before you tap.",
+         lede="Got a link in a WhatsApp message or SMS that looks off? Paste it here before you open it. I check it against lists of known scams and for the tricks scammers use — and the link itself never leaves your device.",
          desc="Check whether a link is a scam or malware before you open it: known-threat lists, fake Absher, Saudi Post and bank sites, look-alike letters and more — privately, plus an official second opinion from NCA Tahqaq.",
          keywords="link checker url scanner phishing scam malware safe check suspicious sms whatsapp nca tahqaq haseen"),
     dict(slug="vault", name="Encrypted Vault", title="Encrypted <em>Vault</em>",
          cat="Security", icon="lock", offline=False, local=False, new=True,
-         short="Logins, notes and secrets — encrypted on your device, synced to your account.",
-         lede="A zero-knowledge vault for your logins, notes and API keys. Everything is encrypted in your browser before it’s saved, so only you can ever read it — not us, and not anyone who breaks into our server.",
-         desc="A free zero-knowledge password and secrets vault: logins, notes and API keys encrypted in your browser with AES-256 before syncing. We can’t read it. Includes a password health check.",
+         short="A locked box for your passwords that only you can open.",
+         lede="Keep your passwords, notes and secret codes in one safe place, on every device you sign in on. They’re locked on your device with a passphrase only you know — I can’t open them, and neither can anyone who breaks into my server.",
+         desc="A free zero-knowledge password and secrets vault: logins, notes and API keys encrypted in your browser with AES-256 before syncing. I can’t read it. Includes a password health check.",
          keywords="vault password manager encrypted notes secrets api keys zero knowledge sync store"),
     dict(slug="hash-generator", name="Hash Generator", title="Hash <em>Generator</em>",
          cat="Security", icon="hash",
-         short="MD5, SHA-1, SHA-256/384/512 for text or files.",
-         lede="Live MD5 and SHA-family digests for text or whole files — with a verify field that lights up when a checksum matches.",
+         short="MD5 and SHA checksums for text or files — and a quick verify.",
+         lede="Get MD5 and SHA checksums for any text or file as you type, and paste an expected checksum to see instantly if a download is genuine.",
          desc="Generate MD5, SHA-1, SHA-256, SHA-384 and SHA-512 hashes of text or files instantly in your browser, and verify checksums.",
          keywords="md5 sha1 sha256 sha512 checksum digest file verify"),
     dict(slug="username-generator", name="Username Generator", title="Username <em>Generator</em>",
          cat="Security", icon="user",
-         short="Distinctive handles in five personalities.",
-         lede="Fresh handles in five personalities — professional, gamer, anonymous, friendly and techie. Click any name to copy it.",
+         short="Fresh usernames in five styles — tap one to copy it.",
+         lede="Stuck on a username? Get fresh ideas in five styles — professional, gamer, anonymous, friendly and techie. Tap any name to copy it.",
          desc="Generate unique usernames and gamer tags in professional, gamer, anonymous, friendly and techie styles.",
          keywords="username handle gamertag nickname name"),
     dict(slug="base64-tool", name="Base64 Encoder", title="Base64 <em>Encode & Decode</em>",
          cat="Developer", icon="code",
          short="Encode and decode Base64 — standard or URL-safe.",
-         lede="Encode or decode Base64 as you type, with full Unicode support, URL-safe mode, and file-to-Base64 conversion.",
+         lede="Encode or decode Base64 as you type — with Arabic and emoji working properly, a URL-safe mode, and file-to-Base64 too.",
          desc="Encode and decode Base64 and URL-safe Base64 strings live, with Unicode support and file to data-URL conversion.",
          keywords="base64 encode decode url-safe data url btoa atob"),
     dict(slug="json-formatter", name="JSON Formatter", title="JSON <em>Formatter</em>",
          cat="Developer", icon="braces",
-         short="Format, validate, minify and sort JSON.",
-         lede="Paste JSON to validate, pretty-print, minify, or sort its keys — with syntax highlighting and precise error locations.",
+         short="Tidy, check, shrink and sort JSON.",
+         lede="Paste JSON to tidy it up, check it for mistakes, shrink it, or sort its keys — with colours, and the exact line and column of any error.",
          desc="Format, validate, minify and sort JSON online with syntax highlighting and line/column error messages. Runs in your browser.",
          keywords="json format beautify validate minify pretty print lint"),
     dict(slug="text-converter", name="Text Case Converter", title="Text <em>Case</em> Converter",
          cat="Developer", icon="type",
          short="camelCase, snake_case, Title Case and more — all at once.",
-         lede="Type once, get every case at the same time — camel, Pascal, snake, kebab, constant, title, sentence and more.",
+         lede="Type once and get your text in every case at the same time — camel, Pascal, snake, kebab, constant, title, sentence and more.",
          desc="Convert text between UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, kebab-case and more.",
          keywords="case convert camel snake kebab pascal title upper lower"),
     dict(slug="ip-network", name="IP & Network", title="IP & <em>Network</em>",
          cat="Developer", icon="globe", offline=False,
-         short="Your public IP, browser details and a subnet calculator.",
-         lede="Your public IP and network at a glance, browser and device details, and a live IPv4 subnet calculator.",
+         short="Your IP address, your browser’s details, and a subnet calculator.",
+         lede="See your public IP and who your internet provider is, what your browser and device report about you, and work out IPv4 subnets in a live calculator.",
          desc="See your public IP address, ISP and location, browser details, and calculate IPv4 subnets (CIDR, mask, broadcast, host range).",
          keywords="ip address my ip subnet cidr calculator network mask"),
     dict(slug="pdf-studio", name="PDF Studio", title="PDF <em>Studio</em>", title_ar="استوديو <em>PDF</em>",
          cat="Everyday", icon="pages", new=True,
-         short="Merge, split, reorder, rotate and convert PDFs — without uploading them.",
-         lede="Merge, split, reorder, rotate and convert PDFs and photos — all inside your browser. Your files never leave your device, so it’s safe for contracts, statements and IDs.",
+         short="Join, split, sign and shrink PDFs — without uploading them.",
+         lede="Join PDFs, split them, sign them, shrink them, or turn photos into one PDF. It all happens on your phone or computer — your files never leave it, and there’s nothing to pay at the end.",
          desc="Free private PDF editor in your browser: merge PDFs, split pages, reorder, rotate and delete pages, convert JPG to PDF and PDF to JPG. No uploads — files never leave your device.",
          keywords="pdf merge combine join split extract reorder rotate delete pages jpg png image to pdf convert organize sign signature fill form page numbers watermark دمج تقسيم تدوير تحويل صور ملف"),
     dict(slug="unit-converter", name="Unit Converter", title="Unit <em>Converter</em>",
          cat="Everyday", icon="ruler",
-         short="Ten categories — weight, length, temperature, data and more.",
-         lede="Convert across ten categories — weight, length, speed, temperature, volume, area, data, time, pressure and energy.",
+         short="Kilos to pounds, Celsius to Fahrenheit, and eight more.",
+         lede="Convert weight, length, speed, temperature, volume, area, data, time, pressure and energy — just type a number and pick the units.",
          desc="Convert units of weight, length, speed, temperature, volume, area, data, time, pressure and energy instantly.",
          keywords="convert units kg lb km miles celsius fahrenheit"),
     dict(slug="speed-test", name="Speed Test", title="Speed <em>Test</em>",
          cat="Everyday", icon="gauge", offline=False, local=False, new=True,
-         short="Private internet speed test — no third parties.",
-         lede="Measure download, upload, latency and responsiveness under load — against our own server, with nothing logged and no third party watching.",
-         desc="A private internet speed test: download, upload, latency, jitter and bufferbloat, measured against our own server in Riyadh. No tracking, no third parties, nothing stored.",
+         short="How fast is your internet, really? Nothing is logged.",
+         lede="Find out how fast your internet really is — download, upload, and how laggy it gets when it’s busy. It runs against my own server, nothing is saved, and nobody else is watching.",
+         desc="A private internet speed test: download, upload, latency, jitter and bufferbloat, measured against my own server in Riyadh. No tracking, no third parties, nothing stored.",
          keywords="speed test internet bandwidth download upload ping latency jitter bufferbloat mbps"),
     dict(slug="date-converter", name="Hijri Date Converter", title="Hijri <em>&amp;</em> Gregorian",
          cat="Everyday", icon="calendar",
-         short="Umm al-Qura Hijri ⇄ Gregorian, with a dual calendar.",
-         lede="Convert between the Hijri (Umm al-Qura) and Gregorian calendars, and browse both side by side in a dual calendar.",
+         short="Hijri and Gregorian dates, side by side.",
+         lede="Turn any Hijri date into Gregorian and back (Umm al-Qura calendar), and see both calendars side by side for the whole month.",
          desc="Convert dates between Hijri (Islamic, Umm al-Qura) and Gregorian calendars with today’s date and a dual monthly calendar.",
          keywords="hijri islamic gregorian date convert umm al-qura calendar"),
 ]
@@ -189,73 +189,73 @@ TOOL_BY_SLUG = {t["slug"]: t for t in TOOLS}
 _studio = TOOL_BY_SLUG["pdf-studio"]
 PDF_VARIANTS = [dict(_studio, parent="pdf-studio", new=False, **v) for v in [
     dict(slug="merge-pdf", preset="merge", name="Merge PDF", title="Merge <em>PDF</em>",
-         short="Combine PDFs into one — privately, in your browser.",
-         lede="Combine several PDFs into one, in exactly the order you want. Drag pages around, drop the ones you don’t need — without uploading anything.",
+         short="Join PDFs into one — free, and nothing is uploaded.",
+         lede="Join several PDFs into one, in exactly the order you want. Drag pages around, drop the ones you don’t need — and your files never leave your device.",
          desc="Merge PDF files online for free without uploading them: combine PDFs into one, reorder and remove pages, all privately in your browser.",
          keywords="merge pdf combine pdf join pdf files into one"),
     dict(slug="split-pdf", preset="split", name="Split PDF", title="Split <em>PDF</em>",
-         short="Split a PDF into parts or extract pages.",
-         lede="Split a PDF into separate files by page ranges, every page or equal parts — or pull out just the pages you need. Nothing is uploaded.",
+         short="Split a PDF into parts, or pull out just the pages you need.",
+         lede="Split a PDF into separate files — by page numbers, every page, or equal parts — or pull out just the pages you need. Nothing is uploaded.",
          desc="Split PDF files for free without uploading: extract pages, split by ranges, every page or into equal parts — privately in your browser.",
          keywords="split pdf extract pages separate pdf cut pdf"),
     dict(slug="jpg-to-pdf", preset="images", name="JPG to PDF", title="JPG to <em>PDF</em>",
-         short="Turn photos and scans into one PDF.",
-         lede="Turn photos, scans and screenshots into a single, tidy PDF — A4 or Letter pages, with margins, ready to email. Your photos stay on your device.",
+         short="Turn photos and scans into one tidy PDF.",
+         lede="Turn photos, scans and screenshots into one tidy PDF — A4 or Letter pages, with margins, ready to email. Your photos stay on your device.",
          desc="Convert JPG, PNG, WebP and HEIC images to PDF for free, privately in your browser. Choose A4 or Letter, margins and file size. No uploads.",
          keywords="jpg to pdf image to pdf png to pdf photo to pdf heic to pdf scan to pdf"),
     dict(slug="sign-pdf", preset="sign", name="Sign PDF", title="Sign <em>PDF</em>",
-         short="Fill in and sign PDFs — draw, type or upload your signature.",
-         lede="Fill in forms, add text and dates, and sign — right on the page. Draw your signature, type it in handwriting, or use a photo of it. Your document never leaves your device.",
+         short="Fill in and sign PDFs — draw, type or use a photo of your signature.",
+         lede="Fill in forms, add text and today’s date, and sign — right on the page. Draw your signature with your finger, type it in handwriting, or use a photo of it. Your document never leaves your device.",
          desc="Sign PDF documents and fill in PDF forms for free, privately in your browser: draw, type or upload a signature, add text, dates and ticks. Arabic supported. No uploads.",
          keywords="sign pdf signature fill pdf form e-sign add text to pdf tick date esign توقيع تعبئة نموذج"),
     dict(slug="add-page-numbers", preset="numbers", name="Add Page Numbers", title="Page <em>Numbers</em>",
-         short="Number the pages of a PDF, exactly where you want.",
-         lede="Add page numbers to any PDF — top or bottom, left, centre or right, in the style you like. You see the result on every page before you download.",
+         short="Put page numbers on a PDF, exactly where you want them.",
+         lede="Add page numbers to any PDF — top or bottom, left, middle or right, in the style you like. You see the result on every page before you download.",
          desc="Add page numbers to a PDF for free, privately in your browser: choose the position, style and starting number, skip the cover page. No uploads.",
          keywords="add page numbers pdf number pages pagination ترقيم صفحات"),
     dict(slug="watermark-pdf", preset="watermark", name="Watermark PDF", title="Watermark <em>PDF</em>",
-         short="Stamp CONFIDENTIAL, DRAFT or your own text on PDF pages.",
-         lede="Stamp CONFIDENTIAL, DRAFT or any words of your own across your pages — diagonal or straight, as subtle or bold as you like. Arabic looks right, and nothing is uploaded.",
+         short="Stamp CONFIDENTIAL, DRAFT or your own words on your pages.",
+         lede="Stamp CONFIDENTIAL, DRAFT or any words you like across your pages — slanted or straight, faint or bold. Arabic looks right too, and nothing is uploaded.",
          desc="Add a text watermark to a PDF for free, privately in your browser: CONFIDENTIAL, DRAFT or your own words, diagonal or across, any opacity. Arabic supported. No uploads.",
          keywords="watermark pdf confidential draft stamp text علامة مائية سري"),
     dict(slug="compress-pdf", preset="compress", name="Compress PDF", title="Compress <em>PDF</em>",
-         short="Shrink PDFs for email — scans and photos get smaller, text stays sharp.",
-         lede="Make big PDFs small enough to email or upload to a government portal. Photos and scans are re-compressed; text and drawings stay crisp. Your files never leave your device.",
+         short="Make a PDF small enough to email — text stays sharp.",
+         lede="Make a big PDF small enough to email, or to upload to a government portal. Photos and scans get smaller; text and drawings stay crisp. Your files never leave your device.",
          desc="Compress PDF files for free, privately in your browser: shrink scans and photo-heavy PDFs for email and portals while text stays sharp. No uploads.",
          keywords="compress pdf reduce pdf size shrink pdf smaller pdf email تصغير ضغط حجم"),
     dict(slug="protect-pdf", preset="protect", name="Protect PDF", title="Protect <em>PDF</em>",
-         short="Add a password to a PDF (AES-256) and block copying or editing.",
-         lede="Lock a PDF with a password using AES-256 encryption, and optionally stop it being copied or edited. Encrypted right here — the password never leaves your device.",
+         short="Put a password on a PDF, and stop it being copied.",
+         lede="Lock a PDF with a password, and choose whether people can copy or edit it. It’s locked right here on your device — the password never goes anywhere.",
          desc="Password-protect PDF files for free, privately in your browser: AES-256 encryption, optional copy and edit restrictions. No uploads.",
          keywords="protect pdf password encrypt pdf lock pdf aes secure حماية كلمة مرور تشفير"),
     dict(slug="unlock-pdf", preset="unlock", name="Unlock PDF", title="Unlock <em>PDF</em>",
-         short="Remove the password from a PDF you can open.",
-         lede="Type the password once and save a copy that opens without it — handy for statements and certificates you open often. It works only with passwords you know, entirely on your device.",
+         short="Remove the password from a PDF you can already open.",
+         lede="Type the password once and save a copy that opens without it — handy for bank statements and certificates you open often. It only works with passwords you know, all on your device.",
          desc="Remove a password from a PDF for free, privately in your browser: enter it once and save an unlocked copy. Also removes copy and print restrictions. No uploads.",
          keywords="unlock pdf remove password decrypt pdf restrictions فك حماية إزالة كلمة مرور"),
     dict(slug="redact-pdf", preset="redact", name="Redact PDF", title="Redact <em>PDF</em>",
-         short="Black out IDs, IBANs and personal details — removed for good.",
-         lede="Black out national ID numbers, IBANs, phone numbers, emails or anything you choose. Redacted pages are rebuilt so the hidden text is gone for good — not just covered up. Nothing is uploaded.",
+         short="Black out ID numbers, IBANs and personal details — for good.",
+         lede="Black out ID numbers, IBANs, phone numbers, emails or anything you choose. The hidden text is really removed, not just covered with a box — and nothing is uploaded.",
          desc="Redact PDF files for free, privately in your browser: find and black out Saudi ID and Iqama numbers, IBANs, phone numbers, emails and any words. True redaction — the text is removed. No uploads.",
          keywords="redact pdf black out hide personal data id number iban privacy remove text إخفاء حجب بيانات"),
     dict(slug="ocr-pdf", preset="ocr", name="PDF OCR", title="PDF <em>OCR</em>",
-         short="Read text from scans — Arabic and English — and make PDFs searchable.",
-         lede="Turn scanned pages and photos into text you can copy and search — Arabic and English. The recogniser runs on your device, so even confidential scans stay private.",
+         short="Copy text out of scans and photos — Arabic and English.",
+         lede="Turn scanned pages and photos into text you can copy and search — in Arabic and English. It reads them on your device, so even private documents stay private.",
          desc="Free OCR for PDF and images, privately in your browser: recognise Arabic and English text in scans, copy it, or make the PDF searchable. No uploads.",
          keywords="ocr pdf scan to text arabic ocr english image to text searchable pdf تحويل صورة إلى نص قراءة نص عربي"),
     dict(slug="pdf-to-jpg", preset="topng", name="PDF to JPG", title="PDF to <em>JPG</em>",
-         short="Save PDF pages as sharp JPG or PNG images.",
-         lede="Turn every page of a PDF into a sharp JPG, PNG or WebP image — at screen or print resolution. Converted on your device, never uploaded.",
+         short="Turn PDF pages into sharp JPG or PNG pictures.",
+         lede="Turn every page of a PDF into a sharp JPG, PNG or WebP picture — for screens or for printing. Done on your device, never uploaded.",
          desc="Convert PDF to JPG, PNG or WebP images for free, privately in your browser — choose 72, 150 or 300 DPI. No uploads, no watermarks.",
          keywords="pdf to jpg pdf to png pdf to image convert pdf pages to images"),
 ]]
 CATS = ["Security", "Developer", "Everyday"]
 CAT_META = {
-    "Security": dict(slug="security", name="Security & privacy", title="Security &amp; <em>privacy</em>", icon="shield",
-                     blurb="Create, check and share secrets without trusting anyone — passwords, hashes and self-destructing links."),
-    "Developer": dict(slug="developer", name="Developer", title="Developer <em>tools</em>", icon="code",
+    "Security": dict(slug="security", name="Stay safe online", title="Stay safe <em>online</em>", title_ar="احمِ نفسك <em>على الإنترنت</em>", icon="shield",
+                     blurb="Strong passwords, safe ways to share them, and a quick check for suspicious links."),
+    "Developer": dict(slug="developer", name="For developers", title="For <em>developers</em>", title_ar="أدوات <em>للمطوّرين</em>", icon="code",
                       blurb="Encoders, formatters and network helpers for everyday development — instant, offline, nothing uploaded."),
-    "Everyday": dict(slug="everyday", name="Everyday", title="Everyday <em>tools</em>", icon="sparkle",
+    "Everyday": dict(slug="everyday", name="Everyday helpers", title="Everyday <em>helpers</em>", title_ar="أدوات <em>يومية</em>", icon="sparkle",
                      blurb="Practical helpers for daily life — PDFs, units, Hijri dates and how fast your internet really is."),
 }
 FEATURED = ["pdf-studio", "password-generator", "link-checker"]
@@ -316,6 +316,7 @@ def head(title, desc, path, extra_fonts="", jsonld=None, noindex=False):
 <link rel="stylesheet" href="/assets/fonts.css?v={{V}}">
 <link rel="stylesheet" href="/assets/site.css?v={{V}}">
 {THEME_BOOT}
+<script type="speculationrules">{{"prefetch":[{{"source":"document","where":{{"and":[{{"href_matches":"/*"}},{{"not":{{"href_matches":"/api/*"}}}},{{"not":{{"href_matches":"/s/*"}}}}]}},"eagerness":"moderate"}}]}}</script>
 <!--HREFLANG-->
 {ld}
 </head>
@@ -369,13 +370,13 @@ def footer():
     <div class="foot-grid">
       <div>
         <a class="brand" href="/">{MARK}<span class="brand-word">nicely<em>done</em></span></a>
-        <p class="foot-tag">Small, sharp tools that work in your browser. No sign-up needed, no tracking, no one watching.</p>
+        <p class="foot-tag">Free, honest tools that work on your device. Made by Abdulaziz — no ads, no tracking, no catch.</p>
       </div>
       {cols}
     </div>
     <div class="foot-big" aria-hidden="true">nicely<em>done</em></div>
     <div class="foot-bottom">
-      <span>© {year} {SITE} · <a href="/about/">About &amp; trust</a> · <a href="/widgets/">iPhone widgets</a> · <a href="/suggest/">Suggest a tool</a> · <a href="{GITHUB}" rel="noopener">Source on GitHub</a></span>
+      <span>© {year} {SITE} · <a href="/about/">About &amp; trust</a> · <a href="/widgets/">iPhone widgets</a> · <a href="/whats-new/">What’s new</a> · <a href="/suggest/">Suggest a tool</a> · <a href="{GITHUB}" rel="noopener">Source on GitHub</a></span>
       <span>Private by design · No tracking, no third parties</span>
     </div>
   </div>
@@ -492,8 +493,24 @@ PREVIEWS = {
 }
 
 
+# Everyday tasks on the home page — what people come to do, in their words.
+HOME_TASKS = [
+    ("pdf-studio", "Fix a PDF", "Join, split, sign, shrink, or turn photos into one PDF.", "pages"),
+    ("link-checker", "Is this link safe?", "Got a strange link in a message? Check it before you tap.", "shield"),
+    ("password-generator", "Make a strong password", "One tap. Nobody else ever sees it — not even me.", "lock"),
+    ("share", "Send a password safely", "A link that works once, then disappears.", "link"),
+    ("vault", "Keep my passwords safe", "A locked box for your passwords that only you can open.", "key"),
+    ("ocr-pdf", "Copy text from a photo", "Arabic or English — from scans, photos and screenshots.", "type"),
+    ("speed-test", "How fast is my internet?", "A quick, honest test. Nothing is logged.", "gauge"),
+    ("date-converter", "Hijri and Gregorian dates", "Today in both calendars, and an easy converter.", "calendar"),
+]
+
+
 def build_home():
-    featured = "".join(tool_card(TOOL_BY_SLUG[slug], i, PREVIEWS.get(slug, "")) for i, slug in enumerate(FEATURED))
+    tasks = "".join(
+        f'<a class="task reveal" style="--d:{(i % 4) * 60}ms" href="/{slug}/"><span class="tile-icon">{ICONS[icon]}</span>'
+        f'<span class="task-t"><strong>{name}</strong><span>{short}</span></span><span class="task-go">{ICONS["arrow"]}</span></a>'
+        for i, (slug, name, short, icon) in enumerate(HOME_TASKS))
     groups = ""
     for i, c in enumerate(CATS):
         m = CAT_META[c]
@@ -506,51 +523,61 @@ def build_home():
 """
     jsonld = {
         "@context": "https://schema.org", "@type": "WebSite", "name": SITE, "url": ORIGIN + "/",
-        "description": "Private, browser-based security and developer tools.",
+        "description": "Free, honest tools that work on your device — PDFs, passwords, link checks and more. No ads, no tracking, no paywall.",
     }
-    desc = ("Beautifully crafted, private tools — password generator, one-time secret links, speed test, strength checker, "
-            "hashes, Base64, JSON, text case, IP & subnet, unit and Hijri date converters. No tracking, no third parties.")
-    page = head(f"{SITE} — Small tools, nicely done.", desc, "/", "", jsonld) + header() + f"""<main id="main">
-  <section class="hero">
-    <div class="wrap hero-row">
-      <div>
-        <p class="eyebrow reveal"><span class="dot"></span>{len(TOOLS)} tools · zero tracking</p>
-        <h1 class="display reveal" style="--d:80ms">Small tools,<br><em>nicely done.</em></h1>
-        <p class="lede reveal" style="--d:160ms">A quiet, beautifully made toolkit for security and everyday developer work. Every calculation happens on your device — nothing you type ever leaves it.</p>
-        <div class="hero-cta reveal" style="--d:240ms">
-          <a class="btn btn-primary" href="#tools">Explore the tools {ICONS['arrow']}</a>
-          <button class="btn" data-search>{ICONS['search']} Search <span class="kbd"><span data-mod>Ctrl</span>K</span></button>
-        </div>
-        <div class="trust reveal" style="--d:320ms">
-          <span>{ICONS['cpu']}Runs in your browser</span>
-          <span>{ICONS['shield']}No sign-up, no cookies</span>
-          <span>{ICONS['offline']}Works offline</span>
-        </div>
-      </div>
-      <div class="specimen reveal" style="--d:260ms" aria-label="Live password preview">
-        <div class="specimen-head">
-          <div class="specimen-dots"><i></i><i></i><i></i></div>
-          <span class="eyebrow" style="font-size:.68rem">live · crypto.getRandomValues</span>
-        </div>
-        <div class="specimen-pw" id="specPw" aria-live="off">&nbsp;</div>
-        <div class="specimen-meta">
-          <span id="specBits">— bits</span>
-          <span class="bar"><i id="specBar"></i></span>
-          <button class="copy" id="specCopy" aria-label="Copy this password">{ICONS['copy']}Copy</button>
+    desc = ("Free, honest tools made by one person: fix PDFs, make strong passwords, check suspicious links, read text from photos. "
+            "Everything works on your device — no ads, no tracking, no paywall at the end.")
+    page = head(f"{SITE} — Free tools, no catch.", desc, "/", "", jsonld) + header() + f"""<main id="main">
+  <section class="hero hero2">
+    <div class="wrap hero2-row">
+      <div class="hero2-main">
+        <p class="eyebrow reveal"><span class="dot"></span>Free · made by one person · no tricks</p>
+        <h1 class="display reveal" style="--d:80ms"><span class="h-line">Tools that do the job.</span><br><em>No catch.</em></h1>
+        <p class="lede reveal" style="--d:160ms">Fix a PDF, make a strong password, check a suspicious link. Everything works right on your phone or computer — your files never leave it, and there’s never a bill at the end.</p>
+        <label class="hero-drop reveal" style="--d:240ms" id="heroDrop" tabindex="0">
+          <input type="file" id="heroFile" multiple accept=".pdf,application/pdf,image/*,.heic,.heif" hidden>
+          <span class="hero-drop-ic">{ICONS['pages']}</span>
+          <span class="hero-drop-t"><strong>Drop a PDF or photo here</strong><span>or tap to choose — it opens in PDF Studio, on your device</span></span>
+          <span class="hero-drop-go">{ICONS['arrow']}</span>
+        </label>
+        <div class="hero-quick reveal" style="--d:300ms">
+          <a href="/sign-pdf/">{ICONS['pen']}Sign a PDF</a>
+          <a href="/compress-pdf/">{ICONS['download']}Shrink a PDF</a>
+          <a href="/link-checker/">{ICONS['shield']}Check a link</a>
+          <a href="/password-generator/">{ICONS['lock']}Make a password</a>
         </div>
       </div>
+      <aside class="note reveal" style="--d:200ms" aria-label="A note from Abdulaziz">
+        <p class="note-k">A note from the maker</p>
+        <p>Most tool websites aren’t honest. You spend ten minutes working on your file — then they ask you to pay, or won’t let you download it.</p>
+        <p>That made me angry, so I built my own. Everything here is free, there are no ads, and your files stay yours.</p>
+        <p class="note-sig">Abdulaziz</p>
+      </aside>
     </div>
   </section>
 
-  <section class="section" id="tools" style="padding-top:clamp(24px,4vw,48px)">
+  <section class="section recent-sec" id="recent" hidden>
     <div class="wrap">
-      <div class="section-head">
-        <div>
-          <h2 class="h2 reveal">Start <em>here</em></h2>
-          <p class="lede reveal" style="--d:80ms">The three tools people reach for most.</p>
-        </div>
+      <p class="panel-title">Pick up where you left off</p>
+      <div class="recent" id="recentList"></div>
+    </div>
+  </section>
+
+  <section class="section" id="tools" style="padding-top:clamp(20px,3vw,40px)">
+    <div class="wrap">
+      <div class="section-head"><div><h2 class="h2 reveal">What do you need <em>to do?</em></h2></div></div>
+      <div class="tasks">{tasks}</div>
+    </div>
+  </section>
+
+  <section class="section" id="promise">
+    <div class="wrap">
+      <div class="section-head"><h2 class="h2 reveal">My <em>promise</em></h2></div>
+      <div class="principles reveal">
+        <div class="principle"><span class="num">01</span><h3>Your files stay yours</h3><p>PDFs, photos and passwords are handled on your device. They’re never sent to me or to anyone else.</p></div>
+        <div class="principle"><span class="num">02</span><h3>Free, for real</h3><p>No “pay to download” at the end, no sign-up walls, no trial that runs out. If it works today, it’s free today.</p></div>
+        <div class="principle"><span class="num">03</span><h3>No ads, no tracking</h3><p>There are no trackers here at all. I don’t even know you visited — and I like it that way.</p></div>
       </div>
-      <div class="featured">{featured}</div>
     </div>
   </section>
 
@@ -558,30 +585,19 @@ def build_home():
     <div class="wrap">
       <div class="section-head">
         <div>
-          <h2 class="h2 reveal">Every <em>tool</em>, in its place</h2>
-          <p class="lede reveal" style="--d:80ms">Grouped by what you’re trying to do. Or press <span class="kbd"><span data-mod>Ctrl</span>K</span> and type.</p>
+          <h2 class="h2 reveal">All the <em>tools</em></h2>
+          <p class="lede reveal" style="--d:80ms">Or press <span class="kbd"><span data-mod>Ctrl</span>K</span> anywhere and type what you need.</p>
         </div>
       </div>
       <div class="cat-groups">{groups}</div>
       <div class="callouts">
-      <a class="widget-callout reveal" href="/suggest/"><span class="tile-icon">{ICONS['sparkle']}</span><span class="tr-text"><strong>Missing a tool?</strong><span>Suggest it, or vote for the ideas you’d use most.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
-      <a class="widget-callout reveal" href="/widgets/"><span class="tile-icon">{ICONS['calendar']}</span><span class="tr-text"><strong>On iPhone? Add the widgets</strong><span>The Hijri date and one-tap passwords on your Home Screen and Lock Screen.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="principles">
-    <div class="wrap">
-      <div class="section-head"><h2 class="h2 reveal">Made with <em>care</em></h2></div>
-      <div class="principles reveal">
-        <div class="principle"><span class="num">01</span><h3>Private by design</h3><p>No analytics, no ads, no third parties. Passwords and data are generated and processed on your device with the Web Crypto API.</p></div>
-        <div class="principle"><span class="num">02</span><h3>Fast &amp; offline</h3><p>Pages are tiny and cached on first visit, so most tools keep working on a plane, in a basement, or behind a firewall.</p></div>
-        <div class="principle"><span class="num">03</span><h3>Free, quietly</h3><p>No sign-ups, no paywalls, no pop-ups. Press <span class="kbd"><span data-mod>Ctrl</span>K</span> anywhere to jump straight to a tool.</p></div>
+      <a class="widget-callout reveal" href="/suggest/"><span class="tile-icon">{ICONS['sparkle']}</span><span class="tr-text"><strong>Missing a tool?</strong><span>Tell me what you need — the most-wanted ideas get built first.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
+      <a class="widget-callout reveal" href="/widgets/"><span class="tile-icon">{ICONS['calendar']}</span><span class="tr-text"><strong>On iPhone? Add the widgets</strong><span>The Hijri date and one-tap passwords on your Home Screen.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
       </div>
     </div>
   </section>
 </main>
-""" + footer() + scripts(HOME_SCRIPT)
+""" + footer() + scripts(HOME_SCRIPT2)
     return page
 
 
@@ -597,7 +613,7 @@ def build_category(c):
   <section class="tool-hero">
     <div class="wrap">
       <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{ICONS['chev']}<span aria-current="page">{m['name']}</span></nav>
-      <h1 class="h1">{m['title']}</h1>
+      <h1 class="h1"{(' data-ar-title="' + html.escape(m['title_ar']) + '"') if m.get('title_ar') else ''}>{m['title']}</h1>
       <p class="lede">{m['blurb']}</p>
     </div>
   </section>
@@ -650,6 +666,37 @@ HOME_SCRIPT = r"""<script>
 </script>"""
 
 
+HOME_SCRIPT2 = r"""<script>
+(function(){
+  if(new URLSearchParams(location.search).get('deleted')==='1'){ND.toast('Your account has been deleted');history.replaceState(null,'',location.pathname);}
+  // Drop a file on the home page → hand it to PDF Studio through this browser's own storage (it never leaves the device).
+  const drop=document.getElementById('heroDrop'),fin=document.getElementById('heroFile');
+  function handoff(files){
+    files=[...files].filter(f=>/pdf|image/.test(f.type)||/\.(pdf|jpe?g|png|webp|heic|heif)$/i.test(f.name));
+    if(!files.length){ND.toast('Choose a PDF or a photo.');return;}
+    const go=()=>{location.href=ND.url(files.every(f=>/image/.test(f.type))?'/jpg-to-pdf/':'/pdf-studio/')+'#from-home';};
+    try{
+      const rq=indexedDB.open('nd-handoff',1);
+      rq.onupgradeneeded=()=>rq.result.createObjectStore('files');
+      rq.onsuccess=()=>{const tx=rq.result.transaction('files','readwrite');tx.objectStore('files').put(files.map(f=>({name:f.name,type:f.type,blob:f})),'pending');tx.oncomplete=go;tx.onerror=go;};
+      rq.onerror=go;
+    }catch(e){go();}
+  }
+  fin.addEventListener('change',()=>{if(fin.files.length)handoff(fin.files);});
+  drop.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='enter'||e.key===' '){e.preventDefault();fin.click();}});
+  ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+  ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,()=>drop.classList.remove('over')));
+  drop.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files.length)handoff(e.dataTransfer.files);});
+  // "Pick up where you left off": remembered only in this browser
+  const recent=ND.store.get('recent',[]).map(h=>(window.ND_TOOLS||[]).find(t=>t.href===h)).filter(Boolean).slice(0,6);
+  if(recent.length){
+    document.getElementById('recentList').innerHTML=recent.map(t=>'<a class="recent-i" href="'+ND.url(t.href)+'"><span class="mi">'+t.icon+'</span><span>'+ND.esc(t.name)+'</span></a>').join('');
+    document.getElementById('recent').hidden=false;
+  }
+})();
+</script>"""
+
+
 HOME_SCRIPT_TILES = r"""<script>
 (function(){
   const ALL='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*-_=+?',SN='23456789!@#$%^&*-_=+?';
@@ -670,6 +717,7 @@ EXTRA_PAGES = [
     ("admin", "Admin", "Nicely Done administration.", None, True),
     ("s", "A secret for you", "Someone shared a one-time secret with you.", None, True),
     ("suggest", "Suggest a tool", "Suggest a tool for Nicely Done or vote for the ideas you’d use — the most-wanted get built first.", None, False),
+    ("whats-new", "What’s new", "What Abdulaziz has added to Nicely Done lately — new tools and improvements, newest first.", None, False),
     ("widgets", "iPhone widgets", "Hijri date and password widgets for your iPhone Home Screen and Lock Screen — private, open source, run on your phone.", None, False),
 ]
 
@@ -832,7 +880,7 @@ def main():
     (DIST / ".nojekyll").write_text("")
     (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /s/\nDisallow: /ar/s/\nDisallow: /api/\n\nSitemap: {ORIGIN}/sitemap.xml\n")
     today = datetime.date.today().isoformat()
-    urls = ["/"] + [f"/{CAT_META[c]['slug']}/" for c in CATS] + [f"/{t['slug']}/" for t in TOOLS + PDF_VARIANTS] + ["/about/", "/widgets/", "/suggest/"]
+    urls = ["/"] + [f"/{CAT_META[c]['slug']}/" for c in CATS] + [f"/{t['slug']}/" for t in TOOLS + PDF_VARIANTS] + ["/about/", "/whats-new/", "/widgets/", "/suggest/"]
     (DIST / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
         + "".join(

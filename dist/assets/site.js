@@ -362,6 +362,15 @@
   }
 
   /* ---------- Offline support ---------- */
+  /* ---------- Recently used tools (this browser only) ---------- */
+  try {
+    const here = location.pathname.replace(/^\/ar\//, '/');
+    if ((window.ND_TOOLS || []).some((t) => t.href === here) && here !== '/') {
+      const list = ND.store.get('recent', []).filter((h) => h !== here);
+      list.unshift(here); ND.store.set('recent', list.slice(0, 8));
+    }
+  } catch (e) { /* storage unavailable */ }
+
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));
   }

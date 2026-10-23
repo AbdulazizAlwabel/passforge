@@ -9,12 +9,12 @@
   <div class="vs" data-s="loading"><div class="empty-state"><span class="spin big-spin"></span></div></div>
 
   <!-- offline / signed out -->
-  <div class="vs" data-s="offline"><div class="empty-state">{{icon:offline}}<p>The vault needs our server, which isn’t reachable right now.</p></div></div>
+  <div class="vs" data-s="offline"><div class="empty-state">{{icon:offline}}<p>The vault needs my server, which isn’t reachable right now.</p></div></div>
   <div class="vs" data-s="signedout">
     <div class="vault-hero">
       <div class="vault-mark">{{icon:lock}}</div>
       <h2 class="h2">A private place for your <em>secrets</em></h2>
-      <p class="muted">Logins, notes and API keys — encrypted in your browser with a passphrase only you know. We store scrambled data we can’t read, and sync it to every device you sign in on.</p>
+      <p class="muted">Logins, notes and API keys — encrypted in your browser with a passphrase only you know. I store scrambled data I can’t read, and sync it to every device you sign in on.</p>
       <div class="row" style="justify-content:center;margin-top:20px">
         <a class="btn btn-primary" href="/account/?next=/vault/">Sign in</a>
         <a class="btn" href="/account/#register">Create a free account</a>
@@ -27,7 +27,7 @@
     <div class="vault-narrow">
       <p class="eyebrow"><span class="dot"></span>Step 1 of 2</p>
       <h2 class="h2" style="margin-top:14px">Choose a vault <em>passphrase</em></h2>
-      <p class="muted">It encrypts everything in your vault. It’s separate from your account password, and we never see it — so we can’t reset it for you.</p>
+      <p class="muted">It encrypts everything in your vault. It’s separate from your account password, and I never see it — so I can’t reset it for you.</p>
       <form id="createForm" class="vform" novalidate>
         <div class="field">
           <label class="label" for="cp1">Passphrase <button type="button" class="link" id="cpSuggest" style="font-size:.82rem">Suggest one</button></label>
@@ -106,22 +106,25 @@
 
 <!-- @aside -->
 <div class="panel">
-  <h4>How the vault protects you</h4>
+  <h4>Only you can open it</h4>
   <ul>
-    <li>Your passphrase turns into an encryption key with 600,000 rounds of PBKDF2 — in your browser, never sent.</li>
-    <li>Every item is encrypted with AES-256-GCM before it leaves your device.</li>
-    <li>We store only scrambled data. Even with full access to our server, nobody can read your vault.</li>
-    <li>It locks itself after 10 minutes without activity.</li>
+    <li>Everything is locked on your device with a passphrase only you know — before it’s saved.</li>
+    <li>I only store scrambled data. Even someone who broke into my server couldn’t read it.</li>
+    <li>It locks itself after 10 minutes without use.</li>
   </ul>
 </div>
 <div class="panel">
   <h4>Keep two things safe</h4>
-  <p>Your vault passphrase and your recovery key each open the vault on their own. If both are lost, nobody can recover the data — that’s what zero-knowledge means.</p>
+  <p>Your vault passphrase and your recovery key each open the vault on their own. If you lose both, nobody can get your data back — not even me. That’s the price of real privacy.</p>
 </div>
 
 <!-- @about -->
-<h2>Why a zero-knowledge vault?</h2>
-<p>Most online “vaults” can read what you store: they hold the keys. Here, the key is created and kept on your device, so a database leak, a rogue admin or a court order would only ever reveal ciphertext. Turn on <a class="link" href="/profile/">two-factor sign-in</a> as well, so nobody can even reach your encrypted data without your phone.</p>
+<h2>Why can’t you open my vault?</h2>
+<p>Most online “vaults” keep the keys themselves, so they can read what you store. Here, the key is made and kept on your own device. If my database ever leaked, all anyone would find is scrambled data.</p>
+<p>Turn on <a class="link" href="/profile/">two-factor sign-in</a> too, so nobody can even reach your vault without your phone.</p>
+<div class="faq">
+  <details><summary>For the technical folks</summary><p>Your passphrase is turned into a key with 600,000 rounds of PBKDF2 in the browser; every item is encrypted with AES-256-GCM before it leaves your device. A random 256-bit vault key is wrapped by both the passphrase key and the recovery key.</p></details>
+</div>
 
 <!-- @script -->
 <script src="/assets/vault-crypto.js?v={V}"></script>

@@ -3,7 +3,7 @@
 <span class="badge">{{icon:globe}}Server: Riyadh</span>
 
 <!-- @tool -->
-<div class="msg info" id="offline" hidden style="margin-bottom:16px">{{icon:offline}}<span>The speed test needs our server, which isn’t reachable right now.</span></div>
+<div class="msg info" id="offline" hidden style="margin-bottom:16px">{{icon:offline}}<span>The speed test needs my server, which isn’t reachable right now.</span></div>
 
 <div class="panel">
   <div class="panel-body speed-stage">
@@ -53,29 +53,26 @@
 
 <!-- @aside -->
 <div class="panel">
-  <h4>Private by design</h4>
-  <ul>
-    <li>You test against our own server in Riyadh — no Ookla, Cloudflare or other third party ever sees your connection.</li>
-    <li>Nothing is logged, and results never leave your browser.</li>
-    <li>The test data is random bytes, generated fresh and thrown away.</li>
-  </ul>
+  <h4>Private, start to finish</h4>
+  <p>You test against my own server in Riyadh — no Ookla, no Cloudflare, nobody else watching. Nothing is saved, and your result stays on your screen.</p>
 </div>
 <div class="panel">
-  <h4>How it measures</h4>
+  <h4>What it measures</h4>
   <ul>
-    <li>Latency and jitter from a series of tiny requests.</li>
-    <li>Download and upload with four parallel streams, ignoring the first second while the connection ramps up.</li>
-    <li>“Under load” repeats the latency check while the line is busy — the lag you feel in calls and games.</li>
+    <li><b>Download</b> and <b>upload</b> — how fast things come in and go out.</li>
+    <li><b>Ping</b> — how quickly your connection answers.</li>
+    <li><b>Lag when busy</b> — how much slower things feel while someone is downloading. That’s what ruins calls and games.</li>
   </ul>
 </div>
 
 <!-- @about -->
-<h2>Why a self-hosted speed test?</h2>
-<p>Popular speed tests are run by companies that collect your IP address, location and results to build network maps and ad profiles. This one runs entirely between your browser and our server, and the result exists only on your screen.</p>
-<p>Because it measures the path to a single server in Riyadh, it’s most representative for connections in Saudi Arabia and the Gulf. Very fast fibre plans (above roughly 600 Mbps) may read a little lower than their real capacity.</p>
+<h2>Why my own speed test?</h2>
+<p>Popular speed tests are run by companies that collect your IP address, location and results to build network maps and ad profiles. This one runs only between your device and my server, and the result exists only on your screen.</p>
+<p>Because it measures the path to one server in Riyadh, it’s most accurate in Saudi Arabia and the Gulf. Very fast fibre plans (above about 600 Mbps) may read a little lower than they really are.</p>
 <div class="faq">
-  <details><summary>Why is my result lower than my plan?</summary><p>Wi-Fi is the most common bottleneck — try again on a cable or close to the router. Other devices downloading at the same time, VPNs and busy evening hours also reduce speed.</p></details>
-  <details><summary>What is “responsiveness under load”?</summary><p>It’s how much your latency rises while the connection is busy, often called bufferbloat. A good router keeps it low, so video calls and games stay smooth even while someone is downloading.</p></details>
+  <details><summary>Why is my result lower than my plan?</summary><p>Wi-Fi is the usual reason — try again close to the router, or with a cable. Other devices downloading at the same time, VPNs and busy evenings also slow things down.</p></details>
+  <details><summary>What is “lag when busy”?</summary><p>It’s how much your connection slows down while it’s being used heavily (sometimes called bufferbloat). A good router keeps it low, so video calls stay smooth even when someone is watching Netflix.</p></details>
+  <details><summary>For the technical folks</summary><p>Latency and jitter come from a series of tiny requests; download and upload use four parallel streams and ignore the first second while the connection ramps up. The test data is random bytes, generated fresh and thrown away.</p></details>
 </div>
 
 <!-- @script -->

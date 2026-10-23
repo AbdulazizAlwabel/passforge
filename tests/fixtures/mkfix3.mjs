@@ -1,0 +1,10 @@
+import { PDFDocument, StandardFonts, rgb } from '../../src/assets/vendor/pdf-studio-1/pdf-lib.esm.min.js';
+import fs from 'fs';
+const d = await PDFDocument.create(); const f = await d.embedFont(StandardFonts.Helvetica), b = await d.embedFont(StandardFonts.HelveticaBold);
+const p = d.addPage([595.28, 841.89]);
+p.drawText('Customer details', { x: 50, y: 780, size: 22, font: b });
+const L = [['Name', 'Abdulaziz Alwabel'], ['National ID', '1012345678'], ['IBAN', 'SA03 8000 0000 6080 1016 7519'], ['Mobile', '0551234567'], ['Alt. phone', '+966 50 765 4321'], ['Email', 'aziz@example.com'], ['Card', '4111 1111 1111 1111'], ['Reference', '2024-00017 (not an ID)'], ['Order total', 'SAR 1,250.00']];
+L.forEach(([k, v], i) => { p.drawText(k + ':', { x: 50, y: 720 - i * 34, size: 13, font: b }); p.drawText(v, { x: 180, y: 720 - i * 34, size: 13, font: f }); });
+p.drawText('Thank you for your business.', { x: 50, y: 360, size: 12, font: f, color: rgb(0.3, 0.3, 0.3) });
+fs.writeFileSync(process.argv[2] + '/personal.pdf', await d.save());
+console.log('ok');
