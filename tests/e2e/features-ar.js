@@ -5,12 +5,12 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
   const br = await chromium.launch({ executablePath: require('../chrome') }); const errs = [];
   const pg = async () => { const p = await br.newPage({ viewport: { width: 1280, height: 900 } }); p.on('pageerror', e => errs.push(e.message)); return p; };
   const lc = await pg(); await lc.goto(B + '/ar/link-checker/');
-  for (const [u, re] of [['absher-sa-verify.info/login', /على الأرجح احتيال/], ['https://www.absher.sa', /عنوان رسمي/], ['bit.ly/x1', /كن حذرًا/]]) {
+  for (const [u, re] of [['absher-sa-verify.info/login', /غالبًا احتيال/], ['https://www.absher.sa', /عنوان رسمي/], ['bit.ly/x1', /انتبه/]]) {
     await lc.fill('#url', u); await lc.click('#form button[type=submit]'); await lc.waitForFunction(() => document.querySelector('#verdict').dataset.kind !== 'busy', null, { timeout: 15000 });
     const t = await lc.textContent('#vTitle'), f = (await lc.$$eval('#findings .check span', e => e.map(x => x.textContent))).join(' | ');
     ok(re.test(t), `${u} → ${t} [${f.slice(0, 110)}]`);
   }
-  ok(/فُحص مقابل [\d,]+ تهديدًا معروفًا/.test(await lc.textContent('#feeds')), 'feeds line arabic: ' + (await lc.textContent('#feeds')).slice(0, 60));
+  ok(/انفحص مع [\d,]+ تهديد معروف/.test(await lc.textContent('#feeds')), 'feeds line arabic: ' + (await lc.textContent('#feeds')).slice(0, 60));
   await lc.screenshot({ path: (process.env.OUT || process.argv[2]) + '/lc-ar.png', fullPage: true });
   const ia = await pg(); await ia.goto(B + '/ar/');
   for (const [q, re] of [['كلمة مرور 24', /^\S{24}$/], ['10 كم الى ميل', /^6\.2137119224 mi$/], ['هجري', / هـ$/], ['١٥% من ٢٠٠', /^30$/], ['example.com', /example\.com/]]) {

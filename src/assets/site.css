@@ -1581,3 +1581,18 @@ select.fld { appearance: auto; -webkit-appearance: menulist; padding: 0; }
 [dir="rtl"] .task-go svg { transform: scaleX(-1); }
 @media (max-width: 1000px) { .tasks { grid-template-columns: repeat(2, minmax(0, 1fr)); } .hero2-row { grid-template-columns: 1fr; } .note { transform: none; max-width: 560px; } }
 @media (max-width: 520px) { .tasks { grid-template-columns: 1fr; } .task { min-height: 0; flex-direction: row; align-items: flex-start; } .hero-drop { padding: 16px; gap: 14px; } .hero-drop-ic { width: 44px; height: 44px; } .hero-drop-go { display: none; } }
+/* About: promise list · What's new */
+.promise-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+.promise-list li { position: relative; padding-inline-start: 30px; }
+.promise-list li::before { content: "✓"; position: absolute; inset-inline-start: 0; top: 0; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; font-size: 0.72rem; font-weight: 700; color: var(--accent-ink); background: var(--accent); }
+.promise-list b { color: var(--text); font-weight: 600; }
+.news { max-width: 760px; display: flex; flex-direction: column; gap: 0; }
+.news-i { position: relative; padding: 0 0 34px 28px; border-inline-start: 1.5px solid var(--line-2); }
+[dir="rtl"] .news-i { padding: 0 28px 34px 0; }
+.news-i::before { content: ""; position: absolute; top: 4px; inset-inline-start: -7px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px var(--accent-soft); }
+.news-i:first-child::before { animation: pulse 2.4s infinite; }
+.news-d { font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-3); letter-spacing: 0.06em; text-transform: uppercase; }
+[dir="rtl"] .news-d { font-family: var(--font-sans); letter-spacing: 0; font-size: 0.82rem; }
+.news-i h2 { font-family: var(--font-display); font-weight: 400; font-size: 1.6rem; margin-top: 6px; line-height: 1.2; }
+[dir="rtl"] .news-i h2 { font-family: var(--font-sans); font-weight: 700; font-size: 1.3rem; }
+.news-i p:not(.news-d) { margin-top: 8px; color: var(--text-2); line-height: 1.65; }

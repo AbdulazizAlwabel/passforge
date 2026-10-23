@@ -46,7 +46,7 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
     // Arabic 2FA sign-in step
     await ctx.clearCookies(); await p.goto(B + '/ar/account/'); await p.fill('#lEmail', u); await p.fill('#lPass', 'pass word 1234'); await p.click('#loginForm button[type=submit]');
     await p.waitForSelector('[data-view="twofa"]:not([hidden])'); ok(/رمز التحقق بخطوتين/.test(await p.textContent('[data-view="twofa"] h2')), name + ': Arabic 2FA heading');
-    await p.fill('#tfaIn', '111111'); await p.waitForSelector('#tfaForm .msg.err:not([hidden])'); ok(/الرمز غير مطابق/.test(await p.textContent('#tfaForm .msg.err')), name + ': Arabic server error message');
+    await p.fill('#tfaIn', '111111'); await p.waitForSelector('#tfaForm .msg.err:not([hidden])'); ok(/الرمز ما طابق/.test(await p.textContent('#tfaForm .msg.err')), name + ': Arabic server error message');
     await p.screenshot({ path: `${OUT}/${name}-ar-2fa-login.png` });
     await ctx.close();
   }

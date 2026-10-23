@@ -1,5 +1,5 @@
 const { chromium } = require('playwright-core');
-const B = process.env.B || 'http://localhost:8765';
+const B = process.env.B || 'http://localhost:8899';
 let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };
 const LATIN_SCAN = () => {
   const skip = el => el.closest('code,kbd,.kbd,.mono,.mono-in,pre,.out,.brand,.foot-big,.pw-text,.specimen-pw,.tile-preview,.hash-row .val,.bits-row,.names,.case-item .txt,svg,script,style,textarea,input,.list-item .txt,.ip-big,.kv dd,.stat .v,option,select,.json-out,[dir="ltr"],.lang-switch,.cal .h');
@@ -26,7 +26,7 @@ const ALLOWED = new Set(['Nicely','Done','Base64','JSON','IPv4','CIDR','PIN','UT
   // strength checker
   p = await pg('/ar/strength-checker/');
   await p.fill('#pw', 'P@ssw0rd123'); await p.waitForSelector('#breach[data-state="bad"]', { timeout: 15000 });
-  ok(/^ظهرت في [\d,]+ تسريب/.test(await p.textContent('#breachTitle')), 'breach arabic: ' + await p.textContent('#breachTitle'));
+  ok(/^طلعت في [\d,]+ تسريب/.test(await p.textContent('#breachTitle')), 'breach arabic: ' + await p.textContent('#breachTitle'));
   await p.fill('#pw', 'zQ7!kfp2Lw9#'); await p.waitForTimeout(900);
   const crack = await p.$$eval('#crack .v', e => e.map(x => x.textContent));
   ok(crack.every(t => !/[a-z]{3,}/.test(t)), 'crack times arabic: ' + crack.join(' | '));

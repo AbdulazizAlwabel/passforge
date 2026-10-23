@@ -30,10 +30,16 @@ like him: a friendly, honest person explaining something to a neighbour.
 
 ## Arabic
 
-Warm, simple Modern Standard Arabic that anyone in Saudi Arabia reads comfortably — the way a kind
-person would explain it, not the language of a contract. Short sentences, common words
-(«ملفاتك لا تغادر جهازك» rather than «تتم المعالجة محليًا»). Keep brand and product names in Latin
-letters (Nicely Done, PDF). Abdulaziz signs as «عبدالعزيز».
+Everyday Saudi “white” dialect (اللهجة البيضاء) — the way people actually talk and text, understood
+from Riyadh to Jeddah to Dammam: «ملفاتك ما تطلع من جهازك», «سوّ كلمة مرور», «جالس نقرأ…»,
+«مو متاح الحين». Short sentences, no contract language, no heavy local slang.
+
+- Visible text (headings, buttons, messages, FAQ) → dialect.
+- Search titles and meta descriptions → plain Modern Standard Arabic, so Google shows clean results.
+- Technical terms stay readable: «تشفير»، «بصمة (هاش)», and brand/product names in Latin letters
+  (Nicely Done, PDF, Base64). Abdulaziz signs as «عبدالعزيز».
+- Past tense “Copied” is «انتسخ», never «انسخ» (that reads as the command “copy”).
+- Loading states use «جالس …» («جالس نحفظ…»), errors use «ما قدرنا …».
 
 ## Abdulaziz’s note (home page)
 
