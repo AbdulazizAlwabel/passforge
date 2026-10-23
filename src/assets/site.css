@@ -1518,3 +1518,66 @@ select.fld { appearance: auto; -webkit-appearance: menulist; padding: 0; }
 #ocrOut { min-height: 180px; font-size: 0.88rem; line-height: 1.6; }
 #ocrProg .st-prog { width: 100%; }
 #dlgDl .sp-sec, #dlgOcr .sp-row { border-bottom: 0; padding-bottom: 0; }
+
+/* ---------- Redesign: instant, app-like page changes ---------- */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.28s; animation-timing-function: var(--ease); }
+.site-header { view-transition-name: site-header; }
+::view-transition-group(site-header) { animation: none; }
+@media (prefers-reduced-motion: reduce) { @view-transition { navigation: none; } }
+
+/* ---------- Redesign: home ---------- */
+.hero2 { padding: clamp(40px, 7vw, 96px) 0 clamp(16px, 3vw, 32px); }
+.hero2-row { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.85fr); gap: clamp(28px, 5vw, 64px); align-items: center; }
+.hero2 .display { font-size: clamp(2.5rem, 5vw, 4.6rem); }
+@media (min-width: 1001px) { .hero2 .h-line { white-space: nowrap; } }
+#promise { padding-top: clamp(24px, 4vw, 56px); }
+.hero2 .lede { margin-top: 20px; max-width: 54ch; }
+.hero-drop {
+  margin-top: 30px; display: flex; align-items: center; gap: 18px; padding: 20px 22px; border-radius: var(--r-xl); cursor: pointer;
+  border: 1.5px dashed color-mix(in srgb, var(--accent) 55%, var(--line-2));
+  background: radial-gradient(120% 140% at 0% 0%, var(--accent-soft), transparent 60%), var(--surface);
+  transition: transform var(--t), border-color var(--t), box-shadow var(--t); outline: none;
+}
+.hero-drop:hover, .hero-drop:focus-visible, .hero-drop.over { border-color: var(--accent); box-shadow: 0 0 0 6px var(--accent-soft); transform: translateY(-1px); }
+.hero-drop.over { transform: scale(1.01); }
+.hero-drop-ic { width: 52px; height: 52px; border-radius: 15px; flex: none; display: grid; place-items: center; background: var(--accent); color: var(--accent-ink); box-shadow: 0 10px 24px -10px var(--accent-glow); }
+.hero-drop-ic svg { width: 24px; height: 24px; }
+.hero-drop-t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.hero-drop-t strong { font-size: 1.08rem; font-weight: 600; }
+.hero-drop-t span { color: var(--text-2); font-size: 0.9rem; }
+.hero-drop-go { color: var(--text-3); transition: transform var(--t), color var(--t); }
+.hero-drop:hover .hero-drop-go { transform: translateX(4px); color: var(--accent); }
+[dir="rtl"] .hero-drop-go svg { transform: scaleX(-1); }
+[dir="rtl"] .hero-drop:hover .hero-drop-go { transform: translateX(-4px); }
+.hero-quick { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+.hero-quick a { display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 14px; border-radius: 999px; font-size: 0.88rem; color: var(--text-2); background: var(--surface); border: 1px solid var(--line); transition: color var(--t), border-color var(--t), transform var(--t); }
+.hero-quick a:hover { color: var(--text); border-color: var(--line-2); transform: translateY(-1px); }
+.hero-quick svg { width: 15px; height: 15px; color: var(--accent); }
+.note { position: relative; padding: 30px 30px 26px; border-radius: 6px 22px 22px 22px; background: var(--raised); border: 1px solid var(--line); box-shadow: var(--shadow-lg); transform: rotate(-1.2deg); }
+[dir="rtl"] .note { border-radius: 22px 6px 22px 22px; transform: rotate(1.2deg); }
+.note::before { content: ""; position: absolute; top: -10px; left: 50%; width: 90px; height: 22px; margin-left: -45px; background: color-mix(in srgb, var(--gold) 40%, transparent); border-radius: 3px; transform: rotate(-3deg); opacity: 0.8; }
+.note p { color: var(--text-2); font-size: 1rem; line-height: 1.65; }
+.note p + p { margin-top: 12px; }
+.note-k { font-family: var(--font-mono); font-size: 0.7rem !important; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-3) !important; margin-bottom: 14px; }
+.note-sig { font-family: Caveat, 'Aref Ruqaa', cursive; font-size: 2rem !important; color: var(--text) !important; margin-top: 18px !important; line-height: 1 !important; }
+[dir="rtl"] .note-sig { font-family: 'Aref Ruqaa', serif; font-size: 1.7rem !important; }
+[dir="rtl"] .note-k { font-family: var(--font-sans); letter-spacing: 0; font-size: 0.8rem !important; }
+.recent-sec { padding: 0 0 8px; }
+.recent { display: flex; flex-wrap: wrap; gap: 8px; }
+.recent-i { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px 0 12px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-size: 0.9rem; transition: border-color var(--t), transform var(--t); }
+.recent-i:hover { border-color: var(--accent); transform: translateY(-1px); }
+.recent-i .mi svg { width: 16px; height: 16px; color: var(--accent); }
+.tasks { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.task { position: relative; display: flex; flex-direction: column; gap: 14px; min-height: 168px; padding: 20px; border-radius: var(--r-lg); background: var(--surface); border: 1px solid var(--line); transition: transform var(--t), border-color var(--t), box-shadow var(--t), background var(--t); }
+.task:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent) 45%, var(--line-2)); box-shadow: var(--shadow); background: var(--surface-2); }
+.task .tile-icon { width: 42px; height: 42px; border-radius: 12px; }
+.task-t { display: flex; flex-direction: column; gap: 6px; }
+.task-t strong { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.01em; }
+.task-t span { font-size: 0.88rem; color: var(--text-2); line-height: 1.5; }
+.task-go { position: absolute; top: 20px; inset-inline-end: 20px; color: var(--text-3); opacity: 0; transform: translate(-4px, 4px); transition: opacity var(--t), transform var(--t); }
+.task:hover .task-go { opacity: 1; transform: none; color: var(--accent); }
+.task-go svg { width: 16px; height: 16px; }
+[dir="rtl"] .task-go svg { transform: scaleX(-1); }
+@media (max-width: 1000px) { .tasks { grid-template-columns: repeat(2, minmax(0, 1fr)); } .hero2-row { grid-template-columns: 1fr; } .note { transform: none; max-width: 560px; } }
+@media (max-width: 520px) { .tasks { grid-template-columns: 1fr; } .task { min-height: 0; flex-direction: row; align-items: flex-start; } .hero-drop { padding: 16px; gap: 14px; } .hero-drop-ic { width: 44px; height: 44px; } .hero-drop-go { display: none; } }

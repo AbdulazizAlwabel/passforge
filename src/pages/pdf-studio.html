@@ -405,7 +405,7 @@
 
 <!-- @about -->
 <h2>A PDF studio that never sees your files</h2>
-<p>Most online PDF tools upload your documents to their servers to process them — contracts, bank statements, IDs and all. PDF Studio does the work right here in your browser using the same open-source engines your browser uses to show PDFs. Nothing is uploaded, nothing is stored, and once the page has loaded it even works offline.</p>
+<p>Most online PDF sites send your documents to their own computers — contracts, bank statements, IDs and all — and many make you pay before you can download the result. Here, all the work happens on your own phone or computer. Nothing is uploaded, nothing is kept, and you never pay. Once the page has loaded, it even works without internet.</p>
 <ol class="steps">
   <li><span><b>Add</b> PDFs and images — drop them in, choose them, or paste.</span></li>
   <li><span><b>Arrange</b> — drag pages into order, rotate the sideways ones, remove the ones you don’t need.</span></li>
@@ -990,6 +990,18 @@
     else if(PRESET==='unlock')ND.toast(ND.t('Unlocked on this device — download to save a copy without the password.'));
     else if(PRESET==='redact')setTimeout(()=>{openViewer(pages[0].id).then(()=>{setTool('redact');openFind();});},350);
     else if(PRESET==='ocr')setTimeout(()=>openOcr(),350);
+  }
+
+  // A file dropped on the home page arrives through this browser's own storage; read it once, then delete it.
+  if(location.hash==='#from-home'){
+    history.replaceState(null,'',location.pathname);
+    try{
+      const rq=indexedDB.open('nd-handoff',1);
+      rq.onupgradeneeded=()=>rq.result.createObjectStore('files');
+      rq.onsuccess=()=>{const db=rq.result,tx=db.transaction('files','readwrite'),st=tx.objectStore('files'),g=st.get('pending');
+        g.onsuccess=()=>{const list=g.result||[];st.delete('pending');
+          if(list.length)addFiles(list.map(x=>new File([x.blob],x.name,{type:x.type})));};};
+    }catch(e){}
   }
 
   /* ---------- Toolbar ---------- */

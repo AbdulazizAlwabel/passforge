@@ -159,8 +159,8 @@ TOOLS = [
          keywords="ip address my ip subnet cidr calculator network mask"),
     dict(slug="pdf-studio", name="PDF Studio", title="PDF <em>Studio</em>", title_ar="استوديو <em>PDF</em>",
          cat="Everyday", icon="pages", new=True,
-         short="Merge, split, reorder, rotate and convert PDFs — without uploading them.",
-         lede="Merge, split, reorder, rotate and convert PDFs and photos — all inside your browser. Your files never leave your device, so it’s safe for contracts, statements and IDs.",
+         short="Join, split, sign and shrink PDFs — without uploading them.",
+         lede="Join PDFs, split them, sign them, shrink them, or turn photos into one PDF. It all happens on your phone or computer — your files never leave it, and there’s nothing to pay at the end.",
          desc="Free private PDF editor in your browser: merge PDFs, split pages, reorder, rotate and delete pages, convert JPG to PDF and PDF to JPG. No uploads — files never leave your device.",
          keywords="pdf merge combine join split extract reorder rotate delete pages jpg png image to pdf convert organize sign signature fill form page numbers watermark دمج تقسيم تدوير تحويل صور ملف"),
     dict(slug="unit-converter", name="Unit Converter", title="Unit <em>Converter</em>",
@@ -251,11 +251,11 @@ PDF_VARIANTS = [dict(_studio, parent="pdf-studio", new=False, **v) for v in [
 ]]
 CATS = ["Security", "Developer", "Everyday"]
 CAT_META = {
-    "Security": dict(slug="security", name="Security & privacy", title="Security &amp; <em>privacy</em>", icon="shield",
-                     blurb="Create, check and share secrets without trusting anyone — passwords, hashes and self-destructing links."),
-    "Developer": dict(slug="developer", name="Developer", title="Developer <em>tools</em>", icon="code",
+    "Security": dict(slug="security", name="Stay safe online", title="Stay safe <em>online</em>", title_ar="احمِ نفسك <em>على الإنترنت</em>", icon="shield",
+                     blurb="Strong passwords, safe ways to share them, and a quick check for suspicious links."),
+    "Developer": dict(slug="developer", name="For developers", title="For <em>developers</em>", title_ar="أدوات <em>للمطوّرين</em>", icon="code",
                       blurb="Encoders, formatters and network helpers for everyday development — instant, offline, nothing uploaded."),
-    "Everyday": dict(slug="everyday", name="Everyday", title="Everyday <em>tools</em>", icon="sparkle",
+    "Everyday": dict(slug="everyday", name="Everyday helpers", title="Everyday <em>helpers</em>", title_ar="أدوات <em>يومية</em>", icon="sparkle",
                      blurb="Practical helpers for daily life — PDFs, units, Hijri dates and how fast your internet really is."),
 }
 FEATURED = ["pdf-studio", "password-generator", "link-checker"]
@@ -316,6 +316,7 @@ def head(title, desc, path, extra_fonts="", jsonld=None, noindex=False):
 <link rel="stylesheet" href="/assets/fonts.css?v={{V}}">
 <link rel="stylesheet" href="/assets/site.css?v={{V}}">
 {THEME_BOOT}
+<script type="speculationrules">{{"prefetch":[{{"source":"document","where":{{"and":[{{"href_matches":"/*"}},{{"not":{{"href_matches":"/api/*"}}}},{{"not":{{"href_matches":"/s/*"}}}}]}},"eagerness":"moderate"}}]}}</script>
 <!--HREFLANG-->
 {ld}
 </head>
@@ -492,8 +493,24 @@ PREVIEWS = {
 }
 
 
+# Everyday tasks on the home page — what people come to do, in their words.
+HOME_TASKS = [
+    ("pdf-studio", "Fix a PDF", "Join, split, sign, shrink, or turn photos into one PDF.", "pages"),
+    ("link-checker", "Is this link safe?", "Got a strange link in a message? Check it before you tap.", "shield"),
+    ("password-generator", "Make a strong password", "One tap. Nobody else ever sees it — not even me.", "lock"),
+    ("share", "Send a password safely", "A link that works once, then disappears.", "link"),
+    ("vault", "Keep my passwords safe", "A locked box for your passwords that only you can open.", "key"),
+    ("ocr-pdf", "Copy text from a photo", "Arabic or English — from scans, photos and screenshots.", "type"),
+    ("speed-test", "How fast is my internet?", "A quick, honest test. Nothing is logged.", "gauge"),
+    ("date-converter", "Hijri and Gregorian dates", "Today in both calendars, and an easy converter.", "calendar"),
+]
+
+
 def build_home():
-    featured = "".join(tool_card(TOOL_BY_SLUG[slug], i, PREVIEWS.get(slug, "")) for i, slug in enumerate(FEATURED))
+    tasks = "".join(
+        f'<a class="task reveal" style="--d:{(i % 4) * 60}ms" href="/{slug}/"><span class="tile-icon">{ICONS[icon]}</span>'
+        f'<span class="task-t"><strong>{name}</strong><span>{short}</span></span><span class="task-go">{ICONS["arrow"]}</span></a>'
+        for i, (slug, name, short, icon) in enumerate(HOME_TASKS))
     groups = ""
     for i, c in enumerate(CATS):
         m = CAT_META[c]
@@ -506,51 +523,61 @@ def build_home():
 """
     jsonld = {
         "@context": "https://schema.org", "@type": "WebSite", "name": SITE, "url": ORIGIN + "/",
-        "description": "Private, browser-based security and developer tools.",
+        "description": "Free, honest tools that work on your device — PDFs, passwords, link checks and more. No ads, no tracking, no paywall.",
     }
-    desc = ("Beautifully crafted, private tools — password generator, one-time secret links, speed test, strength checker, "
-            "hashes, Base64, JSON, text case, IP & subnet, unit and Hijri date converters. No tracking, no third parties.")
-    page = head(f"{SITE} — Small tools, nicely done.", desc, "/", "", jsonld) + header() + f"""<main id="main">
-  <section class="hero">
-    <div class="wrap hero-row">
-      <div>
-        <p class="eyebrow reveal"><span class="dot"></span>{len(TOOLS)} tools · zero tracking</p>
-        <h1 class="display reveal" style="--d:80ms">Small tools,<br><em>nicely done.</em></h1>
-        <p class="lede reveal" style="--d:160ms">A quiet, beautifully made toolkit for security and everyday developer work. Every calculation happens on your device — nothing you type ever leaves it.</p>
-        <div class="hero-cta reveal" style="--d:240ms">
-          <a class="btn btn-primary" href="#tools">Explore the tools {ICONS['arrow']}</a>
-          <button class="btn" data-search>{ICONS['search']} Search <span class="kbd"><span data-mod>Ctrl</span>K</span></button>
-        </div>
-        <div class="trust reveal" style="--d:320ms">
-          <span>{ICONS['cpu']}Runs in your browser</span>
-          <span>{ICONS['shield']}No sign-up, no cookies</span>
-          <span>{ICONS['offline']}Works offline</span>
-        </div>
-      </div>
-      <div class="specimen reveal" style="--d:260ms" aria-label="Live password preview">
-        <div class="specimen-head">
-          <div class="specimen-dots"><i></i><i></i><i></i></div>
-          <span class="eyebrow" style="font-size:.68rem">live · crypto.getRandomValues</span>
-        </div>
-        <div class="specimen-pw" id="specPw" aria-live="off">&nbsp;</div>
-        <div class="specimen-meta">
-          <span id="specBits">— bits</span>
-          <span class="bar"><i id="specBar"></i></span>
-          <button class="copy" id="specCopy" aria-label="Copy this password">{ICONS['copy']}Copy</button>
+    desc = ("Free, honest tools made by one person: fix PDFs, make strong passwords, check suspicious links, read text from photos. "
+            "Everything works on your device — no ads, no tracking, no paywall at the end.")
+    page = head(f"{SITE} — Free tools, no catch.", desc, "/", "", jsonld) + header() + f"""<main id="main">
+  <section class="hero hero2">
+    <div class="wrap hero2-row">
+      <div class="hero2-main">
+        <p class="eyebrow reveal"><span class="dot"></span>Free · made by one person · no tricks</p>
+        <h1 class="display reveal" style="--d:80ms"><span class="h-line">Tools that do the job.</span><br><em>No catch.</em></h1>
+        <p class="lede reveal" style="--d:160ms">Fix a PDF, make a strong password, check a suspicious link. Everything works right on your phone or computer — your files never leave it, and there’s never a bill at the end.</p>
+        <label class="hero-drop reveal" style="--d:240ms" id="heroDrop" tabindex="0">
+          <input type="file" id="heroFile" multiple accept=".pdf,application/pdf,image/*,.heic,.heif" hidden>
+          <span class="hero-drop-ic">{ICONS['pages']}</span>
+          <span class="hero-drop-t"><strong>Drop a PDF or photo here</strong><span>or tap to choose — it opens in PDF Studio, on your device</span></span>
+          <span class="hero-drop-go">{ICONS['arrow']}</span>
+        </label>
+        <div class="hero-quick reveal" style="--d:300ms">
+          <a href="/sign-pdf/">{ICONS['pen']}Sign a PDF</a>
+          <a href="/compress-pdf/">{ICONS['download']}Shrink a PDF</a>
+          <a href="/link-checker/">{ICONS['shield']}Check a link</a>
+          <a href="/password-generator/">{ICONS['lock']}Make a password</a>
         </div>
       </div>
+      <aside class="note reveal" style="--d:200ms" aria-label="A note from Abdulaziz">
+        <p class="note-k">A note from the maker</p>
+        <p>Most tool websites aren’t honest. You spend ten minutes working on your file — then they ask you to pay, or won’t let you download it.</p>
+        <p>That made me angry, so I built my own. Everything here is free, there are no ads, and your files stay yours.</p>
+        <p class="note-sig">Abdulaziz</p>
+      </aside>
     </div>
   </section>
 
-  <section class="section" id="tools" style="padding-top:clamp(24px,4vw,48px)">
+  <section class="section recent-sec" id="recent" hidden>
     <div class="wrap">
-      <div class="section-head">
-        <div>
-          <h2 class="h2 reveal">Start <em>here</em></h2>
-          <p class="lede reveal" style="--d:80ms">The three tools people reach for most.</p>
-        </div>
+      <p class="panel-title">Pick up where you left off</p>
+      <div class="recent" id="recentList"></div>
+    </div>
+  </section>
+
+  <section class="section" id="tools" style="padding-top:clamp(20px,3vw,40px)">
+    <div class="wrap">
+      <div class="section-head"><div><h2 class="h2 reveal">What do you need <em>to do?</em></h2></div></div>
+      <div class="tasks">{tasks}</div>
+    </div>
+  </section>
+
+  <section class="section" id="promise">
+    <div class="wrap">
+      <div class="section-head"><h2 class="h2 reveal">My <em>promise</em></h2></div>
+      <div class="principles reveal">
+        <div class="principle"><span class="num">01</span><h3>Your files stay yours</h3><p>PDFs, photos and passwords are handled on your device. They’re never sent to me or to anyone else.</p></div>
+        <div class="principle"><span class="num">02</span><h3>Free, for real</h3><p>No “pay to download” at the end, no sign-up walls, no trial that runs out. If it works today, it’s free today.</p></div>
+        <div class="principle"><span class="num">03</span><h3>No ads, no tracking</h3><p>There are no trackers here at all. I don’t even know you visited — and I like it that way.</p></div>
       </div>
-      <div class="featured">{featured}</div>
     </div>
   </section>
 
@@ -558,30 +585,19 @@ def build_home():
     <div class="wrap">
       <div class="section-head">
         <div>
-          <h2 class="h2 reveal">Every <em>tool</em>, in its place</h2>
-          <p class="lede reveal" style="--d:80ms">Grouped by what you’re trying to do. Or press <span class="kbd"><span data-mod>Ctrl</span>K</span> and type.</p>
+          <h2 class="h2 reveal">All the <em>tools</em></h2>
+          <p class="lede reveal" style="--d:80ms">Or press <span class="kbd"><span data-mod>Ctrl</span>K</span> anywhere and type what you need.</p>
         </div>
       </div>
       <div class="cat-groups">{groups}</div>
       <div class="callouts">
-      <a class="widget-callout reveal" href="/suggest/"><span class="tile-icon">{ICONS['sparkle']}</span><span class="tr-text"><strong>Missing a tool?</strong><span>Suggest it, or vote for the ideas you’d use most.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
-      <a class="widget-callout reveal" href="/widgets/"><span class="tile-icon">{ICONS['calendar']}</span><span class="tr-text"><strong>On iPhone? Add the widgets</strong><span>The Hijri date and one-tap passwords on your Home Screen and Lock Screen.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="principles">
-    <div class="wrap">
-      <div class="section-head"><h2 class="h2 reveal">Made with <em>care</em></h2></div>
-      <div class="principles reveal">
-        <div class="principle"><span class="num">01</span><h3>Private by design</h3><p>No analytics, no ads, no third parties. Passwords and data are generated and processed on your device with the Web Crypto API.</p></div>
-        <div class="principle"><span class="num">02</span><h3>Fast &amp; offline</h3><p>Pages are tiny and cached on first visit, so most tools keep working on a plane, in a basement, or behind a firewall.</p></div>
-        <div class="principle"><span class="num">03</span><h3>Free, quietly</h3><p>No sign-ups, no paywalls, no pop-ups. Press <span class="kbd"><span data-mod>Ctrl</span>K</span> anywhere to jump straight to a tool.</p></div>
+      <a class="widget-callout reveal" href="/suggest/"><span class="tile-icon">{ICONS['sparkle']}</span><span class="tr-text"><strong>Missing a tool?</strong><span>Tell me what you need — the most-wanted ideas get built first.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
+      <a class="widget-callout reveal" href="/widgets/"><span class="tile-icon">{ICONS['calendar']}</span><span class="tr-text"><strong>On iPhone? Add the widgets</strong><span>The Hijri date and one-tap passwords on your Home Screen.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
       </div>
     </div>
   </section>
 </main>
-""" + footer() + scripts(HOME_SCRIPT)
+""" + footer() + scripts(HOME_SCRIPT2)
     return page
 
 
@@ -597,7 +613,7 @@ def build_category(c):
   <section class="tool-hero">
     <div class="wrap">
       <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{ICONS['chev']}<span aria-current="page">{m['name']}</span></nav>
-      <h1 class="h1">{m['title']}</h1>
+      <h1 class="h1"{(' data-ar-title="' + html.escape(m['title_ar']) + '"') if m.get('title_ar') else ''}>{m['title']}</h1>
       <p class="lede">{m['blurb']}</p>
     </div>
   </section>
@@ -646,6 +662,37 @@ HOME_SCRIPT = r"""<script>
   const tp=document.getElementById('tilePw');
   if(tp){setInterval(()=>{if(document.hidden)return;let s='';for(let i=0;i<18;i++){const c=ALL[ND.randInt(ALL.length)];s+=(CH.s.includes(c)||CH.n.includes(c))?'<b>'+ND.esc(c)+'</b>':ND.esc(c);}tp.innerHTML=s;},1600);}
 
+})();
+</script>"""
+
+
+HOME_SCRIPT2 = r"""<script>
+(function(){
+  if(new URLSearchParams(location.search).get('deleted')==='1'){ND.toast('Your account has been deleted');history.replaceState(null,'',location.pathname);}
+  // Drop a file on the home page → hand it to PDF Studio through this browser's own storage (it never leaves the device).
+  const drop=document.getElementById('heroDrop'),fin=document.getElementById('heroFile');
+  function handoff(files){
+    files=[...files].filter(f=>/pdf|image/.test(f.type)||/\.(pdf|jpe?g|png|webp|heic|heif)$/i.test(f.name));
+    if(!files.length){ND.toast('Choose a PDF or a photo.');return;}
+    const go=()=>{location.href=ND.url(files.every(f=>/image/.test(f.type))?'/jpg-to-pdf/':'/pdf-studio/')+'#from-home';};
+    try{
+      const rq=indexedDB.open('nd-handoff',1);
+      rq.onupgradeneeded=()=>rq.result.createObjectStore('files');
+      rq.onsuccess=()=>{const tx=rq.result.transaction('files','readwrite');tx.objectStore('files').put(files.map(f=>({name:f.name,type:f.type,blob:f})),'pending');tx.oncomplete=go;tx.onerror=go;};
+      rq.onerror=go;
+    }catch(e){go();}
+  }
+  fin.addEventListener('change',()=>{if(fin.files.length)handoff(fin.files);});
+  drop.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='enter'||e.key===' '){e.preventDefault();fin.click();}});
+  ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+  ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,()=>drop.classList.remove('over')));
+  drop.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files.length)handoff(e.dataTransfer.files);});
+  // "Pick up where you left off": remembered only in this browser
+  const recent=ND.store.get('recent',[]).map(h=>(window.ND_TOOLS||[]).find(t=>t.href===h)).filter(Boolean).slice(0,6);
+  if(recent.length){
+    document.getElementById('recentList').innerHTML=recent.map(t=>'<a class="recent-i" href="'+ND.url(t.href)+'"><span class="mi">'+t.icon+'</span><span>'+ND.esc(t.name)+'</span></a>').join('');
+    document.getElementById('recent').hidden=false;
+  }
 })();
 </script>"""
 
