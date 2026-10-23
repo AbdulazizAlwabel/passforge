@@ -1,5 +1,5 @@
 const { chromium } = require('playwright-core');
-const B = 'http://localhost:8899';
+const B = process.env.B || 'http://localhost:8899';
 const SECRET = 'p@ss — كلمة السر 🔐\nline2\tTAB <b>not html</b>';
 let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };
 (async () => {

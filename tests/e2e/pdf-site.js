@@ -1,5 +1,5 @@
 const { chromium } = require('playwright-core');
-const B = 'http://localhost:8899', OUT = process.env.OUT;
+const B = process.env.B || 'http://localhost:8899', OUT = process.env.OUT;
 let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };
 (async () => {
   const br = await chromium.launch({ executablePath: require('../chrome') });

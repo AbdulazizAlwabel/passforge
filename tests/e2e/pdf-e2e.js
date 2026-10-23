@@ -1,7 +1,7 @@
 const { chromium } = require('playwright-core');
 const { execSync } = require('child_process');
 const fs = require('fs');
-const F = process.env.F, DL = process.env.DL, B = 'http://localhost:8899';
+const F = process.env.F, DL = process.env.DL, B = process.env.B || 'http://localhost:8899';
 let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) fails++; };
 const sh = (c) => execSync(c, { encoding: 'utf8' });
 const info = (f) => sh(`pdfinfo "${f}"`);
@@ -14,7 +14,7 @@ const pageInfo = (f) => sh(`pdfinfo -f 1 -l 999 "${f}"`).split('\n').filter(l =>
   const p = await ctx.newPage(); const errs = [], ext = [], api = [];
   p.on('dialog', d => d.accept());
   p.on('pageerror', e => errs.push(e.message)); p.on('console', m => { if (m.type() === 'error' && !/401/.test(m.text())) errs.push(m.text()); });
-  p.on('request', r => { const u = new URL(r.url()); if (u.host !== 'localhost:8899') ext.push(u.host); else if (u.pathname.startsWith('/api/') && u.pathname !== '/api/me') api.push(u.pathname); });
+  p.on('request', r => { const u = new URL(r.url()); if (u.host !== new URL(B).host) ext.push(u.host); else if (u.pathname.startsWith('/api/') && u.pathname !== '/api/me') api.push(u.pathname); });
   const st = () => p.evaluate(() => window.__studio.pages);
   const save = async (clickSel, name) => { const [d] = await Promise.all([p.waitForEvent('download', { timeout: 60000 }), p.click(clickSel)]); const f = DL + '/' + (name || d.suggestedFilename()); await d.saveAs(f); return { f, name: d.suggestedFilename() }; };
   const dlgOk = async (dlg) => { const [d] = await Promise.all([p.waitForEvent('download', { timeout: 60000 }), p.click(dlg + ' [value=ok]')]); const f = DL + '/' + d.suggestedFilename(); await d.saveAs(f); return { f, name: d.suggestedFilename() }; };

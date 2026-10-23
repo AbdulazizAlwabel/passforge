@@ -1,5 +1,5 @@
 const { chromium } = require('playwright-core');
-const B = 'http://localhost:8899';
+const B = process.env.B || 'http://localhost:8899';
 const fs = require('fs');
 (async () => {
   const br = await chromium.launch({ executablePath: require('../chrome') });
