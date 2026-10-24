@@ -108,7 +108,7 @@
   <div class="st-dropover" id="dropover" hidden><div>{{icon:plus}}<span>Drop to add</span></div></div>
 
   <div class="st-busy" id="busy" hidden>
-    <div class="st-busy-card"><span class="spin big-spin"></span><strong id="busyMsg">Working…</strong><div class="st-prog"><i id="busyBar"></i></div><span class="faint" id="busySub"></span></div>
+    <div class="st-busy-card"><span class="spin big-spin"></span><strong id="busyMsg">Working…</strong><div class="st-prog"><i id="busyBar"></i></div><span class="st-busy-pct" id="busyPct"></span><span class="faint" id="busySub"></span></div>
   </div>
 
   <div class="sr-only" aria-live="polite" id="live"></div>
@@ -1924,7 +1924,7 @@
   /*i18n:on*/
 
   /* ---------- Busy overlay ---------- */
-  function busy(msg,frac,sub){const b=$('#busy');if(msg===false){b.hidden=true;return;}b.hidden=false;$('#busyMsg').textContent=msg;$('#busyBar').style.width=Math.round((frac||0)*100)+'%';$('#busySub').textContent=sub||'';}
+  function busy(msg,frac,sub){const b=$('#busy');if(msg===false){b.hidden=true;return;}b.hidden=false;$('#busyMsg').textContent=msg;$('#busyBar').style.width=Math.round((frac||0)*100)+'%';$('#busyPct').textContent=frac>0.02?Math.round(frac*100)+'%':'';$('#busySub').textContent=sub||'';}
 
   /* ---------- Building PDFs ---------- */
   const libDocs=new Map();

@@ -180,13 +180,13 @@
       await ping();const pings=[];
       for(let i=0;i<PING_N;i++)pings.push(await ping());
       const idle=median(pings);let jit=0;for(let i=1;i<pings.length;i++)jit+=Math.abs(pings[i]-pings[i-1]);jit/=pings.length-1;
-      $('#rPing').textContent=Math.round(idle);$('#rJitter').textContent=jit.toFixed(1);
+      ND.countUp($('#rPing'),idle);ND.countUp($('#rJitter'),jit,v=>v.toFixed(1));
       phase('down','Download');
       const d=await measure('down',L.durationMs,L.streams,downWorker(token));
-      $('#rDown').textContent=fmt(d.mbps);setLive(0);
+      ND.countUp($('#rDown'),d.mbps,fmt,900);setLive(0);
       phase('up','Upload');
       const u=await measure('up',L.durationMs,L.streams,upWorker(token));
-      $('#rUp').textContent=fmt(u.mbps);
+      ND.countUp($('#rUp'),u.mbps,fmt,900);
       release();
       const loadedMs=median(d.loaded.concat(u.loaded));
       const rise=Math.max(0,loadedMs-idle);

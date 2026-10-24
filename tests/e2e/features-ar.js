@@ -4,6 +4,8 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
 (async () => {
   const br = await chromium.launch({ executablePath: require('../chrome') }); const errs = [];
   const pg = async () => { const p = await br.newPage({ viewport: { width: 1280, height: 900 } }); p.on('pageerror', e => errs.push(e.message)); return p; };
+  // the test server downloads the real threat lists when it starts — wait until they are indexed
+  for (let i = 0; i < 120; i++) { const r = await fetch(B + '/api/linkcheck?p=00000').then((x) => x.json()).catch(() => ({})); if (r.ready) break; await new Promise((z) => setTimeout(z, 1000)); }
   const lc = await pg(); await lc.goto(B + '/ar/link-checker/');
   for (const [u, re] of [['absher-sa-verify.info/login', /غالبًا احتيال/], ['https://www.absher.sa', /عنوان رسمي/], ['bit.ly/x1', /انتبه/]]) {
     await lc.fill('#url', u); await lc.click('#form button[type=submit]'); await lc.waitForFunction(() => document.querySelector('#verdict').dataset.kind !== 'busy', null, { timeout: 15000 });

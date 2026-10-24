@@ -71,6 +71,7 @@ ICONS = {
     "check": ic('<path d="M20 6 9 17l-5-5"/>'),
     "x": ic('<path d="M18 6 6 18M6 6l12 12"/>'),
     "alert": ic('<circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/>'),
+    "star": ic('<path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9Z"/>'),
     "sparkle": ic('<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.5 2.5M15.2 15.2l2.5 2.5M6.3 17.7l2.5-2.5M15.2 8.8l2.5-2.5"/>'),
     "chev": ic('<path d="m9 18 6-6-6-6"/>'),
     "chev_l": ic('<path d="m15 18-6-6 6-6"/>'),
@@ -441,6 +442,7 @@ def build_tool(t):
       <h1 class="h1"{ar_title}>{t['title']}</h1>
       <p class="lede">{t['lede']}</p>
       <div class="tool-badges">
+        <button type="button" class="pin-btn" data-pin="/{t['slug']}/" aria-pressed="false">{ICONS['star']}<span class="pin-off">Pin to my tools</span><span class="pin-on">Pinned</span></button>
         {local_badge}
         {offline_badge}
         {badges}
@@ -558,7 +560,7 @@ def build_home():
 
   <section class="section recent-sec" id="recent" hidden>
     <div class="wrap">
-      <p class="panel-title">Pick up where you left off</p>
+      <p class="panel-title">Your tools <span class="faint" id="recentHint">· pin any tool with {ICONS['star']} to keep it here</span></p>
       <div class="recent" id="recentList"></div>
     </div>
   </section>
@@ -567,6 +569,38 @@ def build_home():
     <div class="wrap">
       <div class="section-head"><div><h2 class="h2 reveal">What do you need <em>to do?</em></h2></div></div>
       <div class="tasks">{tasks}</div>
+    </div>
+  </section>
+
+  <section class="section try-sec" id="try">
+    <div class="wrap">
+      <div class="section-head"><div><h2 class="h2 reveal">Try it <em>right here</em></h2><p class="lede reveal" style="--d:80ms">No page to open — these work on the spot.</p></div></div>
+      <div class="tries">
+        <div class="try-card reveal" id="tryStrength">
+          <p class="try-k">{ICONS['shield']}How strong is my password?</p>
+          <input class="input" type="password" id="tryPw" placeholder="Type a password to test it…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Password to test">
+          <div class="meter" id="tryMeter" data-level="0"><i></i><i></i><i></i><i></i><i></i></div>
+          <p class="try-out" id="tryOut">Nothing you type leaves this page.</p>
+          <a class="try-more" href="/strength-checker/">Full check, including leaks{ICONS['arrow']}</a>
+        </div>
+        <div class="try-card reveal" style="--d:80ms" id="tryMake">
+          <p class="try-k">{ICONS['lock']}Need a password?</p>
+          <div class="try-pw" id="tryGen" dir="ltr" aria-live="polite"></div>
+          <div class="try-row">
+            <button type="button" class="btn btn-primary btn-sm" id="tryCopy">{ICONS['copy']}Copy</button>
+            <button type="button" class="btn btn-sm" id="tryNew">{ICONS['refresh']}New one</button>
+          </div>
+          <p class="try-out">Made on your device. 20 random characters.</p>
+          <a class="try-more" href="/password-generator/">More options{ICONS['arrow']}</a>
+        </div>
+        <div class="try-card try-today reveal" style="--d:160ms" id="tryToday">
+          <p class="try-k">{ICONS['calendar']}Today</p>
+          <p class="try-hijri" id="tryHijri"></p>
+          <p class="try-greg" id="tryGreg"></p>
+          <p class="try-next" id="tryNext" hidden></p>
+          <a class="try-more" href="/date-converter/">Convert any date{ICONS['arrow']}</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -597,7 +631,7 @@ def build_home():
     </div>
   </section>
 </main>
-""" + footer() + scripts(HOME_SCRIPT2)
+""" + footer() + scripts('<script src="/assets/strength.js?v={V}"></script>\n' + HOME_SCRIPT2)
     return page
 
 
@@ -687,12 +721,60 @@ HOME_SCRIPT2 = r"""<script>
   ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
   ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,()=>drop.classList.remove('over')));
   drop.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files.length)handoff(e.dataTransfer.files);});
-  // "Pick up where you left off": remembered only in this browser
-  const recent=ND.store.get('recent',[]).map(h=>(window.ND_TOOLS||[]).find(t=>t.href===h)).filter(Boolean).slice(0,6);
-  if(recent.length){
-    document.getElementById('recentList').innerHTML=recent.map(t=>'<a class="recent-i" href="'+ND.url(t.href)+'"><span class="mi">'+t.icon+'</span><span>'+ND.esc(t.name)+'</span></a>').join('');
+  // "Your tools": pinned first, then recently used — remembered only in this browser
+  const find=h=>(window.ND_TOOLS||[]).find(t=>t.href.replace(/^\/ar\//,'/')===h);
+  const pins=ND.store.get('pins',[]).map(find).filter(Boolean);
+  const recent=ND.store.get('recent',[]).map(find).filter(t=>t&&!pins.includes(t)).slice(0,Math.max(0,8-pins.length));
+  if(pins.length||recent.length){
+    document.getElementById('recentList').innerHTML=pins.concat(recent).map(t=>'<a class="recent-i'+(pins.includes(t)?' pinned':'')+'" href="'+ND.url(t.href)+'"><span class="mi">'+t.icon+'</span><span>'+ND.esc(t.name)+'</span></a>').join('');
+    document.getElementById('recentHint').hidden=pins.length>0;
     document.getElementById('recent').hidden=false;
   }
+
+  // Try it right here — 1) strength, using the same estimate as the Strength Checker
+  const tp=document.getElementById('tryPw'),tm=document.getElementById('tryMeter'),to=document.getElementById('tryOut');
+  const NAMES=['','Very weak','Weak','Fair','Strong','Excellent'];
+  tp.addEventListener('input',()=>{
+    const pw=tp.value;
+    if(!pw){tm.dataset.level=0;to.textContent=ND.t('Nothing you type leaves this page.');to.className='try-out';return;}
+    const a=ND.strength(pw),sec=ND.strength.seconds(a.bits,ND.strength.FAST);
+    tm.dataset.level=a.level;to.className='try-out lv'+a.level;
+    to.innerHTML='<b>'+ND.t(NAMES[a.level])+'</b> · '+ND.esc(sec<1?ND.t('a fast attacker would guess it instantly'):ND.f('a fast attacker would need {time}',{time:ND.strength.human(sec).toLowerCase()}));
+  });
+  // 2) a fresh password, with a short scramble as it arrives
+  const CH='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*-_=+?',SN='23456789!@#$%^&*-_=+?',LEN=20;
+  const gen=document.getElementById('tryGen'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let cur='';
+  const paint=(s,locked)=>{gen.innerHTML=[...s].map((c,i)=>'<span class="'+(i>=locked?'scramble':SN.includes(c)?'c-sym':'')+'">'+ND.esc(c)+'</span>').join('');};
+  function fresh(){
+    let t='';for(let i=0;i<LEN;i++)t+=CH[ND.randInt(CH.length)];cur=t;
+    if(reduce){paint(t,LEN);return;}
+    let f=0;const total=18;
+    (function step(){const locked=Math.floor(f/total*LEN);let s=t.slice(0,locked);for(let i=locked;i<LEN;i++)s+=CH[ND.randInt(CH.length)];paint(s,locked);if(++f<=total)setTimeout(step,26);else paint(t,LEN);})();
+  }
+  fresh();
+  document.getElementById('tryNew').addEventListener('click',fresh);
+  document.getElementById('tryCopy').addEventListener('click',e=>ND.copy(cur,e.currentTarget,'Password copied'));
+  // 3) today in both calendars, with the next Ramadan / Eid
+  const HM=['Muharram','Safar','Rabiʿ al-Awwal','Rabiʿ al-Thani','Jumada al-Ula','Jumada al-Akhirah','Rajab','Shaʿban','Ramadan','Shawwal','Dhu al-Qaʿdah','Dhu al-Hijjah'];
+  function hijri(d){try{const p=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'numeric',year:'numeric'}).formatToParts(d);const g=k=>+((p.find(x=>x.type===k)||{}).value||0);return {d:g('day'),m:g('month'),y:parseInt(((p.find(x=>x.type==='year')||{}).value||'0'),10)};}catch(e){return null;}}
+  const now=new Date(),h=hijri(now);
+  if(h&&h.m){
+    document.getElementById('tryHijri').textContent=h.d+' '+HM[h.m-1]+' '+h.y+' '+ND.t('AH');
+    document.getElementById('tryGreg').textContent=now.toLocaleDateString(ND.lang==='ar'?'ar-SA-u-ca-gregory-nu-latn':'en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+    const DAYS={one:'day',other:'days'},DAYS_AR={one:'يوم',two:'يومين',few:'أيام',many:'يوم',other:'يوم'};
+    let msg='';
+    if(h.m===9)msg=ND.f('Ramadan Mubarak — day {n}',{n:h.d});
+    else if(h.m===10&&h.d<=3)msg=ND.t('Eid Mubarak!');
+    else if(h.m===12&&h.d>=10&&h.d<=13)msg=ND.t('Eid Mubarak!');
+    else for(let i=1;i<400;i++){
+      const x=hijri(new Date(now.getFullYear(),now.getMonth(),now.getDate()+i));if(!x)break;
+      const days=ND.count(i,DAYS,DAYS_AR);
+      if(x.m===9&&x.d===1){msg=i===1?ND.t('Ramadan starts tomorrow'):ND.f('Ramadan starts in {days}',{days});break;}
+      if(x.m===12&&x.d===10){msg=i===1?ND.t('Eid al-Adha is tomorrow'):ND.f('Eid al-Adha in {days}',{days});break;}
+    }
+    if(msg){const n=document.getElementById('tryNext');n.textContent=msg;n.hidden=false;}
+  } else document.getElementById('tryToday').hidden=true;
 })();
 </script>"""
 
@@ -899,7 +981,7 @@ def main():
         ],
         "shortcuts": [{"name": t["name"], "url": f"/{t['slug']}/"} for t in TOOLS[:4]],
     }, indent=2))
-    precache = ["/", "/404.html", f"/assets/site.css?v={version}", f"/assets/site.js?v={version}", f"/assets/fonts.css?v={version}",
+    precache = ["/", "/404.html", f"/assets/site.css?v={version}", f"/assets/site.js?v={version}", f"/assets/fonts.css?v={version}", f"/assets/strength.js?v={version}",
                 "/assets/fonts/geist-normal-300-700-latin.woff2", "/assets/fonts/instrument-serif-normal-400-latin.woff2", "/favicon.svg"] + \
                [f"/{t['slug']}/" for t in TOOLS] + ["/about/", "/ar/", "/ar/404.html"]
     (DIST / "sw.js").write_text(SW.replace("{V}", version).replace("{PRECACHE}", json.dumps(precache)))

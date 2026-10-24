@@ -5,6 +5,8 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
   const br = await chromium.launch({ executablePath: require('../chrome') }); const errs = [];
   const page = async (ctx) => { const p = await (ctx || await br.newContext()).newPage(); p.on('pageerror', e => errs.push(e.message)); return p; };
   /* ---- link checker ---- */
+  // the test server downloads the real threat lists when it starts — wait until they are indexed
+  for (let i = 0; i < 120; i++) { const r = await fetch(B + '/api/linkcheck?p=00000').then((x) => x.json()).catch(() => ({})); if (r.ready) break; await new Promise((z) => setTimeout(z, 1000)); }
   const lc = await page(); await lc.goto(B + '/link-checker/');
   const reqs = []; lc.on('request', r => { if (r.url().includes('/api/linkcheck')) reqs.push(r.url()); });
   const check = async (u) => { await lc.fill('#url', u); await lc.click('#form button[type=submit]'); await lc.waitForFunction(() => document.querySelector('#verdict').dataset.kind !== 'busy', null, { timeout: 15000 }); return { kind: await lc.getAttribute('#verdict', 'data-kind'), title: await lc.textContent('#vTitle'), f: (await lc.$$eval('#findings .check span', e => e.map(x => x.textContent))).join(' | ') }; };
