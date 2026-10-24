@@ -105,36 +105,37 @@
   }
 
   function analyse(u,raw){
-    const F=[];const add=(sev,text)=>F.push({sev,text});
+    const F=[];const add=(sev,text,part)=>F.push({sev,text,part});
     const host=norm(u.hostname),reg=registrable(host),label=reg.split('.')[0],tld=host.split('.').pop();
-    if(!/^https?:$/.test(u.protocol)){add('high',ND.f('Uses the “{scheme}” scheme instead of a normal web address — it can run code or open apps.',{scheme:u.protocol.replace(':','')}));return {F,host};}
+    if(!/^https?:$/.test(u.protocol)){add('high',ND.f('Uses the “{scheme}” scheme instead of a normal web address — it can run code or open apps.',{scheme:u.protocol.replace(':','')}),'scheme');return {F,host};}
     // official?
     const official=BRANDS.find(([,dom])=>isOfficial(host,dom));
-    if(official)add('good',ND.f('This is the official address of {brand} ({domain}).',{brand:official[0],domain:official[1]}));
-    if(u.username||u.password||/^[^/]*@/.test(raw.replace(/^[a-z]+:\/\//i,'')))add('high','Contains “@” before the address — everything before it is ignored, so the real destination is hidden.');
-    if(/^\d{1,3}(\.\d{1,3}){3}$/.test(host)||host.startsWith('['))add('high','Points to a raw IP address instead of a name — legitimate services almost never do this.');
-    if(host.split('.').some(p=>p.startsWith('xn--')))add('high','Uses international characters that can imitate normal letters (punycode). The real address is: '+host);
-    else if(/[^\x00-\x7f]/.test(raw.split(/[/?#]/).slice(0,3).join('/')))add('medium','Contains non-Latin characters in the address — check it carefully.');
+    if(official)add('good',ND.f('This is the official address of {brand} ({domain}).',{brand:official[0],domain:official[1]}),'name');
+    if(u.username||u.password||/^[^/]*@/.test(raw.replace(/^[a-z]+:\/\//i,'')))add('high','Contains “@” before the address — everything before it is ignored, so the real destination is hidden.','user');
+    if(/^\d{1,3}(\.\d{1,3}){3}$/.test(host)||host.startsWith('['))add('high','Points to a raw IP address instead of a name — legitimate services almost never do this.','name');
+    if(host.split('.').some(p=>p.startsWith('xn--')))add('high','Uses international characters that can imitate normal letters (punycode). The real address is: '+host,label.startsWith('xn--')?'name':'sub');
+    else if(/[^\x00-\x7f]/.test(raw.split(/[/?#]/).slice(0,3).join('/')))add('medium','Contains non-Latin characters in the address — check it carefully.','name');
     if(!official){
       const tokens=host.split(/[.-]/);
       for(const [name,dom,keys] of BRANDS){
         const domLabel=dom.split('.')[0];
         const mentions=keys.some(k=>{k=k.replace(/-$/,'');return k.length<5?tokens.includes(k):tokens.some(t=>t===k||t.startsWith(k)||(t.endsWith(k)&&t.length-k.length<=3));});
         if(mentions){
-          add('high',ND.f('Mentions {brand} but is not {brand}’s official site ({domain}).',{brand:name,domain:dom}));break;}
+          const inName=keys.some(k=>{k=k.replace(/-$/,'');return label.split('-').some(t=>t===k||t.startsWith(k)||(t.endsWith(k)&&t.length-k.length<=3));});
+          add('high',ND.f('Mentions {brand} but is not {brand}’s official site ({domain}).',{brand:name,domain:dom}),inName?'name':'sub');break;}
         if(domLabel.length>=6&&label!==domLabel&&lev(label,domLabel)<=(domLabel.length>=8?2:1)){
-          add('high',ND.f('Looks like {domain} but is spelled differently — a classic imitation.',{domain:dom}));break;}
+          add('high',ND.f('Looks like {domain} but is spelled differently — a classic imitation.',{domain:dom}),'name');break;}
       }
     }
-    if(SHORTENERS.includes(host))add('medium','This is a shortened link — the real destination is hidden until you open it.');
-    if(RISKY_TLDS.includes(tld)&&!official)add('medium',ND.f('Ends in “.{tld}”, a domain ending that is cheap and very common in scams.',{tld}));
-    if(/\.(apk|exe|scr|bat|msi|cmd|vbs|jar|dmg|pkg)$/i.test(u.pathname))add('high','Downloads an app or program file — never install apps from links in messages.');
-    if(u.protocol==='http:')add('low','Not encrypted (http) — anything you type could be read on the way.');
-    if(u.port&&!['80','443'].includes(u.port))add('low',ND.f('Uses an unusual port ({port}).',{port:u.port}));
+    if(SHORTENERS.includes(host))add('medium','This is a shortened link — the real destination is hidden until you open it.','name');
+    if(RISKY_TLDS.includes(tld)&&!official)add('medium',ND.f('Ends in “.{tld}”, a domain ending that is cheap and very common in scams.',{tld}),'tld');
+    if(/\.(apk|exe|scr|bat|msi|cmd|vbs|jar|dmg|pkg)$/i.test(u.pathname))add('high','Downloads an app or program file — never install apps from links in messages.','path');
+    if(u.protocol==='http:')add('low','Not encrypted (http) — anything you type could be read on the way.','scheme');
+    if(u.port&&!['80','443'].includes(u.port))add('low',ND.f('Uses an unusual port ({port}).',{port:u.port}),'port');
     const sub=host.split('.').length-reg.split('.').length;
-    if(sub>=3||host.length>45)add('low','Has an unusually long or deeply nested address — often used to hide the real domain.');
+    if(sub>=3||host.length>45)add('low','Has an unusually long or deeply nested address — often used to hide the real domain.','sub');
     const bait=BAIT.filter(w=>(host+u.pathname).toLowerCase().includes(w));
-    if(bait.length&&!official)add('low',ND.f('Uses pressure words often seen in scams: {words}.',{words:bait.slice(0,4).join(', ')}));
+    if(bait.length&&!official)add('low',ND.f('Uses pressure words often seen in scams: {words}.',{words:bait.slice(0,4).join(', ')}),bait.some(w=>u.pathname.toLowerCase().includes(w))?'path':(bait.some(w=>label.includes(w))?'name':'sub'));
     return {F,host,reg,official};
   }
 
@@ -155,8 +156,7 @@
     if(!u){setVerdict('warn','That doesn’t look like a link','Paste the whole address, e.g. example.com/page');$('#findings').innerHTML='';$('#anatomy').innerHTML='';$('#feeds').innerHTML='';return;}
     const a=analyse(u,raw);
     const host=norm(u.hostname),reg=registrable(host);
-    const full=u.href;const i=full.indexOf(u.hostname);
-    $('#anatomy').innerHTML='<span class="ua-dim">'+ND.esc(full.slice(0,i))+'</span>'+ND.esc(u.hostname.slice(0,u.hostname.length-reg.length))+'<b>'+ND.esc(u.hostname.slice(u.hostname.length-reg.length))+'</b><span class="ua-dim">'+ND.esc(full.slice(i+u.hostname.length))+'</span>';
+    anatomy(u,a,[]);
     $('#ncaWa').href='https://wa.me/966118136644?text='+encodeURIComponent(u.href);
     setVerdict('busy','Checking threat lists…','');
     render(a,null);
@@ -169,11 +169,38 @@
       if(r.ok&&r.data.ready){meta=r.data;
         const head=r.data.head||64;hashes.forEach(h=>{(r.data.matches[h.slice(0,5)]||[]).forEach(([fh,feed])=>{if(fh===h.slice(0,head))hits.push(feed);});});}
     }catch(e){}
-    LAST={a,hits:[...new Set(hits)],meta};render(a,LAST);
+    LAST={u,a,hits:[...new Set(hits)],meta};render(a,LAST);
   }
 
+  /* The link, taken apart: each piece is labelled, and the pieces with a warning are coloured */
+  const PART_NAME={scheme:'Protocol',user:'Hidden part',sub:'Extra part',name:'Website name',tld:'Ending',port:'Port',path:'Page',query:'Extras'};
+  function anatomy(u,a,hits){
+    const host=u.hostname,isIp=/^\d{1,3}(\.\d{1,3}){3}$/.test(host)||host.startsWith('[');
+    const reg=isIp?host:registrable(norm(host)),regAt=host.toLowerCase().lastIndexOf(reg);
+    const dot=reg.indexOf('.'),segs=[];
+    const push=(k,t)=>{if(t)segs.push([k,t]);};
+    push('scheme',u.protocol+(/^https?:$/.test(u.protocol)?'//':''));
+    if(u.username||u.password)push('user',decodeURIComponent(u.username+(u.password?':'+u.password:''))+'@');
+    if(isIp)push('name',host);
+    else{push('sub',host.slice(0,regAt));push('name',isIp?reg:reg.slice(0,dot));push('tld',reg.slice(dot));}
+    if(u.port)push('port',':'+u.port);
+    if(u.pathname&&u.pathname!=='/')push('path',u.pathname);
+    push('query',u.search+u.hash);
+    const flag={};const rank={good:1,low:2,medium:3,high:4};
+    a.F.forEach(f=>{if(f.part&&(!flag[f.part]||rank[f.sev]>rank[flag[f.part]]))flag[f.part]=f.sev;});
+    if(hits.length)flag.name='high';
+    const cls=v=>v==='high'?'bad':v==='medium'||v==='low'?'warn':v==='good'?'good':'';
+    const cut=t=>t.length>34?t.slice(0,32)+'…':t;
+    let h='<div class="ua-segs">'+segs.map(([k,t])=>'<span class="ua-seg '+cls(flag[k])+(k==='name'||k==='tld'?' main':'')+'"'+(t.length>34?' title="'+ND.esc(t)+'"':'')+'><code>'+ND.esc(cut(t))+'</code><small>'+ND.t(PART_NAME[k])+'</small></span>').join('')+'</div>';
+    if(/^https?:$/.test(u.protocol)){
+      const short=SHORTENERS.includes(norm(host));
+      h+='<p class="ua-real" dir="auto">'+(short?ND.t('This is a short link — the real website only shows up after it opens.'):ND.t('This link really goes to')+' <b dir="ltr">'+ND.esc(isIp?host:reg)+'</b>'+(a.official?' '+ND.t('— the official site.'):''))+'</p>';
+    }
+    $('#anatomy').innerHTML=h;
+  }
   function render(a,res){
     const F=a.F.slice();
+    if(res)anatomy(res.u,a,res.hits);
     if(res&&res.hits.length){
       const names=res.hits.map(id=>(res.meta.feeds.find(f=>f.id===id)||{}).name||id);
       F.unshift({sev:'high',text:ND.f('Listed as a known threat by {lists}.',{lists:names.join(', ')})});

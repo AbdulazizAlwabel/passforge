@@ -26,8 +26,8 @@
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preload" href="/assets/fonts/geist-normal-300-700-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/instrument-serif-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/fonts.css?v=ed8cda2f7f">
-<link rel="stylesheet" href="/assets/site.css?v=ed8cda2f7f">
+<link rel="stylesheet" href="/assets/fonts.css?v=50ad26f954">
+<link rel="stylesheet" href="/assets/site.css?v=50ad26f954">
 <script>(function(){try{var t=JSON.parse(localStorage.getItem('nd:theme'));if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script>
 <script type="speculationrules">{"prefetch":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":"/api/*"}},{"not":{"href_matches":"/s/*"}}]},"eagerness":"moderate"}]}</script>
 <link rel="alternate" hreflang="en" href="https://nicelydone.qd.je/strength-checker/">
@@ -59,6 +59,7 @@
       <h1 class="h1">Password <em>Strength</em></h1>
       <p class="lede">Type a password and see how long it would take someone to crack it — and exactly what makes it weak. Nothing you type leaves your device.</p>
       <div class="tool-badges">
+        <button type="button" class="pin-btn" data-pin="/strength-checker/" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9Z"/></svg><span class="pin-off">Pin to my tools</span><span class="pin-on">Pinned</span></button>
         <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg>Runs on your device</span>
         <span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14.5A4.5 4.5 0 0 1 8.2 8a6 6 0 0 1 11.3 2.5A4 4 0 0 1 18 18.5H8"/><path d="m3 3 18 18"/></svg>Works offline</span>
         <span class="badge info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z"/><path d="m9 12 2.2 2.2L15.5 10"/></svg>Leak check sends only 5 hash characters</span>
@@ -89,7 +90,12 @@
   </div>
   <div class="panel-sec" id="results" hidden>
     <div class="panel-title">Time to crack</div>
-    <div class="stat-grid" id="crack"></div>
+    <div class="ctime" id="ctime" data-level="0">
+      <div class="ctime-head"><span>Against a fast offline attack</span><b id="ctimeV"></b></div>
+      <div class="ctime-track"><i class="ctime-fill"></i><span class="ctime-dot"></span></div>
+      <div class="ctime-marks" aria-hidden="true"><span style="--at:20.2%">1 hour</span><span style="--at:42.4%">1 year</span><span class="end">Age of the universe</span></div>
+    </div>
+    <div class="stat-grid" id="crack" style="margin-top:18px"></div>
     <div class="divider"></div>
     <div class="panel-title">Composition</div>
     <div class="stat-grid" id="comp"></div>
@@ -138,15 +144,12 @@
   </div>
 </footer>
 <script>window.ND_TOOLS=[{"name": "Password Generator", "short": "Strong passwords in one tap — nobody else ever sees them.", "cat": "Stay safe online", "href": "/password-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"11\" width=\"16\" height=\"10\" rx=\"2.5\"/><path d=\"M8 11V7.5a4 4 0 0 1 8 0V11\"/><circle cx=\"12\" cy=\"16\" r=\"1.2\" fill=\"currentColor\"/><\/svg>", "keywords": "random secure strong passphrase diceware generate"}, {"name": "Strength Checker", "short": "How long would your password survive a real attack?", "cat": "Stay safe online", "href": "/strength-checker/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z\"/><path d=\"m9 12 2.2 2.2L15.5 10\"/><\/svg>", "keywords": "password strength test entropy crack time analyse"}, {"name": "One-Time Secret", "short": "Send a password with a link that works once, then disappears.", "cat": "Stay safe online", "href": "/share/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M10 14a4.5 4.5 0 0 0 6.4 0l3.2-3.2a4.5 4.5 0 0 0-6.4-6.4L12 5.6\"/><path d=\"M14 10a4.5 4.5 0 0 0-6.4 0l-3.2 3.2a4.5 4.5 0 0 0 6.4 6.4l1.2-1.2\"/><\/svg>", "keywords": "share secret password one-time link self-destruct burn encrypted send note"}, {"name": "Link Checker", "short": "Got a strange link in a message? Check it before you tap.", "cat": "Stay safe online", "href": "/link-checker/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 21s7.5-3.6 7.5-9.5V5.8L12 3 4.5 5.8v5.7C4.5 17.4 12 21 12 21Z\"/><path d=\"m9 12 2.2 2.2L15.5 10\"/><\/svg>", "keywords": "link checker url scanner phishing scam malware safe check suspicious sms whatsapp nca tahqaq haseen"}, {"name": "Encrypted Vault", "short": "A locked box for your passwords that only you can open.", "cat": "Stay safe online", "href": "/vault/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"4\" y=\"11\" width=\"16\" height=\"10\" rx=\"2.5\"/><path d=\"M8 11V7.5a4 4 0 0 1 8 0V11\"/><circle cx=\"12\" cy=\"16\" r=\"1.2\" fill=\"currentColor\"/><\/svg>", "keywords": "vault password manager encrypted notes secrets api keys zero knowledge sync store"}, {"name": "Hash Generator", "short": "MD5 and SHA checksums for text or files — and a quick verify.", "cat": "Stay safe online", "href": "/hash-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M5 9h15M4 15h15M10 3 8 21M16 3l-2 18\"/><\/svg>", "keywords": "md5 sha1 sha256 sha512 checksum digest file verify"}, {"name": "Username Generator", "short": "Fresh usernames in five styles — tap one to copy it.", "cat": "Stay safe online", "href": "/username-generator/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4.5 21a7.5 7.5 0 0 1 15 0\"/><\/svg>", "keywords": "username handle gamertag nickname name"}, {"name": "Base64 Encoder", "short": "Encode and decode Base64 — standard or URL-safe.", "cat": "For developers", "href": "/base64-tool/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m16 18 6-6-6-6M8 6l-6 6 6 6\"/><\/svg>", "keywords": "base64 encode decode url-safe data url btoa atob"}, {"name": "JSON Formatter", "short": "Tidy, check, shrink and sort JSON.", "cat": "For developers", "href": "/json-formatter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3H7a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2h1M16 3h1a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2h-1\"/><\/svg>", "keywords": "json format beautify validate minify pretty print lint"}, {"name": "Text Case Converter", "short": "camelCase, snake_case, Title Case and more — all at once.", "cat": "For developers", "href": "/text-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4 7V5h16v2M9 19h6M12 5v14\"/><\/svg>", "keywords": "case convert camel snake kebab pascal title upper lower"}, {"name": "IP & Network", "short": "Your IP address, your browser’s details, and a subnet calculator.", "cat": "For developers", "href": "/ip-network/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"9\"/><path d=\"M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18\"/><\/svg>", "keywords": "ip address my ip subnet cidr calculator network mask"}, {"name": "PDF Studio", "short": "Join, split, sign and shrink PDFs — without uploading them.", "cat": "Everyday helpers", "href": "/pdf-studio/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "pdf merge combine join split extract reorder rotate delete pages jpg png image to pdf convert organize sign signature fill form page numbers watermark دمج تقسيم تدوير تحويل صور ملف"}, {"name": "Unit Converter", "short": "Kilos to pounds, Celsius to Fahrenheit, and eight more.", "cat": "Everyday helpers", "href": "/unit-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M3 17 17 3l4 4L7 21z\"/><path d=\"m7 13 2 2M10 10l2 2M13 7l2 2\"/><\/svg>", "keywords": "convert units kg lb km miles celsius fahrenheit"}, {"name": "Speed Test", "short": "How fast is your internet, really? Nothing is logged.", "cat": "Everyday helpers", "href": "/speed-test/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M4.9 18.5a9 9 0 1 1 14.2 0\"/><path d=\"m12 14 4-5\"/><circle cx=\"12\" cy=\"14\" r=\"1.6\" fill=\"currentColor\"/><\/svg>", "keywords": "speed test internet bandwidth download upload ping latency jitter bufferbloat mbps"}, {"name": "Hijri Date Converter", "short": "Hijri and Gregorian dates, side by side.", "cat": "Everyday helpers", "href": "/date-converter/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"5\" width=\"17\" height=\"15.5\" rx=\"2.5\"/><path d=\"M8 3v4M16 3v4M3.5 10h17\"/><path d=\"M15.5 13.2a2.6 2.6 0 1 0 0 4.6 3.3 3.3 0 1 1 0-4.6Z\"/><\/svg>", "keywords": "hijri islamic gregorian date convert umm al-qura calendar"}, {"name": "Merge PDF", "short": "Join PDFs into one — free, and nothing is uploaded.", "cat": "Everyday helpers", "href": "/merge-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "merge pdf combine pdf join pdf files into one"}, {"name": "Split PDF", "short": "Split a PDF into parts, or pull out just the pages you need.", "cat": "Everyday helpers", "href": "/split-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "split pdf extract pages separate pdf cut pdf"}, {"name": "JPG to PDF", "short": "Turn photos and scans into one tidy PDF.", "cat": "Everyday helpers", "href": "/jpg-to-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "jpg to pdf image to pdf png to pdf photo to pdf heic to pdf scan to pdf"}, {"name": "Sign PDF", "short": "Fill in and sign PDFs — draw, type or use a photo of your signature.", "cat": "Everyday helpers", "href": "/sign-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "sign pdf signature fill pdf form e-sign add text to pdf tick date esign توقيع تعبئة نموذج"}, {"name": "Add Page Numbers", "short": "Put page numbers on a PDF, exactly where you want them.", "cat": "Everyday helpers", "href": "/add-page-numbers/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "add page numbers pdf number pages pagination ترقيم صفحات"}, {"name": "Watermark PDF", "short": "Stamp CONFIDENTIAL, DRAFT or your own words on your pages.", "cat": "Everyday helpers", "href": "/watermark-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "watermark pdf confidential draft stamp text علامة مائية سري"}, {"name": "Compress PDF", "short": "Make a PDF small enough to email — text stays sharp.", "cat": "Everyday helpers", "href": "/compress-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "compress pdf reduce pdf size shrink pdf smaller pdf email تصغير ضغط حجم"}, {"name": "Protect PDF", "short": "Put a password on a PDF, and stop it being copied.", "cat": "Everyday helpers", "href": "/protect-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "protect pdf password encrypt pdf lock pdf aes secure حماية كلمة مرور تشفير"}, {"name": "Unlock PDF", "short": "Remove the password from a PDF you can already open.", "cat": "Everyday helpers", "href": "/unlock-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "unlock pdf remove password decrypt pdf restrictions فك حماية إزالة كلمة مرور"}, {"name": "Redact PDF", "short": "Black out ID numbers, IBANs and personal details — for good.", "cat": "Everyday helpers", "href": "/redact-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "redact pdf black out hide personal data id number iban privacy remove text إخفاء حجب بيانات"}, {"name": "PDF OCR", "short": "Copy text out of scans and photos — Arabic and English.", "cat": "Everyday helpers", "href": "/ocr-pdf/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "ocr pdf scan to text arabic ocr english image to text searchable pdf تحويل صورة إلى نص قراءة نص عربي"}, {"name": "PDF to JPG", "short": "Turn PDF pages into sharp JPG or PNG pictures.", "cat": "Everyday helpers", "href": "/pdf-to-jpg/", "icon": "<svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M8 3h8l4 4v11a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Z\"/><path d=\"M16 3v4h4M3 7v12a3 3 0 0 0 3 3h9\"/><\/svg>", "keywords": "pdf to jpg pdf to png pdf to image convert pdf pages to images"}];</script>
-<script src="/assets/site.js?v=ed8cda2f7f"></script>
-<script src="/assets/answers.js?v=ed8cda2f7f"></script>
+<script src="/assets/site.js?v=50ad26f954"></script>
+<script src="/assets/answers.js?v=50ad26f954"></script>
+<script src="/assets/strength.js?v=50ad26f954"></script>
 <script>
 (function(){
   const $=ND.$;
-  const COMMON=['password','passw0rd','123456','12345678','123456789','1234567890','qwerty','qwertyuiop','abc123','111111','123123','admin','letmein','welcome','monkey','dragon','football','baseball','iloveyou','master','sunshine','princess','shadow','superman','michael','trustno1','starwars','whatever','hello','freedom','login','secret','computer','charlie','donald','batman','access','mustang','696969','654321','666666','121212','000000','zaq12wsx','1q2w3e4r','1qaz2wsx','asdfgh','asdfghjkl','zxcvbnm','google','samsung','apple','summer','winter','spring','autumn','love','pokemon','soccer','hockey','killer','jordan','hunter','ranger','buster','pepper','ginger','cookie','cheese','flower','tigger','matrix','qwerty123','password1','password123','admin123','root','toor','changeme','default','guest','test','test123','pass','pass123','user','abcdef','abcd1234','aaaaaa','987654321','00000000','11111111','q1w2e3r4','987654','ninja','azerty','solo','loveme','whatever1','mypass','mypassword','allah','bismillah','saudi','riyadh','arabia'];
-  const WORDS=['love','pass','word','admin','user','king','queen','star','moon','blue','red','dog','cat','life','baby','angel','money','team','game','golf','home','cool','summer','winter','apple','orange','lion','tiger','eagle','dragon','magic','power','secret','hello','world','sun','fire','ice','rock','music','happy','sweet','heart','god','jesus','allah'];
-  const ROWS=['qwertyuiop','asdfghjkl','zxcvbnm','1234567890','qwertzuiop','azertyuiop'];
-  const LEET={'0':'o','1':'i','3':'e','4':'a','5':'s','7':'t','@':'a','$':'s','!':'i'};
   let shown=false;
 
   $('#vis').addEventListener('click',function(){
@@ -155,67 +158,37 @@
     this.innerHTML=shown?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.6 5.1A10 10 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3 3.9M6.6 6.6C3.6 8.4 2 12 2 12s3.6 7 10 7a9.6 9.6 0 0 0 5.4-1.6M3 3l18 18"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>':'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
   });
 
-  function pool(pw){let s=0;if(/[a-z]/.test(pw))s+=26;if(/[A-Z]/.test(pw))s+=26;if(/[0-9]/.test(pw))s+=10;if(/[^a-zA-Z0-9]/.test(pw))s+=33;return s;}
-  function seqLen(pw){
-    let max=1,run=1;
-    for(let i=1;i<pw.length;i++){const d=pw.charCodeAt(i)-pw.charCodeAt(i-1);
-      if(Math.abs(d)===1&&(i<2||pw.charCodeAt(i-1)-pw.charCodeAt(i-2)===d)){run++;max=Math.max(max,run);}else run=1;}
-    return max>=3?max:0;
-  }
-  function kbWalk(pw){
-    const p=pw.toLowerCase();let best=0;
-    ROWS.forEach(r=>{for(let n=Math.min(p.length,r.length);n>=4;n--){for(let i=0;i+n<=r.length;i++){const s=r.substr(i,n);if(p.includes(s)||p.includes([...s].reverse().join(''))){best=Math.max(best,n);break;}}}});
-    return best;
-  }
-  function analyse(pw){
-    const len=[...pw].length,P=pool(pw);
-    let bits=len*Math.log2(Math.max(P,1));
-    const issues=[];
-    const lower=pw.toLowerCase();
-    const unleet=lower.replace(/[013457@$!]/g,c=>LEET[c]||c);
-    const common=COMMON.find(c=>lower===c||unleet===c||unleet.replace(/\d+$/,'')===c);
-    if(common){bits=Math.min(bits,10);issues.push({sev:'bad',t:'This is one of the most common passwords — it would be guessed instantly.'});}
-    else{
-      const dict=COMMON.concat(WORDS).filter(w=>w.length>=4&&unleet.includes(w));
-      if(dict.length){const w=dict.sort((a,b)=>b.length-a.length)[0];bits-=w.length*Math.log2(P||1)*0.75;issues.push({sev:'fail',t:ND.f(unleet!==lower?'Contains the common word “{w}” (even with substitutions).':'Contains the common word “{w}”.',{w})});}
-    }
-    const kb=kbWalk(pw);if(kb){bits-=kb*2.5;issues.push({sev:'fail',t:ND.f('Contains a keyboard pattern ({n} keys in a row).',{n:kb})});}
-    const sq=seqLen(pw);if(sq){bits-=sq*2.5;issues.push({sev:'fail',t:ND.f('Contains a sequence like “abc” or “123” ({n} characters).',{n:sq})});}
-    const rep=pw.match(/(.)\1{2,}/);if(rep){bits-=rep[0].length*2;issues.push({sev:'fail',t:ND.f('Repeats “{c}” {n} times in a row.',{c:rep[1],n:rep[0].length})});}
-    const chunk=pw.match(/(.{2,})\1+/);if(chunk&&chunk[0].length>=4){bits-=chunk[0].length*1.5;issues.push({sev:'fail',t:ND.f('Repeats the chunk “{c}”.',{c:chunk[1]})});}
-    if(/(19|20)\d{2}/.test(pw)){bits-=6;issues.push({sev:'fail',t:'Looks like it contains a year — years are among the first things tried.'});}
-    if(/^[A-Z][a-z]+\d+[^a-zA-Z0-9]?$/.test(pw)){bits-=8;issues.push({sev:'fail',t:'Follows the very common “Word + numbers” shape.'});}
-    bits=Math.max(0,bits);
-    const unique=new Set(pw).size;
-    return {len,P,bits,unique,issues};
-  }
-  const UNITS=[
-    [3153600000,{one:'century',other:'centuries'},{one:'قرن',two:'قرنان',few:'قرون',many:'قرنًا',other:'قرن'}],
-    [31536000,{one:'year',other:'years'},{one:'سنة',two:'سنتان',few:'سنوات',many:'سنة',other:'سنة'}],
-    [2592000,{one:'month',other:'months'},{one:'شهر',two:'شهران',few:'أشهر',many:'شهرًا',other:'شهر'}],
-    [86400,{one:'day',other:'days'},{one:'يوم',two:'يومان',few:'أيام',many:'يومًا',other:'يوم'}],
-    [3600,{one:'hour',other:'hours'},{one:'ساعة',two:'ساعتان',few:'ساعات',many:'ساعة',other:'ساعة'}],
-    [60,{one:'minute',other:'minutes'},{one:'دقيقة',two:'دقيقتان',few:'دقائق',many:'دقيقة',other:'دقيقة'}],
-    [1,{one:'second',other:'seconds'},{one:'ثانية',two:'ثانيتان',few:'ثوانٍ',many:'ثانية',other:'ثانية'}]];
-  function human(sec){
-    if(sec<1)return 'Instantly';
-    if(sec>3153600000*1e6)return 'Heat death of the sun';
-    for(const [s,en,ar] of UNITS){if(sec>=s){const v=sec/s;
-      if(s===UNITS[0][0]&&v>=1000)return v>=1e6?ND.f('{n} million centuries',{n:Math.round(v/1e6)}):ND.f('{n} thousand centuries',{n:Math.round(v/1000)});
-      return ND.count(Math.round(v),en,ar);}}
+  const MSG={
+    common:i=>'This is one of the most common passwords — it would be guessed instantly.',
+    word:i=>ND.f(i.leet?'Contains the common word “{w}” (even with substitutions).':'Contains the common word “{w}”.',{w:i.w}),
+    kb:i=>ND.f('Contains a keyboard pattern ({n} keys in a row).',{n:i.n}),
+    seq:i=>ND.f('Contains a sequence like “abc” or “123” ({n} characters).',{n:i.n}),
+    rep:i=>ND.f('Repeats “{c}” {n} times in a row.',{c:i.c,n:i.n}),
+    chunk:i=>ND.f('Repeats the chunk “{c}”.',{c:i.c}),
+    year:i=>'Looks like it contains a year — years are among the first things tried.',
+    shape:i=>'Follows the very common “Word + numbers” shape.'};
+  function analyse(pw){const a=ND.strength(pw);a.issues=a.issues.map(i=>({sev:i.sev,t:MSG[i.k](i)}));return a;}
+  const human=ND.strength.human;
+  // The worst case on a log scale: 1 second → the age of the universe
+  function ctime(sec){
+    const p=ND.strength.scale(sec);
+    $('#ctime').style.setProperty('--p',p.toFixed(1)+'%');
+    $('#ctime').dataset.level=p<20?1:p<42?2:p<55?3:p<80?4:5;
+    $('#ctimeV').textContent=human(sec);
   }
   function run(){
     const pw=$('#pw').value;
     $('#results').hidden=!pw;$('#empty').hidden=!!pw;
     if(!pw){$('#meter').dataset.level=0;$('#bits').textContent='0 bits';$('#lvl').textContent='—';$('#lvl').style.color='';leakCheck('');return;}
     const a=analyse(pw),b=Math.round(a.bits);
-    const level=b<28?1:b<45?2:b<64?3:b<90?4:5;
+    const level=a.level;
     $('#meter').dataset.level=level;$('#bits').textContent=b+' bits';
     const names=['','Very weak','Weak','Fair','Strong','Excellent'];
     const cols=['','var(--danger)','var(--warn)','var(--gold)','var(--accent-2)','var(--accent)'];
     $('#lvl').textContent=names[level];$('#lvl').style.color=cols[level];
     const guesses=Math.pow(2,a.bits)/2;
     const sc=[['Online, throttled','100 / hour',100/3600],['Online, unthrottled','10 / second',10],['Offline, slow hash','10k / second',1e4],['Offline, fast hash','100B / second',1e11]];
+    ctime(guesses/ND.strength.FAST);
     $('#crack').innerHTML=sc.map(([k,r,rate])=>'<div class="stat"><div class="k">'+k+'</div><div class="v">'+human(guesses/rate)+'</div><div class="faint mono" style="font-size:.72rem;margin-top:4px">'+r+'</div></div>').join('');
     $('#comp').innerHTML=[['Length',a.len],['Character pool',a.P],['Unique chars',a.unique+' / '+a.len],['Raw entropy',Math.round(a.len*Math.log2(a.P||1))+' bits']].map(([k,v])=>'<div class="stat"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>').join('');
     const checks=[
@@ -239,7 +212,7 @@
   function applyLeak(){
     if(!leakCount)return;
     $('#meter').dataset.level=1;$('#lvl').textContent='Leaked';$('#lvl').style.color='var(--danger)';
-    $('#crack').querySelectorAll('.v').forEach(v=>v.textContent='Instantly');
+    $('#crack').querySelectorAll('.v').forEach(v=>v.textContent='Instantly');ctime(0);
   }
   function leakCheck(pw){
     clearTimeout(leakTimer);leakCount=null;

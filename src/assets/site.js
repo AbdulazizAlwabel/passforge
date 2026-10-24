@@ -365,11 +365,57 @@
   /* ---------- Recently used tools (this browser only) ---------- */
   try {
     const here = location.pathname.replace(/^\/ar\//, '/');
-    if ((window.ND_TOOLS || []).some((t) => t.href === here) && here !== '/') {
+    if ((window.ND_TOOLS || []).some((t) => t.href.replace(/^\/ar\//, '/') === here) && here !== '/') {
       const list = ND.store.get('recent', []).filter((h) => h !== here);
       list.unshift(here); ND.store.set('recent', list.slice(0, 8));
     }
   } catch (e) { /* storage unavailable */ }
+
+  /* ---------- Pin a tool to “Your tools” on the home page (this browser only) ---------- */
+  ND.$$('.pin-btn').forEach((b) => {
+    const href = b.dataset.pin;
+    const paint = () => b.setAttribute('aria-pressed', ND.store.get('pins', []).includes(href));
+    paint();
+    b.addEventListener('click', () => {
+      const pins = ND.store.get('pins', []), on = pins.includes(href);
+      ND.store.set('pins', on ? pins.filter((h) => h !== href) : [href].concat(pins).slice(0, 12));
+      paint(); ND.toast(T(on ? 'Removed from your tools' : 'Pinned — it’s on your home page now'));
+    });
+  });
+
+  /* ---------- Numbers that count up to their value ---------- */
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
+  ND.countUp = (el, to, fmt, ms) => {
+    fmt = fmt || ((v) => Math.round(v));
+    if (calm.matches || !isFinite(to)) { el.textContent = fmt(to); return; }
+    const t0 = performance.now(), dur = ms || 700;
+    (function step(t) {
+      const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = fmt(to * e);
+      if (k < 1) requestAnimationFrame(step);
+    })(t0);
+  };
+
+  /* ---------- Cards that follow the pointer (mouse only, never with reduced motion) ---------- */
+  const fine = matchMedia('(hover: hover) and (pointer: fine)');
+  const SPOT = '.task, .try-card, .tile, .principle, .widget-callout, .cat-head, .related > a, .recent-i, .hero-drop';
+  const TILT = '.task, .try-card, .tile';
+  let spotEl = null;
+  document.addEventListener('pointermove', (e) => {
+    if (!fine.matches || calm.matches || e.pointerType !== 'mouse') return;
+    const el = e.target.closest && e.target.closest(SPOT);
+    if (spotEl && spotEl !== el) { spotEl.classList.remove('spot'); spotEl.style.removeProperty('--rx'); spotEl.style.removeProperty('--ry'); }
+    spotEl = el;
+    if (!el) return;
+    const r = el.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    el.style.setProperty('--mx', x + 'px'); el.style.setProperty('--my', y + 'px');
+    el.classList.add('spot');
+    if (el.matches(TILT)) {
+      el.style.setProperty('--rx', ((0.5 - y / r.height) * 5).toFixed(2) + 'deg');
+      el.style.setProperty('--ry', ((x / r.width - 0.5) * 6).toFixed(2) + 'deg');
+    }
+  }, { passive: true });
+  document.addEventListener('pointerleave', () => { if (spotEl) { spotEl.classList.remove('spot'); spotEl = null; } });
 
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));

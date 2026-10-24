@@ -107,5 +107,11 @@
  "compressed": "مضغوط",
  "password": "بكلمة مرور",
  "searchable": "قابل للبحث",
- "password-protected": "محمي بكلمة مرور"
+ "password-protected": "محمي بكلمة مرور",
+ "Instantly": "فورًا",
+ "Heat death of the sun": "أطول من عمر الشمس",
+ "{n} million centuries": "{n} مليون قرن",
+ "{n} thousand centuries": "{n} ألف قرن",
+ "Removed from your tools": "انشالت من أدواتك",
+ "Pinned — it’s on your home page now": "تثبّتت — صارت في صفحتك الرئيسية"
 }
