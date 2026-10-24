@@ -4,6 +4,7 @@
   const root = document.documentElement;
   root.classList.remove('no-js');
 
+  const ICON_FILE = '<svg class="t-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/></svg>';
   const ICON_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
 
   const ND = (window.ND = window.ND || {});
@@ -53,7 +54,8 @@
 
   /* ---------- Toast ---------- */
   let toastEl, toastTimer;
-  ND.toast = (msg) => {
+  // kind: undefined (plain), 'done' (check draws itself) or 'file' (a file drops in, then the check)
+  ND.toast = (msg, kind) => {
     if (!toastEl) {
       toastEl = document.createElement('div');
       toastEl.className = 'toast';
@@ -61,12 +63,17 @@
       toastEl.setAttribute('aria-live', 'polite');
       document.body.appendChild(toastEl);
     }
-    toastEl.innerHTML = ICON_CHECK + '<span></span>';
+    toastEl.className = 'toast' + (kind ? ' toast-' + kind : '');
+    toastEl.innerHTML = (kind === 'file' ? ICON_FILE : '') + ICON_CHECK + '<span></span>';
     toastEl.querySelector('span').textContent = T(msg);
     requestAnimationFrame(() => toastEl.classList.add('show'));
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1900);
+    toastTimer = setTimeout(() => toastEl.classList.remove('show'), kind === 'file' ? 2600 : 1900);
   };
+  /* A finished download: the file drops in and a check draws itself */
+  ND.done = (msg) => ND.toast(msg, 'file');
+  /* Something worked: the check draws itself */
+  ND.ok = (msg) => ND.toast(msg, 'done');
 
   /* ---------- Clipboard ---------- */
   ND.copy = async (text, btn, msg) => {
@@ -80,11 +87,19 @@
       try { document.execCommand('copy'); } catch (_) { /* ignore */ }
       ta.remove();
     }
-    ND.toast(T(msg || 'Copied to clipboard'));
+    ND.toast(T(msg || 'Copied to clipboard'), 'done');
     if (btn) {
+      // the button's icon turns into a check for a moment
+      const ic = btn.querySelector('svg');
+      if (ic && !btn._ic) { btn._ic = ic.outerHTML; ic.outerHTML = ICON_CHECK.replace('<svg ', '<svg class="ic-done" '); }
       btn.classList.add('done');
       clearTimeout(btn._t);
-      btn._t = setTimeout(() => btn.classList.remove('done'), 1400);
+      btn._t = setTimeout(() => {
+        btn.classList.remove('done');
+        const d = btn.querySelector('svg.ic-done');
+        if (d && btn._ic) d.outerHTML = btn._ic;
+        btn._ic = null;
+      }, 1400);
     }
   };
 
@@ -371,6 +386,7 @@
     }
   } catch (e) { /* storage unavailable */ }
 
+  const calm = matchMedia('(prefers-reduced-motion: reduce)');
   /* ---------- Pin a tool to “Your tools” on the home page (this browser only) ---------- */
   ND.$$('.pin-btn').forEach((b) => {
     const href = b.dataset.pin;
@@ -379,12 +395,12 @@
     b.addEventListener('click', () => {
       const pins = ND.store.get('pins', []), on = pins.includes(href);
       ND.store.set('pins', on ? pins.filter((h) => h !== href) : [href].concat(pins).slice(0, 12));
-      paint(); ND.toast(T(on ? 'Removed from your tools' : 'Pinned — it’s on your home page now'));
+      paint(); ND.toast(T(on ? 'Removed from your tools' : 'Pinned — it’s on your home page now'), on ? undefined : 'done');
+      if (!on && !calm.matches) { b.classList.remove('burst'); void b.offsetWidth; b.classList.add('burst'); }
     });
   });
 
   /* ---------- Numbers that count up to their value ---------- */
-  const calm = matchMedia('(prefers-reduced-motion: reduce)');
   ND.countUp = (el, to, fmt, ms) => {
     fmt = fmt || ((v) => Math.round(v));
     if (calm.matches || !isFinite(to)) { el.textContent = fmt(to); return; }
@@ -416,6 +432,48 @@
     }
   }, { passive: true });
   document.addEventListener('pointerleave', () => { if (spotEl) { spotEl.classList.remove('spot'); spotEl = null; } });
+
+  /* ---------- Cards that grow into the page ----------
+     When you open a tool from a card, the card's icon and title glide into place as the tool's
+     heading (and back again). Cross-document view transitions — browsers without them just fade. */
+  const strip = (p) => p.replace(/^\/ar\//, '/');
+  const pathOf = (href) => { try { const u = new URL(href, location.href); return u.origin === location.origin ? strip(u.pathname) : null; } catch (e) { return null; } };
+  const isTool = (p) => (window.ND_TOOLS || []).some((t) => strip(t.href) === p);
+  const cardFor = (p) => ND.$$('main a[href]').find((a) => pathOf(a.getAttribute('href')) === p && a.querySelector('.tile-icon, .mi'));
+  const named = (pairs) => { ND.$$('[style*="view-transition-name"]').forEach((el) => { el.style.viewTransitionName = ''; }); pairs.forEach(([el, n]) => { if (el) el.style.viewTransitionName = n; }); return pairs.map(([el]) => el); };
+  const nameCard = (a) => named([[a.querySelector('.tile-icon, .mi'), 'vt-icon'], [a.querySelector('strong') || a.querySelector('.mi + span'), 'vt-title']]);
+  const nameHero = () => { const ic = document.querySelector('.tool-hero .tool-ic'); return ic ? named([[ic, 'vt-icon'], [document.querySelector('.tool-hero h1'), 'vt-title']]) : []; };
+  // clear the names once the transition ends — unless a newer transition has named them since
+  let vtGen = 0;
+  const unname = (els, vt) => { const g = ++vtGen; vt.finished.finally(() => { if (g === vtGen) els.forEach((el) => el && (el.style.viewTransitionName = '')); }); };
+  let clicked = null;
+  document.addEventListener('click', (e) => { clicked = e.target.closest ? e.target.closest('a[href]') : null; }, true);
+  window.addEventListener('pageswap', (e) => {
+    if (!e.viewTransition || calm.matches) return;
+    let to = null;
+    try { to = pathOf(e.activation.entry.url); } catch (_) { to = clicked && pathOf(clicked.getAttribute('href')); }
+    if (!to) return;
+    let els = [];
+    if (isTool(to)) {
+      const a = clicked && pathOf(clicked.getAttribute('href')) === to && clicked.querySelector('.tile-icon, .mi') ? clicked : cardFor(to);
+      if (a) els = nameCard(a);
+    } else els = nameHero(); // leaving a tool for a list: the heading shrinks back into its card
+    unname(els, e.viewTransition);
+  });
+  window.addEventListener('pagereveal', (e) => {
+    if (!e.viewTransition || calm.matches) return;
+    let from = null;
+    try { from = pathOf(navigation.activation.from.url); } catch (_) { from = document.referrer ? pathOf(document.referrer) : null; }
+    let els = nameHero();
+    if (!els.length && from) { const a = cardFor(from); if (a) els = nameCard(a); }
+    if (els.length) unname(els, e.viewTransition);
+  });
+
+  /* ---------- First visit: the logo's check draws itself once ---------- */
+  if (root.classList.contains('nd-first')) {
+    ND.store.set('seen', 1);
+    setTimeout(() => root.classList.remove('nd-first'), 2500);
+  }
 
   if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
     window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(() => {}));

@@ -1693,3 +1693,65 @@ select.fld { appearance: auto; -webkit-appearance: menulist; padding: 0; }
 @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 .st-busy-pct { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-3); }
 @media (prefers-reduced-motion: reduce) { .st-prog i { animation: none; } .task.spot, .tile.spot, .try-card.spot { transform: none; } }
+
+/* ---------- Motion: cards that grow into the page ---------- */
+.tool-ic { width: 52px; height: 52px; border-radius: 15px; margin-bottom: 18px; display: grid; place-items: center; }
+.tool-ic svg { width: 24px; height: 24px; }
+::view-transition-group(vt-icon), ::view-transition-group(vt-title) { animation-duration: 0.45s; animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1); }
+::view-transition-old(vt-title), ::view-transition-new(vt-title) { height: 100%; width: auto; }
+::view-transition-old(vt-icon), ::view-transition-new(vt-icon) { height: 100%; width: 100%; }
+
+/* ---------- Motion: moments of "done" ---------- */
+.toast > svg:not(.t-file) path { stroke-dasharray: 30; stroke-dashoffset: 0; }
+.toast-done.show svg path, .toast-file.show > svg:not(.t-file) path { animation: drawCheck 0.5s 0.12s var(--ease) both; }
+.toast-file.show > svg:not(.t-file) path { animation-delay: 0.55s; }
+.toast .t-file { color: var(--bg); opacity: 0.7; }
+.toast-file.show .t-file { animation: fileDrop 0.6s var(--ease) both; }
+.toast-file.show > svg:not(.t-file) { animation: popIn 0.35s 0.5s var(--ease) both; }
+@keyframes drawCheck { from { stroke-dashoffset: 30; } to { stroke-dashoffset: 0; } }
+@keyframes fileDrop { 0% { transform: translateY(-26px) rotate(-12deg); opacity: 0; } 60% { transform: translateY(2px) rotate(3deg); opacity: 1; } 100% { transform: none; opacity: 0.7; } }
+@keyframes popIn { from { transform: scale(0.4); opacity: 0; } to { transform: none; opacity: 1; } }
+.ic-done { animation: popIn 0.3s var(--ease) both; color: var(--accent); }
+.ic-done path { stroke-dasharray: 30; animation: drawCheck 0.4s 0.05s var(--ease) both; }
+/* pin: the star pops and throws a few sparks */
+.pin-btn { position: relative; }
+.pin-btn.burst svg { animation: starPop 0.55s var(--ease); }
+.pin-btn.burst::after { content: ""; position: absolute; top: 50%; inset-inline-start: 18px; width: 4px; height: 4px; margin: -2px; border-radius: 50%; pointer-events: none;
+  box-shadow: 0 -16px 0 var(--gold), 14px -8px 0 var(--accent), 14px 8px 0 var(--gold), 0 16px 0 var(--accent), -14px 8px 0 var(--gold), -14px -8px 0 var(--accent);
+  animation: sparks 0.6s var(--ease) both; }
+@keyframes starPop { 0% { transform: scale(0.6) rotate(0); } 55% { transform: scale(1.45) rotate(90deg); } 100% { transform: rotate(72deg) scale(1.1); } }
+@keyframes sparks { from { transform: scale(0.3); opacity: 1; } to { transform: scale(1.6); opacity: 0; } }
+/* reassuring results get one calm green pulse */
+.verdict[data-kind="good"] .v-icon, .breach[data-state="ok"] .breach-icon { animation: calmPulse 1.6s ease-out 1; }
+@keyframes calmPulse { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); } 100% { box-shadow: 0 0 0 16px transparent; } }
+
+/* ---------- Motion: the home page's signature touches ---------- */
+.scribble { position: relative; display: inline-block; }
+.scribble-u { position: absolute; left: -2%; width: 104%; bottom: -0.16em; height: 0.34em; overflow: visible; pointer-events: none; }
+[dir="rtl"] .scribble-u { transform: scaleX(-1); bottom: -0.05em; }
+.scribble-u path { fill: none; stroke: var(--gold); stroke-width: 3.2; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: scribble 0.8s 0.7s var(--ease) forwards; }
+.scribble-u path + path { stroke-width: 2.2; opacity: 0.7; animation-delay: 1.15s; animation-duration: 0.55s; }
+@keyframes scribble { to { stroke-dashoffset: 0; } }
+/* the note drops in and settles, then its tape goes on */
+.note { animation: noteDrop 0.9s 0.25s cubic-bezier(0.2, 1.3, 0.4, 1) both; }
+[dir="rtl"] .note { animation-name: noteDropRtl; }
+.note::before { animation: tape 0.35s 1s var(--ease) both; }
+@keyframes noteDrop { from { opacity: 0; transform: translateY(-40px) rotate(-7deg); } to { opacity: 1; transform: rotate(-1.2deg); } }
+@keyframes noteDropRtl { from { opacity: 0; transform: translateY(-40px) rotate(7deg); } to { opacity: 1; transform: rotate(1.2deg); } }
+@keyframes tape { from { opacity: 0; transform: rotate(-3deg) scaleX(0.3); } to { opacity: 0.8; transform: rotate(-3deg); } }
+@media (max-width: 1000px) {
+  @keyframes noteDrop { from { opacity: 0; transform: translateY(-30px) rotate(-4deg); } to { opacity: 1; transform: none; } }
+  @keyframes noteDropRtl { from { opacity: 0; transform: translateY(-30px) rotate(4deg); } to { opacity: 1; transform: none; } }
+}
+/* first visit only: the logo's check draws itself */
+.mark-check { stroke-dasharray: 1; stroke-dashoffset: 0; }
+.nd-first .mark-check { animation: markDraw 0.7s 0.3s var(--ease) both; }
+@keyframes markDraw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .note, .note::before, .scribble-u path, .nd-first .mark-check, .toast svg, .toast svg path, .ic-done, .ic-done path,
+  .pin-btn.burst svg, .pin-btn.burst::after, .verdict .v-icon, .breach-icon { animation: none !important; }
+  .scribble-u path { stroke-dashoffset: 0; }
+  .pin-btn.burst::after { display: none; }
+}
+.hero2 .display { text-wrap: balance; }

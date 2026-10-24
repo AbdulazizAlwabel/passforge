@@ -1607,7 +1607,7 @@
     const data=await s2.encrypt({type:'signature',title:ND.t('Signature')+' · '+todayStr(),image:g.src});
     if(data.length>140000){ND.toast(ND.t('That signature is too large to store in the vault.'));return;}
     const r=await ND.api('/vault/items/'+NDVault.newId(),{method:'PUT',body:{data}});
-    if(r.ok){g.vault=true;ND.toast(ND.t('Saved to your vault — encrypted on this device'));}else ND.toast(r.data.error||ND.t('Something went wrong.'));
+    if(r.ok){g.vault=true;ND.ok(ND.t('Saved to your vault — encrypted on this device'));}else ND.toast(r.data.error||ND.t('Something went wrong.'));
   }
   window.addEventListener('pagehide',()=>{if(vaultSess)vaultSess.close();});
 
@@ -2120,8 +2120,8 @@
       const size=download(bytes,outBase()+'.pdf','application/pdf');
       const before=[...new Set(pages.map(p=>p.src))].map(id=>sources.get(id)).reduce((n,x)=>n+(x.bytes?x.bytes.length:0),0);
       const extra=[];if(dlOpts.protect)extra.push(ND.t('password-protected'));if(dlOpts.ocr)extra.push(ND.t('searchable'));
-      if(dlOpts.compress!=='off'&&before)ND.toast(ND.f('Saved {name} · {size} (was {was})',{name:outBase()+'.pdf',size:fmtSize(size),was:fmtSize(before)})+(extra.length?' · '+extra.join(' · '):''));
-      else ND.toast(ND.f('Saved {name} · {size}',{name:outBase()+'.pdf',size:fmtSize(size)})+(extra.length?' · '+extra.join(' · '):''));
+      if(dlOpts.compress!=='off'&&before)ND.done(ND.f('Saved {name} · {size} (was {was})',{name:outBase()+'.pdf',size:fmtSize(size),was:fmtSize(before)})+(extra.length?' · '+extra.join(' · '):''));
+      else ND.done(ND.f('Saved {name} · {size}',{name:outBase()+'.pdf',size:fmtSize(size)})+(extra.length?' · '+extra.join(' · '):''));
     });
   }
   $('#save').addEventListener('click',savePdf);
@@ -2180,12 +2180,12 @@
         files[base+rangeName(r)+'.pdf']=await buildPdf(list,base);
       }
       const names=Object.keys(files);
-      if(names.length===1){const size=download(files[names[0]],names[0],'application/pdf');ND.toast(ND.f('Saved {name} · {size}',{name:names[0],size:fmtSize(size)}));return;}
+      if(names.length===1){const size=download(files[names[0]],names[0],'application/pdf');ND.done(ND.f('Saved {name} · {size}',{name:names[0],size:fmtSize(size)}));return;}
       busy(ND.t('Packing the ZIP…'),1);await tick();
       const {zipSync}=await zipLib();
       const z={};names.forEach(n=>{z[n]=[files[n],{level:0}];});
       const size=download(zipSync(z),base+'-split.zip','application/zip');
-      ND.toast(ND.f('Saved {files} · {size}',{files:nFiles(names.length),size:fmtSize(size)}));
+      ND.done(ND.f('Saved {files} · {size}',{files:nFiles(names.length),size:fmtSize(size)}));
     });
   });
 
@@ -2242,11 +2242,11 @@
         catch(e){if(e.message==='encode'){ND.toast(ND.t('Your browser can’t save WebP — try PNG or JPG.'));return;}throw e;}
       }
       const names=Object.keys(files);
-      if(names.length===1){const size=download(files[names[0]],names[0],mime);ND.toast(ND.f('Saved {name} · {size}',{name:names[0],size:fmtSize(size)}));return;}
+      if(names.length===1){const size=download(files[names[0]],names[0],mime);ND.done(ND.f('Saved {name} · {size}',{name:names[0],size:fmtSize(size)}));return;}
       busy(ND.t('Packing the ZIP…'),1);await tick();
       const {zipSync}=await zipLib();const z={};names.forEach(n=>{z[n]=[files[n],{level:0}];});
       const size=download(zipSync(z),base+'-images.zip','application/zip');
-      ND.toast(ND.f('Saved {files} · {size}',{files:nFiles(names.length),size:fmtSize(size)}));
+      ND.done(ND.f('Saved {files} · {size}',{files:nFiles(names.length),size:fmtSize(size)}));
     });
   });
 
