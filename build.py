@@ -85,7 +85,7 @@ ICONS = {
 
 MARK = ('<svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">'
         '<rect x="1" y="1" width="30" height="30" rx="9" fill="var(--text)"/>'
-        '<path d="M8.5 16.8l4.6 4.6L23.5 10.6" fill="none" stroke="var(--accent)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>'
+        '<path class="mark-check" pathLength="1" d="M8.5 16.8l4.6 4.6L23.5 10.6" fill="none" stroke="var(--accent)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>'
         '</svg>')
 
 # ---------------------------------------------------------------------------
@@ -270,7 +270,8 @@ VERIFY_META = "".join(
     for k, n in (("google", "google-site-verification"), ("bing", "msvalidate.01")) if SEO.get(k))
 
 THEME_BOOT = ("<script>(function(){try{var t=JSON.parse(localStorage.getItem('nd:theme'));"
-              "if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}})();</script>")
+              "if(t)document.documentElement.setAttribute('data-theme',t);"
+              "if(!localStorage.getItem('nd:seen'))document.documentElement.classList.add('nd-first')}catch(e){}})();</script>")
 
 
 def tools_json():
@@ -439,6 +440,7 @@ def build_tool(t):
   <section class="tool-hero">
     <div class="wrap">
       <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{ICONS['chev']}{parent_crumb}<span aria-current="page">{t['name']}</span></nav>
+      <span class="tile-icon tool-ic" aria-hidden="true">{ICONS[t['icon']]}</span>
       <h1 class="h1"{ar_title}>{t['title']}</h1>
       <p class="lede">{t['lede']}</p>
       <div class="tool-badges">
@@ -534,7 +536,7 @@ def build_home():
     <div class="wrap hero2-row">
       <div class="hero2-main">
         <p class="eyebrow reveal"><span class="dot"></span>Free · made by one person · no tricks</p>
-        <h1 class="display reveal" style="--d:80ms"><span class="h-line">Tools that do the job.</span><br><em>No catch.</em></h1>
+        <h1 class="display reveal" style="--d:80ms"><span class="h-line">Tools that do the job.</span><br><em class="scribble">No catch.<svg class="scribble-u" viewBox="0 0 300 24" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 15C52 7 104 5 160 8s104 9 136 3"/><path pathLength="1" d="M40 21c60-5 140-7 228-4"/></svg></em></h1>
         <p class="lede reveal" style="--d:160ms">Fix a PDF, make a strong password, check a suspicious link. Everything works right on your phone or computer — your files never leave it, and there’s never a bill at the end.</p>
         <label class="hero-drop reveal" style="--d:240ms" id="heroDrop" tabindex="0">
           <input type="file" id="heroFile" multiple accept=".pdf,application/pdf,image/*,.heic,.heif" hidden>
@@ -549,7 +551,7 @@ def build_home():
           <a href="/password-generator/">{ICONS['lock']}Make a password</a>
         </div>
       </div>
-      <aside class="note reveal" style="--d:200ms" aria-label="A note from Abdulaziz">
+      <aside class="note" aria-label="A note from Abdulaziz">
         <p class="note-k">A note from the maker</p>
         <p>Most tool websites aren’t honest. You spend ten minutes working on your file — then they ask you to pay, or won’t let you download it.</p>
         <p>That made me angry, so I built my own. Everything here is free, there are no ads, and your files stay yours.</p>
@@ -837,7 +839,7 @@ def build_404():
 FAVICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
 <rect x="1" y="1" width="30" height="30" rx="9" fill="#0f1210"/>
 <rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="none" stroke="#7ee2b0" stroke-opacity=".25"/>
-<path d="M8.5 16.8l4.6 4.6L23.5 10.6" fill="none" stroke="#7ee2b0" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path class="mark-check" pathLength="1" d="M8.5 16.8l4.6 4.6L23.5 10.6" fill="none" stroke="#7ee2b0" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 """
 

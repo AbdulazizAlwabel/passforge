@@ -65,10 +65,46 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
     ok(/short link|رابط مختصر/.test(await p.textContent('.ua-real')), tag + ': short link explained');
     await ctx.close();
   }
+  // motion: first visit, done moments, cards that grow into the page
+  {
+    const ctx = await br.newContext({ viewport: { width: 1280, height: 900 }, permissions: ['clipboard-read', 'clipboard-write'] });
+    await ctx.addInitScript(() => { addEventListener('pagereveal', (e) => { const vt = !!e.viewTransition; setTimeout(() => { window.__vt = { vt, anims: [...new Set(document.getAnimations().map((a) => a.effect && a.effect.pseudoElement).filter(Boolean))] }; }, 30); }); });
+    const p = await ctx.newPage(); p.on('pageerror', (e) => errs.push('motion: ' + e.message));
+    await p.goto(B + '/');
+    ok(await p.evaluate(() => document.documentElement.classList.contains('nd-first')), 'first visit: the logo check draws itself');
+    ok(await p.locator('.scribble-u path').count() === 2, 'headline underline is there');
+    await p.reload();
+    ok(!(await p.evaluate(() => document.documentElement.classList.contains('nd-first'))), 'second visit: no logo animation');
+    for (const L of ['', '/ar']) {
+      await p.goto(B + L + '/'); await p.waitForTimeout(300);
+      await p.click('.tasks .task'); await p.waitForURL(/pdf-studio/); await p.waitForTimeout(150);
+      const fwd = await p.evaluate(() => window.__vt);
+      ok(fwd && fwd.vt && fwd.anims.includes('::view-transition-old(vt-icon)') && fwd.anims.includes('::view-transition-new(vt-title)'), (L || 'en') + ': card grows into the tool heading ' + JSON.stringify(fwd && fwd.anims));
+      ok(await p.locator('.tool-hero .tool-ic').count() === 1, (L || 'en') + ': tool page has its icon');
+      await p.goBack(); await p.waitForFunction(() => window.__vt && window.__vt.fresh !== false, null, { timeout: 3000 }).catch(() => {}); await p.waitForTimeout(400);
+      const back = await p.evaluate(() => window.__vt);
+      ok(back && back.anims.includes('::view-transition-old(vt-icon)') && back.anims.includes('::view-transition-new(vt-icon)'), (L || 'en') + ': and shrinks back into its card ' + JSON.stringify(back && back.anims));
+      ok(!(await p.evaluate(() => { const n = {}; for (const el of document.querySelectorAll('*')) { const v = el.style.viewTransitionName; if (v) { if (n[v]) return true; n[v] = 1; } } return false; })), (L || 'en') + ': no duplicate transition names left behind');
+    }
+    await p.goto(B + '/password-generator/'); await p.waitForTimeout(300);
+    await p.click('#copyPw'); await p.waitForSelector('#copyPw svg.ic-done', { timeout: 2000 }).catch(() => {});
+    ok(await p.locator('#copyPw svg.ic-done').count() === 1, 'copy: the button icon turns into a check');
+    ok(await p.evaluate(() => document.querySelector('.toast').classList.contains('toast-done')), 'copy: toast draws its check');
+    await p.waitForTimeout(1600);
+    ok(await p.locator('#copyPw svg.ic-done').count() === 0 && await p.locator('#copyPw svg').count() === 1, 'copy: the original icon comes back');
+    await p.evaluate(() => ND.done('Saved test.pdf'));
+    ok(await p.evaluate(() => { const t = document.querySelector('.toast'); return t.classList.contains('toast-file') && !!t.querySelector('.t-file') && /Saved test\.pdf/.test(t.textContent); }), 'download toast: the file drops in');
+    await p.click('.pin-btn');
+    ok(await p.evaluate(() => document.querySelector('.pin-btn').classList.contains('burst')), 'pin: the star pops');
+    await p.click('.pin-btn');
+    await ctx.close();
+  }
   // reduced motion: no tilt, password appears at once
   const rm = await br.newContext({ reducedMotion: 'reduce' }); const q = await rm.newPage();
   await q.goto(B + '/'); ok((await q.textContent('#tryGen')).trim().length === 20 && !(await q.$('#tryGen .scramble')), 'reduced motion: password shown without the scramble');
   await q.hover('.task'); ok(!(await q.$('.task.spot')), 'reduced motion: cards don’t tilt');
+  ok(await q.evaluate(() => getComputedStyle(document.querySelector('.scribble-u path')).strokeDashoffset) === '0px' || await q.evaluate(() => getComputedStyle(document.querySelector('.scribble-u path')).strokeDashoffset) === '0', 'reduced motion: underline simply shown');
+  ok(await q.evaluate(() => getComputedStyle(document.querySelector('.note')).animationName) === 'none', 'reduced motion: the note doesn’t drop');
   await rm.close();
   ok(!errs.length, 'no page errors ' + errs.join(' | '));
   await br.close(); console.log(fails ? fails + ' FAILED' : 'ALL PASSED');

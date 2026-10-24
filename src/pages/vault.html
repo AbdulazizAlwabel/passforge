@@ -273,7 +273,7 @@
       if(!r.ok)return err(f,r.data.error||ND.t('Something went wrong.'));
       const saved=Object.assign(obj,{id,updated:new Date().toISOString()});
       const i=items.findIndex(it=>it.id===id);if(i>=0)items[i]=saved;else items.push(saved);
-      current=saved;renderList();renderDetail();ND.toast('Saved — encrypted on this device');
+      current=saved;renderList();renderDetail();ND.ok('Saved — encrypted on this device');
     });
     if(isNew)$('#f_title').focus();
   }
