@@ -79,14 +79,14 @@
     const host = norm(u.hostname), reg = registrable(host), label = reg.split('.')[0], tld = host.split('.').pop();
     if (!/^https?:$/.test(u.protocol)) { add('high', ND.f('Uses the “{scheme}” scheme instead of a normal web address — it can run code or open apps.', { scheme: u.protocol.replace(':', '') }), 'scheme'); return { F, host }; }
     const official = officialFor(host);
-    if (official) add('good', ND.f('This is the official address of {brand} ({domain}).', { brand: official[0], domain: official[1] }), 'name');
+    if (official) add('good', ND.f('This is the official address of {brand} ({domain}).', { brand: T(official[0]), domain: official[1] }), 'name');
     if (u.username || u.password || /^[^/]*@/.test(raw.replace(/^[a-z]+:\/\//i, ''))) add('high', T('Contains “@” before the address — everything before it is ignored, so the real destination is hidden.'), 'user');
     if (/^\d{1,3}(\.\d{1,3}){3}$/.test(host) || host.startsWith('[')) add('high', T('Points to a raw IP address instead of a name — legitimate services almost never do this.'), 'name');
     if (host.split('.').some((p) => p.startsWith('xn--'))) add('high', T('Uses international characters that can imitate normal letters (punycode). The real address is: ') + host, label.startsWith('xn--') ? 'name' : 'sub');
     else if (/[^\x00-\x7f]/.test(raw.split(/[/?#]/).slice(0, 3).join('/'))) add('medium', T('Contains non-Latin characters in the address — check it carefully.'), 'name');
     const im = official ? null : imitates(host);
     if (im) {
-      if (im.how === 'mention') add('high', ND.f('Mentions {brand} but is not {brand}’s official site ({domain}).', { brand: im.brand, domain: im.domain }), im.part);
+      if (im.how === 'mention') add('high', ND.f('Mentions {brand} but is not {brand}’s official site ({domain}).', { brand: T(im.brand), domain: im.domain }), im.part);
       else add('high', ND.f('Looks like {domain} but is spelled differently — a classic imitation.', { domain: im.domain }), 'name');
     }
     if (SHORTENERS.includes(host)) add('medium', T('This is a shortened link — the real destination is hidden until you open it.'), 'name');

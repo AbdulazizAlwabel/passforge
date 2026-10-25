@@ -183,7 +183,7 @@
     const official=fdom?LC.officialFor(fdom):null;
     // 1) who sent it
     if(R.auth){
-      if(R.auth.dmarc==='pass'&&official)add('good',F('Passed the sender check (DMARC) for {domain} — this really came from {brand}.',{domain:freg,brand:official[0]},1));
+      if(R.auth.dmarc==='pass'&&official)add('good',F('Passed the sender check (DMARC) for {domain} — this really came from {brand}.',{domain:freg,brand:T(official[0])},1));
       else if(R.auth.dmarc==='pass')add('good',F('Passed the sender check (DMARC): it really came from {domain}. That proves who sent it — not that they’re trustworthy.',{domain:freg||'?'},1));
       else if(R.auth.dmarc==='fail')add('high',F('Failed the sender check (DMARC): this email is pretending to come from {domain}.',{domain:freg||'?'},1));
       else if(R.auth.spf==='fail'&&R.auth.dkim!=='pass')add('medium',T('Failed the sender checks (SPF and DKIM) — it may not really come from the address shown.'));
@@ -197,11 +197,11 @@
       const brandByName=LC.brandsIn(shownName)[0]||LC.brandsIn(local)[0]||(FREE.includes(fdom)?LC.brandsIn(R.subject+' '+(R.text||'').slice(0,400))[0]:null);
       const own=LC.officialFor(fdom); // the company this address really belongs to, if any
       if(brandByName&&!(own&&own[1]===brandByName[1])){
-        if(FREE.includes(fdom))add('high',F('Uses the name {brand} but was sent from a free {provider} address ({address}). Companies don’t email from free accounts.',{brand:brandByName[0],provider:fdom,address:from.email},1));
-        else add('high',F('Says it’s from {brand}, but the address is {domain} — not {brand}’s own ({official}).',{brand:brandByName[0],domain:fdom,official:brandByName[1]},1));
+        if(FREE.includes(fdom))add('high',F('Uses the name {brand} but was sent from a free {provider} address ({address}). Companies don’t email from free accounts.',{brand:T(brandByName[0]),provider:fdom,address:from.email},1));
+        else add('high',F('Says it’s from {brand}, but the address is {domain} — not {brand}’s own ({official}).',{brand:T(brandByName[0]),domain:fdom,official:brandByName[1]},1));
       }
       const im=LC.imitates(fdom);
-      if(im&&!(brandByName&&im.brand===brandByName[0]))add('high',im.how==='mention'?F('The sender’s address mentions {brand} but isn’t {brand}’s ({domain}).',{brand:im.brand,domain:im.domain}):F('The sender’s address looks like {domain} but is spelled differently.',{domain:im.domain}),1);
+      if(im&&!(brandByName&&im.brand===brandByName[0]))add('high',im.how==='mention'?F('The sender’s address mentions {brand} but isn’t {brand}’s ({domain}).',{brand:T(im.brand),domain:im.domain}):F('The sender’s address looks like {domain} but is spelled differently.',{domain:im.domain}),1);
       const fake=shownName.match(/[^\s<>"]+@[^\s<>"]+\.[a-z]{2,}/i);
       if(fake&&fake[0].toLowerCase()!==from.email)add('high',F('The name shows the address {shown}, but the real sender is {real}.',{shown:fake[0],real:from.email},1));
       if(/\.(xyz|top|icu|cfd|sbs|click|link|cyou|rest|buzz|monster|quest|lol|mom|cam|bond|tk|ml|ga|cf|gq|support|info|vip|win|online|site|shop|live)$/.test(fdom)&&!official)add('medium',F('Sent from an address ending in “.{tld}” — cheap endings like this are very common in scams.',{tld:fdom.split('.').pop()}));
