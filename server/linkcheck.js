@@ -10,7 +10,7 @@ const crypto = require('crypto');
 
 const FEEDS = [
   // abuse.ch has required a free Auth-Key since June 2025 — the feed is used only when URLHAUS_AUTH_KEY is set
-  { id: 'urlhaus', name: 'URLhaus (abuse.ch)', kind: 'url', threat: 'malware', url: 'https://urlhaus.abuse.ch/downloads/text_online/', key: 'URLHAUS_AUTH_KEY' },
+  { id: 'urlhaus', name: 'URLhaus (abuse.ch)', kind: 'url', threat: 'malware', url: (k) => `https://urlhaus-api.abuse.ch/v2/files/exports/${k}/online.csv`, csv: 3, key: 'URLHAUS_AUTH_KEY' },
   { id: 'openphish', name: 'OpenPhish', kind: 'url', threat: 'phishing', url: 'https://openphish.com/feed.txt' },
   { id: 'phishdb', name: 'Phishing.Database', kind: 'domain', threat: 'phishing', url: 'https://raw.githubusercontent.com/Phishing-Database/Phishing.Database/master/phishing-domains-ACTIVE.txt' },
 ];
@@ -51,12 +51,13 @@ module.exports = function mountLinkcheck(api, { limiter }) {
     for (let fi = 0; fi < ACTIVE.length; fi++) {
       const f = ACTIVE[fi];
       try {
-        const res = await fetch(f.url, { signal: AbortSignal.timeout(60000), headers: Object.assign({ 'User-Agent': 'nicelydone-linkcheck/1.0 (+https://nicelydone.qd.je/link-checker/)' }, f.key ? { 'Auth-Key': process.env[f.key] } : {}) });
+        const res = await fetch(typeof f.url === 'function' ? f.url(process.env[f.key]) : f.url, { signal: AbortSignal.timeout(60000), headers: Object.assign({ 'User-Agent': 'nicelydone-linkcheck/1.0 (+https://nicelydone.qd.je/link-checker/)' }, f.key ? { 'Auth-Key': process.env[f.key] } : {}) });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const text = await res.text();
         let n = 0;
         for (const line of text.split('\n')) {
-          const v = line.trim();
+          // CSV feeds: take the address from the given column (rows look like "id","date","url",…)
+          const v = f.csv ? ((line.match(/"([^"]*)"/g) || [])[f.csv - 1] || '').slice(1, -1) : line.trim();
           if (!v || v.startsWith('#')) continue;
           let key;
           if (f.kind === 'domain') {
@@ -100,7 +101,8 @@ module.exports = function mountLinkcheck(api, { limiter }) {
     res.set('Cache-Control', 'no-store');
     res.json({
       matches, updated: stats.updated, ready: !!stats.updated, head: HEAD,
-      feeds: ACTIVE.map((f) => ({ id: f.id, name: f.name, threat: f.threat, entries: stats.counts[f.id] || 0 })),
+      // a feed that loaded nothing (down, or the key not working yet) isn't named as a source
+      feeds: ACTIVE.filter((f) => stats.counts[f.id] > 0).map((f) => ({ id: f.id, name: f.name, threat: f.threat, entries: stats.counts[f.id] })),
     });
   });
 };
