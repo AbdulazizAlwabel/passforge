@@ -1,0 +1,138 @@
+<!-- @badges -->
+<span class="badge ok">{{icon:check}}Never expires</span>
+
+<!-- @tool -->
+<div class="panel">
+  <div class="panel-body">
+    <div class="seg qr-kinds" role="tablist" aria-label="What goes in the code">
+      <button role="tab" aria-selected="true" data-kind="text">Link or text</button>
+      <button role="tab" aria-selected="false" data-kind="wifi">Wi-Fi</button>
+      <button role="tab" aria-selected="false" data-kind="wa">WhatsApp</button>
+      <button role="tab" aria-selected="false" data-kind="contact">Contact</button>
+    </div>
+    <div class="qr-grid">
+      <div class="qr-form">
+        <div data-pane="text">
+          <div class="field">
+            <label class="label" for="qText">Link or text</label>
+            <textarea class="textarea" id="qText" rows="3" placeholder="https://example.com — or any text" spellcheck="false" dir="auto"></textarea>
+          </div>
+        </div>
+        <div data-pane="wifi" hidden>
+          <div class="field"><label class="label" for="qSsid">Network name</label><input class="input" id="qSsid" autocomplete="off" spellcheck="false" dir="auto"></div>
+          <div class="field"><label class="label" for="qPass">Password</label><input class="input mono-in" id="qPass" autocomplete="off" spellcheck="false"></div>
+          <div class="field">
+            <label class="label">Security</label>
+            <div class="seg" id="qSec"><button type="button" aria-pressed="true" data-v="WPA">WPA / WPA2 / WPA3</button><button type="button" aria-pressed="false" data-v="WEP">WEP</button><button type="button" aria-pressed="false" data-v="nopass">None</button></div>
+          </div>
+          <label class="chip"><input type="checkbox" id="qHidden"><span>Hidden network</span></label>
+        </div>
+        <div data-pane="wa" hidden>
+          <div class="field"><label class="label" for="qWaNum">WhatsApp number</label><input class="input mono-in" id="qWaNum" inputmode="tel" placeholder="9665XXXXXXXX" autocomplete="off" dir="ltr"></div>
+          <p class="hint">With the country code, no + or spaces — for Saudi numbers start with 966.</p>
+          <div class="field"><label class="label" for="qWaMsg">Message <span class="faint" style="font-weight:400">optional</span></label><textarea class="textarea" id="qWaMsg" rows="2" dir="auto"></textarea></div>
+        </div>
+        <div data-pane="contact" hidden>
+          <div class="field"><label class="label" for="qName">Name</label><input class="input" id="qName" autocomplete="off" dir="auto"></div>
+          <div class="field"><label class="label" for="qTel">Phone</label><input class="input mono-in" id="qTel" inputmode="tel" autocomplete="off" dir="ltr"></div>
+          <div class="field"><label class="label" for="qMail">Email</label><input class="input mono-in" id="qMail" inputmode="email" autocomplete="off" dir="ltr"></div>
+        </div>
+        <div class="field" style="margin-top:18px">
+          <label class="label">Colour</label>
+          <div class="qr-inks" id="qInk">
+            <button type="button" aria-pressed="true" data-c="#111111" style="--ink:#111111" aria-label="Black"></button>
+            <button type="button" aria-pressed="false" data-c="#0b6e49" style="--ink:#0b6e49" aria-label="Green"></button>
+            <button type="button" aria-pressed="false" data-c="#1d3f8f" style="--ink:#1d3f8f" aria-label="Blue"></button>
+            <button type="button" aria-pressed="false" data-c="#7a1f2b" style="--ink:#7a1f2b" aria-label="Red"></button>
+          </div>
+        </div>
+      </div>
+      <div class="qr-out">
+        <div class="qr-frame" id="qFrame"><canvas id="qCanvas" width="320" height="320" aria-label="QR code preview" role="img"></canvas><p class="qr-empty" id="qEmpty">Your code appears here as you type.</p></div>
+        <div class="row" style="justify-content:center;margin-top:14px">
+          <button class="btn btn-primary btn-sm" id="qPng" disabled>{{icon:download}}Download PNG</button>
+          <button class="btn btn-sm" id="qSvg" disabled>{{icon:download}}SVG</button>
+        </div>
+        <p class="hint" id="qInfo" style="text-align:center;margin-top:10px"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- @aside -->
+<div class="panel">
+  <h4>Why it never expires</h4>
+  <ul>
+    <li>Many QR sites give you a code that secretly goes through their server — and stops working unless you pay.</li>
+    <li>This code holds your link or text itself. There’s no middleman, so it works for as long as your link does.</li>
+    <li>It’s made on your device. Nothing you type is sent anywhere.</li>
+  </ul>
+</div>
+<div class="panel">
+  <h4>Tips</h4>
+  <ul>
+    <li>Print it at least 2 × 2 cm, and test it with your phone camera before printing lots.</li>
+    <li>Dark colour on a white background scans best.</li>
+    <li>The Wi-Fi code lets guests join by pointing their camera — no typing the password.</li>
+  </ul>
+</div>
+
+<!-- @about -->
+<h2>A QR code that’s really yours</h2>
+<p>Restaurants, shops and families use QR codes for menus, Wi-Fi and contact cards. The catch with many “free” QR makers is that the code points at their own short link, so they can count every scan — and switch it off later to make you pay. This one writes your link, Wi-Fi details or contact straight into the code. Nobody can count your scans or turn it off.</p>
+<details><summary>For the technical folks</summary><p>Codes are made with Kazuhiko Arase’s open-source QR Code Generator (MIT), using byte mode with UTF-8 so Arabic works, error correction level M and a four-module quiet zone. Wi-Fi uses the standard <code>WIFI:</code> format, contacts use MECARD, and WhatsApp uses a <code>wa.me</code> link.</p></details>
+
+<!-- @script -->
+<script src="/assets/vendor/qrcode.js?v={V}"></script>
+<script>
+/*i18n:off*/ // code words (kinds, Wi-Fi fields) must stay as they are; messages go through ND.t at runtime
+(function(){
+  const $=ND.$,$$=ND.$$;
+  qrcode.stringToBytes=qrcode.stringToBytesFuncs['UTF-8'];
+  let kind='text',ink='#111111',sec='WPA',qr=null,payload='';
+  const esc=s=>String(s).replace(/([\\;,:\x22])/g,'\\$1'); // escaping for WIFI: and MECARD:
+  function build(){
+    if(kind==='text')return $('#qText').value.trim();
+    if(kind==='wifi'){const s=$('#qSsid').value;if(!s)return '';return 'WIFI:T:'+sec+';S:'+esc(s)+';'+(sec!=='nopass'?'P:'+esc($('#qPass').value)+';':'')+($('#qHidden').checked?'H:true;':'')+';';}
+    if(kind==='wa'){const n=$('#qWaNum').value.replace(/[^\d]/g,'').replace(/^00/,'');if(n.length<8)return '';const m=$('#qWaMsg').value.trim();return 'https://wa.me/'+n+(m?'?text='+encodeURIComponent(m):'');}
+    if(kind==='contact'){const n=$('#qName').value.trim(),t=$('#qTel').value.trim(),e=$('#qMail').value.trim();if(!n&&!t&&!e)return '';return 'MECARD:'+(n?'N:'+esc(n)+';':'')+(t?'TEL:'+esc(t)+';':'')+(e?'EMAIL:'+esc(e)+';':'')+';';}
+    return '';
+  }
+  function draw(cv,size){
+    const n=qr.getModuleCount(),q=4,total=n+q*2,cell=size/total,ctx=cv.getContext('2d');
+    cv.width=cv.height=size;ctx.fillStyle='#ffffff';ctx.fillRect(0,0,size,size);ctx.fillStyle=ink;
+    for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(qr.isDark(r,c))ctx.fillRect(Math.floor((c+q)*cell),Math.floor((r+q)*cell),Math.ceil(cell),Math.ceil(cell));
+  }
+  function render(){
+    payload=build();
+    const has=!!payload;$('#qEmpty').hidden=has;$('#qFrame').classList.toggle('has',has);$('#qPng').disabled=$('#qSvg').disabled=!has;
+    if(!has){qr=null;const c=$('#qCanvas');c.getContext('2d').clearRect(0,0,c.width,c.height);$('#qInfo').textContent='';return;}
+    try{qr=qrcode(0,'M');qr.addData(payload,'Byte');qr.make();}
+    catch(e){qr=null;$('#qInfo').textContent=ND.t('That’s too long for one QR code — try a shorter link or text.');$('#qPng').disabled=$('#qSvg').disabled=true;return;}
+    draw($('#qCanvas'),640);
+    const n=qr.getModuleCount();
+    $('#qInfo').textContent=ND.f('{n} × {n} squares · {chars} characters',{n,chars:[...payload].length});
+  }
+  $$('.qr-kinds [data-kind]').forEach(b=>b.addEventListener('click',()=>{
+    kind=b.dataset.kind;$$('.qr-kinds [data-kind]').forEach(x=>x.setAttribute('aria-selected',x===b));
+    $$('[data-pane]').forEach(p=>p.hidden=p.dataset.pane!==kind);render();
+  }));
+  $$('#qSec button').forEach(b=>b.addEventListener('click',()=>{sec=b.dataset.v;$$('#qSec button').forEach(x=>x.setAttribute('aria-pressed',x===b));$('#qPass').disabled=sec==='nopass';render();}));
+  $$('#qInk button').forEach(b=>b.addEventListener('click',()=>{ink=b.dataset.c;$$('#qInk button').forEach(x=>x.setAttribute('aria-pressed',x===b));render();}));
+  $$('.qr-form input, .qr-form textarea').forEach(el=>el.addEventListener('input',render));
+  $('#qHidden').addEventListener('change',render);
+  const fname=()=>'qr-code-'+(kind==='wifi'?'wifi':kind==='wa'?'whatsapp':kind==='contact'?'contact':'link');
+  function save(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);ND.done(ND.f('Saved {name}',{name:name}));}
+  $('#qPng').addEventListener('click',()=>{if(!qr)return;const c=document.createElement('canvas');draw(c,1200);c.toBlob(b=>save(b,fname()+'.png'),'image/png');});
+  $('#qSvg').addEventListener('click',()=>{
+    if(!qr)return;const n=qr.getModuleCount(),q=4,t=n+q*2;let d='';
+    for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(qr.isDark(r,c))d+='M'+(c+q)+' '+(r+q)+'h1v1h-1z';
+    const svg='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+t+' '+t+'" shape-rendering="crispEdges"><rect width="'+t+'" height="'+t+'" fill="#fff"/><path fill="'+ink+'" d="'+d+'"/></svg>';
+    save(new Blob([svg],{type:'image/svg+xml'}),fname()+'.svg');
+  });
+  // a link can be passed in the #fragment (never sent to any server): /qr-code/#https://example.com
+  const h=decodeURIComponent(location.hash.slice(1));if(h){$('#qText').value=h;history.replaceState(null,'',location.pathname);}
+  render();
+})();
+/*i18n:on*/
+</script>

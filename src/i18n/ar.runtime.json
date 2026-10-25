@@ -113,5 +113,13 @@
  "{n} million centuries": "{n} مليون قرن",
  "{n} thousand centuries": "{n} ألف قرن",
  "Removed from your tools": "انشالت من أدواتك",
- "Pinned — it’s on your home page now": "تثبّتت — صارت في صفحتك الرئيسية"
+ "Pinned — it’s on your home page now": "تثبّتت — صارت في صفحتك الرئيسية",
+ "That’s too long for one QR code — try a shorter link or text.": "هذا طويل على رمز QR واحد — جرّب رابط أو نص أقصر.",
+ "{n} × {n} squares · {chars} characters": "{n} × {n} مربع · {chars} حرف",
+ "Saved {name}": "انحفظ {name}",
+ "Couldn’t get under the limit": "ما قدرنا ننزل تحت الحد",
+ "Download": "نزّل",
+ "This browser can’t open HEIC photos — try Safari, or share it as JPG first.": "هالمتصفح ما يفتح صور HEIC — جرّب Safari، أو شاركها كـ JPG أول.",
+ "This image couldn’t be opened.": "ما قدرنا نفتح هالصورة.",
+ "{n} photos · {before} → {after}": "{n} صور · {before} ← {after}"
 }

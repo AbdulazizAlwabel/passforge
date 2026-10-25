@@ -9,7 +9,8 @@
 const crypto = require('crypto');
 
 const FEEDS = [
-  { id: 'urlhaus', name: 'URLhaus (abuse.ch)', kind: 'url', threat: 'malware', url: 'https://urlhaus.abuse.ch/downloads/text_online/' },
+  // abuse.ch has required a free Auth-Key since June 2025 — the feed is used only when URLHAUS_AUTH_KEY is set
+  { id: 'urlhaus', name: 'URLhaus (abuse.ch)', kind: 'url', threat: 'malware', url: 'https://urlhaus.abuse.ch/downloads/text_online/', key: 'URLHAUS_AUTH_KEY' },
   { id: 'openphish', name: 'OpenPhish', kind: 'url', threat: 'phishing', url: 'https://openphish.com/feed.txt' },
   { id: 'phishdb', name: 'Phishing.Database', kind: 'domain', threat: 'phishing', url: 'https://raw.githubusercontent.com/Phishing-Database/Phishing.Database/master/phishing-domains-ACTIVE.txt' },
 ];
@@ -39,16 +40,18 @@ function normUrl(raw) {
 const HEAD = 16; // keep the first 64 bits of each SHA-256 — collisions are ~1 in 10^19
 
 module.exports = function mountLinkcheck(api, { limiter }) {
+  // only feeds we can actually download are used — and listed (never claim a source we don't check)
+  const ACTIVE = FEEDS.filter((f) => !f.key || process.env[f.key]);
   // Sorted array of "<16 hex><feed index>" strings: compact, and prefix lookups are a binary search.
   let entries = [];
   let stats = { updated: null, counts: {} };
 
   async function refresh() {
     const keys = new Set(); const counts = {};
-    for (let fi = 0; fi < FEEDS.length; fi++) {
-      const f = FEEDS[fi];
+    for (let fi = 0; fi < ACTIVE.length; fi++) {
+      const f = ACTIVE[fi];
       try {
-        const res = await fetch(f.url, { signal: AbortSignal.timeout(60000), headers: { 'User-Agent': 'nicelydone-linkcheck/1.0 (+https://nicelydone.qd.je/link-checker/)' } });
+        const res = await fetch(f.url, { signal: AbortSignal.timeout(60000), headers: Object.assign({ 'User-Agent': 'nicelydone-linkcheck/1.0 (+https://nicelydone.qd.je/link-checker/)' }, f.key ? { 'Auth-Key': process.env[f.key] } : {}) });
         if (!res.ok) throw new Error('HTTP ' + res.status);
         const text = await res.text();
         let n = 0;
@@ -85,7 +88,7 @@ module.exports = function mountLinkcheck(api, { limiter }) {
     let lo = 0, hi = entries.length;
     while (lo < hi) { const mid = (lo + hi) >> 1; if (entries[mid] < prefix) lo = mid + 1; else hi = mid; }
     const out = [];
-    for (let i = lo; i < entries.length && entries[i].startsWith(prefix); i++) out.push([entries[i].slice(0, HEAD), FEEDS[+entries[i].slice(HEAD)].id]);
+    for (let i = lo; i < entries.length && entries[i].startsWith(prefix); i++) out.push([entries[i].slice(0, HEAD), ACTIVE[+entries[i].slice(HEAD)].id]);
     return out;
   }
 
@@ -97,7 +100,7 @@ module.exports = function mountLinkcheck(api, { limiter }) {
     res.set('Cache-Control', 'no-store');
     res.json({
       matches, updated: stats.updated, ready: !!stats.updated, head: HEAD,
-      feeds: FEEDS.map((f) => ({ id: f.id, name: f.name, threat: f.threat, entries: stats.counts[f.id] || 0 })),
+      feeds: ACTIVE.map((f) => ({ id: f.id, name: f.name, threat: f.threat, entries: stats.counts[f.id] || 0 })),
     });
   });
 };

@@ -23,6 +23,14 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
     ok(pw.length === 20, tag + ': fresh 20-character password (' + pw.length + ')');
     await p.click('#tryNew'); await p.waitForTimeout(800);
     ok((await p.textContent('#tryGen')).trim() !== pw, tag + ': “New one” makes a different password');
+    // live: changes by itself, but holds still while you point at it
+    await p.mouse.move(5, 5); await p.locator('body').focus().catch(() => {}); await p.evaluate(() => document.activeElement && document.activeElement.blur());
+    const live1 = (await p.textContent('#tryGen')).trim(); await p.waitForTimeout(4800);
+    ok((await p.textContent('#tryGen')).trim() !== live1, tag + ': live card makes a new password by itself');
+    await p.hover('#tryGen'); await p.waitForTimeout(1000); const held = (await p.textContent('#tryGen')).trim();
+    ok(await p.evaluate(() => document.getElementById('tryMake').classList.contains('paused')), tag + ': pointing at it pauses it');
+    await p.waitForTimeout(4800); ok((await p.textContent('#tryGen')).trim() === held, tag + ': paused password stays the same');
+    await p.mouse.move(5, 5);
     // 3) today card
     const hj = await p.textContent('#tryHijri');
     ok(/14\d\d/.test(hj) && (L ? /هـ/.test(hj) : /AH/.test(hj)), tag + ': Hijri date shown: ' + hj);
@@ -77,7 +85,7 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
     ok(!(await p.evaluate(() => document.documentElement.classList.contains('nd-first'))), 'second visit: no logo animation');
     for (const L of ['', '/ar']) {
       await p.goto(B + L + '/'); await p.waitForTimeout(300);
-      await p.click('.tasks .task'); await p.waitForURL(/pdf-studio/); await p.waitForTimeout(150);
+      await p.click('.tasks .task'); await p.waitForURL(/pdf-studio/); await p.waitForFunction(() => window.__vt, null, { timeout: 5000 }).catch(() => {});
       const fwd = await p.evaluate(() => window.__vt);
       ok(fwd && fwd.vt && fwd.anims.includes('::view-transition-old(vt-icon)') && fwd.anims.includes('::view-transition-new(vt-title)'), (L || 'en') + ': card grows into the tool heading ' + JSON.stringify(fwd && fwd.anims));
       ok(await p.locator('.tool-hero .tool-ic').count() === 1, (L || 'en') + ': tool page has its icon');

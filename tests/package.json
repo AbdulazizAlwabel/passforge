@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "playwright-core": "^1.64.0"
+  },
+  "devDependencies": {
+    "jsqr": "^1.4.0"
   }
 }

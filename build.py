@@ -71,6 +71,7 @@ ICONS = {
     "check": ic('<path d="M20 6 9 17l-5-5"/>'),
     "x": ic('<path d="M18 6 6 18M6 6l12 12"/>'),
     "alert": ic('<circle cx="12" cy="12" r="9"/><path d="M12 8v4.5M12 16h.01"/>'),
+    "qr": ic('<rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1.2"/><rect x="14" y="3.5" width="6.5" height="6.5" rx="1.2"/><rect x="3.5" y="14" width="6.5" height="6.5" rx="1.2"/><path d="M14 14h2.5v2.5H14zM18 18h2.5v2.5H18zM14 18.5v2M18 14h2.5"/>'),
     "star": ic('<path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9Z"/>'),
     "sparkle": ic('<path d="M12 3v4M12 17v4M3 12h4M17 12h4M6.3 6.3l2.5 2.5M15.2 15.2l2.5 2.5M6.3 17.7l2.5-2.5M15.2 8.8l2.5-2.5"/>'),
     "chev": ic('<path d="m9 18 6-6-6-6"/>'),
@@ -182,8 +183,54 @@ TOOLS = [
          lede="Turn any Hijri date into Gregorian and back (Umm al-Qura calendar), and see both calendars side by side for the whole month.",
          desc="Convert dates between Hijri (Islamic, Umm al-Qura) and Gregorian calendars with today’s date and a dual monthly calendar.",
          keywords="hijri islamic gregorian date convert umm al-qura calendar"),
+    dict(slug="qr-code", name="QR Code Maker", title="QR code <em>maker</em>", title_ar="صانع <em>رمز QR</em>",
+         cat="Everyday", icon="qr", new=True,
+         short="QR codes for links, Wi-Fi and contacts — that never expire.",
+         lede="Make a QR code for a link, your Wi-Fi, a WhatsApp chat or a contact card. It’s made on your device, holds your details directly, and never stops working — no sign-up, no hidden redirect.",
+         desc="Free QR code generator for links, text, Wi-Fi, WhatsApp and contacts. Made in your browser, static codes that never expire, PNG and SVG download, no sign-up.",
+         keywords="qr code generator maker wifi whatsapp vcard contact link barcode free static رمز باركود كيو آر"),
+    dict(slug="image-resizer", name="Photo Resizer", title="Photo <em>resizer</em>", title_ar="تصغير <em>الصور</em>",
+         cat="Everyday", icon="image", new=True,
+         short="Shrink photos for email or upload limits — on your device.",
+         lede="Make photos smaller in size and dimensions — for email, WhatsApp or a form with an upload limit. Your photos are resized right on your device, and the hidden location data is left out.",
+         desc="Resize and compress photos in your browser: JPG, PNG, WebP and HEIC, batch resize, fit under a KB limit, strips GPS location data. Nothing is uploaded.",
+         keywords="resize image compress photo reduce size kb jpg png webp heic batch exif gps تصغير ضغط صورة حجم"),
 ]
 TOOL_BY_SLUG = {t["slug"]: t for t in TOOLS}
+
+# “How it works” — three short steps under each tool
+STEPS = {
+ "password-generator": [("Pick a style","Random characters, easy-to-say words, or a PIN."),("Set the length","Longer is stronger — 16+ characters is plenty."),("Copy and use it","It’s made on your device and never sent anywhere.")],
+ "strength-checker": [("Type a password","It stays on this page the whole time."),("See how it holds up","How long an attacker would need, and why."),("Fix what’s weak","Follow the tips, or make a new one.")],
+ "share": [("Paste your secret","A password, a code or a private note."),("Get a one-time link","It’s locked on your device before it leaves."),("Send it","Once it’s opened, it’s gone for good.")],
+ "link-checker": [("Paste the link","Long-press it in WhatsApp or SMS and copy — don’t open it."),("See the verdict","Known scams, fake names and tricky endings."),("Decide safely","When in doubt, ask the NCA’s Tahqaq service too.")],
+ "vault": [("Make your vault","Choose a passphrase only you know."),("Add your logins","Passwords, notes and codes — locked on your device."),("Open it anywhere","Sign in on any device and unlock it with your passphrase.")],
+ "hash-generator": [("Type or drop a file","Nothing is uploaded."),("Get every checksum","MD5, SHA-1, SHA-256 and more, as you type."),("Check a download","Paste the expected checksum to see if it matches.")],
+ "username-generator": [("Pick a style","Professional, gamer, anonymous, friendly or techie."),("Add a word","Optional — a name or nickname to build on."),("Tap to copy","Not happy? Get a fresh batch.")],
+ "base64-tool": [("Paste text or a file","Arabic and emoji work properly."),("Encode or decode","Standard or URL-safe, as you type."),("Copy the result","In one tap.")],
+ "json-formatter": [("Paste your JSON","It’s checked as you type."),("Tidy or shrink it","Pretty-print, minify or sort the keys."),("Fix mistakes fast","Errors show the exact line and column.")],
+ "text-converter": [("Type once","Any phrase or variable name."),("See every case","camelCase, snake_case, Title Case and more."),("Tap to copy","The one you need.")],
+ "ip-network": [("Open the page","Your public IP and provider appear."),("See what you share","What your browser tells every site."),("Plan a network","Work out subnets in the calculator.")],
+ "pdf-studio": [("Add your files","PDFs or photos — they stay on your device."),("Arrange and edit","Drag, rotate, sign, number or black out pages."),("Download","Your new PDF — free, no sign-up.")],
+ "merge-pdf": [("Add your PDFs","As many as you like."),("Put them in order","Drag pages around and remove the ones you don’t need."),("Download one PDF","Joined right on your device.")],
+ "split-pdf": [("Add a PDF","It stays on your device."),("Choose how to split","By page numbers, every page, or equal parts."),("Download the parts","In one ZIP if there are several.")],
+ "jpg-to-pdf": [("Add your photos","JPG, PNG, WebP or HEIC."),("Pick the page size","A4 or Letter, with margins."),("Download one PDF","Ready to email.")],
+ "sign-pdf": [("Add your PDF","Forms and contracts both work."),("Fill in and sign","Draw, type in handwriting, or use a photo of your signature."),("Download","Your signed copy — nothing uploaded.")],
+ "add-page-numbers": [("Add your PDF","It stays on your device."),("Choose where and how","Top or bottom, left, middle or right."),("Download","Numbers on every page.")],
+ "watermark-pdf": [("Add your PDF","It stays on your device."),("Type your words","CONFIDENTIAL, DRAFT or anything you like."),("Download","Stamped across every page.")],
+ "compress-pdf": [("Add a big PDF","Scans and photos shrink the most."),("Pick how small","Balanced, or the smallest file."),("Download","Text and drawings stay sharp.")],
+ "protect-pdf": [("Add your PDF","It stays on your device."),("Set a password","And choose whether copying or editing is allowed."),("Download","Locked with AES-256.")],
+ "unlock-pdf": [("Add the locked PDF","You need to know its password."),("Type the password once","It’s used on this device only."),("Download","A copy that opens without it.")],
+ "redact-pdf": [("Add your PDF","It stays on your device."),("Black out details","Draw boxes, or find ID numbers, IBANs and phones."),("Download","The hidden text is really removed.")],
+ "ocr-pdf": [("Add a scan or photo","Arabic and English both work."),("Let it read","Right here on your device."),("Copy or search","Get the text, or a searchable PDF.")],
+ "pdf-to-jpg": [("Add your PDF","It stays on your device."),("Pick a format","JPG, PNG or WebP — for screens or printing."),("Download the pictures","One per page, in a ZIP if there are several.")],
+ "unit-converter": [("Pick a category","Weight, length, temperature and seven more."),("Type a number","In either box."),("Read the answer","Using the official definitions.")],
+ "speed-test": [("Press start","It takes about 20 seconds."),("Watch it measure","Download, upload and lag when busy."),("Read your result","Nothing is saved or shared.")],
+ "qr-code": [("Choose what goes in","A link, text, Wi-Fi, WhatsApp or a contact."),("Watch it appear","The code updates as you type."),("Download","PNG for sharing, SVG for printing.")],
+ "image-resizer": [("Add your photos","As many as you like — they stay on your device."),("Pick a size","Or set a limit like 500 KB for a form."),("Download","One by one, or all together in a ZIP.")],
+ "date-converter": [("Pick a direction","Hijri to Gregorian or the other way."),("Choose a date","Umm al-Qura calendar."),("See both calendars","Side by side for the whole month.")],
+}
+
 
 # Task-focused entry points into PDF Studio: same studio, preset for one job. Not listed in menus,
 # but searchable (Ctrl K) and in the sitemap — these are the words people search for.
@@ -287,6 +334,9 @@ def head(title, desc, path, extra_fonts="", jsonld=None, noindex=False):
     if jsonld:
         ld = '<script type="application/ld+json">' + json.dumps(jsonld, ensure_ascii=False) + "</script>"
     robots = '\n<meta name="robots" content="noindex">' if noindex else ""
+    # each public page has its own share preview (made by tools/og.js); the rest use the site-wide one
+    og_key = path.strip("/") or "home"
+    og = f"{ORIGIN}/og/{og_key}.jpg" if (SRC / "og" / f"{og_key}.jpg").exists() and not noindex else f"{ORIGIN}/og.png"
     return f"""<!doctype html>
 <html lang="en" class="no-js">
 <head>
@@ -302,13 +352,13 @@ def head(title, desc, path, extra_fonts="", jsonld=None, noindex=False):
 <meta property="og:title" content="{html.escape(title)}">
 <meta property="og:description" content="{html.escape(desc)}">
 <meta property="og:url" content="{url}">
-<meta property="og:image" content="{ORIGIN}/og.png">
+<meta property="og:image" content="{og}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="{html.escape(title)}">
 <meta name="twitter:description" content="{html.escape(desc)}">
-<meta name="twitter:image" content="{ORIGIN}/og.png">
+<meta name="twitter:image" content="{og}">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -430,6 +480,10 @@ def build_tool(t):
     aside = s.get("aside", "")
     ws_class = "workspace" if aside else "workspace single"
     aside_html = f'<aside class="aside">{aside}</aside>' if aside else ""
+    st = STEPS.get(t["slug"], [])
+    steps_html = ('<section class="section steps-sec"><div class="wrap"><p class="panel-title">How it works</p><ol class="steps3">'
+                  + "".join(f'<li class="reveal" style="--d:{i * 80}ms"><span class="s3-n">{i + 1}</span><strong>{a}</strong><span>{b}</span></li>' for i, (a, b) in enumerate(st))
+                  + '</ol></div></section>') if st else ""
     about = s.get("about", "")
     about_html = f'<section class="section" style="padding-top:0"><div class="wrap"><div class="prose reveal">{about}</div></div></section>' if about else ""
 
@@ -457,6 +511,7 @@ def build_tool(t):
       {aside_html}
     </div>
   </section>
+  {steps_html}
   {about_html}
   <section class="section" style="padding-top:0">
     <div class="wrap">
@@ -585,14 +640,15 @@ def build_home():
           <p class="try-out" id="tryOut">Nothing you type leaves this page.</p>
           <a class="try-more" href="/strength-checker/">Full check, including leaks{ICONS['arrow']}</a>
         </div>
-        <div class="try-card reveal" style="--d:80ms" id="tryMake">
-          <p class="try-k">{ICONS['lock']}Need a password?</p>
-          <div class="try-pw" id="tryGen" dir="ltr" aria-live="polite"></div>
+        <div class="try-card try-live specimen reveal" style="--d:80ms" id="tryMake">
+          <div class="specimen-head"><div class="specimen-dots"><i></i><i></i><i></i></div><span class="live-tag" id="tryLive"><span class="live-dot"></span><span class="live-on">Live — made on your device right now</span><span class="live-off">Paused while you look</span></span></div>
+          <div class="specimen-pw" id="tryGen" dir="ltr" aria-live="off"></div>
+          <div class="specimen-meta" dir="ltr"><span id="tryBits">— bits</span><span class="bar"><i id="tryBar"></i></span></div>
           <div class="try-row">
             <button type="button" class="btn btn-primary btn-sm" id="tryCopy">{ICONS['copy']}Copy</button>
             <button type="button" class="btn btn-sm" id="tryNew">{ICONS['refresh']}New one</button>
           </div>
-          <p class="try-out">Made on your device. 20 random characters.</p>
+          <p class="try-out mono-note" dir="ltr">crypto.getRandomValues · 20 random characters</p>
           <a class="try-more" href="/password-generator/">More options{ICONS['arrow']}</a>
         </div>
         <div class="try-card try-today reveal" style="--d:160ms" id="tryToday">
@@ -743,20 +799,33 @@ HOME_SCRIPT2 = r"""<script>
     tm.dataset.level=a.level;to.className='try-out lv'+a.level;
     to.innerHTML='<b>'+ND.t(NAMES[a.level])+'</b> · '+ND.esc(sec<1?ND.t('a fast attacker would guess it instantly'):ND.f('a fast attacker would need {time}',{time:ND.strength.human(sec).toLowerCase()}));
   });
-  // 2) a fresh password, with a short scramble as it arrives
-  const CH='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*-_=+?',SN='23456789!@#$%^&*-_=+?',LEN=20;
-  const gen=document.getElementById('tryGen'),reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let cur='';
-  const paint=(s,locked)=>{gen.innerHTML=[...s].map((c,i)=>'<span class="'+(i>=locked?'scramble':SN.includes(c)?'c-sym':'')+'">'+ND.esc(c)+'</span>').join('');};
+  // 2) a live password — a new one every few seconds, made right here with crypto.getRandomValues.
+  //    It pauses while you point at it or after you copy, so it never changes under you.
+  const CH='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*-_=+?',NUM='23456789',LEN=20;
+  const gen=document.getElementById('tryGen'),card=document.getElementById('tryMake'),bitsEl=document.getElementById('tryBits'),bar=document.getElementById('tryBar');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,BITS=Math.round(LEN*Math.log2(CH.length));
+  let cur='',hover=false,kbd=false,holdUntil=0;
+  const cls=c=>NUM.includes(c)?'c-num':/[^A-Za-z0-9]/.test(c)?'c-sym':'';
+  const paint=(s,locked)=>{gen.innerHTML=[...s].map((c,i)=>{const k=i>=locked?'scramble':cls(c);return k?'<span class="'+k+'">'+ND.esc(c)+'</span>':ND.esc(c);}).join('');};
   function fresh(){
     let t='';for(let i=0;i<LEN;i++)t+=CH[ND.randInt(CH.length)];cur=t;
-    if(reduce){paint(t,LEN);return;}
-    let f=0;const total=18;
-    (function step(){const locked=Math.floor(f/total*LEN);let s=t.slice(0,locked);for(let i=locked;i<LEN;i++)s+=CH[ND.randInt(CH.length)];paint(s,locked);if(++f<=total)setTimeout(step,26);else paint(t,LEN);})();
+    bitsEl.textContent=BITS+' bits';
+    if(reduce){paint(t,LEN);bar.style.width=Math.min(100,BITS/1.3)+'%';return;}
+    bar.style.transition='none';bar.style.width='0';void bar.offsetWidth;bar.style.transition='';bar.style.width=Math.min(100,BITS/1.3)+'%';
+    let f=0;const total=22;
+    (function step(){const locked=Math.floor(f/total*LEN);let s=t.slice(0,locked);for(let i=locked;i<LEN;i++)s+=CH[ND.randInt(CH.length)];paint(s,locked);if(++f<=total)setTimeout(step,28);else paint(t,LEN);})();
   }
-  fresh();
+  const paused=()=>hover||kbd||Date.now()<holdUntil;
+  const syncLive=()=>card.classList.toggle('paused',paused()&&!reduce);
+  card.addEventListener('pointerenter',e=>{if(e.pointerType==='mouse'){hover=true;syncLive();}});
+  card.addEventListener('pointerleave',()=>{hover=false;syncLive();});
+  // keyboard users: hold still while focus is inside (a mouse click leaving focus on a button doesn't count)
+  card.addEventListener('focusin',e=>{kbd=e.target.matches(':focus-visible');syncLive();});
+  card.addEventListener('focusout',e=>{if(!card.contains(e.relatedTarget))kbd=false;syncLive();});
+  fresh();syncLive();
+  if(!reduce)setInterval(()=>{syncLive();if(!document.hidden&&!paused())fresh();},4200);
   document.getElementById('tryNew').addEventListener('click',fresh);
-  document.getElementById('tryCopy').addEventListener('click',e=>ND.copy(cur,e.currentTarget,'Password copied'));
+  document.getElementById('tryCopy').addEventListener('click',e=>{holdUntil=Date.now()+8000;syncLive();ND.copy(cur,e.currentTarget,'Password copied');});
   // 3) today in both calendars, with the next Ramadan / Eid
   const HM=['Muharram','Safar','Rabiʿ al-Awwal','Rabiʿ al-Thani','Jumada al-Ula','Jumada al-Akhirah','Rajab','Shaʿban','Ramadan','Shawwal','Dhu al-Qaʿdah','Dhu al-Hijjah'];
   function hijri(d){try{const p=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'numeric',year:'numeric'}).formatToParts(d);const g=k=>+((p.find(x=>x.type===k)||{}).value||0);return {d:g('day'),m:g('month'),y:parseInt(((p.find(x=>x.type==='year')||{}).value||'0'),10)};}catch(e){return null;}}
@@ -873,7 +942,7 @@ self.addEventListener('fetch', (e) => {
 """
 
 
-STATIC_PREFIXES = ("assets/", "api/", "favicon", "manifest", "og.png", "apple-touch", "icon-", "sw.js", "ar/", "s/#")
+STATIC_PREFIXES = ("assets/", "api/", "favicon", "manifest", "og.png", "og/", "apple-touch", "icon-", "sw.js", "ar/", "s/#")
 
 
 def page_path(rel):
@@ -903,6 +972,7 @@ def finish(html_src, rel, lang):
     out = out.replace(f'<link rel="canonical" href="{en}">', f'<link rel="canonical" href="{ar}">')
     out = out.replace(f'<meta property="og:url" content="{en}">', f'<meta property="og:url" content="{ar}">')
     out = out.replace('<meta property="og:type" content="website">', '<meta property="og:type" content="website">\n<meta property="og:locale" content="ar_SA">')
+    out = re.sub(r'(content="' + re.escape(ORIGIN) + r'/og/)([^"]+\.jpg)"', lambda m: f'{m.group(1)}ar/{m.group(2)}"' if (SRC / "og" / "ar" / m.group(2)).exists() else m.group(0), out)
     return (out.replace("{ALT_HREF}", path).replace("{ALT_LANG}", "en")
                .replace("{ALT_LABEL}", "English").replace("{ALT_TEXT}", "EN"))
 
@@ -990,6 +1060,8 @@ def main():
     # Keep IIS / Azure App Service compatibility from the original deployment.
     (DIST / "web.config").write_text(WEB_CONFIG)
 
+    if (SRC / "og").exists():
+        shutil.copytree(SRC / "og", DIST / "og", dirs_exist_ok=True)
     for img in (SRC / "static").glob("*") if (SRC / "static").exists() else []:
         shutil.copy(img, DIST / img.name)
     print(f"built {len(pages)} pages → {DIST} (v{version})")
