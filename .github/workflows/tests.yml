@@ -1,0 +1,41 @@
+# Runs every browser test suite on GitHub's machines (free for public repos) — see tests/README.md.
+name: Tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            tests/package-lock.json
+            server/package-lock.json
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: System packages (PDF tools, ImageMagick, Arabic fonts)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils qpdf imagemagick fonts-noto-core fonts-dejavu-core
+      - name: Set up the test machine
+        run: bash tests/setup.sh
+      - name: Run all suites
+        run: bash tests/run.sh
+      - name: Keep the logs and screenshots if something failed
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-logs
+          path: |
+            tests/.work/logs
+            tests/.work/shots
+          retention-days: 7
