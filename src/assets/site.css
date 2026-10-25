@@ -1824,3 +1824,41 @@ select.fld { appearance: auto; -webkit-appearance: menulist; padding: 0; }
 @media (max-width: 640px) { .ir-opts { grid-template-columns: 1fr; } }
 .steps-sec + .section { padding-top: clamp(32px, 5vw, 56px) !important; }
 .try-live.calm .live-dot { animation: none; }
+
+/* ---------- Email checker ---------- */
+.em-actions { margin-top: 16px; gap: 10px; flex-wrap: wrap; }
+.em-how { margin-top: 16px; font-size: 0.88rem; color: var(--text-2); }
+.em-how summary { cursor: pointer; color: var(--accent); }
+.em-how ul { margin: 10px 0 0; padding-inline-start: 20px; display: flex; flex-direction: column; gap: 6px; }
+.em-h { margin-top: 22px; }
+.em-card { margin-top: 14px; border-radius: var(--r-md); background: var(--bg-2); border: 1px solid var(--line); overflow: hidden; }
+.em-row { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 12px; padding: 11px 16px; border-top: 1px solid var(--line); font-size: 0.9rem; align-items: center; }
+.em-row:first-child { border-top: 0; }
+.em-k { color: var(--text-3); font-size: 0.8rem; }
+.em-v { min-width: 0; overflow-wrap: anywhere; display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.em-addr { font-family: var(--font-mono); font-size: 0.86rem; padding: 2px 7px; border-radius: 6px; background: var(--surface); border: 1px solid var(--line-2); }
+.em-addr.bad { color: var(--danger); background: color-mix(in srgb, var(--danger) 10%, transparent); border-color: color-mix(in srgb, var(--danger) 45%, transparent); }
+.em-addr.warn { color: var(--warn); border-color: color-mix(in srgb, var(--warn) 45%, transparent); }
+.em-addr.good { color: var(--accent-2); background: var(--accent-soft); border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.em-auth { display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 10px; border-radius: 999px; font-size: 0.78rem; border: 1px solid var(--line-2); color: var(--text-2); }
+.em-auth b { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; }
+.em-auth.ok { color: var(--accent-2); background: var(--accent-soft); border-color: transparent; }
+.em-auth.bad { color: var(--danger); background: color-mix(in srgb, var(--danger) 12%, transparent); border-color: transparent; }
+.em-links, .em-atts { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+.em-link { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: var(--r-md); background: var(--bg-2); border: 1px solid var(--line); }
+.em-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--line-2); flex: none; }
+.em-link.bad { border-color: color-mix(in srgb, var(--danger) 40%, var(--line)); } .em-link.bad .em-dot { background: var(--danger); }
+.em-link.warn .em-dot { background: var(--warn); } .em-link.good .em-dot { background: var(--accent); }
+.em-lk { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.em-host { font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem; overflow-wrap: anywhere; }
+.em-full { font-family: var(--font-mono); font-size: 0.74rem; color: var(--text-3); overflow-wrap: anywhere; }
+.em-why { font-size: 0.8rem; color: var(--text-2); }
+.em-link.bad .em-why { color: var(--danger); }
+.em-att { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 10px 12px; border-radius: var(--r-md); background: var(--bg-2); border: 1px solid var(--line); font-size: 0.88rem; }
+.em-att.bad { border-color: color-mix(in srgb, var(--danger) 40%, var(--line)); } .em-att.bad > span:first-child { color: var(--danger); font-weight: 600; }
+.em-att.warn > span:first-child { color: var(--warn); }
+.em-body { margin-top: 10px; max-height: 340px; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; padding: 14px 16px; border-radius: var(--r-md); background: var(--bg-2); border: 1px solid var(--line); font-size: 0.9rem; line-height: 1.7; color: var(--text-2); }
+.em-mk { background: color-mix(in srgb, var(--warn) 28%, transparent); color: var(--text); border-radius: 3px; padding: 0 2px; }
+.em-url { font-family: var(--font-mono); font-size: 0.84rem; text-decoration: underline; text-decoration-color: var(--line-2); }
+.em-url.bad { color: var(--danger); text-decoration-color: currentColor; } .em-url.warn { color: var(--warn); } .em-url.good { color: var(--accent-2); }
+@media (max-width: 560px) { .em-row { grid-template-columns: 1fr; gap: 4px; } }

@@ -1,6 +1,6 @@
 /* Nicely Done — offline cache */
-const CACHE = 'nd-46d29b50de';
-const PRECACHE = ["/", "/404.html", "/assets/site.css?v=46d29b50de", "/assets/site.js?v=46d29b50de", "/assets/fonts.css?v=46d29b50de", "/assets/strength.js?v=46d29b50de", "/assets/fonts/geist-normal-300-700-latin.woff2", "/assets/fonts/instrument-serif-normal-400-latin.woff2", "/favicon.svg", "/password-generator/", "/strength-checker/", "/share/", "/link-checker/", "/vault/", "/hash-generator/", "/username-generator/", "/base64-tool/", "/json-formatter/", "/text-converter/", "/ip-network/", "/pdf-studio/", "/unit-converter/", "/speed-test/", "/date-converter/", "/qr-code/", "/image-resizer/", "/about/", "/ar/", "/ar/404.html"];
+const CACHE = 'nd-ff35751ec4';
+const PRECACHE = ["/", "/404.html", "/assets/site.css?v=ff35751ec4", "/assets/site.js?v=ff35751ec4", "/assets/fonts.css?v=ff35751ec4", "/assets/strength.js?v=ff35751ec4", "/assets/fonts/geist-normal-300-700-latin.woff2", "/assets/fonts/instrument-serif-normal-400-latin.woff2", "/favicon.svg", "/password-generator/", "/strength-checker/", "/share/", "/link-checker/", "/email-checker/", "/vault/", "/hash-generator/", "/username-generator/", "/base64-tool/", "/json-formatter/", "/text-converter/", "/ip-network/", "/pdf-studio/", "/unit-converter/", "/speed-test/", "/date-converter/", "/qr-code/", "/image-resizer/", "/about/", "/ar/", "/ar/404.html"];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
 });
