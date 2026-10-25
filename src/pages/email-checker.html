@@ -1,0 +1,332 @@
+<!-- @badges -->
+<span class="badge ok">{{icon:shield}}Your email never leaves your device</span>
+
+<!-- @tool -->
+<div class="panel">
+  <div class="panel-body">
+    <div class="field">
+      <label class="label" for="em">The suspicious email</label>
+      <textarea class="textarea" id="em" rows="9" dir="auto" spellcheck="false" placeholder="Paste the email here — the sender, the subject and the message. Or its full source, for the strongest check."></textarea>
+    </div>
+    <div class="field">
+      <label class="label" for="emFrom">Who sent it? <span class="faint" style="font-weight:400">optional — the address next to the sender’s name</span></label>
+      <input class="input mono-in" id="emFrom" dir="ltr" placeholder="name@example.com" autocomplete="off" spellcheck="false">
+    </div>
+    <div class="row em-actions">
+      <button class="btn btn-primary" type="button" id="emGo">{{icon:search}}Check this email</button>
+      <label class="btn btn-sm" style="cursor:pointer">{{icon:file}}Open an .eml file<input type="file" id="emFile" accept=".eml,message/rfc822,.txt" hidden></label>
+      <button class="btn btn-ghost btn-sm" type="button" id="emSample">Try an example</button>
+    </div>
+    <details class="em-how">
+      <summary>How do I get the full source? (it makes the check much stronger)</summary>
+      <ul>
+        <li><b>Gmail</b> (computer): open the email → ⋮ → <b>Show original</b> → <b>Copy to clipboard</b>.</li>
+        <li><b>Outlook</b>: open the email → ⋯ → <b>View</b> → <b>View message source</b>.</li>
+        <li><b>Apple Mail</b> (Mac): <b>View</b> → <b>Message</b> → <b>Raw Source</b>.</li>
+        <li><b>Yahoo Mail</b>: ⋯ → <b>View raw message</b>.</li>
+        <li><b>iPhone and Android mail apps</b> can’t show the source. Paste the text you see, and type the sender’s address in the box above.</li>
+      </ul>
+    </details>
+  </div>
+
+  <div class="panel-sec" id="emRes" hidden>
+    <div class="verdict" id="emVerdict">
+      <div class="v-icon" id="emVIcon"></div>
+      <div style="flex:1;min-width:0"><div class="v-title" id="emVTitle"></div><div class="v-sub" id="emVSub"></div></div>
+    </div>
+    <div class="em-card" id="emCard"></div>
+    <div class="panel-title em-h">What I found</div>
+    <div class="checks" id="emFind"></div>
+    <div id="emLinksSec" hidden>
+      <div class="panel-title em-h">Links inside <span class="faint" id="emLinkN"></span></div>
+      <div class="em-links" id="emLinks"></div>
+    </div>
+    <div id="emAttSec" hidden>
+      <div class="panel-title em-h">Attachments</div>
+      <div class="em-atts" id="emAtts"></div>
+    </div>
+    <div id="emBodySec" hidden>
+      <div class="panel-title em-h">The message, with the warning signs marked</div>
+      <div class="em-body" id="emBody" dir="auto"></div>
+    </div>
+    <div class="feeds" id="emFeeds"></div>
+  </div>
+</div>
+
+<!-- @aside -->
+<div class="panel">
+  <h4>How it stays private</h4>
+  <ul>
+    <li>The email is read right here in your browser. It isn’t uploaded, saved or logged.</li>
+    <li>To check the links against threat lists, only the first 5 characters of a scrambled fingerprint of each link are sent — the same way as the Link Checker.</li>
+    <li>Nothing in the email is opened or loaded: no images, no links, no attachments.</li>
+  </ul>
+</div>
+<div class="panel">
+  <h4>What it looks for</h4>
+  <ul>
+    <li>Who really sent it: fake bank and government names, look-alike addresses, free email accounts pretending to be a company.</li>
+    <li>Links that show one address but go to another, and links on known threat lists.</li>
+    <li>Pressure tricks in Arabic and English: threats to close your account, requests for passwords or codes, prizes and fees.</li>
+    <li>Dangerous attachments and disguised file names.</li>
+  </ul>
+</div>
+
+<!-- @about -->
+<h2>Is this email really from my bank?</h2>
+<p>Scam emails copy the look of a bank, Absher, Saudi Post or Amazon almost perfectly — the logo, the colours, even the signature. What they can’t copy is where they really come from and where their links really go. This checker looks at exactly those things, plus the pressure tricks scammers rely on.</p>
+<p>When you paste the full source, it can also read the checks your own email provider already did — called SPF, DKIM and DMARC. If an email says it’s from your bank and passes DMARC for the bank’s real domain, it really came from them. If it fails, someone is pretending.</p>
+<p>No checker can promise an email is safe. If something asks for a password, a code or money, contact the company yourself — by typing their address or calling the number on your card — not through the email.</p>
+<details><summary>For the technical folks</summary><p>The message is parsed in the browser: headers are unfolded and RFC 2047 encoded words decoded; MIME parts are walked recursively with base64 and quoted-printable decoding and the declared charset. HTML parts go through <code>DOMParser</code>, which builds an inert document — nothing is fetched or run. The topmost <code>Authentication-Results</code> header is read for SPF, DKIM and DMARC. Links use the same rules and k-anonymous threat lookup as the Link Checker.</p></details>
+
+<!-- @script -->
+<script src="/assets/linkcheck-core.js?v={V}"></script>
+<script>
+/*i18n:off*/ // header names, word lists and codes must stay as they are; every visible message goes through ND.t / ND.f at runtime
+(function(){
+  const $=ND.$,T=ND.t,F=ND.f,LC=ND.lc;
+  const FREE=['gmail.com','googlemail.com','outlook.com','hotmail.com','live.com','msn.com','yahoo.com','ymail.com','icloud.com','me.com','mac.com','aol.com','proton.me','protonmail.com','gmx.com','gmx.net','mail.com','yandex.com','yandex.ru','mail.ru','zoho.com','tutanota.com'];
+  // pressure tricks — [kind, words]; matched case-insensitively in the subject and the message
+  const TRICKS=[
+    ['urgent',['urgent','immediately','within 24 hours','within 48 hours','within 24h','account has been suspended','account suspended','account will be suspended','account has been locked','account locked','account will be closed','account restricted','final notice','last warning','last chance','action required','unusual activity','unusual sign-in','suspicious activity','verify your account','update your details','update your information','expires today',
+      'عاجل','فورًا','فورا','خلال 24 ساعة','خلال ٢٤ ساعة','خلال 48 ساعة','تم إيقاف حسابك','سيتم إيقاف','إيقاف حسابك','تعليق حسابك','إغلاق حسابك','تم تقييد','تحديث بياناتك','حدث بياناتك','حدّث بياناتك','آخر فرصة','تنبيه نهائي','نشاط غير معتاد','نشاط مشبوه']],
+    ['secret',['password','passcode','one-time password','one-time code','verification code','security code','otp','pin code','cvv','card number','login details','sign-in details','confirm your identity','confirm your details',
+      'كلمة المرور','كلمة السر','رمز التحقق','الرمز السري','رمز التفعيل','رقم البطاقة','الرقم السري','بيانات الدخول','بيانات البطاقة','رمز التأكيد']],
+    ['money',['gift card','bitcoin','crypto wallet','wire transfer','bank transfer','western union','customs fee','delivery fee','shipping fee','small fee','pay the fee','unpaid','outstanding balance','refund',
+      'بطاقة هدايا','بطاقات هدايا','بيتكوين','حوالة','تحويل بنكي','رسوم جمركية','رسوم الجمارك','رسوم توصيل','رسوم الشحن','رسوم بسيطة','سداد الرسوم','استرداد','مبلغ مستحق','فاتورة غير مدفوعة']],
+    ['prize',['you have won','you won','you are a winner','winner','congratulations','lottery','prize','inheritance','claim your','free iphone',
+      'ربحت','فزت','مبروك','جائزة','الفائز','سحب على','ميراث','استلم جائزتك']]];
+  const TRICK_MSG={urgent:'Pushes you to hurry or threatens your account: {words}.',secret:'Asks for a password, a code or card details: {words}. Real banks and government services never ask for these by email.',money:'Talks about fees, transfers or refunds: {words}.',prize:'Promises a prize or a win: {words}.'};
+
+  /* ---------- reading the email ---------- */
+  const looksRaw=s=>{const head=s.split(/\r?\n\r?\n/)[0];const lines=head.split(/\r?\n/);
+    const named=lines.filter(l=>/^[A-Za-z][A-Za-z0-9-]*:\s/.test(l)).length;
+    return /^from:/im.test(head)&&named>=3&&/^(received|message-id|date|mime-version|subject|to|return-path|delivered-to|x-[a-z-]+):/im.test(head);};
+  function headerList(block){
+    const out=[];block.replace(/\r\n/g,'\n').split('\n').forEach(l=>{if(/^[ \t]/.test(l)&&out.length)out[out.length-1][1]+=' '+l.trim();else{const m=l.match(/^([A-Za-z0-9-]+):\s*(.*)$/);if(m)out.push([m[1].toLowerCase(),m[2]]);}});
+    return out;
+  }
+  const hget=(H,n)=>{const x=H.find(h=>h[0]===n);return x?x[1]:'';};
+  const hall=(H,n)=>H.filter(h=>h[0]===n).map(h=>h[1]);
+  const bytesOf=s=>{const b=new Uint8Array(s.length);for(let i=0;i<s.length;i++)b[i]=s.charCodeAt(i)&255;return b;};
+  const isBinary=s=>!/[^\x00-\xff]/.test(s);
+  function decodeText(bytes,cs){try{return new TextDecoder((cs||'utf-8').toLowerCase().replace(/^(us-ascii|ascii)$/,'utf-8'),{fatal:false}).decode(bytes);}catch(e){return new TextDecoder().decode(bytes);}}
+  function b64bytes(s){try{const bin=atob(s.replace(/[^A-Za-z0-9+/=]/g,''));return bytesOf(bin);}catch(e){return new Uint8Array();}}
+  function qpbytes(s){s=s.replace(/=\r?\n/g,'');const out=[];for(let i=0;i<s.length;i++){const c=s[i];if(c==='='&&/^[0-9A-Fa-f]{2}$/.test(s.substr(i+1,2))){out.push(parseInt(s.substr(i+1,2),16));i+=2;}else{const cc=s.charCodeAt(i);if(cc<256)out.push(cc);else new TextEncoder().encode(c).forEach(x=>out.push(x));}}return new Uint8Array(out);}
+  function words(s){ // RFC 2047 encoded words: =?utf-8?B?...?=
+    return String(s||'').replace(/(=\?[^?]+\?[BbQq]\?[^?]*\?=)\s+(?==\?)/g,'$1').replace(/=\?([^?]+)\?([BbQq])\?([^?]*)\?=/g,(m,cs,enc,txt)=>decodeText(enc.toUpperCase()==='B'?b64bytes(txt):qpbytes(txt.replace(/_/g,' ')),cs));
+  }
+  function params(v){const o={};String(v||'').replace(/;\s*([A-Za-z0-9*-]+)\s*=\s*("([^"]*)"|[^;]+)/g,(m,k,raw,q)=>{o[k.toLowerCase()]=q!=null?q:raw.trim();return m;});
+    const fx=o['filename*']||o['name*'];if(fx){const m=fx.match(/^([^']*)'[^']*'(.*)$/);if(m)try{o.filename=decodeURIComponent(m[2]);}catch(e){}}
+    return o;}
+  function addr(v){v=words(v||'').trim();if(!v)return null;let m=v.match(/^\s*"?(.*?)"?\s*<([^>]+)>/);
+    if(m)return {name:m[1].trim(),email:m[2].trim().toLowerCase()};m=v.match(/[^\s<>"]+@[^\s<>"]+/);return m?{name:'',email:m[0].toLowerCase()}:{name:v,email:''};}
+  function walk(H,body,out,raw){
+    const ct=hget(H,'content-type')||'text/plain',type=ct.split(';')[0].trim().toLowerCase(),p=params(ct);
+    const cte=(hget(H,'content-transfer-encoding')||'').toLowerCase().trim(),disp=hget(H,'content-disposition'),dp=params(disp);
+    if(type.startsWith('multipart/')&&p.boundary){
+      const parts=body.split(new RegExp('^--'+p.boundary.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?:--)?\\s*$','m')).slice(1);
+      parts.forEach(pt=>{const i=pt.search(/\r?\n\r?\n/);if(i<0)return;const h=headerList(pt.slice(0,i).replace(/^\r?\n/,''));if(!h.length&&!pt.trim())return;walk(h,pt.slice(i).replace(/^\r?\n\r?\n/,''),out,raw);});
+      return;
+    }
+    if(type==='message/rfc822'){const i=body.search(/\r?\n\r?\n/);if(i>0)walk(headerList(body.slice(0,i)),body.slice(i).replace(/^\r?\n\r?\n/,''),out,raw);return;}
+    const name=words(dp.filename||p.name||'');
+    const bytes=()=>cte==='base64'?b64bytes(body):cte==='quoted-printable'?qpbytes(body):isBinary(body)?bytesOf(body):null;
+    if(/attachment/i.test(disp)||(name&&!/^text\/(plain|html)$/.test(type))){const b=bytes();out.att.push({name:name||type,type,size:b?b.length:body.length});return;}
+    if(type==='text/plain'||type==='text/html'){const b=bytes();const txt=b?decodeText(b,p.charset):body;(type==='text/html'?out.html:out.text).push(txt);}
+  }
+  function readEmail(src,fromField){
+    const R={raw:false,from:null,reply:null,ret:'',subject:'',auth:null,text:'',html:'',att:[]};
+    src=src.replace(/\r\n/g,'\n');
+    if(looksRaw(src)){
+      R.raw=true;const i=src.indexOf('\n\n');const hb=src.slice(0,i<0?src.length:i);const H=headerList(isBinary(hb)?decodeText(bytesOf(hb),'utf-8'):hb);const body=i<0?'':src.slice(i+2);
+      R.from=addr(hget(H,'from'));R.reply=addr(hget(H,'reply-to'));R.ret=(hget(H,'return-path').match(/[^\s<>]+@[^\s<>]+/)||[''])[0].toLowerCase();
+      R.subject=words(hget(H,'subject'));
+      const ar=hall(H,'authentication-results')[0];
+      if(ar){const g=k=>{const all=[...ar.matchAll(new RegExp('\\b'+k+'=([a-z]+)','gi'))].map(m=>m[1].toLowerCase());return all.includes('pass')?'pass':all[0]||'none';};
+        R.auth={spf:g('spf'),dkim:g('dkim'),dmarc:g('dmarc'),by:(ar.split(';')[0]||'').trim().split(/\s/)[0]};}
+      const out={text:[],html:[],att:R.att};walk(H,body,out,src);R.text=out.text.join('\n\n');R.html=out.html.join('\n');
+    }else{
+      // pasted text: pick up a “From:” / «من:» line and a subject if they were copied too
+      const lines=src.split('\n').slice(0,12);
+      const fl=lines.find(l=>/^\s*(from|من|المرسل)\s*[:：]/i.test(l));if(fl)R.from=addr(fl.replace(/^\s*(from|من|المرسل)\s*[:：]\s*/i,''));
+      const sl=lines.find(l=>/^\s*(subject|الموضوع)\s*[:：]/i.test(l));if(sl)R.subject=sl.replace(/^\s*(subject|الموضوع)\s*[:：]\s*/i,'').trim();
+      R.text=src;
+    }
+    const typed=(fromField||'').trim();
+    if(typed){const a=addr(typed);if(a&&a.email)R.from={name:(R.from&&R.from.name)||'',email:a.email};}
+    return R;
+  }
+  function htmlLinks(html){ // DOMParser builds an inert document: nothing is fetched or run
+    const doc=new DOMParser().parseFromString(html,'text/html'),out=[];
+    doc.querySelectorAll('a[href]').forEach(a=>out.push({href:a.getAttribute('href').trim(),text:a.textContent.replace(/\s+/g,' ').trim()}));
+    doc.querySelectorAll('form[action]').forEach(f=>out.push({href:f.getAttribute('action').trim(),text:'',form:true}));
+    doc.querySelectorAll('br,p,div,tr,li,h1,h2,h3').forEach(e=>e.append('\n'));
+    return {links:out,text:(doc.body?doc.body.textContent:'').replace(/\n{3,}/g,'\n\n').trim()};
+  }
+  const URL_RE=/\b(?:https?:\/\/|www\.)[^\s<>"'()\[\]{}]+[^\s<>"'()\[\]{}.,;:!?،]/gi;
+  // links written without http:// — bit.ly/abc, absher-update.xyz/login (not e-mail addresses, not file names)
+  const BARE_RE=/(?<![@\w.\/-])((?:[a-z0-9-]+\.)+(?:com|net|org|sa|info|xyz|top|io|co|me|ly|gd|cc|link|click|online|site|shop|live|app|dev|ai|us|uk|ae|biz|vip|win|icu|cfd|sbs|cyou|rest|buzz|mobi|tk|ml|ga|cf|gq|to|in|ru|cn)(?:\/[^\s<>"'()]*[^\s<>"'().,;:!?،])?)(?![\w@-])/gi;
+  function findLinks(text){ // → [[index, text]] for full and bare links, in order, without overlaps
+    const out=[];let m;URL_RE.lastIndex=0;while((m=URL_RE.exec(text)))out.push([m.index,m[0]]);
+    BARE_RE.lastIndex=0;while((m=BARE_RE.exec(text))){const i=m.index;if(!out.some(([j,t])=>i>=j&&i<j+t.length))out.push([i,m[1]]);}
+    return out.sort((a,b)=>a[0]-b[0]);
+  }
+  const hrefOf=t=>/^https?:\/\//i.test(t)?t:'http://'+t;
+
+  /* ---------- checking ---------- */
+  const regOf=e=>{const d=(e||'').split('@')[1]||'';return d?LC.registrable(LC.norm(d)):'';};
+  async function check(src){
+    const R=readEmail(src,$('#emFrom').value);
+    const Fi=[];const add=(sev,text,who)=>Fi.push({sev,text,who:!!who});
+    const from=R.from&&R.from.email?R.from:null,fdom=from?LC.norm(from.email.split('@')[1]||''):'',freg=fdom?LC.registrable(fdom):'';
+    const official=fdom?LC.officialFor(fdom):null;
+    // 1) who sent it
+    if(R.auth){
+      if(R.auth.dmarc==='pass'&&official)add('good',F('Passed the sender check (DMARC) for {domain} — this really came from {brand}.',{domain:freg,brand:official[0]},1));
+      else if(R.auth.dmarc==='pass')add('good',F('Passed the sender check (DMARC): it really came from {domain}. That proves who sent it — not that they’re trustworthy.',{domain:freg||'?'},1));
+      else if(R.auth.dmarc==='fail')add('high',F('Failed the sender check (DMARC): this email is pretending to come from {domain}.',{domain:freg||'?'},1));
+      else if(R.auth.spf==='fail'&&R.auth.dkim!=='pass')add('medium',T('Failed the sender checks (SPF and DKIM) — it may not really come from the address shown.'));
+      else if(R.auth.spf!=='pass'&&R.auth.dkim!=='pass')add('low',T('The sender couldn’t be confirmed (no SPF or DKIM pass).'));
+    }
+    const shownName=from?from.name:'';
+    const named=LC.brandsIn(shownName+(R.subject?' '+R.subject:''));
+    if(from){
+      // which company does it claim to be? the display name, the address itself (alrajhi.bank@gmail.com), or — from a free account — the subject or opening lines
+      const local=from.email.split('@')[0].replace(/[._+-]+/g,' ');
+      const brandByName=LC.brandsIn(shownName)[0]||LC.brandsIn(local)[0]||(FREE.includes(fdom)?LC.brandsIn(R.subject+' '+(R.text||'').slice(0,400))[0]:null);
+      const own=LC.officialFor(fdom); // the company this address really belongs to, if any
+      if(brandByName&&!(own&&own[1]===brandByName[1])){
+        if(FREE.includes(fdom))add('high',F('Uses the name {brand} but was sent from a free {provider} address ({address}). Companies don’t email from free accounts.',{brand:brandByName[0],provider:fdom,address:from.email},1));
+        else add('high',F('Says it’s from {brand}, but the address is {domain} — not {brand}’s own ({official}).',{brand:brandByName[0],domain:fdom,official:brandByName[1]},1));
+      }
+      const im=LC.imitates(fdom);
+      if(im&&!(brandByName&&im.brand===brandByName[0]))add('high',im.how==='mention'?F('The sender’s address mentions {brand} but isn’t {brand}’s ({domain}).',{brand:im.brand,domain:im.domain}):F('The sender’s address looks like {domain} but is spelled differently.',{domain:im.domain}),1);
+      const fake=shownName.match(/[^\s<>"]+@[^\s<>"]+\.[a-z]{2,}/i);
+      if(fake&&fake[0].toLowerCase()!==from.email)add('high',F('The name shows the address {shown}, but the real sender is {real}.',{shown:fake[0],real:from.email},1));
+      if(/\.(xyz|top|icu|cfd|sbs|click|link|cyou|rest|buzz|monster|quest|lol|mom|cam|bond|tk|ml|ga|cf|gq|support|info|vip|win|online|site|shop|live)$/.test(fdom)&&!official)add('medium',F('Sent from an address ending in “.{tld}” — cheap endings like this are very common in scams.',{tld:fdom.split('.').pop()}));
+      if(R.reply&&R.reply.email&&regOf(R.reply.email)&&regOf(R.reply.email)!==freg)add('medium',F('Replies would go to a different address ({reply}) than the sender.',{reply:R.reply.email}));
+    }else if(!R.raw)add('note',T('Add the sender’s address above — it’s one of the strongest clues.'));
+    // 2) the message
+    // with an HTML part, use what the mail app actually shows: its links and its text
+    let text=R.text,links=[];
+    if(R.html){const h=htmlLinks(R.html);links=h.links;text=h.text||R.text;}
+    const hay=(R.subject+'\n'+text+'\n'+R.text).toLowerCase(),marks=[];
+    TRICKS.forEach(([k,list])=>{const hit=[...new Set(list.filter(w=>hay.includes(w.toLowerCase())))].sort((a,b)=>b.length-a.length);
+      const shown=hit.filter((w,i)=>!hit.slice(0,i).some(x=>x.toLowerCase().includes(w.toLowerCase())));
+      // from a proven company address, sales words are just a note; asking for secrets is still a warning
+      const trusted=R.auth&&R.auth.dmarc==='pass'&&official;
+      if(shown.length){marks.push(...shown);add(k==='secret'?(trusted?'medium':'high'):(trusted?'low':'medium'),F(TRICK_MSG[k],{words:shown.slice(0,4).map(w=>'“'+w+'”').join(', ')}));}});
+    if(!R.html)findLinks(text).forEach(([,h])=>links.push({href:hrefOf(h),text:''}));
+    // 3) attachments
+    const atts=R.att.map(a=>{const n=a.name||'',ext=(n.match(/\.([a-z0-9]{1,5})$/i)||['',''])[1].toLowerCase();let sev='',why='';
+      if(/‮/.test(n)){sev='high';why=T('The name hides its real ending with a reversed-text trick.');}
+      else if(/\.(pdf|docx?|xlsx?|pptx?|jpe?g|png|txt|zip)\.[a-z0-9]{2,5}$/i.test(n)&&!/\.(pdf|docx?|xlsx?|pptx?|jpe?g|png|txt|zip)$/i.test(n)){sev='high';why=T('Disguised name — it pretends to be a document but is something else.');}
+      else if(['exe','scr','bat','cmd','com','pif','vbs','vbe','js','jse','wsf','wsh','msi','msp','hta','cpl','jar','ps1','lnk','apk','dll','iso','img','vhd','vhdx'].includes(ext)){sev='high';why=T('A program or disk image — opening it can install malware.');}
+      else if(['html','htm','shtml','xhtml','svg'].includes(ext)){sev='high';why=T('A web page as an attachment — a common way to show a fake sign-in page.');}
+      else if(['docm','xlsm','pptm','dotm','xlam','xltm'].includes(ext)){sev='high';why=T('An Office file with macros — they can run code when opened.');}
+      else if(['zip','rar','7z','gz','tar','cab','ace','arj','tgz'].includes(ext)){sev='medium';why=T('A compressed file — it can hide programs inside.');}
+      if(sev)add(sev,F('Attachment “{name}”: {why}',{name:n,why}));
+      return {...a,sev,why};});
+    // links: de-duplicate, check each, and compare what they show with where they go
+    const seen=new Map();
+    links.forEach(l=>{if(/^(mailto|tel|cid|#)/i.test(l.href))return;const u=LC.parse(l.href);if(!u)return;const k=u.href;if(!seen.has(k))seen.set(k,{u,texts:[],form:!!l.form});if(l.text)seen.get(k).texts.push(l.text);});
+    const list=[...seen.values()].slice(0,40);
+    list.forEach(L=>{L.a=LC.analyse(L.u,L.u.href);
+      const shown=L.texts.map(t=>(t.match(/(?:https?:\/\/)?((?:[a-z0-9-]+\.)+[a-z]{2,})(?:[/:?#]\S*)?/i)||[])[1]).find(Boolean);
+      if(shown&&LC.registrable(LC.norm(shown))!==LC.registrable(L.a.host)){L.mismatch=shown;}
+      L.sev=L.mismatch||L.a.F.some(x=>x.sev==='high')?'high':L.a.F.some(x=>x.sev==='medium')?'medium':L.a.official?'good':'';});
+    const mism=list.filter(L=>L.mismatch);
+    if(mism.length)add('high',F('A link shows {shown} but really goes to {real}.',{shown:mism[0].mismatch,real:mism[0].a.host})+(mism.length>1?' '+F('(and {n} more like it)',{n:mism.length-1}):''));
+    const badLinks=list.filter(L=>!L.mismatch&&L.a.F.some(x=>x.sev==='high'));
+    if(badLinks.length)add('high',badLinks.length===1?F(mism.length?'Another link shows strong warning signs: {host}.':'A link shows strong warning signs: {host}.',{host:badLinks[0].a.host}):F('{n} links show strong warning signs, for example {host}.',{n:badLinks.length,host:badLinks[0].a.host}));
+    if(list.some(L=>L.form))add('high',T('Contains a form that sends what you type to another website.'));
+    paint(R,Fi,list,atts,marks,text,null,true);
+    // threat lists (k-anonymous, 5 characters per fingerprint)
+    if(list.length){const {hits,meta}=await LC.lookup(list.map(L=>L.u));
+      list.forEach(L=>{L.hits=LC.feedNames(meta,hits.get(L.u.href)||[]);if(L.hits.length)L.sev='high';});
+      const listed=list.filter(L=>L.hits&&L.hits.length);
+      if(listed.length)Fi.unshift({sev:'high',text:F('A link in this email is a known threat ({lists}): {host}.',{lists:listed[0].hits.join(', '),host:listed[0].a.host}),listed:true});
+      paint(R,Fi,list,atts,marks,text,meta,false);
+    }else paint(R,Fi,list,atts,marks,text,undefined,false);
+  }
+
+  /* ---------- showing the result ---------- */
+  const esc=ND.esc;
+  function verdict(kind,title,sub){const v=$('#emVerdict');v.dataset.kind=kind;
+    $('#emVIcon').innerHTML=kind==='bad'?ICON.x:kind==='warn'?ICON.alert:kind==='busy'?'<span class="spin"></span>':ICON.shield;$('#emVTitle').textContent=title;$('#emVSub').textContent=sub;}
+  const ICON={x:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>',
+    alert:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>',
+    shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/><path d="m9 12 2 2 4-4"/></svg>',
+    check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>'};
+  function markText(text,marks,list){
+    let s=text.length>5000?text.slice(0,5000)+'…':text;
+    const same=(a,b)=>a.replace(/\/$/,'')===b.replace(/\/$/,'');
+    const sevOf=h=>{const L=list.find(L=>same(L.u.href,h)||L.texts.some(t=>same(t,h)));return L?L.sev:'';}; // a URL shown as link text takes the colour of where it really goes
+    const tokens=[];marks.forEach(w=>tokens.push({w,k:'mk'}));
+    let out='',i=0;const low=s.toLowerCase();
+    const urls=findLinks(s);
+    while(i<s.length){
+      const u=urls.find(x=>x[0]===i);
+      if(u){const h=hrefOf(u[1]);const sv=sevOf(h);out+='<span class="em-url '+(sv==='high'?'bad':sv==='medium'?'warn':sv==='good'?'good':'')+'" dir="ltr">'+esc(u[1])+'</span>';i+=u[1].length;continue;}
+      const t=tokens.find(x=>low.startsWith(x.w.toLowerCase(),i));
+      if(t){out+='<mark class="em-mk">'+esc(s.substr(i,t.w.length))+'</mark>';i+=t.w.length;continue;}
+      out+=esc(s[i]);i++;
+    }
+    return out;
+  }
+  function pill(k,v){const c=v==='pass'?'ok':v==='fail'||v==='softfail'||v==='permerror'?'bad':'none';return '<span class="em-auth '+c+'"><b>'+k+'</b>'+esc(v==='pass'?T('pass'):v==='fail'||v==='softfail'?T('fail'):v==='none'?T('none'):v)+'</span>';}
+  function paint(R,Fi,list,atts,marks,text,meta,busy){
+    $('#emRes').hidden=false;
+    const sevs=Fi.map(x=>x.sev),listed=Fi.some(x=>x.listed);
+    if(busy)verdict('busy',T('Checking the links against threat lists…'),'');
+    else if(listed)verdict('bad',T('Dangerous email'),T('It links to a known threat. Don’t click anything in it, and delete it.'));
+    else if(sevs.includes('high'))verdict('bad',T('Likely a scam'),T('This email shows strong warning signs. Don’t click its links, open its attachments or reply with any details.'));
+    else if(sevs.includes('medium'))verdict('warn',T('Be careful'),T('Some warning signs. If it asks you to do anything, contact the company yourself instead of using the email.'));
+    else if(R.auth&&R.auth.dmarc==='pass'&&R.from&&LC.officialFor(R.from.email.split('@')[1]||''))verdict('good',T('Looks genuine'),T('It passed the sender check for the company’s real address, and nothing suspicious was found.'));
+    else verdict('good',T('No warning signs found'),R.raw?T('Nothing suspicious was found — but no check can promise an email is safe.'):T('Nothing suspicious in what you pasted. Without the full source, though, I can’t confirm who really sent it.'));
+    // the sender card
+    const f=R.from,fdom=f&&f.email?f.email.split('@')[1]:'',fsev=Fi.some(x=>x.who&&x.sev==='high')?'bad':'';
+    let card='';
+    if(f)card+='<div class="em-row"><span class="em-k">'+esc(T('From'))+'</span><span class="em-v">'+(f.name?'<b dir="auto">'+esc(f.name)+'</b> ':'')+(f.email?'<span class="em-addr '+(fsev||(LC.officialFor(fdom)&&R.auth&&R.auth.dmarc==='pass'?'good':''))+'" dir="ltr">'+esc(f.email.split('@')[0])+'@<b>'+esc(fdom)+'</b></span>':'')+'</span></div>';
+    if(R.reply&&R.reply.email&&R.reply.email!==(f&&f.email))card+='<div class="em-row"><span class="em-k">'+esc(T('Reply to'))+'</span><span class="em-v"><span class="em-addr '+(regOf(R.reply.email)!==regOf(f&&f.email)?'warn':'')+'" dir="ltr">'+esc(R.reply.email)+'</span></span></div>';
+    if(R.subject)card+='<div class="em-row"><span class="em-k">'+esc(T('Subject'))+'</span><span class="em-v" dir="auto">'+esc(R.subject)+'</span></div>';
+    card+='<div class="em-row"><span class="em-k">'+esc(T('Sender checks'))+'</span><span class="em-v">'+(R.auth?pill('SPF',R.auth.spf)+pill('DKIM',R.auth.dkim)+pill('DMARC',R.auth.dmarc):'<span class="faint">'+esc(R.raw?T('Not in this source'):T('Paste the full source to see these'))+'</span>')+'</span></div>';
+    $('#emCard').innerHTML=card;
+    const icon={high:ICON.x,medium:ICON.alert,low:ICON.alert,note:ICON.alert,good:ICON.check},cls={high:'bad',medium:'fail',low:'fail',note:'fail',good:'pass'};
+    const order={high:0,medium:1,low:2,note:3,good:4};
+    $('#emFind').innerHTML=Fi.slice().sort((a,b)=>order[a.sev]-order[b.sev]).map(x=>'<div class="check '+cls[x.sev]+'">'+icon[x.sev]+'<span>'+esc(x.text)+'</span></div>').join('')||'<div class="check pass">'+ICON.check+'<span>'+esc(T('No warning signs in the sender, the message or the links.'))+'</span></div>';
+    $('#emLinksSec').hidden=!list.length;$('#emLinkN').textContent='('+list.length+')';
+    $('#emLinks').innerHTML=list.map(L=>{const c=L.sev==='high'?'bad':L.sev==='medium'?'warn':L.sev==='good'?'good':'';
+      const why=L.hits&&L.hits.length?F('Known threat ({lists})',{lists:L.hits.join(', ')}):L.mismatch?F('Shows {shown}',{shown:L.mismatch}):(L.a.F.find(x=>x.sev==='high'||x.sev==='medium')||{}).text||(L.a.official?T('Official address'):'');
+      return '<div class="em-link '+c+'"><span class="em-dot"></span><div class="em-lk"><span class="em-host" dir="ltr">'+esc(L.a.host||L.u.host)+'</span><span class="em-full" dir="ltr">'+esc(L.u.href.length>90?L.u.href.slice(0,88)+'…':L.u.href)+'</span>'+(why?'<span class="em-why">'+esc(why)+'</span>':'')+'</div><a class="btn btn-ghost btn-sm" href="'+ND.url('/link-checker/')+'#'+encodeURIComponent(L.u.href)+'" target="_blank" rel="noopener">'+esc(T('Details'))+'</a></div>';}).join('');
+    $('#emAttSec').hidden=!atts.length;
+    $('#emAtts').innerHTML=atts.map(a=>'<div class="em-att '+(a.sev==='high'?'bad':a.sev==='medium'?'warn':'')+'"><span dir="auto">'+esc(a.name)+'</span><span class="faint">'+esc(a.why||a.type)+'</span></div>').join('');
+    $('#emBodySec').hidden=!text.trim();$('#emBody').innerHTML=markText(text.trim(),marks,list);
+    if(meta)$('#emFeeds').innerHTML='<span>'+esc(F('Links checked against {n} known threats',{n:meta.feeds.reduce((s,f)=>s+f.entries,0).toLocaleString()}))+'</span><span>'+esc(meta.feeds.map(f=>f.name).join(' · '))+'</span>';
+    else if(meta===null)$('#emFeeds').innerHTML='<span>'+esc(T('Threat lists unavailable right now — only the warning-sign analysis ran.'))+'</span>';
+    else $('#emFeeds').innerHTML='';
+  }
+
+  /* ---------- the example: a typical fake Absher email (made up — nothing real) ---------- */
+  const SAMPLE=['Return-Path: <bounce@mailer-7731.xyz>','Received: from mailer-7731.xyz (unknown [185.234.0.7]) by mx.example.com','Authentication-Results: mx.example.com; spf=softfail smtp.mailfrom=mailer-7731.xyz; dkim=none; dmarc=fail header.from=absher-sa-verify.info',
+    'From: =?UTF-8?B?2KPYqNi02LEgfCBBYnNoZXI=?= <no-reply@absher-sa-verify.info>','Reply-To: support.absher@gmail.com','To: you@example.com','Subject: =?UTF-8?B?2KrZhtio2YrZhyDYudin2KzZhDog2KrZhSDYqti52YTZitmCINit2LPYp9io2YM=?=','Date: Sat, 25 Oct 2026 09:12:00 +0300','Message-ID: <a81f@mailer-7731.xyz>','MIME-Version: 1.0',
+    'Content-Type: multipart/mixed; boundary="b1"','','--b1','Content-Type: multipart/alternative; boundary="b2"','','--b2','Content-Type: text/plain; charset=UTF-8','Content-Transfer-Encoding: 8bit','',
+    'عزيزي المستفيد،','تم تعليق حسابك في أبشر بسبب نشاط غير معتاد. حدّث بياناتك خلال 24 ساعة وإلا سيتم إيقاف الخدمات.','لإعادة التفعيل أدخل رمز التحقق المرسل إلى جوالك عبر الرابط: https://www.absher.sa/portal','','Dear customer, your account has been suspended. Verify your account immediately.','',
+    '--b2','Content-Type: text/html; charset=UTF-8','Content-Transfer-Encoding: 8bit','',
+    '<p dir="rtl">عزيزي المستفيد،<br>تم تعليق حسابك في أبشر بسبب نشاط غير معتاد. حدّث بياناتك خلال 24 ساعة وإلا سيتم إيقاف الخدمات.</p><p dir="rtl">لإعادة التفعيل أدخل رمز التحقق المرسل إلى جوالك: <a href="http://absher-sa-verify.info/login?id=7731">https://www.absher.sa/portal</a></p><p>Dear customer, your account has been suspended. <a href="http://absher-sa-verify.info/login">Verify your account immediately</a>.</p>',
+    '--b2--','','--b1','Content-Type: text/html; name="invoice.pdf.html"','Content-Disposition: attachment; filename="invoice.pdf.html"','Content-Transfer-Encoding: base64','','PGgxPkZha2U8L2gxPg==','--b1--',''].join('\n');
+
+  async function run(){const t=$('#em').value,v=fileRaw&&t===fileShown?fileRaw:t;if(!v.trim()&&!$('#emFrom').value.trim()){$('#em').focus();return;}
+    try{await check(v);}catch(e){console.error(e);ND.toast(T('Something went wrong reading this email.'));}
+    $('#emRes').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});}
+  $('#emGo').addEventListener('click',run);
+  $('#emSample').addEventListener('click',()=>{fileRaw=null;$('#em').value=SAMPLE;$('#emFrom').value='';run();});
+  // .eml files: parse the original bytes (so any charset decodes properly) and show a readable copy in the box
+  let fileRaw=null,fileShown=null;
+  $('#emFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;
+    const buf=new Uint8Array(await f.arrayBuffer());let s='';for(let i=0;i<buf.length;i+=32768)s+=String.fromCharCode.apply(null,buf.subarray(i,i+32768));
+    fileRaw=s;fileShown=decodeText(buf,'utf-8');$('#em').value=fileShown;e.target.value='';run();});
+})();
+/*i18n:on*/
+</script>

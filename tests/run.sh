@@ -7,7 +7,7 @@ set -uo pipefail
 T="$(cd "$(dirname "$0")" && pwd)"; R="$(cd "$T/.." && pwd)"; W="$T/.work"
 export F="$W/fixtures" DL="$W/downloads" OUT="$W/shots"; mkdir -p "$F" "$DL" "$OUT" "$W/logs"
 command -v magick >/dev/null 2>&1 || export PATH="$T/bin:$PATH"
-ALL="e2e ar dynamic newtools owner features features-ar acct acct-ar pdf-e2e pdf-touch pdf-ar pdf-site pdf-offline pdf2-sign pdf2-vault-touch pdf2-ar pdf3-tools pdf3-ar phone-widths"
+ALL="e2e ar dynamic newtools email owner features features-ar acct acct-ar pdf-e2e pdf-touch pdf-ar pdf-site pdf-offline pdf2-sign pdf2-vault-touch pdf2-ar pdf3-tools pdf3-ar phone-widths"
 SUITES="${*:-$ALL}"
 HP=""
 stop() { if [ -n "$HP" ]; then kill "$HP" 2>/dev/null; wait "$HP" 2>/dev/null; HP=""; fi; }
