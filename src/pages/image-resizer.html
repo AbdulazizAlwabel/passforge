@@ -1,0 +1,165 @@
+<!-- @badges -->
+<span class="badge ok">{{icon:shield}}Removes hidden location data</span>
+
+<!-- @tool -->
+<div class="panel">
+  <div class="panel-body">
+    <label class="drop ir-drop" id="irDrop" tabindex="0">
+      <input type="file" id="irFile" accept="image/*,.heic,.heif" multiple hidden>
+      <span class="ir-drop-ic">{{icon:image}}</span>
+      <strong>Drop photos here, or tap to choose</strong>
+      <span class="faint">JPG, PNG, WebP — and HEIC on iPhone and Mac. They stay on your device.</span>
+    </label>
+    <div class="ir-opts" id="irOpts" hidden>
+      <div class="field">
+        <label class="label">Size</label>
+        <div class="seg" id="irSize">
+          <button type="button" aria-pressed="false" data-v="0">Keep</button>
+          <button type="button" aria-pressed="true" data-v="2048">Large · 2048</button>
+          <button type="button" aria-pressed="false" data-v="1280">Medium · 1280</button>
+          <button type="button" aria-pressed="false" data-v="800">Small · 800</button>
+          <button type="button" aria-pressed="false" data-v="custom">Custom</button>
+        </div>
+        <div class="row ir-custom" id="irCustom" hidden><input class="input" id="irPx" type="number" min="50" max="10000" value="1600" inputmode="numeric" aria-label="Longest side in pixels"><span class="faint">px on the longest side</span></div>
+      </div>
+      <div class="field">
+        <label class="label">Format</label>
+        <div class="seg" id="irFmt">
+          <button type="button" aria-pressed="true" data-v="image/jpeg">JPG</button>
+          <button type="button" aria-pressed="false" data-v="image/webp">WebP</button>
+          <button type="button" aria-pressed="false" data-v="image/png">PNG</button>
+        </div>
+      </div>
+      <div class="field" id="irQField">
+        <label class="label" for="irQ">Quality <span class="mono" id="irQv">82%</span></label>
+        <input type="range" class="range" id="irQ" min="40" max="95" value="82">
+      </div>
+      <div class="field">
+        <label class="chip"><input type="checkbox" id="irCap"><span>Keep each photo under</span></label>
+        <span class="ir-cap"><input class="input" id="irKb" type="number" min="20" max="20000" value="500" inputmode="numeric" aria-label="Size limit in KB"> KB</span>
+        <p class="hint">Handy for government portals and forms with an upload limit.</p>
+      </div>
+    </div>
+  </div>
+  <div class="panel-sec" id="irRes" hidden>
+    <div class="panel-title"><span id="irSum"></span><span class="row" style="gap:8px"><button class="btn btn-ghost btn-sm" id="irClear">Clear</button><button class="btn btn-primary btn-sm" id="irAll">{{icon:download}}Download all</button></span></div>
+    <div class="ir-list" id="irList"></div>
+  </div>
+</div>
+
+<!-- @aside -->
+<div class="panel">
+  <h4>Private by design</h4>
+  <ul>
+    <li>Your photos are resized right here on your device — nothing is uploaded.</li>
+    <li>Photos from phones often hide the exact place they were taken (GPS). The new copies leave that out.</li>
+    <li>No watermark, no limit on how many, no sign-up.</li>
+  </ul>
+</div>
+<div class="panel">
+  <h4>Which format?</h4>
+  <ul>
+    <li><b>JPG</b> works everywhere — best for photos.</li>
+    <li><b>WebP</b> is smaller at the same quality, for websites and apps.</li>
+    <li><b>PNG</b> keeps every pixel — for screenshots and graphics, not photos.</li>
+  </ul>
+</div>
+
+<!-- @about -->
+<h2>Smaller photos, without the catch</h2>
+<p>Phone photos are often 4–8 MB — too big to email, and over the limit on many upload forms. Pick a size, and every photo is resized and saved again on your device. Online “compressors” usually upload your pictures to their servers first; here, they never leave your phone or computer.</p>
+<details><summary>For the technical folks</summary><p>Images are decoded with <code>createImageBitmap</code> (honouring the EXIF orientation), scaled down in halving steps for sharpness, and re-encoded with <code>canvas.toBlob</code> — which writes no EXIF, so location and camera data are dropped. The size limit uses a quick binary search on quality, then shrinks the dimensions if it still doesn’t fit.</p></details>
+
+<!-- @script -->
+<script>
+/*i18n:off*/ // format codes and settings stay as they are; visible messages go through ND.t at runtime
+(function(){
+  const $=ND.$,$$=ND.$$;
+  const items=[];let size=2048,fmt='image/jpeg',busy=Promise.resolve();
+  const ext={'image/jpeg':'jpg','image/webp':'webp','image/png':'png'};
+  const kb=n=>n<1048576?Math.max(1,Math.round(n/1024))+' KB':(n/1048576).toFixed(1)+' MB';
+  const fmtSize=n=>'⁦'+kb(n)+'⁩';
+  const pick=(id,cb)=>$$('#'+id+' button').forEach(b=>b.addEventListener('click',()=>{$$('#'+id+' button').forEach(x=>x.setAttribute('aria-pressed',x===b));cb(b.dataset.v);rerun();}));
+  pick('irSize',v=>{$('#irCustom').hidden=v!=='custom';size=v==='custom'?+$('#irPx').value||1600:+v;});
+  pick('irFmt',v=>{fmt=v;$('#irQField').hidden=v==='image/png';});
+  $('#irPx').addEventListener('change',()=>{size=Math.max(50,Math.min(10000,+$('#irPx').value||1600));rerun();});
+  $('#irQ').addEventListener('input',()=>{$('#irQv').textContent=$('#irQ').value+'%';});
+  $('#irQ').addEventListener('change',rerun);
+  $('#irCap').addEventListener('change',rerun);$('#irKb').addEventListener('change',()=>{if($('#irCap').checked)rerun();});
+
+  function scaleTo(bmp,w,h){
+    // halve step by step for a sharper result than one big jump
+    let src=bmp,sw=bmp.width,sh=bmp.height;
+    while(sw/2>w&&sh/2>h){const c=new OffscreenCanvas(Math.round(sw/2),Math.round(sh/2));const x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(src,0,0,c.width,c.height);src=c;sw=c.width;sh=c.height;}
+    const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');
+    if(fmt!=='image/png'){x.fillStyle='#fff';x.fillRect(0,0,w,h);} // JPG has no transparency
+    x.imageSmoothingQuality='high';x.drawImage(src,0,0,w,h);return c;
+  }
+  const toBlob=(c,q)=>new Promise(r=>c.toBlob(r,fmt,q));
+  async function convert(it){
+    const bmp=it.bmp,long=Math.max(bmp.width,bmp.height);
+    let k=size&&long>size?size/long:1,q=+$('#irQ').value/100,blob,w,h;
+    const cap=$('#irCap').checked?(+$('#irKb').value||500)*1024:0;
+    for(let round=0;round<6;round++){
+      w=Math.max(1,Math.round(bmp.width*k));h=Math.max(1,Math.round(bmp.height*k));
+      const c=scaleTo(bmp,w,h);
+      if(!cap||fmt==='image/png'){blob=await toBlob(c,q);if(!cap||blob.size<=cap)break;}
+      else{ // find the best quality that fits
+        let lo=0.3,hi=q,best=null;
+        for(let i=0;i<7;i++){const mid=(lo+hi)/2,b=await toBlob(c,mid);if(b.size<=cap){best=b;lo=mid;}else hi=mid;}
+        if(!best){const b=await toBlob(c,hi);if(b.size<=cap)best=b;}
+        if(best){blob=best;break;}
+        blob=await toBlob(c,0.3);
+      }
+      k*=0.8;
+    }
+    return {blob,w,h,fits:!cap||blob.size<=cap};
+  }
+  function name(it){return it.file.name.replace(/\.[^.]+$/,'')+'-'+(it.w||'')+'.'+ext[fmt];}
+  function row(it){
+    if(it.err)return '<div class="ir-row err"><span class="ir-thumb"></span><div class="ir-meta"><b dir="auto">'+ND.esc(it.file.name)+'</b><span>'+ND.esc(it.err)+'</span></div></div>';
+    const saved=it.out?Math.round((1-it.out.size/it.file.size)*100):0;
+    return '<div class="ir-row"><img class="ir-thumb" alt="" src="'+(it.thumb||'')+'"><div class="ir-meta"><b dir="auto">'+ND.esc(it.file.name)+'</b><span>'+
+      (it.out?fmtSize(it.file.size)+' → <b>'+fmtSize(it.out.size)+'</b> · <span dir="ltr">'+it.w+' × '+it.h+'</span>'+(saved>0?' · <span class="ir-save">−'+saved+'%</span>':'')+(it.fits===false?' · <span class="ir-warn">'+ND.esc(ND.t('Couldn’t get under the limit'))+'</span>':''):'<span class="spin"></span>')+
+      '</span></div>'+(it.out?'<button class="btn btn-sm" data-dl="'+items.indexOf(it)+'">'+ND.esc(ND.t('Download'))+'</button>':'')+'</div>';
+  }
+  function paint(){
+    const ok=items.filter(i=>i.out);
+    $('#irRes').hidden=!items.length;$('#irOpts').hidden=!items.length;
+    $('#irList').innerHTML=items.map(row).join('');
+    const before=ok.reduce((s,i)=>s+i.file.size,0),after=ok.reduce((s,i)=>s+i.out.size,0);
+    $('#irSum').innerHTML=ok.length?ND.f('{n} photos · {before} → {after}',{n:ok.length,before:fmtSize(before),after:'<b>'+fmtSize(after)+'</b>'}):'';
+    $('#irAll').disabled=!ok.length;
+  }
+  let gen=0; // a newer run makes older, slower results obsolete
+  function rerun(){const g=++gen;items.forEach(i=>{if(!i.err)i.out=null;});paint();busy=busy.then(async()=>{for(const it of items){if(g!==gen)return;if(it.err||it.out)continue;const r=await convert(it);if(g!==gen)return;Object.assign(it,{out:r.blob,w:r.w,h:r.h,fits:r.fits});paint();}});}
+  async function add(files){
+    for(const f of files){
+      if(!/^image\//.test(f.type)&&!/\.(heic|heif)$/i.test(f.name))continue;
+      const it={file:f};items.push(it);
+      try{it.bmp=await createImageBitmap(f,{imageOrientation:'from-image'});
+        const t=document.createElement('canvas'),s=Math.min(1,96/Math.max(it.bmp.width,it.bmp.height));t.width=Math.round(it.bmp.width*s);t.height=Math.round(it.bmp.height*s);t.getContext('2d').drawImage(it.bmp,0,0,t.width,t.height);it.thumb=t.toDataURL('image/jpeg',0.7);}
+      catch(e){it.err=/heic|heif/i.test(f.type+f.name)?ND.t('This browser can’t open HEIC photos — try Safari, or share it as JPG first.'):ND.t('This image couldn’t be opened.');}
+    }
+    rerun();
+  }
+  const fin=$('#irFile'),drop=$('#irDrop');
+  fin.addEventListener('change',()=>{add([...fin.files]);fin.value='';});
+  drop.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fin.click();}});
+  ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
+  ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,()=>drop.classList.remove('over')));
+  drop.addEventListener('drop',e=>{e.preventDefault();add([...e.dataTransfer.files]);});
+  document.addEventListener('paste',e=>{const f=[...(e.clipboardData||{}).files||[]];if(f.length)add(f);});
+  function save(blob,n){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=n;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
+  $('#irList').addEventListener('click',e=>{const b=e.target.closest('[data-dl]');if(!b)return;const it=items[+b.dataset.dl];save(it.out,name(it));ND.done(ND.f('Saved {name}',{name:name(it)}));});
+  $('#irAll').addEventListener('click',async()=>{
+    const ok=items.filter(i=>i.out);if(!ok.length)return;
+    if(ok.length===1){save(ok[0].out,name(ok[0]));ND.done(ND.f('Saved {name}',{name:name(ok[0])}));return;}
+    const {zipSync}=await import('/assets/vendor/pdf-studio-1/fflate.mjs');const z={},used={};
+    for(const it of ok){let n=name(it);if(used[n])n=n.replace(/(\.\w+)$/,'-'+(++used[n])+'$1');else used[n]=1;z[n]=[new Uint8Array(await it.out.arrayBuffer()),{level:0}];}
+    const zip=new Blob([zipSync(z)],{type:'application/zip'});save(zip,'photos-resized.zip');ND.done(ND.f('Saved {name}',{name:'photos-resized.zip'}));
+  });
+  $('#irClear').addEventListener('click',()=>{items.forEach(i=>i.bmp&&i.bmp.close&&i.bmp.close());items.length=0;paint();});
+})();
+/*i18n:on*/
+</script>
