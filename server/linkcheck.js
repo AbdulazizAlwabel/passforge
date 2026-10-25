@@ -66,7 +66,11 @@ module.exports = function mountLinkcheck(api, { limiter }) {
             key = 'd:' + h;
           } else {
             const u = normUrl(v);
-            if (!u || NEVER.has(u.split(/[/:?]/)[0])) continue;
+            // big shared sites are never flagged as a whole — but an exact bad link on them (a malware file on
+            // github.com, a phishing form on docs.google.com) still is; only their bare home pages are skipped
+            if (!u) continue;
+            const host = u.split(/[/:?]/)[0];
+            if (NEVER.has(host) && u.slice(host.length).replace(/^:\d+/, '').replace(/\/$/, '') === '') continue;
             key = 'u:' + u;
           }
           keys.add(sha(key).slice(0, HEAD) + fi); n++;
