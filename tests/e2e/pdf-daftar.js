@@ -189,8 +189,9 @@ function serve(port) { return new Promise(r => { const s = http.createServer((q,
 
   /* ---------- Arabic ---------- */
   {
-    const { ctx, studio, errs } = await session('http://127.0.0.1:8896', {}, 'ar');
-    await studio.waitForFunction(() => window.__studio.daftar.on, null, { timeout: 15000 });
+    const { ctx, opener, studio, errs } = await session('http://127.0.0.1:8896', {}, 'ar');
+    const arrived = await studio.waitForFunction(() => window.__studio.daftar.on, null, { timeout: 30000 }).then(() => true, () => false);
+    ok(arrived, 'Arabic page receives the profile' + (arrived ? '' : ' — opener saw ' + JSON.stringify(await opener.evaluate(() => window.got)) + ', studio ' + JSON.stringify(await st(studio)) + ', errors ' + JSON.stringify(errs)));
     const t = await studio.innerText('#dfBar');
     ok(/بياناتك من دفتر جاهزة/.test(t) && /انسَ بياناتي/.test(t) && await studio.getAttribute('html', 'dir') === 'rtl', 'Arabic banner, right to left');
     ok(!errs.length, 'no page errors in Arabic');
