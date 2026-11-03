@@ -83,3 +83,22 @@ DigitalPlat dashboard; records then live at that DNS provider:
 Alerts go through Hermes to the target in `/etc/nicelydone/ops.env` (kept off the repo).
 `deploy/ops/nicelydone-backup-pull.*` is a user-level timer template for pulling the backups to another machine.
 Admins are set by numeric id: `ADMIN_USER_IDS` in `server/.env`.
+
+**Caddy and the other sites on the VM.** The VM's Caddy also serves sites that
+are not part of this repo (Daftar, the desktop relay). They live in their own
+files in `/etc/caddy/sites.d/*.caddy`, which `deploy/Caddyfile` imports and
+`install-vm.sh` never touches. On every install (including auto-deploys) the
+script:
+
+1. builds the new Caddyfile as `/etc/caddy/Caddyfile.new` and runs
+   `caddy validate` on it as the `caddy` user, together with everything it
+   imports; if that fails, the live Caddyfile stays as it was and the deploy
+   stops with the error (auto-deploy then alerts);
+2. keeps the old file as `/etc/caddy/backups/Caddyfile.<date>` (20 kept);
+3. **reloads** Caddy (`systemctl reload caddy`), so every site stays up.
+   It restarts Caddy only when Caddy was not running or its binary was
+   upgraded.
+
+To add or change another site, edit its file in `sites.d`, then
+`sudo -u caddy caddy validate --config /etc/caddy/Caddyfile && sudo systemctl reload caddy`.
+To roll back: copy a backup over `/etc/caddy/Caddyfile` and reload.

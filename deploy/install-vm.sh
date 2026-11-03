@@ -58,14 +58,37 @@ if ! /usr/local/bin/caddy version 2>/dev/null | grep -q "v$CADDY_VER"; then
   echo "$EXPECT  $T/c.tgz" | sha512sum -c --quiet -
   tar -xzf $T/c.tgz -C $T caddy
   sudo install -m 755 $T/caddy /usr/local/bin/caddy
+  CADDY_UPGRADED=1
   sudo restorecon -v /usr/local/bin/caddy || true
   rm -rf $T
 fi
-sudo mkdir -p /etc/caddy
+sudo mkdir -p /etc/caddy /etc/caddy/backups
+# Other sites on this VM (Daftar, the desktop relay) are separate files in
+# sites.d, imported by deploy/Caddyfile; this script never touches them.
+sudo install -d -m 755 /etc/caddy/sites.d
 # Certificate contact email: $ACME_EMAIL, or keep the one already configured on this host.
 ACME_EMAIL=${ACME_EMAIL:-$(sudo awk '/^\temail /{print $2; exit}' /etc/caddy/Caddyfile 2>/dev/null || true)}
 [ -n "$ACME_EMAIL" ] || { echo "Set ACME_EMAIL=you@example.com (needed for ZeroSSL certificates)"; exit 1; }
-sed "s|{\$ACME_EMAIL}|$ACME_EMAIL|" "$BUNDLE/deploy/Caddyfile" | sudo tee /etc/caddy/Caddyfile >/dev/null
+# New Caddyfile: validate it (with everything it imports) before it replaces
+# the live one, keep a dated backup of the old one, and reload, not restart.
+NEW_CADDYFILE=/etc/caddy/Caddyfile.new
+sed "s|{\$ACME_EMAIL}|$ACME_EMAIL|" "$BUNDLE/deploy/Caddyfile" | sudo tee "$NEW_CADDYFILE" >/dev/null
+# As the caddy user, so an imported file it cannot read fails here, not live.
+if ! sudo -u caddy /usr/local/bin/caddy validate --config "$NEW_CADDYFILE" --adapter caddyfile >/tmp/caddy-validate.log 2>&1; then
+  echo "!! the new Caddyfile does not validate; the live one is unchanged:"; tail -20 /tmp/caddy-validate.log
+  sudo rm -f "$NEW_CADDYFILE"; exit 1
+fi
+CADDY_CHANGED=0
+if ! sudo cmp -s "$NEW_CADDYFILE" /etc/caddy/Caddyfile; then
+  CADDY_CHANGED=1
+  if sudo test -f /etc/caddy/Caddyfile; then
+    sudo cp -p /etc/caddy/Caddyfile "/etc/caddy/backups/Caddyfile.$(date +%Y%m%d-%H%M%S)"
+    # Keep the 20 newest backups.
+    sudo find /etc/caddy/backups -name 'Caddyfile.*' -type f | sort | head -n -20 | xargs -r sudo rm -f
+  fi
+fi
+sudo mv "$NEW_CADDYFILE" /etc/caddy/Caddyfile
+sudo restorecon /etc/caddy/Caddyfile 2>/dev/null || true
 sudo install -m 644 "$BUNDLE/deploy/caddy.service" /etc/systemd/system/caddy.service
 sudo install -m 644 "$BUNDLE/deploy/nicelydone.slice" /etc/systemd/system/nicelydone.slice
 sudo sed -e "s|/opt/nicelydone|$APP|g" "$BUNDLE/deploy/nicelydone.service" | sudo tee /etc/systemd/system/nicelydone.service >/dev/null
@@ -89,5 +112,11 @@ sudo systemctl enable -q --now nicelydone-backup.timer nicelydone-monitor.timer 
 sudo systemctl restart nicelydone
 sleep 2
 curl -fsS http://127.0.0.1:3080/api/health && echo
-sudo systemctl restart caddy
+# Reload keeps every site up (a bad config is refused and the old one stays).
+# Restart only when Caddy is not running yet or its binary was just upgraded.
+if [ "${CADDY_UPGRADED:-0}" = 1 ] || ! sudo systemctl is-active -q caddy; then
+  sudo systemctl restart caddy
+elif [ "$CADDY_CHANGED" = 1 ]; then
+  sudo systemctl reload caddy
+fi
 sudo systemctl --no-pager --lines=0 status nicelydone caddy | grep -E "●|Active"
