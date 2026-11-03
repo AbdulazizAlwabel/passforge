@@ -30,6 +30,12 @@ document.getElementById('go').onclick=()=>{
   });
 };
 </script>`;
+// A script click, not a mouse click: Google Chrome on the CI runner hits a
+// fatal Blink check in its event-timing code (window_performance.cc,
+// "processing_start_time >= render_start_time") when a trusted click opens a
+// cross-origin popup. Playwright runs Chromium without the popup blocker, so
+// window.open still works.
+const openStudio = (opener) => opener.evaluate(() => document.getElementById('go').click());
 function serve(port) { return new Promise(r => { const s = http.createServer((q, res) => { res.setHeader('content-type', 'text/html'); res.end(FAKE); }).listen(port, '127.0.0.1', () => r(s)); }); }
 
 (async () => {
@@ -42,7 +48,7 @@ function serve(port) { return new Promise(r => { const s = http.createServer((q,
     const opener = await ctx.newPage(); const errs = [];
     await opener.goto(origin + '/');
     await opener.evaluate(c => { window.cfg = c; }, { url: B + (lang ? '/' + lang : '') + '/sign-pdf/?from=daftar', fields: FIELDS, ...cfg });
-    const [studio] = await Promise.all([ctx.waitForEvent('page'), opener.click('#go')]);
+    const [studio] = await Promise.all([ctx.waitForEvent('page'), openStudio(opener)]);
     studio.on('pageerror', e => errs.push(e.message));
     const reqs = []; studio.on('request', r => reqs.push(r.url() + ' ' + (r.postData() || '')));
     await studio.waitForLoadState('load');
@@ -188,7 +194,7 @@ function serve(port) { return new Promise(r => { const s = http.createServer((q,
     const ctx = await br.newContext(); const opener = await ctx.newPage();
     await opener.goto('http://127.0.0.1:8896/');
     await opener.evaluate(c => { window.cfg = c; }, { url: B + '/pdf-studio/?from=daftar', fields: FIELDS });
-    const [studio] = await Promise.all([ctx.waitForEvent('page'), opener.click('#go')]);
+    const [studio] = await Promise.all([ctx.waitForEvent('page'), openStudio(opener)]);
     await studio.waitForLoadState('load'); await studio.waitForTimeout(1500);
     ok(!(await opener.evaluate(() => window.got)).length && !(await st(studio)).on, 'other PDF pages keep their opener cut off (COOP)');
     await ctx.close();
