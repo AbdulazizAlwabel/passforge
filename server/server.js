@@ -56,6 +56,7 @@ app.disable('x-powered-by');
 if (TRUST_PROXY === '1') app.set('trust proxy', 1);
 
 /* ── Security headers ─────────────────────────────────────────────── */
+const DAFTAR_HANDOFF = /^\/(?:ar\/)?sign-pdf(?:\/(?:index\.html)?)?$/;
 const CSP = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",   // wasm: PDF image decoders (JPEG 2000, JBIG2)
@@ -78,6 +79,11 @@ app.use((req, res, next) => {
     'Permissions-Policy': 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
     'Cross-Origin-Opener-Policy': 'same-origin',
   });
+  // "Fill a form" from Daftar opens this one page in a new tab and hands it
+  // the details with postMessage, so the page has to keep its link to the
+  // tab that opened it. The page accepts messages only from Daftar's exact
+  // address, from that tab, with a one-time code (src/assets/daftar-fill.js).
+  if (DAFTAR_HANDOFF.test(req.path)) res.set('Cross-Origin-Opener-Policy', 'unsafe-none');
   if (PROD) res.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
   next();
 });

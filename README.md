@@ -35,6 +35,14 @@ Pages are written in English; `build.py` renders each one again under `/ar/` usi
 messages). Every build writes `i18n-missing.txt`; keep it empty. Sentences with numbers use templates —
 `ND.f('Found in {count}', …)` — and plurals use `ND.pl` / `ND.count` with Arabic plural forms.
 
+## Fill a form from Daftar
+
+PDF Studio's sign page (`/sign-pdf/`) can receive a "fill profile" from Daftar
+(Abdulaziz's own document app) in the browser, with `postMessage`. It is
+offered as chips and suggested form fields, and it is never sent to the
+server, never put in the address, and never stored. The contract and the
+one COOP exception it needs are in `docs/DAFTAR-HANDOFF.md`.
+
 ## Build
 
 ```sh
