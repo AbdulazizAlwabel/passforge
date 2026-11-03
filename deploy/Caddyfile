@@ -15,3 +15,8 @@ nicelydone.qd.je {
 www.nicelydone.qd.je {
 	redir https://nicelydone.qd.je{uri} permanent
 }
+
+# Other sites on this VM (Daftar, the desktop relay, ...) live in their own
+# files there and are never in this repo. install-vm.sh creates the folder;
+# Caddy accepts the glob when it matches nothing.
+import /etc/caddy/sites.d/*.caddy
