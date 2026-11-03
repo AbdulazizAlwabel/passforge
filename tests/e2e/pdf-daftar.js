@@ -94,7 +94,14 @@ function serve(port) { return new Promise(r => { const s = http.createServer((q,
   /* ---------- the handoff ---------- */
   {
     const { ctx, opener, studio, errs, reqs } = await session('http://127.0.0.1:8896', { pdf: pdf64 });
-    await studio.waitForFunction(() => window.__studio.daftar.on && window.__studio.pages.length > 0, null, { timeout: 30000 });
+    const logs = []; studio.on('console', m => logs.push(m.type() + ': ' + m.text()));
+    const ready = await studio.waitForFunction(() => window.__studio.daftar.on && window.__studio.pages.length > 0, null, { timeout: 45000 }).then(() => true, () => false);
+    if (!ready) {
+      console.log('DIAG opener got', JSON.stringify(await opener.evaluate(() => window.got)));
+      console.log('DIAG studio', JSON.stringify(await studio.evaluate(() => ({ d: window.__studio.daftar, pages: window.__studio.pages.length, opener: !!window.opener, url: location.href }))));
+      console.log('DIAG errors', JSON.stringify(errs), 'console', JSON.stringify(logs.slice(-10)));
+    }
+    ok(ready, 'profile and PDF arrive');
     const s0 = await st(studio);
     ok(s0.fields === FIELDS.length && !s0.waiting, 'profile accepted once, nonce used up');
     ok(await studio.isVisible('#dfBar') && /Your details from Daftar are here/.test(await studio.innerText('#dfBar')), '“from Daftar” banner shows');
