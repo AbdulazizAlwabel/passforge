@@ -1391,6 +1391,25 @@ body.st-noselect { user-select: none; -webkit-user-select: none; cursor: grabbin
 .st-layer.tool-on { cursor: crosshair; }
 .st-formhint { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; font-size: 0.84rem; color: var(--text); background: var(--surface-solid); border: 1px solid var(--line-2); box-shadow: var(--shadow); pointer-events: none; animation: pop 0.3s var(--ease); white-space: nowrap; }
 .st-formhint svg { width: 14px; height: 14px; color: var(--accent); }
+/* PDF Studio — details handed over by Daftar */
+.st-daftar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 14px; margin-bottom: 14px; padding: 12px 14px; border-radius: var(--r-md); background: var(--accent-soft); border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); animation: pop 0.3s var(--ease); }
+.st-df-ic { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--surface-solid); color: var(--accent); flex: none; }
+.st-df-ic svg { width: 16px; height: 16px; }
+.st-df-txt { display: flex; flex-direction: column; gap: 2px; flex: 1 1 220px; min-width: 0; font-size: 0.92rem; }
+.st-df-txt .muted { font-size: 0.84rem; }
+.st-df-acts { display: flex; flex-wrap: wrap; gap: 8px; }
+.st-dfchips { display: flex; gap: 8px; align-items: center; overflow-x: auto; padding: 8px 14px; border-bottom: 1px solid var(--line); scrollbar-width: thin; }
+.st-dfchips-k { flex: none; font-size: 0.78rem; color: var(--text-3); }
+.st-dfchip { flex: none; display: inline-flex; flex-direction: column; align-items: flex-start; gap: 1px; max-width: 220px; padding: 5px 11px; border-radius: var(--r-sm); border: 1px solid var(--line-2); background: var(--surface-solid); color: var(--text); font: inherit; cursor: pointer; text-align: start; }
+.st-dfchip:hover { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+.st-dfchip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.st-dfchip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); }
+.st-dfchip-k { font-size: 0.72rem; color: var(--text-2); }
+.st-dfchip-v { font-size: 0.86rem; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.st-map { display: grid; gap: 10px; max-height: min(60vh, 520px); overflow-y: auto; }
+.st-map-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 10px; align-items: center; }
+.st-map-row label { font-size: 0.88rem; overflow-wrap: anywhere; }
+@media (max-width: 560px) { .st-map-row { grid-template-columns: 1fr; gap: 4px; } }
 .mk { position: absolute; cursor: move; touch-action: none; outline: 1px dashed transparent; outline-offset: 1px; border-radius: 2px; user-select: none; -webkit-user-select: none; }
 .mk:hover { outline-color: rgb(29 78 216 / 0.45); }
 .mk.on { outline: 1.5px solid #1d4ed8; }
