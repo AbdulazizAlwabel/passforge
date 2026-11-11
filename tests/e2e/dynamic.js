@@ -80,7 +80,7 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
     const p = await ctx.newPage(); p.on('pageerror', (e) => errs.push('motion: ' + e.message));
     await p.goto(B + '/');
     ok(await p.evaluate(() => document.documentElement.classList.contains('nd-first')), 'first visit: the logo check draws itself');
-    ok(await p.locator('.scribble-u path').count() === 2, 'headline underline is there');
+    ok(await p.locator('h1.display .marked').count() === 1, 'headline: the key words are highlighted');
     await p.reload();
     ok(!(await p.evaluate(() => document.documentElement.classList.contains('nd-first'))), 'second visit: no logo animation');
     for (const L of ['', '/ar']) {
@@ -111,7 +111,7 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
   const rm = await br.newContext({ reducedMotion: 'reduce' }); const q = await rm.newPage();
   await q.goto(B + '/'); ok((await q.textContent('#tryGen')).trim().length === 20 && !(await q.$('#tryGen .scramble')), 'reduced motion: password shown without the scramble');
   await q.hover('.task'); ok(!(await q.$('.task.spot')), 'reduced motion: cards don’t tilt');
-  ok(await q.evaluate(() => getComputedStyle(document.querySelector('.scribble-u path')).strokeDashoffset) === '0px' || await q.evaluate(() => getComputedStyle(document.querySelector('.scribble-u path')).strokeDashoffset) === '0', 'reduced motion: underline simply shown');
+  ok(await q.evaluate(() => getComputedStyle(document.querySelector('.live-dot'), '::after').animationName) === 'none' || await q.evaluate(() => parseFloat(getComputedStyle(document.querySelector('.live-dot'), '::after').animationDuration) < 0.01), 'reduced motion: the live dot doesn’t pulse');
   ok(await q.evaluate(() => getComputedStyle(document.querySelector('.note')).animationName) === 'none', 'reduced motion: the note doesn’t drop');
   await rm.close();
   ok(!errs.length, 'no page errors ' + errs.join(' | '));

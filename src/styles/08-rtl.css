@@ -1,0 +1,20 @@
+/* ==========================================================================
+   Arabic / right-to-left
+   Logical properties do most of the work; this file holds the rest.
+   ========================================================================== */
+/* Arabic letters must join: never space them out. */
+[dir="rtl"] *, [dir="rtl"] *::before, [dir="rtl"] *::after { letter-spacing: 0 !important; }
+[dir="rtl"] body { font-size: 16.5px; line-height: 1.75; }
+[dir="rtl"] .display { line-height: 1.3; font-size: clamp(2.1rem, 4.8vw, 3.5rem); }
+[dir="rtl"] .h1 { line-height: 1.35; }
+[dir="rtl"] .h2, [dir="rtl"] .h4, [dir="rtl"] .principle h3, [dir="rtl"] .prose h2, [dir="rtl"] .about-sec .num h2, [dir="rtl"] .news-i h2, [dir="rtl"] .task-t strong { line-height: 1.45; }
+[dir="rtl"] em, [dir="rtl"] i { font-style: normal; }
+/* Brand, code and generated values stay left-to-right; mixed text picks its own direction. */
+[dir="rtl"] .kbd, [dir="rtl"] .bits-row { direction: ltr; }
+[dir="rtl"] .out, [dir="rtl"] .pw-text, [dir="rtl"] .hash-row .val, [dir="rtl"] .ip-big, [dir="rtl"] .list-item .txt,
+[dir="rtl"] .case-item .txt, [dir="rtl"] .name-btn span, [dir="rtl"] .stat .v, [dir="rtl"] .kv dd, [dir="rtl"] .conv-num,
+[dir="rtl"] input, [dir="rtl"] textarea { unicode-bidi: plaintext; text-align: start; }
+[dir="rtl"] .menu-btn svg { transform: rotate(90deg); }
+[dir="rtl"] .menu-btn[aria-expanded="true"] svg { transform: rotate(-90deg); }
+#tHar { text-align: left; }
+[dir="rtl"] #tHar { text-align: right; }

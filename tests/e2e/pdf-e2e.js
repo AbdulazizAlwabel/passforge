@@ -29,6 +29,7 @@ const pageInfo = (f) => sh(`pdfinfo -f 1 -l 999 "${f}"`).split('\n').filter(l =>
   await p.waitForFunction(() => document.querySelectorAll('.pg.ready').length >= 10, null, { timeout: 20000 });
   const blank = await p.evaluate(() => { const c = document.querySelector('.pg.ready canvas'); const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let non = 0; for (let i = 0; i < d.length; i += 4) if (d[i] < 240 || d[i + 1] < 240 || d[i + 2] < 240) non++; return non / (d.length / 4); });
   ok(blank > 0.02, `thumbnails actually show page content (${(blank * 100).toFixed(1)}% inked)`);
+  await p.waitForFunction(() => document.querySelectorAll('.pg')[14].classList.contains('ready'), null, { timeout: 20000 });   // thumbnails render lazily; its real size is known once drawn
   const sl3 = await p.evaluate(() => { const c = document.querySelectorAll('.pg')[14].querySelector('canvas'); return [parseFloat(c.style.width), parseFloat(c.style.height)]; });
   ok(sl3[1] > sl3[0], 'slides p3 (stored landscape, /Rotate 90) shows as portrait');
 

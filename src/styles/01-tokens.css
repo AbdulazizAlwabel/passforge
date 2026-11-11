@@ -1,0 +1,132 @@
+/* ==========================================================================
+   Nicely Done — design tokens
+   Paper, ink and one green pen. Flat surfaces, hairline rules, no glass or glow.
+   Every colour, size and radius used anywhere on the site comes from here.
+   See docs/DESIGN.md for the reasoning.
+   ========================================================================== */
+
+:root {
+  /* --- colour: light ("paper") is the default --- */
+  --bg: #f6f4ee;            /* the page */
+  --bg-2: #eeebe3;          /* wells: inputs, code, sunken areas */
+  --surface: #fffefb;       /* cards and panels */
+  --surface-2: #f3f0e8;     /* hover / pressed on a surface */
+  --surface-solid: #fffefb; /* opaque overlays: menus, dialogs */
+  --raised: #ffffff;
+  --line: #e2ded2;
+  --line-2: #cdc8b9;
+  --field-line: #868e84;   /* edges of things you type into: 3:1 against the page */
+  --text: #17211c;
+  --text-2: #4a554e;
+  --text-3: #5a645d;
+  --accent: #0b6b4b;        /* the green pen: actions, links, selection */
+  --accent-2: #085239;      /* its darker stroke: hover, small text on tints */
+  --accent-ink: #ffffff;    /* text on the accent */
+  --accent-soft: #e2efe6;   /* a wash of it */
+  --accent-line: #a9cdb9;
+  --mark: #d9ecb4;          /* highlighter behind a key word */
+  --gold: #8a5a06;          /* pins, secondary highlights */
+  --gold-soft: #f5e9c8;
+  --danger: #b3321d;
+  --danger-soft: #f8e4de;
+  --warn: #8f5600;
+  --warn-soft: #f7e8c9;
+  --ok: #0b6b4b;
+  --ok-soft: #e2efe6;
+  --info: #2450ae;
+  --info-soft: #e3eaf8;
+  --violet: #6f3bb8;
+  --scrim: rgb(23 33 28 / 0.42);
+  --shadow: 0 1px 2px rgb(23 33 28 / 0.05), 0 6px 18px -8px rgb(23 33 28 / 0.14);
+  --shadow-lg: 0 2px 6px rgb(23 33 28 / 0.06), 0 24px 56px -20px rgb(23 33 28 / 0.28);
+  --theme-color: #f6f4ee;
+  color-scheme: light;
+
+  /* legacy names still used by a few tool styles */
+  --accent-glow: transparent;
+
+  /* --- type --- */
+  --font-display: 'Bricolage Grotesque', 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --fs-xs: 0.78rem;
+  --fs-sm: 0.875rem;
+  --fs-md: 1rem;
+  --fs-lg: 1.125rem;
+
+  /* --- space (4px grid) --- */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px; --s-7: 48px; --s-8: 72px;
+
+  /* --- shape --- */
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 18px;
+  --r-pill: 999px;
+
+  /* --- motion --- */
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --t: 160ms var(--ease);
+
+  /* --- layout --- */
+  --max: 1120px;
+  --gutter: clamp(16px, 4vw, 40px);
+  --header-h: 60px;
+}
+
+/* Dark ("night desk"). Applied by choice (data-theme) or by the system when no choice was made. */
+:root[data-theme="dark"] {
+  --bg: #0f1412;
+  --bg-2: #0a0e0c;
+  --surface: #161c19;
+  --surface-2: #1d2521;
+  --surface-solid: #181f1b;
+  --raised: #212a25;
+  --line: #252e29;
+  --line-2: #364139;
+  --field-line: #66756b;
+  --text: #e9ede7;
+  --text-2: #abb4ad;
+  --text-3: #869088;
+  --accent: #86d4ad;
+  --accent-2: #a5e0c3;
+  --accent-ink: #06200f;
+  --accent-soft: #182b22;
+  --accent-line: #2f5a45;
+  --mark: #2c4a34;
+  --gold: #e2bd72;
+  --gold-soft: #33290f;
+  --danger: #f28b78;
+  --danger-soft: #35190f;
+  --warn: #e9b05c;
+  --warn-soft: #33260c;
+  --ok: #86d4ad;
+  --ok-soft: #182b22;
+  --info: #94b6ff;
+  --info-soft: #17223c;
+  --violet: #c9a2ff;
+  --scrim: rgb(0 0 0 / 0.6);
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 22px -10px rgb(0 0 0 / 0.6);
+  --shadow-lg: 0 2px 6px rgb(0 0 0 / 0.35), 0 28px 64px -22px rgb(0 0 0 / 0.8);
+  --theme-color: #0f1412;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1412; --bg-2: #0a0e0c; --surface: #161c19; --surface-2: #1d2521; --surface-solid: #181f1b; --raised: #212a25;
+    --line: #252e29; --line-2: #364139; --field-line: #66756b; --text: #e9ede7; --text-2: #abb4ad; --text-3: #869088;
+    --accent: #86d4ad; --accent-2: #a5e0c3; --accent-ink: #06200f; --accent-soft: #182b22; --accent-line: #2f5a45; --mark: #2c4a34;
+    --gold: #e2bd72; --gold-soft: #33290f; --danger: #f28b78; --danger-soft: #35190f; --warn: #e9b05c; --warn-soft: #33260c;
+    --ok: #86d4ad; --ok-soft: #182b22; --info: #94b6ff; --info-soft: #17223c; --violet: #c9a2ff; --scrim: rgb(0 0 0 / 0.6);
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 22px -10px rgb(0 0 0 / 0.6);
+    --shadow-lg: 0 2px 6px rgb(0 0 0 / 0.35), 0 28px 64px -22px rgb(0 0 0 / 0.8);
+    --theme-color: #0f1412;
+    color-scheme: dark;
+  }
+}
+
+/* Arabic: one family for everything, so headings and text share a voice. */
+:root[lang="ar"] {
+  --font-display: 'IBM Plex Sans Arabic', 'Geist', system-ui, sans-serif;
+  --font-sans: 'IBM Plex Sans Arabic', 'Geist', system-ui, sans-serif;
+}

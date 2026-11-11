@@ -20,13 +20,20 @@ verification, password reset, profile, admin console).
 
 ```
 build.py            static site generator (no dependencies, Python 3.8+)
-src/assets/         site.css, site.js, words.js (EFF wordlist)
-src/pages/          one file per page: @tool / @aside / @about / @script sections
-src/static/         og.png, icons (regenerate from tools/*.html with headless Chromium)
+src/styles/         the design system: numbered CSS files, joined into dist/assets/site.css (see docs/DESIGN.md)
+src/assets/         site.js, fonts, shared scripts, vendored libraries
+src/pages/          one file per page: @tool / @aside / @about / @script sections (or @body for info pages)
+src/static/         icons and og.png (regenerate with tools/icons.js and tools/og.js)
 dist/               build output — deploy this folder
 server/             Node/Express account API + static host (MySQL/MariaDB, SMTP)
-deploy/             Caddyfile + systemd unit
+deploy/             Caddyfile, systemd units, VM installer and ops timers
+tests/              browser end-to-end suites (bash tests/run.sh)
+docs/               DESIGN.md (design system), VOICE.md (how the site talks), RELEASE.md (ship and roll back)
 ```
+
+Pages: home, `/tools/` (the whole directory with a filter), three category pages, one page per tool and
+per PDF task, About, Privacy & security, Contact, What’s new, Suggest a tool, iPhone widgets, and the
+account pages — each also under `/ar/`.
 
 ## Translations
 
