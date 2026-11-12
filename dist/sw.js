@@ -1,6 +1,6 @@
 /* Nicely Done — offline cache */
-const CACHE = 'nd-2ce1273ac2';
-const PRECACHE = ["/", "/404.html", "/assets/site.css?v=2ce1273ac2", "/assets/site.js?v=2ce1273ac2", "/assets/fonts.css?v=2ce1273ac2", "/assets/strength.js?v=2ce1273ac2", "/assets/pdf-studio.css?v=2ce1273ac2", "/assets/fonts/geist-normal-300-700-latin.woff2", "/favicon.svg", "/password-generator/", "/strength-checker/", "/share/", "/link-checker/", "/email-checker/", "/vault/", "/hash-generator/", "/username-generator/", "/base64-tool/", "/json-formatter/", "/text-converter/", "/ip-network/", "/pdf-studio/", "/unit-converter/", "/speed-test/", "/date-converter/", "/qr-code/", "/image-resizer/", "/tools/", "/about/", "/privacy/", "/ar/", "/ar/404.html"];
+const CACHE = 'nd-2ee982a1c8';
+const PRECACHE = ["/", "/404.html", "/assets/site.css?v=2ee982a1c8", "/assets/site.js?v=2ee982a1c8", "/assets/fonts.css?v=2ee982a1c8", "/assets/strength.js?v=2ee982a1c8", "/assets/pdf-studio.css?v=2ee982a1c8", "/assets/fonts/geist-normal-300-700-latin.woff2", "/favicon.svg", "/password-generator/", "/strength-checker/", "/share/", "/link-checker/", "/email-checker/", "/vault/", "/hash-generator/", "/username-generator/", "/base64-tool/", "/json-formatter/", "/text-converter/", "/ip-network/", "/pdf-studio/", "/unit-converter/", "/speed-test/", "/date-converter/", "/qr-code/", "/image-resizer/", "/tools/", "/about/", "/privacy/", "/ar/", "/ar/404.html"];
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()));
 });

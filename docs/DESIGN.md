@@ -112,10 +112,11 @@ Arabic needs no extra rule; reuse a component before inventing one.
 ## Page patterns
 
 - **Home**: headline and the two fastest ways in (search, drop a file) on one
-  side; on the other, three live cards floating on a stage — today's date, a
-  password being made, a strength test. Then your pinned tools, a bento of the
-  eight things people come to do, the whole directory in three category cards,
-  and the promise beside the maker's note.
+  side; on the other, three live cards floating on a stage — a password being
+  made across the top, today's date and a strength test side by side below it.
+  The cards never overlap. Then your pinned tools, a bento of the eight things
+  people come to do, the whole directory in three category cards, and the
+  promise as three even cards with the maker's note as a band underneath.
 - **Tool page** (`<body data-cat>`): breadcrumb, a large icon tile + title,
   one sentence, then the tool — in the first screen. Notes sit in a side
   column. "How it works" is three cards; the longer explanation and FAQ follow.

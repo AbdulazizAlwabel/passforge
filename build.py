@@ -730,7 +730,7 @@ def build_home():
           <p class="note-sig">Abdulaziz</p>
         </aside>
       </div>
-      <div class="callouts" style="margin-top:14px">
+      <div class="callouts" style="margin-top:20px">
       <a class="widget-callout card card-link reveal" href="/suggest/"><span class="tile-icon">{ICONS['sparkle']}</span><span class="tr-text"><strong>Missing a tool?</strong><span>Tell me what you need — the most-wanted ideas get built first.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
       <a class="widget-callout card card-link reveal" style="--d:90ms" href="/widgets/"><span class="tile-icon" data-c="everyday">{ICONS['calendar']}</span><span class="tr-text"><strong>On iPhone? Add the widgets</strong><span>The Hijri date and one-tap passwords on your Home Screen.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
       </div>
