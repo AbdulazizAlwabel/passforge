@@ -57,7 +57,9 @@
 .st-name span { color: var(--text-3); font-size: 0.85rem; font-family: var(--font-mono); }
 .st-menu-wrap { position: relative; }
 .st-menu {
-  position: absolute; top: calc(100% + 8px); inset-inline-start: 0; z-index: 30; min-width: 232px; padding: 6px;
+  position: absolute; top: calc(100% + 8px); inset-inline-start: 0; z-index: 30; min-width: 232px; max-width: calc(100vw - 16px); padding: 6px;
+  /* --menu-shift is set by the page when the menu would cross a screen edge */
+  transform: translateX(var(--menu-shift, 0px));
   display: flex; flex-direction: column; border-radius: var(--r-md); border: 1px solid var(--line-2);
   background: var(--surface-solid); box-shadow: var(--shadow-lg); animation: menu-in 0.18s var(--ease);
 }
@@ -204,6 +206,16 @@ body.st-noselect { user-select: none; -webkit-user-select: none; cursor: grabbin
 [dir="rtl"] .st-view-nav svg { transform: scaleX(-1); }
 
 @media (max-width: 700px) {
+  /* on a phone the More menu is a sheet that rises from the bottom edge: always fully on screen,
+     full-width labels, and thumb-sized rows */
+  .st-menu {
+    position: fixed; top: auto; inset-inline: 8px; bottom: calc(8px + env(safe-area-inset-bottom, 0px)); z-index: 60; min-width: 0; max-width: none;
+    max-height: min(76vh, 560px); overflow-y: auto; overscroll-behavior: contain; padding: 8px; border-radius: var(--r-lg); transform: none;
+    box-shadow: var(--shadow-lg), 0 0 0 100vmax var(--scrim); animation: sheet-in 0.22s var(--ease);
+  }
+  .st-menu button { min-height: 46px; padding: 10px 12px; font-size: 0.96rem; }
+  .st-menu button span { white-space: normal; }
+  .st-menu svg { width: 18px; height: 18px; }
   .st-bar { gap: 8px; }
   .st-bar .st-sep { display: none; }
   .st-group { gap: 5px; }
@@ -214,8 +226,10 @@ body.st-noselect { user-select: none; -webkit-user-select: none; cursor: grabbin
   .st-bar #add { width: 38px; padding: 0; }
   .st-zoom, .st-name { display: none; }
   .st-group-end { width: 100%; }
-  .st-save { flex: 1; justify-content: flex-end; }
-  .st-bar #save { flex: 1; }
+  /* Download takes the rest of the row, and drops to a row of its own when its label would not fit */
+  .st-save { flex: 1 1 172px; justify-content: flex-end; }
+  .st-dl { flex: 1; }
+  .st-bar #save { flex: 1; white-space: nowrap; }
   .st-files-row { flex-wrap: nowrap; }
   .st-files { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -2px; padding: 0 2px; -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent); }
   .st-files::-webkit-scrollbar { display: none; }
@@ -391,3 +405,5 @@ select.fld { appearance: auto; -webkit-appearance: menulist; padding: 0; }
 .st-prog i { background-image: linear-gradient(100deg, transparent 20%, rgb(255 255 255 / 0.45) 50%, transparent 80%); background-size: 200% 100%; animation: shimmer 1.3s linear infinite; transition: width 0.45s var(--ease); }
 @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
 .st-busy-pct { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-3); }
+
+@keyframes sheet-in { from { opacity: 0; translate: 0 16px; } to { opacity: 1; translate: 0 0; } }

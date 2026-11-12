@@ -895,8 +895,9 @@ HOME_SCRIPT2 = r"""<script>
   // keyboard users: hold still while focus is inside (a mouse click leaving focus on a button doesn't count)
   card.addEventListener('focusin',e=>{kbd=e.target.matches(':focus-visible');syncLive();});
   card.addEventListener('focusout',e=>{if(!card.contains(e.relatedTarget))kbd=false;syncLive();});
+  let onScreen=true;if('IntersectionObserver' in window)new IntersectionObserver(es=>{onScreen=es[0].isIntersecting;}).observe(card);
   fresh();syncLive();
-  if(!reduce)setInterval(()=>{syncLive();if(!document.hidden&&!paused())fresh();},4200);
+  if(!reduce)setInterval(()=>{syncLive();if(!document.hidden&&!paused()&&!document.documentElement.classList.contains('idle')&&onScreen)fresh();},4200);
   document.getElementById('tryNew').addEventListener('click',fresh);
   document.getElementById('tryCopy').addEventListener('click',e=>{holdUntil=Date.now()+8000;syncLive();ND.copy(cur,e.currentTarget,'Password copied');});
   // 3) today in both calendars, with the next Ramadan / Eid
