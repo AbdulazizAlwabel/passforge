@@ -126,6 +126,16 @@
     syncMeta();
   });
 
+  /* ---------- Rest when nobody is there ----------
+     Endless decorative motion (aurora, floating cards) is paused after a few
+     seconds without input, so an open tab never keeps the machine busy. */
+  (function () {
+    const root = document.documentElement; let timer = 0;
+    const wake = () => { if (root.classList.contains('idle')) root.classList.remove('idle'); clearTimeout(timer); timer = setTimeout(() => root.classList.add('idle'), 12000); };
+    ['pointermove', 'pointerdown', 'keydown', 'scroll', 'touchstart'].forEach((ev) => window.addEventListener(ev, wake, { passive: true }));
+    wake();
+  })();
+
   /* ---------- Header shadow ---------- */
   const header = document.querySelector('.site-header');
   if (header) {

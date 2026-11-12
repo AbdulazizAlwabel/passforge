@@ -24,5 +24,6 @@ magick -density 360 -units PixelsPerInch big1.jpg big2.jpg -compress jpeg -quali
 magick -size 2400x1800 plasma:seagreen-white -depth 8 -compress zip flate.pdf
 rm -f big1.jpg big2.jpg
 cd "$HERE"; F="$F" node mkscan.js
+node mkphoto.js "$F/label-photo.jpg"
 magick "$F/scan.png" -quality 85 -density 300 -units PixelsPerInch "$F/scanned.pdf"
 echo "fixtures ready in $F"
