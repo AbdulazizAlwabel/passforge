@@ -104,14 +104,19 @@
   };
 
   /* ---------- Theme ---------- */
+  /* Light is the default; the system's dark preference is followed until you choose for yourself. */
   const saved = ND.store.get('theme', null);
-  if (saved) root.setAttribute('data-theme', saved);
-  const currentTheme = () => root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+  if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+  const darkMq = matchMedia('(prefers-color-scheme: dark)');
+  const currentTheme = () => root.getAttribute('data-theme') || (darkMq.matches ? 'dark' : 'light');
   const syncMeta = () => {
     const m = document.querySelector('meta[name="theme-color"]');
-    if (m) m.setAttribute('content', currentTheme() === 'light' ? '#f5f3ee' : '#0b0c0b');
+    if (m) m.setAttribute('content', currentTheme() === 'light' ? '#f6f6fb' : '#08080f');
+    const b = document.querySelector('[data-theme-toggle]');
+    if (b) b.setAttribute('aria-pressed', currentTheme() === 'dark' ? 'true' : 'false');
   };
   syncMeta();
+  if (darkMq.addEventListener) darkMq.addEventListener('change', syncMeta);
   document.addEventListener('click', (e) => {
     const t = e.target.closest('[data-theme-toggle]');
     if (!t) return;
@@ -154,15 +159,6 @@
     reveals.forEach((el) => el.classList.add('in'));
   }
 
-  /* ---------- Pointer glow on tiles ---------- */
-  document.addEventListener('pointermove', (e) => {
-    const tile = e.target.closest && e.target.closest('.tile');
-    if (!tile) return;
-    const r = tile.getBoundingClientRect();
-    tile.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-    tile.style.setProperty('--my', (e.clientY - r.top) + 'px');
-  }, { passive: true });
-
   /* ---------- Range fill ---------- */
   ND.syncRange = (el) => {
     const p = ((el.value - el.min) / (el.max - el.min)) * 100;
@@ -180,6 +176,7 @@
   function buildCmdk() {
     cmdk = document.createElement('div');
     cmdk.className = 'cmdk-backdrop';
+    cmdk.setAttribute('inert', '');
     cmdk.innerHTML =
       '<div class="cmdk" role="dialog" aria-modal="true" aria-label="' + T('Search tools') + '">' +
         '<div class="cmdk-input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>' +
@@ -240,12 +237,20 @@
       html += '<div id="cmdk-a-slot" class="cmdk-answer-pending">…</div>';
       ans = null;
     } else if (ans) html += answerHtml(ans);
+    const item = (t, id) => '<div class="cmdk-item" role="option" id="cmdk-' + id + '" data-href="' + t.href + '" aria-selected="false">' +
+      '<div class="tile-icon" data-c="' + (t.c || '') + '">' + t.icon + '</div><div><strong>' + ND.esc(t.name) + '</strong><span>' + ND.esc(t.short) + '</span></div><span class="ret">↵</span></div>';
+    if (!q) {
+      // what you pinned or used last comes first — remembered only in this browser
+      const bare = (h) => h.replace(/^\/ar\//, '/');
+      const mine = ND.store.get('pins', []).concat(ND.store.get('recent', [])).filter((h, i, a) => a.indexOf(h) === i)
+        .map((h) => tools.find((t) => bare(t.href) === h)).filter(Boolean).slice(0, 4);
+      if (mine.length) html += '<div class="cmdk-group">' + T('Your tools') + '</div>' + mine.map((t, i) => item(t, 'm' + i)).join('');
+    }
     results.forEach(({ t }, i) => {
       if (!q && t.cat !== lastCat) { html += '<div class="cmdk-group">' + ND.esc(t.cat) + '</div>'; lastCat = t.cat; }
-      html += '<div class="cmdk-item" role="option" id="cmdk-' + i + '" data-href="' + t.href + '" aria-selected="false">' +
-        '<div class="tile-icon">' + t.icon + '</div><div><strong>' + ND.esc(t.name) + '</strong><span>' + ND.esc(t.short) + '</span></div><span class="ret">↵</span></div>';
+      html += item(t, i);
     });
-    cmdList.innerHTML = html || '<div class="cmdk-empty">' + T('No tools match') + ' “' + ND.esc(q) + '”</div>';
+    cmdList.innerHTML = html || '<div class="cmdk-empty">' + T('No tools match') + ' “' + ND.esc(q) + '”<br><a class="link" href="' + ND.url('/suggest/') + '">' + T('Suggest a tool') + '</a></div>';
     cmdList.querySelectorAll('[data-try]').forEach((b) => b.addEventListener('click', () => { cmdInput.value = b.dataset.try; renderCmdk(); cmdInput.focus(); }));
     bindItems();
     cmdIndex = 0; select(0);
@@ -281,12 +286,14 @@
     cmdInput.value = '';
     renderCmdk();
     cmdk.classList.add('open');
+    cmdk.removeAttribute('inert');
     document.body.style.overflow = 'hidden';
     setTimeout(() => cmdInput.focus(), 20);
   }
   function closeCmdk() {
     if (!cmdk) return;
     cmdk.classList.remove('open');
+    cmdk.setAttribute('inert', '');
     document.body.style.overflow = '';
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
@@ -412,26 +419,44 @@
     })(t0);
   };
 
-  /* ---------- Cards that follow the pointer (mouse only, never with reduced motion) ---------- */
+  /* ---------- A soft light follows the pointer across cards (mouse only, never with reduced motion) ---------- */
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
-  const SPOT = '.task, .try-card, .tile, .principle, .widget-callout, .cat-head, .related > a, .recent-i, .hero-drop';
-  const TILT = '.task, .try-card, .tile';
+  const SPOT = '.card-link, .recent-i';
   let spotEl = null;
   document.addEventListener('pointermove', (e) => {
     if (!fine.matches || calm.matches || e.pointerType !== 'mouse') return;
     const el = e.target.closest && e.target.closest(SPOT);
-    if (spotEl && spotEl !== el) { spotEl.classList.remove('spot'); spotEl.style.removeProperty('--rx'); spotEl.style.removeProperty('--ry'); }
+    if (spotEl && spotEl !== el) spotEl.classList.remove('spot');
     spotEl = el;
     if (!el) return;
-    const r = el.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
-    el.style.setProperty('--mx', x + 'px'); el.style.setProperty('--my', y + 'px');
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--mx', (e.clientX - r.left) + 'px'); el.style.setProperty('--my', (e.clientY - r.top) + 'px');
     el.classList.add('spot');
-    if (el.matches(TILT)) {
-      el.style.setProperty('--rx', ((0.5 - y / r.height) * 5).toFixed(2) + 'deg');
-      el.style.setProperty('--ry', ((x / r.width - 0.5) * 6).toFixed(2) + 'deg');
-    }
   }, { passive: true });
   document.addEventListener('pointerleave', () => { if (spotEl) { spotEl.classList.remove('spot'); spotEl = null; } });
+
+  /* ---------- The hero's floating cards lean toward the pointer ---------- */
+  const stage = document.querySelector('.hero-stage'), stageIn = stage && stage.querySelector('.stage-in');
+  if (stageIn) {
+    const hero = stage.closest('section') || stage;
+    hero.addEventListener('pointermove', (e) => {
+      if (!fine.matches || calm.matches || e.pointerType !== 'mouse' || innerWidth < 981) return;
+      const r = stage.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      stageIn.style.setProperty('--ry', (Math.max(-1, Math.min(1, x)) * 5).toFixed(2) + 'deg');
+      stageIn.style.setProperty('--rx', (Math.max(-1, Math.min(1, y)) * -4).toFixed(2) + 'deg');
+    }, { passive: true });
+    hero.addEventListener('pointerleave', () => { stageIn.style.setProperty('--rx', '0deg'); stageIn.style.setProperty('--ry', '0deg'); });
+  }
+
+  /* ---------- Numbers marked data-count climb to their value when they come into view ---------- */
+  const counters = ND.$$('[data-count]');
+  if (counters.length && 'IntersectionObserver' in window && !calm.matches) {
+    const cio = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) { cio.unobserve(en.target); ND.countUp(en.target, +en.target.dataset.count, null, 900); } });
+    }, { threshold: 0.6 });
+    counters.forEach((el) => cio.observe(el));
+  }
 
   /* ---------- Cards that grow into the page ----------
      When you open a tool from a card, the card's icon and title glide into place as the tool's
@@ -442,7 +467,8 @@
   const cardFor = (p) => ND.$$('main a[href]').find((a) => pathOf(a.getAttribute('href')) === p && a.querySelector('.tile-icon, .mi'));
   const named = (pairs) => { ND.$$('[style*="view-transition-name"]').forEach((el) => { el.style.viewTransitionName = ''; }); pairs.forEach(([el, n]) => { if (el) el.style.viewTransitionName = n; }); return pairs.map(([el]) => el); };
   const nameCard = (a) => named([[a.querySelector('.tile-icon, .mi'), 'vt-icon'], [a.querySelector('strong') || a.querySelector('.mi + span'), 'vt-title']]);
-  const nameHero = () => { const ic = document.querySelector('.tool-hero .tool-ic'); return ic ? named([[ic, 'vt-icon'], [document.querySelector('.tool-hero h1'), 'vt-title']]) : []; };
+  // A tool page's own icon and title carry these names in CSS, so they are in place before the first frame.
+  const hasHero = () => !!document.querySelector('.tool-title .tool-ic');
   // clear the names once the transition ends — unless a newer transition has named them since
   let vtGen = 0;
   const unname = (els, vt) => { const g = ++vtGen; vt.finished.finally(() => { if (g === vtGen) els.forEach((el) => el && (el.style.viewTransitionName = '')); }); };
@@ -453,20 +479,18 @@
     let to = null;
     try { to = pathOf(e.activation.entry.url); } catch (_) { to = clicked && pathOf(clicked.getAttribute('href')); }
     if (!to) return;
-    let els = [];
-    if (isTool(to)) {
-      const a = clicked && pathOf(clicked.getAttribute('href')) === to && clicked.querySelector('.tile-icon, .mi') ? clicked : cardFor(to);
-      if (a) els = nameCard(a);
-    } else els = nameHero(); // leaving a tool for a list: the heading shrinks back into its card
-    unname(els, e.viewTransition);
+    // From a list to a tool: the card you clicked grows into the tool's heading. From a tool, its heading
+    // already has the names, so it shrinks back into its card (or morphs into the next tool's heading).
+    if (hasHero() || !isTool(to)) return;
+    const a = clicked && pathOf(clicked.getAttribute('href')) === to && clicked.querySelector('.tile-icon, .mi') ? clicked : cardFor(to);
+    if (a) unname(nameCard(a), e.viewTransition);
   });
   window.addEventListener('pagereveal', (e) => {
-    if (!e.viewTransition || calm.matches) return;
+    if (!e.viewTransition || calm.matches || hasHero()) return;
     let from = null;
     try { from = pathOf(navigation.activation.from.url); } catch (_) { from = document.referrer ? pathOf(document.referrer) : null; }
-    let els = nameHero();
-    if (!els.length && from) { const a = cardFor(from); if (a) els = nameCard(a); }
-    if (els.length) unname(els, e.viewTransition);
+    const a = from && isTool(from) ? cardFor(from) : null;
+    if (a) unname(nameCard(a), e.viewTransition);
   });
 
   /* ---------- First visit: the logo's check draws itself once ---------- */

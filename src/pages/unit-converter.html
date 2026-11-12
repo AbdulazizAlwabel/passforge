@@ -56,7 +56,7 @@
   const sym=u=>C[cat]===C.Temperature?SYM[u]:u;
 
   function tabs(){
-    $('#cats').innerHTML=Object.keys(C).map(k=>'<button class="filter" role="tab" aria-pressed="'+(k===cat)+'" aria-selected="'+(k===cat)+'" data-c="'+k+'">'+CATN[k]+'</button>').join('');
+    $('#cats').innerHTML=Object.keys(C).map(k=>'<button class="filter" role="tab" aria-selected="'+(k===cat)+'" data-c="'+k+'">'+CATN[k]+'</button>').join('');
   }
   function selects(){
     const o=Object.entries(C[cat]).map(([k,[n]])=>'<option value="'+k+'">'+n+' ('+sym(k)+')</option>').join('');

@@ -1,12 +1,12 @@
 {
   "name": "Nicely Done",
   "short_name": "Nicely Done",
-  "description": "Private, browser-based security & developer tools.",
+  "description": "Free, honest tools that work on your device.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#0b0c0b",
-  "theme_color": "#0b0c0b",
+  "background_color": "#f6f6fb",
+  "theme_color": "#f6f6fb",
   "icons": [
     {
       "src": "/favicon.svg",

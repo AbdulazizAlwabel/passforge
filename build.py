@@ -82,13 +82,18 @@ ICONS = {
     "offline": ic('<path d="M4 14.5A4.5 4.5 0 0 1 8.2 8a6 6 0 0 1 11.3 2.5A4 4 0 0 1 18 18.5H8"/><path d="m3 3 18 18"/>'),
     "cpu": ic('<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/>'),
     "sun": '<svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>',
+    "menu": ic('<path d="M4 7h16M4 12h16M4 17h16"/>'),
+    "grid": ic('<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>'),
+    "chat": ic('<path d="M20 15a2 2 0 0 1-2 2H9l-5 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2Z"/>'),
     "moon": '<svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.1A8.5 8.5 0 1 1 9.9 3.5a6.6 6.6 0 0 0 10.6 10.6Z"/></svg>',
 }
 
 MARK = ('<svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">'
-        '<rect x="1" y="1" width="30" height="30" rx="9" fill="var(--text)"/>'
-        '<path class="mark-check" pathLength="1" d="M8.5 16.8l4.6 4.6L23.5 10.6" fill="none" stroke="var(--accent)" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>'
+        '<defs><linearGradient id="ndg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b4bea"/><stop offset=".55" stop-color="#8250ee"/><stop offset="1" stop-color="#c05be8"/></linearGradient></defs>'
+        '<rect width="32" height="32" rx="9" fill="url(#ndg)"/>'
+        '<path class="mark-check" pathLength="1" d="M9 16.6l4.7 4.7L23 11.4" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>'
         '</svg>')
+
 
 # ---------------------------------------------------------------------------
 # Tool registry
@@ -205,6 +210,15 @@ TOOLS = [
 ]
 TOOL_BY_SLUG = {t["slug"]: t for t in TOOLS}
 
+
+def ckey(t):
+    """Colour key of a tool: its category, or "pdf" for PDF Studio and its task pages."""
+    return "pdf" if t.get("parent", t["slug"]) == "pdf-studio" else t["cat"].lower()
+
+
+def tile(t, cls="tile-icon", tag="span", extra=""):
+    return f'<{tag} class="{cls}" data-c="{ckey(t)}"{extra}>{ICONS[t["icon"]]}</{tag}>'
+
 # “How it works” — three short steps under each tool
 STEPS = {
  "password-generator": [("Pick a style","Random characters, easy-to-say words, or a PIN."),("Set the length","Longer is stronger — 16+ characters is plenty."),("Copy and use it","It’s made on your device and never sent anywhere.")],
@@ -244,62 +258,62 @@ STEPS = {
 # but searchable (Ctrl K) and in the sitemap — these are the words people search for.
 _studio = TOOL_BY_SLUG["pdf-studio"]
 PDF_VARIANTS = [dict(_studio, parent="pdf-studio", new=False, **v) for v in [
-    dict(slug="merge-pdf", preset="merge", name="Merge PDF", title="Merge <em>PDF</em>",
+    dict(slug="merge-pdf", icon="pages", preset="merge", name="Merge PDF", title="Merge <em>PDF</em>",
          short="Join PDFs into one — free, and nothing is uploaded.",
          lede="Join several PDFs into one, in exactly the order you want. Drag pages around, drop the ones you don’t need — and your files never leave your device.",
          desc="Merge PDF files online for free without uploading them: combine PDFs into one, reorder and remove pages, all privately in your browser.",
          keywords="merge pdf combine pdf join pdf files into one"),
-    dict(slug="split-pdf", preset="split", name="Split PDF", title="Split <em>PDF</em>",
+    dict(slug="split-pdf", icon="scissors", preset="split", name="Split PDF", title="Split <em>PDF</em>",
          short="Split a PDF into parts, or pull out just the pages you need.",
          lede="Split a PDF into separate files — by page numbers, every page, or equal parts — or pull out just the pages you need. Nothing is uploaded.",
          desc="Split PDF files for free without uploading: extract pages, split by ranges, every page or into equal parts — privately in your browser.",
          keywords="split pdf extract pages separate pdf cut pdf"),
-    dict(slug="jpg-to-pdf", preset="images", name="JPG to PDF", title="JPG to <em>PDF</em>",
+    dict(slug="jpg-to-pdf", icon="image", preset="images", name="JPG to PDF", title="JPG to <em>PDF</em>",
          short="Turn photos and scans into one tidy PDF.",
          lede="Turn photos, scans and screenshots into one tidy PDF — A4 or Letter pages, with margins, ready to email. Your photos stay on your device.",
          desc="Convert JPG, PNG, WebP and HEIC images to PDF for free, privately in your browser. Choose A4 or Letter, margins and file size. No uploads.",
          keywords="jpg to pdf image to pdf png to pdf photo to pdf heic to pdf scan to pdf"),
-    dict(slug="sign-pdf", preset="sign", name="Sign PDF", title="Sign <em>PDF</em>",
+    dict(slug="sign-pdf", icon="pen", preset="sign", name="Sign PDF", title="Sign <em>PDF</em>",
          short="Fill in and sign PDFs — draw, type or use a photo of your signature.",
          lede="Fill in forms, add text and today’s date, and sign — right on the page. Draw your signature with your finger, type it in handwriting, or use a photo of it. Your document never leaves your device.",
          desc="Sign PDF documents and fill in PDF forms for free, privately in your browser: draw, type or upload a signature, add text, dates and ticks. Arabic supported. No uploads.",
          keywords="sign pdf signature fill pdf form e-sign add text to pdf tick date esign توقيع تعبئة نموذج"),
-    dict(slug="add-page-numbers", preset="numbers", name="Add Page Numbers", title="Page <em>Numbers</em>",
+    dict(slug="add-page-numbers", icon="hash", preset="numbers", name="Add Page Numbers", title="Page <em>Numbers</em>",
          short="Put page numbers on a PDF, exactly where you want them.",
          lede="Add page numbers to any PDF — top or bottom, left, middle or right, in the style you like. You see the result on every page before you download.",
          desc="Add page numbers to a PDF for free, privately in your browser: choose the position, style and starting number, skip the cover page. No uploads.",
          keywords="add page numbers pdf number pages pagination ترقيم صفحات"),
-    dict(slug="watermark-pdf", preset="watermark", name="Watermark PDF", title="Watermark <em>PDF</em>",
+    dict(slug="watermark-pdf", icon="stamp", preset="watermark", name="Watermark PDF", title="Watermark <em>PDF</em>",
          short="Stamp CONFIDENTIAL, DRAFT or your own words on your pages.",
          lede="Stamp CONFIDENTIAL, DRAFT or any words you like across your pages — slanted or straight, faint or bold. Arabic looks right too, and nothing is uploaded.",
          desc="Add a text watermark to a PDF for free, privately in your browser: CONFIDENTIAL, DRAFT or your own words, diagonal or across, any opacity. Arabic supported. No uploads.",
          keywords="watermark pdf confidential draft stamp text علامة مائية سري"),
-    dict(slug="compress-pdf", preset="compress", name="Compress PDF", title="Compress <em>PDF</em>",
+    dict(slug="compress-pdf", icon="download", preset="compress", name="Compress PDF", title="Compress <em>PDF</em>",
          short="Make a PDF small enough to email — text stays sharp.",
          lede="Make a big PDF small enough to email, or to upload to a government portal. Photos and scans get smaller; text and drawings stay crisp. Your files never leave your device.",
          desc="Compress PDF files for free, privately in your browser: shrink scans and photo-heavy PDFs for email and portals while text stays sharp. No uploads.",
          keywords="compress pdf reduce pdf size shrink pdf smaller pdf email تصغير ضغط حجم"),
-    dict(slug="protect-pdf", preset="protect", name="Protect PDF", title="Protect <em>PDF</em>",
+    dict(slug="protect-pdf", icon="lock", preset="protect", name="Protect PDF", title="Protect <em>PDF</em>",
          short="Put a password on a PDF, and stop it being copied.",
          lede="Lock a PDF with a password, and choose whether people can copy or edit it. It’s locked right here on your device — the password never goes anywhere.",
          desc="Password-protect PDF files for free, privately in your browser: AES-256 encryption, optional copy and edit restrictions. No uploads.",
          keywords="protect pdf password encrypt pdf lock pdf aes secure حماية كلمة مرور تشفير"),
-    dict(slug="unlock-pdf", preset="unlock", name="Unlock PDF", title="Unlock <em>PDF</em>",
+    dict(slug="unlock-pdf", icon="key", preset="unlock", name="Unlock PDF", title="Unlock <em>PDF</em>",
          short="Remove the password from a PDF you can already open.",
          lede="Type the password once and save a copy that opens without it — handy for bank statements and certificates you open often. It only works with passwords you know, all on your device.",
          desc="Remove a password from a PDF for free, privately in your browser: enter it once and save an unlocked copy. Also removes copy and print restrictions. No uploads.",
          keywords="unlock pdf remove password decrypt pdf restrictions فك حماية إزالة كلمة مرور"),
-    dict(slug="redact-pdf", preset="redact", name="Redact PDF", title="Redact <em>PDF</em>",
+    dict(slug="redact-pdf", icon="redact", preset="redact", name="Redact PDF", title="Redact <em>PDF</em>",
          short="Black out ID numbers, IBANs and personal details — for good.",
          lede="Black out ID numbers, IBANs, phone numbers, emails or anything you choose. The hidden text is really removed, not just covered with a box — and nothing is uploaded.",
          desc="Redact PDF files for free, privately in your browser: find and black out Saudi ID and Iqama numbers, IBANs, phone numbers, emails and any words. True redaction — the text is removed. No uploads.",
          keywords="redact pdf black out hide personal data id number iban privacy remove text إخفاء حجب بيانات"),
-    dict(slug="ocr-pdf", preset="ocr", name="PDF OCR", title="PDF <em>OCR</em>",
+    dict(slug="ocr-pdf", icon="type", preset="ocr", name="PDF OCR", title="PDF <em>OCR</em>",
          short="Copy text out of scans and photos — Arabic and English.",
          lede="Turn scanned pages and photos into text you can copy and search — in Arabic and English. It reads them on your device, so even private documents stay private.",
          desc="Free OCR for PDF and images, privately in your browser: recognise Arabic and English text in scans, copy it, or make the PDF searchable. No uploads.",
          keywords="ocr pdf scan to text arabic ocr english image to text searchable pdf تحويل صورة إلى نص قراءة نص عربي"),
-    dict(slug="pdf-to-jpg", preset="topng", name="PDF to JPG", title="PDF to <em>JPG</em>",
+    dict(slug="pdf-to-jpg", icon="image", preset="topng", name="PDF to JPG", title="PDF to <em>JPG</em>",
          short="Turn PDF pages into sharp JPG or PNG pictures.",
          lede="Turn every page of a PDF into a sharp JPG, PNG or WebP picture — for screens or for printing. Done on your device, never uploaded.",
          desc="Convert PDF to JPG, PNG or WebP images for free, privately in your browser — choose 72, 150 or 300 DPI. No uploads, no watermarks.",
@@ -314,8 +328,6 @@ CAT_META = {
     "Everyday": dict(slug="everyday", name="Everyday helpers", title="Everyday <em>helpers</em>", title_ar="أدوات <em>يومية</em>", icon="sparkle",
                      blurb="Practical helpers for daily life — PDFs, units, Hijri dates and how fast your internet really is."),
 }
-FEATURED = ["pdf-studio", "password-generator", "link-checker"]
-
 # ---------------------------------------------------------------------------
 # Template pieces
 # ---------------------------------------------------------------------------
@@ -325,18 +337,18 @@ VERIFY_META = "".join(
     for k, n in (("google", "google-site-verification"), ("bing", "msvalidate.01")) if SEO.get(k))
 
 THEME_BOOT = ("<script>(function(){try{var t=JSON.parse(localStorage.getItem('nd:theme'));"
-              "if(t)document.documentElement.setAttribute('data-theme',t);"
+              "if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);"
               "if(!localStorage.getItem('nd:seen'))document.documentElement.classList.add('nd-first')}catch(e){}})();</script>")
 
 
 def tools_json():
     return json.dumps([
         dict(name=t["name"], short=t["short"], cat=CAT_META[t["cat"]]["name"], href=f"/{t['slug']}/",
-             icon=ICONS[t["icon"]], keywords=t["keywords"]) for t in TOOLS + PDF_VARIANTS
+             icon=ICONS[t["icon"]], c=ckey(t), keywords=t["keywords"]) for t in TOOLS + PDF_VARIANTS
     ], ensure_ascii=False).replace("</", "<\\/")
 
 
-def head(title, desc, path, extra_fonts="", jsonld=None, noindex=False):
+def head(title, desc, path, extra_head="", jsonld=None, noindex=False):
     url = ORIGIN + path
     ld = ""
     if jsonld:
@@ -353,8 +365,8 @@ def head(title, desc, path, extra_fonts="", jsonld=None, noindex=False):
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
 <link rel="canonical" href="{url}">{robots}{VERIFY_META if path == "/" else ""}
-<meta name="theme-color" content="#0b0c0b">
-<meta name="color-scheme" content="dark light">
+<meta name="theme-color" content="#f6f6fb">
+<meta name="color-scheme" content="light dark">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{SITE}">
 <meta property="og:title" content="{html.escape(title)}">
@@ -372,9 +384,8 @@ def head(title, desc, path, extra_fonts="", jsonld=None, noindex=False):
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
 <link rel="preload" href="/assets/fonts/geist-normal-300-700-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="/assets/fonts/instrument-serif-normal-400-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts.css?v={{V}}">
-<link rel="stylesheet" href="/assets/site.css?v={{V}}">
+<link rel="stylesheet" href="/assets/site.css?v={{V}}">{extra_head}
 {THEME_BOOT}
 <script type="speculationrules">{{"prefetch":[{{"source":"document","where":{{"and":[{{"href_matches":"/*"}},{{"not":{{"href_matches":"/api/*"}}}},{{"not":{{"href_matches":"/s/*"}}}}]}},"eagerness":"moderate"}}]}}</script>
 <!--HREFLANG-->
@@ -382,7 +393,7 @@ def head(title, desc, path, extra_fonts="", jsonld=None, noindex=False):
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<div class="atmos" aria-hidden="true"><div class="grid"></div></div>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
 """
 
 
@@ -390,29 +401,35 @@ def tools_menu():
     cols = ""
     for c in CATS:
         m = CAT_META[c]
-        items = "".join(f'<a href="/{t["slug"]}/"><span class="mi">{ICONS[t["icon"]]}</span><span>{t["name"]}</span></a>'
-                        for t in TOOLS if t["cat"] == c)
+        items = "".join(f'<a href="/{t["slug"]}/" style="--i:{i}">{tile(t, "mi")}<span>{t["name"]}</span></a>'
+                        for i, t in enumerate(x for x in TOOLS if x["cat"] == c))
         cols += (f'<div class="menu-col"><a class="menu-cat" href="/{m["slug"]}/">{m["name"]}</a>'
                  f'<div class="menu-items">{items}</div></div>')
+    pdf = "".join(f'<a href="/{v["slug"]}/">{v["name"]}</a>' for v in PDF_VARIANTS)
+    cols += f'<div class="menu-col menu-pdf"><a class="menu-cat" href="/pdf-studio/">PDF tasks</a><div class="menu-items">{pdf}</div></div>'
     return (f'<div class="menu" id="toolsMenu" hidden><div class="wrap"><div class="menu-grid">{cols}</div>'
-            f'<div class="menu-foot"><a href="/suggest/">{ICONS["sparkle"]}<span>Missing something? Suggest a tool</span></a>'
+            f'<div class="menu-foot"><a class="menu-all" href="/tools/"><span>See all tools</span>{ICONS["chev"]}</a>'
+            f'<a class="only-narrow" href="/about/">About</a><a class="only-narrow" href="/whats-new/">What’s new</a>'
+            f'<a href="/suggest/">{ICONS["sparkle"]}<span>Missing something? Suggest a tool</span></a>'
             f'<a href="/widgets/">{ICONS["calendar"]}<span>iPhone widgets</span></a></div></div></div>')
 
 
 def header(active=None):
-    tools_cur = ' aria-current="page"' if active == "tools" else ""
-    about_cur = ' aria-current="page"' if active == "about" else ""
+    cur = lambda k: ' aria-current="page"' if active == k else ""
     return f"""<header class="site-header">
   <div class="wrap">
-    <a class="brand" href="/" aria-label="{SITE} — home">{MARK}<span class="brand-word">nicely<em>done</em></span></a>
+    <a class="brand" href="/">{MARK}<span class="brand-word" aria-hidden="true">nicely<em>done</em></span><span class="sr-only">{SITE} — home</span></a>
     <nav class="nav" aria-label="Primary">
-      <a class="nav-link menu-btn" href="/#tools" data-menu="toolsMenu" aria-expanded="false" aria-controls="toolsMenu"{tools_cur}>Tools {ICONS['chev']}</a>
-      <a class="nav-link" href="/about/"{about_cur}>About</a>
-      <a class="btn btn-sm" data-account hidden href="/account/" aria-label="Sign in">{ICONS['user']}<span>Sign in</span></a>
-      <button class="search-trigger" data-search aria-label="Search tools">{ICONS['search']}<span>Search tools…</span><span class="kbd"><span data-mod>Ctrl</span>K</span></button>
+      <a class="nav-link menu-btn" href="/tools/" data-menu="toolsMenu" aria-expanded="false" aria-controls="toolsMenu"{cur("tools")}>Tools {ICONS['chev']}</a>
+      <a class="nav-link" href="/about/"{cur("about")}>About</a>
+      <a class="nav-link" href="/whats-new/"{cur("news")}>What’s new</a>
+    </nav>
+    <div class="header-tools">
+      <button class="search-trigger" data-search>{ICONS['search']}<span class="st-label">Search tools…</span><span class="kbd" aria-hidden="true"><span data-mod>Ctrl</span>K</span></button>
       <a class="icon-btn lang-switch" href="{{ALT_HREF}}" hreflang="{{ALT_LANG}}" lang="{{ALT_LANG}}" aria-label="{{ALT_LABEL}}">{{ALT_TEXT}}</a>
       <button class="icon-btn theme-toggle" data-theme-toggle aria-label="Toggle colour theme">{ICONS['moon']}{ICONS['sun']}</button>
-    </nav>
+      <a class="btn btn-sm" data-account hidden href="/account/" aria-label="Sign in">{ICONS['user']}<span>Sign in</span></a>
+    </div>
   </div>
   {tools_menu()}
 </header>
@@ -423,20 +440,29 @@ def footer():
     cols = ""
     for c in CATS:
         items = "".join(f'<li><a href="/{t["slug"]}/">{t["name"]}</a></li>' for t in TOOLS if t["cat"] == c)
-        cols += f'<div><h5><a href="/{CAT_META[c]["slug"]}/">{CAT_META[c]["name"]}</a></h5><ul>{items}</ul></div>'
+        cols += f'<div><h2 class="foot-h"><a href="/{CAT_META[c]["slug"]}/">{CAT_META[c]["name"]}</a></h2><ul>{items}</ul></div>'
     year = datetime.date.today().year
     return f"""<footer class="site-footer">
   <div class="wrap">
     <div class="foot-grid">
       <div>
-        <a class="brand" href="/">{MARK}<span class="brand-word">nicely<em>done</em></span></a>
+        <a class="brand" href="/">{MARK}<span class="brand-word" aria-hidden="true">nicely<em>done</em></span><span class="sr-only">{SITE} — home</span></a>
         <p class="foot-tag">Free, honest tools that work on your device. Made by Abdulaziz — no ads, no tracking, no catch.</p>
       </div>
       {cols}
+      <div><h2 class="foot-h">Nicely Done</h2><ul>
+        <li><a href="/tools/">All tools</a></li>
+        <li><a href="/about/">About &amp; trust</a></li>
+        <li><a href="/privacy/">Privacy &amp; security</a></li>
+        <li><a href="/whats-new/">What’s new</a></li>
+        <li><a href="/suggest/">Suggest a tool</a></li>
+        <li><a href="/widgets/">iPhone widgets</a></li>
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href="{GITHUB}" rel="noopener">Source on GitHub</a></li>
+      </ul></div>
     </div>
-    <div class="foot-big" aria-hidden="true">nicely<em>done</em></div>
     <div class="foot-bottom">
-      <span>© {year} {SITE} · <a href="/about/">About &amp; trust</a> · <a href="/widgets/">iPhone widgets</a> · <a href="/whats-new/">What’s new</a> · <a href="/suggest/">Suggest a tool</a> · <a href="{GITHUB}" rel="noopener">Source on GitHub</a></span>
+      <span>© {year} {SITE}</span>
       <span>Private by design · No tracking, no third parties</span>
     </div>
   </div>
@@ -447,7 +473,7 @@ def footer():
 def scripts(page_script=""):
     return (f"<script>window.ND_TOOLS={tools_json()};</script>\n"
             f'<script src="/assets/site.js?v={{V}}"></script>\n'
-            f'<script src="/assets/answers.js?v={{V}}"></script>\n'
+            f'<script src="/assets/answers.js?v={{V}}" defer></script>\n'
             f"{page_script}\n</body>\n</html>\n")
 
 
@@ -476,34 +502,39 @@ def build_tool(t):
         "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
         "isAccessibleForFree": True,
     }
-    extra = ""
     related = [x for x in TOOLS if x["cat"] == t["cat"] and x["slug"] != t["slug"]]
     related = (related + [x for x in TOOLS if x["cat"] != t["cat"]])[:3]
     rel_html = "".join(
-        f'<a href="/{r["slug"]}/"><div class="tile-icon">{ICONS[r["icon"]]}</div>'
+        f'<a class="card card-link" href="/{r["slug"]}/">{tile(r, tag="div")}'
         f'<div><strong>{r["name"]}</strong><span>{r["short"]}</span></div></a>' for r in related)
     badges = s.get("badges", "")
     local_badge = f'<span class="badge">{ICONS["cpu"]}Runs on your device</span>' if t.get("local", True) else ""
     offline_badge = f'<span class="badge">{ICONS["offline"]}Works offline</span>' if t.get("offline", True) else ""
-    aside = s.get("aside", "")
+    # side notes are part of the page outline: h1 → h2
+    aside = s.get("aside", "").replace("<h4>", '<h2 class="h4">').replace("</h4>", "</h2>")
     ws_class = "workspace" if aside else "workspace single"
     aside_html = f'<aside class="aside">{aside}</aside>' if aside else ""
     st = STEPS.get(t["slug"], [])
-    steps_html = ('<section class="section steps-sec"><div class="wrap"><p class="panel-title">How it works</p><ol class="steps3">'
-                  + "".join(f'<li class="reveal" style="--d:{i * 80}ms"><span class="s3-n">{i + 1}</span><strong>{a}</strong><span>{b}</span></li>' for i, (a, b) in enumerate(st))
-                  + '</ol></div></section>') if st else ""
+    steps_html = ('<div class="guide-steps"><p class="panel-title">How it works</p><ol class="steps3">'
+                  + "".join(f'<li class="reveal" style="--d:{i * 90}ms"><span class="s3-n">{i + 1}</span><strong>{a}</strong><span>{b}</span></li>' for i, (a, b) in enumerate(st))
+                  + '</ol></div>') if st else ""
     about = s.get("about", "")
-    about_html = f'<section class="section" style="padding-top:0"><div class="wrap"><div class="prose reveal">{about}</div></div></section>' if about else ""
+    about_html = f'<div class="prose reveal">{about}</div>' if about else ""
+    guide_html = (f'<section class="section guide-sec"><div class="wrap guide">{steps_html}{about_html}</div></section>'
+                  if steps_html or about_html else "")
 
     parent_crumb = (f'<a href="/{t["parent"]}/">{TOOL_BY_SLUG[t["parent"]]["name"]}</a>{ICONS["chev"]}' if t.get("parent")
                     else f'<a href="/{CAT_META[t["cat"]]["slug"]}/">{CAT_META[t["cat"]]["name"]}</a>{ICONS["chev"]}')
     ar_title = f' data-ar-title="{html.escape(t["title_ar"])}"' if t.get("title_ar") and not t.get("parent") else ""
-    page = head(f"{t['name']} — {SITE}", t["desc"], path, extra, jsonld) + header() + f"""<main id="main">
+    extra_head = '\n<link rel="stylesheet" href="/assets/pdf-studio.css?v={V}">' if t.get("parent", t["slug"]) == "pdf-studio" else ""
+    page = head(f"{t['name']} — {SITE}", t["desc"], path, extra_head, jsonld) + header() + f"""<main id="main">
   <section class="tool-hero">
     <div class="wrap">
       <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{ICONS['chev']}{parent_crumb}<span aria-current="page">{t['name']}</span></nav>
-      <span class="tile-icon tool-ic" aria-hidden="true">{ICONS[t['icon']]}</span>
-      <h1 class="h1"{ar_title}>{t['title']}</h1>
+      <div class="tool-title">
+        {tile(t, "tile-icon tool-ic", extra=' aria-hidden="true"')}
+        <h1 class="h1"{ar_title}>{t['title']}</h1>
+      </div>
       <p class="lede">{t['lede']}</p>
       <div class="tool-badges">
         <button type="button" class="pin-btn" data-pin="/{t['slug']}/" aria-pressed="false">{ICONS['star']}<span class="pin-off">Pin to my tools</span><span class="pin-on">Pinned</span></button>
@@ -519,180 +550,189 @@ def build_tool(t):
       {aside_html}
     </div>
   </section>
-  {steps_html}
-  {about_html}
-  <section class="section" style="padding-top:0">
+  {guide_html}
+  <section class="section related-sec">
     <div class="wrap">
-      <p class="panel-title" style="margin-bottom:16px">More tools</p>
+      <p class="panel-title">More tools</p>
       <div class="related">{rel_html}</div>
     </div>
   </section>
 </main>
 """ + footer() + scripts(s.get("script", ""))
-    return page.replace("{GITHUB}", GITHUB)
+    return page.replace("{GITHUB}", GITHUB).replace("<body>", f'<body data-cat="{ckey(t)}">', 1)
 
 
-def tool_card(t, i=0, preview=""):
-    badge = '<span class="badge ok" style="height:22px">New</span>' if t.get("new") else ""
-    return f"""<a class="tile reveal" style="--d:{(i % 3) * 70}ms" href="/{t['slug']}/">
-  <div class="tile-top"><div class="tile-icon">{ICONS[t['icon']]}</div><span class="tile-cat">{badge}</span></div>
-  {preview}
-  <h3>{t['name']}</h3>
-  <p>{t['short']}</p>
-  <span class="tile-go">{ICONS['arrow']}</span>
-</a>
-"""
 
 
-def tool_row(t):
+
+def tool_row(t, attrs=""):
     new = ' <span class="badge ok row-new">New</span>' if t.get("new") else ""
-    return (f'<a class="tool-row" href="/{t["slug"]}/"><span class="tile-icon">{ICONS[t["icon"]]}</span>'
+    return (f'<a class="tool-row" href="/{t["slug"]}/"{attrs}>{tile(t)}'
             f'<span class="tr-text"><strong>{t["name"]}{new}</strong><span>{t["short"]}</span></span>'
             f'<span class="tr-go">{ICONS["chev"]}</span></a>')
 
 
-PREVIEWS = {
-    "password-generator": '<div class="tile-preview" id="tilePw" aria-hidden="true">k7#Qm<b>9</b>vX!pL2<b>@</b>wR4z</div>',
-    "share": '<div class="tile-preview" aria-hidden="true">nicelydone.qd.je/s/#<b>••••••••</b></div>',
-    "link-checker": '<div class="tile-preview" aria-hidden="true">absher-sa.<b>info</b>/verify → <b>Likely a scam</b></div>',
-    "pdf-studio": '<div class="tile-preview" aria-hidden="true">a.pdf + photo.jpg → <b>one PDF</b></div>',
-    "speed-test": '<div class="tile-preview" id="tileSpeed" aria-hidden="true">↓ <b>—</b> Mbps · ↑ <b>—</b> Mbps · <b>—</b> ms</div>',
-}
+def tool_card(t, attrs="", i=0):
+    """A tool as a card (directory and category pages)."""
+    new = ' <span class="badge ok row-new">New</span>' if t.get("new") else ""
+    return (f'<a class="dir-card card card-link reveal" style="--d:{(i % 3) * 60}ms" href="/{t["slug"]}/"{attrs}>{tile(t)}'
+            f'<span class="tr-text"><strong>{t["name"]}{new}</strong><span>{t["short"]}</span></span>'
+            f'<span class="tr-go">{ICONS["chev"]}</span></a>')
 
 
 # Everyday tasks on the home page — what people come to do, in their words.
+# slug, title, line, icon, size class, small picture
 HOME_TASKS = [
-    ("pdf-studio", "Fix a PDF", "Join, split, sign, shrink, or turn photos into one PDF.", "pages"),
-    ("link-checker", "Is this link safe?", "Got a strange link in a message? Check it before you tap.", "shield"),
-    ("password-generator", "Make a strong password", "One tap. Nobody else ever sees it — not even me.", "lock"),
-    ("share", "Send a password safely", "A link that works once, then disappears.", "link"),
-    ("vault", "Keep my passwords safe", "A locked box for your passwords that only you can open.", "key"),
-    ("ocr-pdf", "Copy text from a photo", "Arabic or English — from scans, photos and screenshots.", "type"),
-    ("speed-test", "How fast is my internet?", "A quick, honest test. Nothing is logged.", "gauge"),
-    ("date-converter", "Hijri and Gregorian dates", "Today in both calendars, and an easy converter.", "calendar"),
+    ("pdf-studio", "Fix a PDF", "Join, split, sign, shrink, or turn photos into one PDF.", "pages", "t-xl",
+     '<span class="art art-pdf" aria-hidden="true"><i></i><i></i><i></i></span>'),
+    ("link-checker", "Is this link safe?", "Got a strange link in a message? Check it before you tap.", "shield", "t-wide",
+     '<span class="art art-url" aria-hidden="true"><b>https://</b><b class="u-bad">absher-sa.info</b><b>/verify</b><em>Likely a scam</em></span>'),
+    ("password-generator", "Make a strong password", "One tap. Nobody else ever sees it — not even me.", "lock", "",
+     '<span class="art art-pw" aria-hidden="true">k7#Qm<b>9</b>vX!pL2<b>@</b>wR4z</span>'),
+    ("share", "Send a password safely", "A link that works once, then disappears.", "link", "", ""),
+    ("vault", "Keep my passwords safe", "A locked box for your passwords that only you can open.", "key", "", ""),
+    ("ocr-pdf", "Copy text from a photo", "Arabic or English — from scans, photos and screenshots.", "type", "", ""),
+    ("speed-test", "How fast is my internet?", "A quick, honest test. Nothing is logged.", "gauge", "",
+     '<svg class="art art-gauge" viewBox="0 0 92 52" aria-hidden="true"><path d="M8 46a38 38 0 0 1 76 0" fill="none" stroke="var(--line-2)" stroke-width="8" stroke-linecap="round"/>'
+     '<path d="M8 46a38 38 0 0 1 57-33" fill="none" stroke="#ff8a3d" stroke-width="8" stroke-linecap="round"/>'
+     '<path class="needle" d="M46 46V16" fill="none" stroke="var(--text)" stroke-width="3.5" stroke-linecap="round"/><circle cx="46" cy="46" r="5" fill="var(--text)"/></svg>'),
+    ("date-converter", "Hijri and Gregorian dates", "Today in both calendars, and an easy converter.", "calendar", "", ""),
 ]
 
 
 def build_home():
-    tasks = "".join(
-        f'<a class="task reveal" style="--d:{(i % 4) * 60}ms" href="/{slug}/"><span class="tile-icon">{ICONS[icon]}</span>'
-        f'<span class="task-t"><strong>{name}</strong><span>{short}</span></span><span class="task-go">{ICONS["arrow"]}</span></a>'
-        for i, (slug, name, short, icon) in enumerate(HOME_TASKS))
+    def task(i, slug, name, short, icon, size, art):
+        t = TOOL_BY_SLUG.get(slug) or next(v for v in PDF_VARIANTS if v["slug"] == slug)
+        pic = art if size or "art-pw" not in art else art   # small pictures sit above the text
+        head_art = art if "art-pdf" in art else ""
+        body_art = "" if "art-pdf" in art else art
+        return (f'<a class="task card card-link reveal {size}" style="--d:{(i % 4) * 70}ms" href="/{slug}/">'
+                f'<span class="tile-icon" data-c="{ckey(t)}">{ICONS[icon]}</span>{head_art}'
+                f'<span class="task-t">{body_art}<strong>{name}</strong><span>{short}</span></span>'
+                f'<span class="task-go">{ICONS["arrow"]}</span></a>')
+    tasks = "".join(task(i, *row) for i, row in enumerate(HOME_TASKS))
     groups = ""
     for i, c in enumerate(CATS):
         m = CAT_META[c]
         rows = "".join(tool_row(t) for t in TOOLS if t["cat"] == c)
         n = sum(1 for t in TOOLS if t["cat"] == c)
-        groups += f"""<div class="cat-group reveal" style="--d:{i * 80}ms">
-  <a class="cat-head" href="/{m['slug']}/"><span class="tile-icon">{ICONS[m['icon']]}</span><span><strong>{m['name']}</strong><span class="cat-count">{n} tools</span></span>{ICONS['chev']}</a>
+        groups += f"""<div class="cat-group card reveal" style="--d:{i * 90}ms">
+  <a class="cat-head" href="/{m['slug']}/"><span class="tile-icon" data-c="{c.lower()}">{ICONS[m['icon']]}</span><span><strong>{m['name']}</strong><span class="cat-count">{n} tools</span></span>{ICONS['chev']}</a>
   <div class="cat-rows">{rows}</div>
 </div>
 """
     jsonld = {
         "@context": "https://schema.org", "@type": "WebSite", "name": SITE, "url": ORIGIN + "/",
         "description": "Free, honest tools that work on your device — PDFs, passwords, link checks and more. No ads, no tracking, no paywall.",
+        "potentialAction": {"@type": "SearchAction", "target": ORIGIN + "/tools/?q={search_term_string}", "query-input": "required name=search_term_string"},
     }
     desc = ("Free, honest tools made by one person: fix PDFs, make strong passwords, check suspicious links, read text from photos. "
             "Everything works on your device — no ads, no tracking, no paywall at the end.")
+    n_tools = len(TOOLS) + len(PDF_VARIANTS)
     page = head(f"{SITE} — Free tools, no catch.", desc, "/", "", jsonld) + header() + f"""<main id="main">
-  <section class="hero hero2">
-    <div class="wrap hero2-row">
-      <div class="hero2-main">
-        <p class="eyebrow reveal"><span class="dot"></span>Free · made by one person · no tricks</p>
-        <h1 class="display reveal" style="--d:80ms"><span class="h-line">Tools that do the job.</span><br><em class="scribble">No catch.<svg class="scribble-u" viewBox="0 0 300 24" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M4 15C52 7 104 5 160 8s104 9 136 3"/><path pathLength="1" d="M40 21c60-5 140-7 228-4"/></svg></em></h1>
-        <p class="lede reveal" style="--d:160ms">Fix a PDF, make a strong password, check a suspicious link. Everything works right on your phone or computer — your files never leave it, and there’s never a bill at the end.</p>
-        <label class="hero-drop reveal" style="--d:240ms" id="heroDrop" tabindex="0">
-          <input type="file" id="heroFile" multiple accept=".pdf,application/pdf,image/*,.heic,.heif" hidden>
-          <span class="hero-drop-ic">{ICONS['pages']}</span>
-          <span class="hero-drop-t"><strong>Drop a PDF or photo here</strong><span>or tap to choose — it opens in PDF Studio, on your device</span></span>
-          <span class="hero-drop-go">{ICONS['arrow']}</span>
-        </label>
-        <div class="hero-quick reveal" style="--d:300ms">
-          <a href="/sign-pdf/">{ICONS['pen']}Sign a PDF</a>
-          <a href="/compress-pdf/">{ICONS['download']}Shrink a PDF</a>
-          <a href="/link-checker/">{ICONS['shield']}Check a link</a>
-          <a href="/password-generator/">{ICONS['lock']}Make a password</a>
+  <section class="home-hero">
+    <div class="wrap home-hero-grid">
+      <div class="home-hero-main">
+        <p class="hero-pill"><b>Free</b><span>Made by one person · no tricks</span></p>
+        <h1 class="display">Tools that do the job.<br><em>No catch.</em></h1>
+        <p class="lede">Fix a PDF, make a strong password, check a suspicious link. Everything works right on your phone or computer — your files never leave it, and there’s never a bill at the end.</p>
+        <div class="home-start">
+          <button type="button" class="home-search" data-search>{ICONS['search']}<span>Search tools or type pw 24, 10 km in mi, 15% of 200…</span><span class="kbd" aria-hidden="true"><span data-mod>Ctrl</span>K</span></button>
+          <label class="hero-drop" id="heroDrop" tabindex="0">
+            <input type="file" id="heroFile" multiple accept=".pdf,application/pdf,image/*,.heic,.heif" hidden>
+            <span class="hero-drop-ic">{ICONS['pages']}</span>
+            <span class="hero-drop-t"><strong>Drop a PDF or photo here</strong><span>or tap to choose — it opens in PDF Studio, on your device</span></span>
+            <span class="hero-drop-go">{ICONS['arrow']}</span>
+          </label>
+          <div class="hero-quick">
+            <a href="/sign-pdf/">{ICONS['pen']}Sign a PDF</a>
+            <a href="/compress-pdf/">{ICONS['download']}Shrink a PDF</a>
+            <a href="/link-checker/">{ICONS['shield']}Check a link</a>
+            <a href="/password-generator/">{ICONS['lock']}Make a password</a>
+          </div>
+        </div>
+        <ul class="hero-stats">
+          <li><b data-count="{n_tools}">{n_tools}</b><span>free tools</span></li>
+          <li><b>0</b><span>ads or trackers</span></li>
+          <li><b>0</b><span>files uploaded</span></li>
+        </ul>
+      </div>
+      <div class="hero-stage" id="try">
+        <div class="stage-in">
+          <div class="stage-card try-card try-today" id="tryToday">
+            <p class="try-k"><span class="tile-icon" data-c="everyday">{ICONS['calendar']}</span>Today</p>
+            <p class="try-hijri" id="tryHijri"></p>
+            <p class="try-greg" id="tryGreg"></p>
+            <p class="try-next" id="tryNext" hidden></p>
+            <a class="try-more" href="/date-converter/">Convert any date{ICONS['arrow']}</a>
+          </div>
+          <div class="stage-card try-card try-live" id="tryMake">
+            <div class="specimen-head"><span class="live-tag" id="tryLive"><span class="live-dot"></span><span class="live-on">Live — made on your device right now</span><span class="live-off">Paused while you look</span></span></div>
+            <div class="specimen-pw" id="tryGen" dir="ltr" aria-live="off"></div>
+            <div class="specimen-meta" dir="ltr"><span id="tryBits">— bits</span><span class="bar"><i id="tryBar"></i></span></div>
+            <div class="try-row">
+              <button type="button" class="btn btn-primary btn-sm" id="tryCopy">{ICONS['copy']}Copy</button>
+              <button type="button" class="btn btn-sm" id="tryNew">{ICONS['refresh']}New one</button>
+              <a class="try-more" href="/password-generator/" style="margin-inline-start:auto;align-self:center">More options{ICONS['arrow']}</a>
+            </div>
+          </div>
+          <div class="stage-card try-card" id="tryStrength">
+            <p class="try-k"><span class="tile-icon" data-c="security">{ICONS['shield']}</span>How strong is my password?</p>
+            <input class="input" type="password" id="tryPw" placeholder="Type a password to test it…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Password to test">
+            <div class="meter" id="tryMeter" data-level="0"><i></i><i></i><i></i><i></i><i></i></div>
+            <p class="try-out" id="tryOut">Nothing you type leaves this page.</p>
+            <a class="try-more" href="/strength-checker/">Full check, including leaks{ICONS['arrow']}</a>
+          </div>
         </div>
       </div>
-      <aside class="note" aria-label="A note from Abdulaziz">
-        <p class="note-k">A note from the maker</p>
-        <p>Most tool websites aren’t honest. You spend ten minutes working on your file — then they ask you to pay, or won’t let you download it.</p>
-        <p>That made me angry, so I built my own. Everything here is free, there are no ads, and your files stay yours.</p>
-        <p class="note-sig">Abdulaziz</p>
-      </aside>
     </div>
   </section>
 
   <section class="section recent-sec" id="recent" hidden>
     <div class="wrap">
-      <p class="panel-title">Your tools <span class="faint" id="recentHint">· pin any tool with {ICONS['star']} to keep it here</span></p>
+      <p class="panel-title"><span>Your tools</span> <span class="faint" id="recentHint">· pin any tool with {ICONS['star']} to keep it here</span></p>
       <div class="recent" id="recentList"></div>
     </div>
   </section>
 
-  <section class="section" id="tools" style="padding-top:clamp(20px,3vw,40px)">
+  <section class="section" id="tools">
     <div class="wrap">
-      <div class="section-head"><div><h2 class="h2 reveal">What do you need <em>to do?</em></h2></div></div>
+      <div class="section-head"><h2 class="h2 reveal">What do you need <em>to do?</em></h2><a class="section-link" href="/tools/"><span>See all tools</span>{ICONS['chev']}</a></div>
       <div class="tasks">{tasks}</div>
     </div>
   </section>
 
-  <section class="section try-sec" id="try">
-    <div class="wrap">
-      <div class="section-head"><div><h2 class="h2 reveal">Try it <em>right here</em></h2><p class="lede reveal" style="--d:80ms">No page to open — these work on the spot.</p></div></div>
-      <div class="tries">
-        <div class="try-card reveal" id="tryStrength">
-          <p class="try-k">{ICONS['shield']}How strong is my password?</p>
-          <input class="input" type="password" id="tryPw" placeholder="Type a password to test it…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Password to test">
-          <div class="meter" id="tryMeter" data-level="0"><i></i><i></i><i></i><i></i><i></i></div>
-          <p class="try-out" id="tryOut">Nothing you type leaves this page.</p>
-          <a class="try-more" href="/strength-checker/">Full check, including leaks{ICONS['arrow']}</a>
-        </div>
-        <div class="try-card try-live specimen reveal" style="--d:80ms" id="tryMake">
-          <div class="specimen-head"><div class="specimen-dots"><i></i><i></i><i></i></div><span class="live-tag" id="tryLive"><span class="live-dot"></span><span class="live-on">Live — made on your device right now</span><span class="live-off">Paused while you look</span></span></div>
-          <div class="specimen-pw" id="tryGen" dir="ltr" aria-live="off"></div>
-          <div class="specimen-meta" dir="ltr"><span id="tryBits">— bits</span><span class="bar"><i id="tryBar"></i></span></div>
-          <div class="try-row">
-            <button type="button" class="btn btn-primary btn-sm" id="tryCopy">{ICONS['copy']}Copy</button>
-            <button type="button" class="btn btn-sm" id="tryNew">{ICONS['refresh']}New one</button>
-          </div>
-          <p class="try-out mono-note" dir="ltr">crypto.getRandomValues · 20 random characters</p>
-          <a class="try-more" href="/password-generator/">More options{ICONS['arrow']}</a>
-        </div>
-        <div class="try-card try-today reveal" style="--d:160ms" id="tryToday">
-          <p class="try-k">{ICONS['calendar']}Today</p>
-          <p class="try-hijri" id="tryHijri"></p>
-          <p class="try-greg" id="tryGreg"></p>
-          <p class="try-next" id="tryNext" hidden></p>
-          <a class="try-more" href="/date-converter/">Convert any date{ICONS['arrow']}</a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="promise">
-    <div class="wrap">
-      <div class="section-head"><h2 class="h2 reveal">My <em>promise</em></h2></div>
-      <div class="principles reveal">
-        <div class="principle"><span class="num">01</span><h3>Your files stay yours</h3><p>PDFs, photos and passwords are handled on your device. They’re never sent to me or to anyone else.</p></div>
-        <div class="principle"><span class="num">02</span><h3>Free, for real</h3><p>No “pay to download” at the end, no sign-up walls, no trial that runs out. If it works today, it’s free today.</p></div>
-        <div class="principle"><span class="num">03</span><h3>No ads, no tracking</h3><p>There are no trackers here at all. I don’t even know you visited — and I like it that way.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" style="padding-top:0">
+  <section class="section" id="all" style="padding-top:0">
     <div class="wrap">
       <div class="section-head">
         <div>
           <h2 class="h2 reveal">All the <em>tools</em></h2>
-          <p class="lede reveal" style="--d:80ms">Or press <span class="kbd"><span data-mod>Ctrl</span>K</span> anywhere and type what you need.</p>
+          <p class="lede">Or press <span class="kbd"><span data-mod>Ctrl</span>K</span> anywhere and type what you need.</p>
         </div>
       </div>
       <div class="cat-groups">{groups}</div>
-      <div class="callouts">
-      <a class="widget-callout reveal" href="/suggest/"><span class="tile-icon">{ICONS['sparkle']}</span><span class="tr-text"><strong>Missing a tool?</strong><span>Tell me what you need — the most-wanted ideas get built first.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
-      <a class="widget-callout reveal" href="/widgets/"><span class="tile-icon">{ICONS['calendar']}</span><span class="tr-text"><strong>On iPhone? Add the widgets</strong><span>The Hijri date and one-tap passwords on your Home Screen.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
+    </div>
+  </section>
+
+  <section class="section" id="promise" style="padding-top:0">
+    <div class="wrap">
+      <div class="section-head"><h2 class="h2 reveal">My <em>promise</em></h2><a class="section-link" href="/privacy/"><span>Privacy &amp; security</span>{ICONS['chev']}</a></div>
+      <div class="promise-grid">
+        <div class="principles">
+          <div class="principle card reveal"><span class="num">01</span><h3>Your files stay yours</h3><p>PDFs, photos and passwords are handled on your device. They’re never sent to me or to anyone else.</p></div>
+          <div class="principle card reveal" style="--d:90ms"><span class="num">02</span><h3>Free, for real</h3><p>No “pay to download” at the end, no sign-up walls, no trial that runs out. If it works today, it’s free today.</p></div>
+          <div class="principle card reveal" style="--d:180ms"><span class="num">03</span><h3>No ads, no tracking</h3><p>There are no trackers here at all. I don’t even know you visited — and I like it that way.</p></div>
+        </div>
+        <aside class="note card reveal" style="--d:270ms" aria-label="A note from Abdulaziz">
+          <p class="note-k">A note from the maker</p>
+          <p>Most tool websites aren’t honest. You spend ten minutes working on your file — then they ask you to pay, or won’t let you download it.</p>
+          <p>That made me angry, so I built my own. Everything here is free, there are no ads, and your files stay yours.</p>
+          <p class="note-sig">Abdulaziz</p>
+        </aside>
+      </div>
+      <div class="callouts" style="margin-top:20px">
+      <a class="widget-callout card card-link reveal" href="/suggest/"><span class="tile-icon">{ICONS['sparkle']}</span><span class="tr-text"><strong>Missing a tool?</strong><span>Tell me what you need — the most-wanted ideas get built first.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
+      <a class="widget-callout card card-link reveal" style="--d:90ms" href="/widgets/"><span class="tile-icon" data-c="everyday">{ICONS['calendar']}</span><span class="tr-text"><strong>On iPhone? Add the widgets</strong><span>The Hijri date and one-tap passwords on your Home Screen.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
       </div>
     </div>
   </section>
@@ -703,66 +743,91 @@ def build_home():
 
 def build_category(c):
     m = CAT_META[c]
-    tools = [t for t in TOOLS if t["cat"] == c]
-    cards = "".join(tool_card(t, i, PREVIEWS.get(t["slug"], "")) for i, t in enumerate(tools))
+    rows = "".join(tool_card(t, i=i) for i, t in enumerate(x for x in TOOLS if x["cat"] == c))
     others = "".join(
-        f'<a href="/{CAT_META[o]["slug"]}/"><div class="tile-icon">{ICONS[CAT_META[o]["icon"]]}</div>'
+        f'<a class="card card-link" href="/{CAT_META[o]["slug"]}/"><div class="tile-icon" data-c="{o.lower()}">{ICONS[CAT_META[o]["icon"]]}</div>'
         f'<div><strong>{CAT_META[o]["name"]}</strong><span>{CAT_META[o]["blurb"]}</span></div></a>' for o in CATS if o != c)
     path = f"/{m['slug']}/"
-    return head(f"{m['name']} — {SITE}", m["blurb"], path) + header("tools") + f"""<main id="main">
+    page = head(f"{m['name']} — {SITE}", m["blurb"], path) + header("tools") + f"""<main id="main">
   <section class="tool-hero">
     <div class="wrap">
-      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{ICONS['chev']}<span aria-current="page">{m['name']}</span></nav>
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{ICONS['chev']}<a href="/tools/">All tools</a>{ICONS['chev']}<span aria-current="page">{m['name']}</span></nav>
       <h1 class="h1"{(' data-ar-title="' + html.escape(m['title_ar']) + '"') if m.get('title_ar') else ''}>{m['title']}</h1>
       <p class="lede">{m['blurb']}</p>
     </div>
   </section>
-  <section class="section" style="padding-top:0">
-    <div class="wrap"><div class="featured">{cards}</div></div>
+  <section>
+    <div class="wrap"><div class="dir-list">{rows}</div></div>
   </section>
-  <section class="section" style="padding-top:0">
+  <section class="section related-sec">
     <div class="wrap">
-      <p class="panel-title" style="margin-bottom:16px">Other categories</p>
+      <p class="panel-title">Other categories</p>
       <div class="related related-2">{others}</div>
     </div>
   </section>
 </main>
-""" + footer() + scripts(HOME_SCRIPT_TILES)
+""" + footer() + scripts()
+    return page.replace("<body>", f'<body data-cat="{c.lower()}">', 1)
 
 
-HOME_SCRIPT = r"""<script>
+def build_directory():
+    """/tools/ — everything on one page, with a filter that works as you type."""
+    key = lambda t: f' data-k="{html.escape(t["keywords"])}"'
+    groups = ""
+    for c in CATS:
+        m = CAT_META[c]
+        rows = "".join(tool_card(t, key(t), i) for i, t in enumerate(x for x in TOOLS if x["cat"] == c))
+        groups += (f'<section class="dir-group" data-group><h2><span class="tile-icon" data-c="{c.lower()}">{ICONS[m["icon"]]}</span><a href="/{m["slug"]}/">{m["name"]}</a></h2>'
+                   f'<div class="dir-list">{rows}</div></section>')
+    rows = "".join(tool_card(v, key(v), i) for i, v in enumerate(PDF_VARIANTS))
+    groups += (f'<section class="dir-group" data-group><h2><span class="tile-icon" data-c="pdf">{ICONS["pages"]}</span><a href="/pdf-studio/">PDF tasks</a></h2>'
+               f'<div class="dir-list">{rows}</div></section>')
+    n = len(TOOLS) + len(PDF_VARIANTS)
+    desc = "Every Nicely Done tool on one page: PDFs, passwords, link and email checks, converters and developer helpers. Free, private, no sign-up."
+    return head(f"All tools — {SITE}", desc, "/tools/") + header("tools") + f"""<main id="main">
+  <section class="tool-hero">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a>{ICONS['chev']}<span aria-current="page">All tools</span></nav>
+      <h1 class="h1">All the <em>tools</em></h1>
+      <p class="lede">Everything I’ve built so far, in one place. Type a few letters to find what you need.</p>
+      <div class="dir-bar">
+        <label class="dir-filter">{ICONS['search']}<input class="input" type="search" id="dirFilter" placeholder="Filter the tools…" aria-label="Filter the tools" autocomplete="off" spellcheck="false"></label>
+        <span class="dir-count" id="dirCount" aria-live="polite" data-total="{n}"></span>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="wrap">
+      {groups}
+      <div class="dir-empty" id="dirEmpty" hidden>
+        <p>Nothing here matches that.</p>
+        <p style="margin-top:6px"><a class="link" href="/suggest/">Tell me what you need</a> — the most-wanted ideas get built first.</p>
+      </div>
+    </div>
+  </section>
+</main>
+""" + footer() + scripts(DIRECTORY_SCRIPT)
+
+
+DIRECTORY_SCRIPT = r"""<script>
+/*i18n:off*/
 (function(){
-  if(new URLSearchParams(location.search).get('deleted')==='1'){ND.toast('Your account has been deleted');history.replaceState(null,'',location.pathname);}
-  const CH={u:'ABCDEFGHJKLMNPQRSTUVWXYZ',l:'abcdefghijkmnopqrstuvwxyz',n:'23456789',s:'!@#$%^&*-_=+?'};
-  const ALL=CH.u+CH.l+CH.n+CH.s, POOL=26+26+10+13, LEN=20;
-  const el=document.getElementById('specPw'),bits=document.getElementById('specBits'),bar=document.getElementById('specBar');
-  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let current='';
-  const cls=c=>CH.s.includes(c)?'c-sym':(CH.n.includes(c)?'c-num':'');
-  const paint=(s,locked)=>{el.innerHTML=s.split('').map((c,i)=>{const k=i<locked?cls(c):'scramble';return k?'<span class="'+k+'">'+ND.esc(c)+'</span>':ND.esc(c);}).join('');};
-  function make(){let s='';for(let i=0;i<LEN;i++)s+=ALL[ND.randInt(ALL.length)];return s;}
-  function next(){
-    const target=make();current=target;
-    const e=Math.round(LEN*Math.log2(POOL));
-    bits.textContent=e+' bits';bar.style.width=Math.min(100,e/1.3)+'%';
-    if(reduce){paint(target,LEN);return;}
-    let f=0;const total=26;
-    (function step(){
-      const locked=Math.floor((f/total)*LEN);
-      let s=target.slice(0,locked);for(let i=locked;i<LEN;i++)s+=ALL[ND.randInt(ALL.length)];
-      paint(s,locked);
-      if(++f<=total)requestAnimationFrame(()=>setTimeout(step,28));else paint(target,LEN);
-    })();
+  const q=document.getElementById('dirFilter'),rows=ND.$$('[data-k]'),groups=ND.$$('[data-group]');
+  const empty=document.getElementById('dirEmpty'),count=document.getElementById('dirCount');
+  const hay=rows.map(r=>(r.textContent+' '+r.dataset.k).toLowerCase());
+  function run(){
+    const terms=q.value.toLowerCase().split(/\s+/).filter(Boolean);let n=0;
+    rows.forEach((r,i)=>{const ok=terms.every(t=>hay[i].includes(t));r.hidden=!ok;if(ok)n++;});
+    groups.forEach(g=>{g.hidden=!g.querySelector('[data-k]:not([hidden])');});
+    empty.hidden=n>0;
+    count.textContent=terms.length?n+' / '+rows.length:'';
   }
-  next();setInterval(()=>{if(!document.hidden)next();},4200);
-  document.getElementById('specCopy').addEventListener('click',e=>ND.copy(current,e.currentTarget,'Password copied'));
-
-  const ts=document.getElementById('tileSpeed'),sh=ND.store.get('speed-history',[]);
-  if(ts&&sh.length){const x=sh[0],f=v=>v>=100?Math.round(v):v.toFixed(1);ts.innerHTML='↓ <b>'+f(x.d)+'</b> Mbps · ↑ <b>'+f(x.u)+'</b> Mbps · <b>'+Math.round(x.p)+'</b> ms';}
-  const tp=document.getElementById('tilePw');
-  if(tp){setInterval(()=>{if(document.hidden)return;let s='';for(let i=0;i<18;i++){const c=ALL[ND.randInt(ALL.length)];s+=(CH.s.includes(c)||CH.n.includes(c))?'<b>'+ND.esc(c)+'</b>':ND.esc(c);}tp.innerHTML=s;},1600);}
-
+  q.addEventListener('input',run);
+  q.addEventListener('keydown',e=>{if(e.keyCode===13){const f=rows.find(r=>!r.hidden);if(f)location.href=f.href;}});
+  const p=new URLSearchParams(location.search).get('q');
+  if(p){q.value=p;run();}
 })();
+/*i18n:on*/
 </script>"""
 
 
@@ -792,7 +857,7 @@ HOME_SCRIPT2 = r"""<script>
   const pins=ND.store.get('pins',[]).map(find).filter(Boolean);
   const recent=ND.store.get('recent',[]).map(find).filter(t=>t&&!pins.includes(t)).slice(0,Math.max(0,8-pins.length));
   if(pins.length||recent.length){
-    document.getElementById('recentList').innerHTML=pins.concat(recent).map(t=>'<a class="recent-i'+(pins.includes(t)?' pinned':'')+'" href="'+ND.url(t.href)+'"><span class="mi">'+t.icon+'</span><span>'+ND.esc(t.name)+'</span></a>').join('');
+    document.getElementById('recentList').innerHTML=pins.concat(recent).map(t=>'<a class="recent-i'+(pins.includes(t)?' pinned':'')+'" href="'+ND.url(t.href)+'"><span class="mi" data-c="'+(t.c||'')+'">'+t.icon+'</span><span>'+ND.esc(t.name)+'</span></a>').join('');
     document.getElementById('recentHint').hidden=pins.length>0;
     document.getElementById('recent').hidden=false;
   }
@@ -836,7 +901,8 @@ HOME_SCRIPT2 = r"""<script>
   document.getElementById('tryCopy').addEventListener('click',e=>{holdUntil=Date.now()+8000;syncLive();ND.copy(cur,e.currentTarget,'Password copied');});
   // 3) today in both calendars, with the next Ramadan / Eid
   const HM=['Muharram','Safar','Rabiʿ al-Awwal','Rabiʿ al-Thani','Jumada al-Ula','Jumada al-Akhirah','Rajab','Shaʿban','Ramadan','Shawwal','Dhu al-Qaʿdah','Dhu al-Hijjah'];
-  function hijri(d){try{const p=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'numeric',year:'numeric'}).formatToParts(d);const g=k=>+((p.find(x=>x.type===k)||{}).value||0);return {d:g('day'),m:g('month'),y:parseInt(((p.find(x=>x.type==='year')||{}).value||'0'),10)};}catch(e){return null;}}
+  let HF=null;try{HF=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'numeric',year:'numeric'});}catch(e){}
+  function hijri(d){try{const p=HF.formatToParts(d);const g=k=>+((p.find(x=>x.type===k)||{}).value||0);return {d:g('day'),m:g('month'),y:parseInt(((p.find(x=>x.type==='year')||{}).value||'0'),10)};}catch(e){return null;}}
   const now=new Date(),h=hijri(now);
   if(h&&h.m){
     document.getElementById('tryHijri').textContent=h.d+' '+HM[h.m-1]+' '+h.y+' '+ND.t('AH');
@@ -858,27 +924,18 @@ HOME_SCRIPT2 = r"""<script>
 </script>"""
 
 
-HOME_SCRIPT_TILES = r"""<script>
-(function(){
-  const ALL='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*-_=+?',SN='23456789!@#$%^&*-_=+?';
-  const ts=document.getElementById('tileSpeed'),sh=ND.store.get('speed-history',[]);
-  if(ts&&sh.length){const x=sh[0],f=v=>v>=100?Math.round(v):v.toFixed(1);ts.innerHTML='↓ <b>'+f(x.d)+'</b> Mbps · ↑ <b>'+f(x.u)+'</b> Mbps · <b>'+Math.round(x.p)+'</b> ms';}
-  const tp=document.getElementById('tilePw');
-  if(tp){setInterval(()=>{if(document.hidden)return;let s='';for(let i=0;i<18;i++){const c=ALL[ND.randInt(ALL.length)];s+=SN.includes(c)?'<b>'+ND.esc(c)+'</b>':ND.esc(c);}tp.innerHTML=s;},1600);}
-})();
-</script>"""
-
-
 EXTRA_PAGES = [
     # slug, title, description, active nav, noindex
-    ("about", "About & trust", "How Nicely Done keeps your data on your device — and how to verify it yourself in ten seconds.", "about", False),
+    ("about", "About & trust", "Who makes Nicely Done, why it exists, and the promises behind it: free, private, no ads and no tracking.", "about", False),
+    ("privacy", "Privacy & security", "How Nicely Done keeps your data on your device — exactly what goes online, and how to verify it yourself in ten seconds.", None, False),
+    ("contact", "Contact", "How to reach Abdulaziz, the maker of Nicely Done: suggest a tool, report a problem, or open an issue on GitHub.", None, False),
     ("account", "Sign in", "Sign in or create a free Nicely Done account.", None, True),
     ("reset-password", "Reset password", "Choose a new password for your Nicely Done account.", None, True),
     ("profile", "Your profile", "Manage your Nicely Done account.", None, True),
     ("admin", "Admin", "Nicely Done administration.", None, True),
     ("s", "A secret for you", "Someone shared a one-time secret with you.", None, True),
     ("suggest", "Suggest a tool", "Suggest a tool for Nicely Done or vote for the ideas you’d use — the most-wanted get built first.", None, False),
-    ("whats-new", "What’s new", "What Abdulaziz has added to Nicely Done lately — new tools and improvements, newest first.", None, False),
+    ("whats-new", "What’s new", "What Abdulaziz has added to Nicely Done lately — new tools and improvements, newest first.", "news", False),
     ("widgets", "iPhone widgets", "Hijri date and password widgets for your iPhone Home Screen and Lock Screen — private, open source, run on your phone.", None, False),
 ]
 
@@ -892,19 +949,20 @@ def build_page(slug, title, desc, active, noindex):
 
 def build_404():
     links = "".join(
-        f'<a href="/{t["slug"]}/"><div class="tile-icon">{ICONS[t["icon"]]}</div><div><strong>{t["name"]}</strong><span>{t["short"]}</span></div></a>'
-        for t in TOOLS[:3])
+        f'<a class="card card-link" href="/{t["slug"]}/">{tile(t, tag="div")}<div><strong>{t["name"]}</strong><span>{t["short"]}</span></div></a>'
+        for t in (TOOL_BY_SLUG[k] for k in ("pdf-studio", "password-generator", "link-checker")))
     return head(f"Page not found — {SITE}", "This page doesn’t exist.", "/404.html") + header() + f"""<main id="main">
   <section class="nf"><div class="wrap">
-    <p class="eyebrow" style="justify-content:center"><span class="dot"></span>Error 404</p>
+    <p class="eyebrow"><span class="dot"></span>Error 404</p>
     <div class="code" aria-hidden="true">4<em>0</em>4</div>
-    <h1 class="h2" style="margin-top:12px">Not quite <em>done</em> — this page doesn’t exist.</h1>
+    <h1 class="h2">Not quite <em>done</em> — this page doesn’t exist.</h1>
     <div class="path" id="nfPath">/</div>
-    <div class="row" style="justify-content:center;margin-top:28px">
+    <div class="row">
       <a class="btn btn-primary" href="/">Back home</a>
+      <a class="btn" href="/tools/">All tools</a>
       <button class="btn" data-search>{ICONS['search']} Search tools</button>
     </div>
-    <div class="related" style="margin-top:48px;text-align:left">{links}</div>
+    <div class="related">{links}</div>
   </div></section>
 </main>
 """ + footer() + scripts("<script>document.getElementById('nfPath').textContent=location.pathname;</script>")
@@ -914,11 +972,12 @@ def build_404():
 # Static extras
 # ---------------------------------------------------------------------------
 FAVICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-<rect x="1" y="1" width="30" height="30" rx="9" fill="#0f1210"/>
-<rect x="1.5" y="1.5" width="29" height="29" rx="8.5" fill="none" stroke="#7ee2b0" stroke-opacity=".25"/>
-<path class="mark-check" pathLength="1" d="M8.5 16.8l4.6 4.6L23.5 10.6" fill="none" stroke="#7ee2b0" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b4bea"/><stop offset=".55" stop-color="#8250ee"/><stop offset="1" stop-color="#c05be8"/></linearGradient></defs>
+<rect width="32" height="32" rx="9" fill="url(#g)"/>
+<path d="M9 16.6l4.7 4.7L23 11.4" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 """
+
 
 SW = """/* Nicely Done — offline cache */
 const CACHE = 'nd-{V}';
@@ -974,6 +1033,8 @@ def finish(html_src, rel, lang):
     out = re.sub(r'<h1 class="h1" data-ar-title="([^"]*)">(.*?)</h1>', ar_title, out)
     out = out.replace('<script src="/assets/site.js', '<script>window.ND_I18N=' + RUNTIME_AR + ';</script>\n<script src="/assets/site.js', 1)
     out = out.replace('<html lang="en" class="no-js">', '<html lang="ar" dir="rtl" class="no-js">', 1)
+    out = out.replace("/assets/fonts/geist-normal-300-700-latin.woff2", "/assets/fonts/ibm-plex-sans-arabic-normal-400-arabic.woff2", 1)
+    out = out.replace('<link rel="stylesheet" href="/assets/fonts.css', '<link rel="preload" href="/assets/fonts/ibm-plex-sans-arabic-normal-700-arabic.woff2" as="font" type="font/woff2" crossorigin>\n<link rel="stylesheet" href="/assets/fonts.css', 1)
     is_file = lambda p: re.search(r"\.(?!html\b)[A-Za-z0-9]{1,12}(?:$|[?#])", p.split("/")[-1] or "") is not None
     out = re.sub(r'(href|data-href)="/(?!/)([^"]*)"', lambda m: m.group(0) if m.group(2).startswith(STATIC_PREFIXES) or is_file(m.group(2)) else f'{m.group(1)}="/ar/{m.group(2)}"', out)
     out = out.replace('"href":"/', '"href":"/ar/').replace('"href": "/', '"href": "/ar/')
@@ -982,11 +1043,19 @@ def finish(html_src, rel, lang):
     out = out.replace('<meta property="og:type" content="website">', '<meta property="og:type" content="website">\n<meta property="og:locale" content="ar_SA">')
     out = re.sub(r'(content="' + re.escape(ORIGIN) + r'/og/)([^"]+\.jpg)"', lambda m: f'{m.group(1)}ar/{m.group(2)}"' if (SRC / "og" / "ar" / m.group(2)).exists() else m.group(0), out)
     return (out.replace("{ALT_HREF}", path).replace("{ALT_LANG}", "en")
-               .replace("{ALT_LABEL}", "English").replace("{ALT_TEXT}", "EN"))
+               .replace("{ALT_LABEL}", "EN — English").replace("{ALT_TEXT}", "EN"))
 
 
 TR = None
 RUNTIME_AR = "{}"
+
+
+def build_css(files):
+    """One stylesheet from CSS source files. Comments and blank lines are dropped; nothing else is
+    rewritten, so what you read is what ships."""
+    css = "\n".join(p.read_text() for p in files)
+    css = re.sub(r"/\*.*?\*/", "", css, flags=re.S)
+    return "/* Nicely Done — built from src/styles */\n" + "\n".join(l.rstrip() for l in css.splitlines() if l.strip()) + "\n"
 
 
 WIDGETS = [  # source, installed script name, Scriptable icon glyph
@@ -1016,6 +1085,10 @@ def main():
     (DIST / "assets").mkdir(parents=True)
 
     shutil.copytree(SRC / "assets", DIST / "assets", dirs_exist_ok=True)
+    # site.css: the numbered files in src/styles (tokens → base → shell → components → pages → tools).
+    # PDF Studio's own styles are a separate file, loaded only by its pages.
+    (DIST / "assets" / "site.css").write_text(build_css(sorted((SRC / "styles").glob("*.css"))))
+    (DIST / "assets" / "pdf-studio.css").write_text(build_css([SRC / "styles" / "studio" / "pdf-studio.css"]))
     version = hashlib.sha1(b"".join(p.read_bytes() for p in sorted((SRC).rglob("*")) if p.is_file())
                            + Path(__file__).read_bytes()).hexdigest()[:10]
 
@@ -1026,6 +1099,7 @@ def main():
         pages[f"{slug}/index.html"] = build_page(slug, *rest)
     for c in CATS:
         pages[f"{CAT_META[c]['slug']}/index.html"] = build_category(c)
+    pages["tools/index.html"] = build_directory()
     for rel, content in pages.items():
         for lang in ("en", "ar"):
             out = DIST / rel if lang == "en" else DIST / "ar" / rel
@@ -1042,7 +1116,7 @@ def main():
     (DIST / ".nojekyll").write_text("")
     (DIST / "robots.txt").write_text(f"User-agent: *\nAllow: /\nDisallow: /s/\nDisallow: /ar/s/\nDisallow: /api/\n\nSitemap: {ORIGIN}/sitemap.xml\n")
     today = datetime.date.today().isoformat()
-    urls = ["/"] + [f"/{CAT_META[c]['slug']}/" for c in CATS] + [f"/{t['slug']}/" for t in TOOLS + PDF_VARIANTS] + ["/about/", "/whats-new/", "/widgets/", "/suggest/"]
+    urls = ["/"] + [f"/{CAT_META[c]['slug']}/" for c in CATS] + [f"/{t['slug']}/" for t in TOOLS + PDF_VARIANTS] + ["/tools/", "/about/", "/privacy/", "/whats-new/", "/widgets/", "/suggest/", "/contact/"]
     (DIST / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'
         + "".join(
@@ -1051,9 +1125,9 @@ def main():
             for u in urls for pre in ("", "/ar"))
         + "</urlset>\n")
     (DIST / "manifest.webmanifest").write_text(json.dumps({
-        "name": SITE, "short_name": SITE, "description": "Private, browser-based security & developer tools.",
+        "name": SITE, "short_name": SITE, "description": "Free, honest tools that work on your device.",
         "start_url": "/", "scope": "/", "display": "standalone",
-        "background_color": "#0b0c0b", "theme_color": "#0b0c0b",
+        "background_color": "#f6f6fb", "theme_color": "#f6f6fb",
         "icons": [
             {"src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
             {"src": "/icon-192.png", "sizes": "192x192", "type": "image/png"},
@@ -1061,9 +1135,9 @@ def main():
         ],
         "shortcuts": [{"name": t["name"], "url": f"/{t['slug']}/"} for t in TOOLS[:4]],
     }, indent=2))
-    precache = ["/", "/404.html", f"/assets/site.css?v={version}", f"/assets/site.js?v={version}", f"/assets/fonts.css?v={version}", f"/assets/strength.js?v={version}",
-                "/assets/fonts/geist-normal-300-700-latin.woff2", "/assets/fonts/instrument-serif-normal-400-latin.woff2", "/favicon.svg"] + \
-               [f"/{t['slug']}/" for t in TOOLS] + ["/about/", "/ar/", "/ar/404.html"]
+    precache = ["/", "/404.html", f"/assets/site.css?v={version}", f"/assets/site.js?v={version}", f"/assets/fonts.css?v={version}", f"/assets/strength.js?v={version}", f"/assets/pdf-studio.css?v={version}",
+                "/assets/fonts/geist-normal-300-700-latin.woff2", "/favicon.svg"] + \
+               [f"/{t['slug']}/" for t in TOOLS] + ["/tools/", "/about/", "/privacy/", "/ar/", "/ar/404.html"]
     (DIST / "sw.js").write_text(SW.replace("{V}", version).replace("{PRECACHE}", json.dumps(precache)))
     # Keep IIS / Azure App Service compatibility from the original deployment.
     (DIST / "web.config").write_text(WEB_CONFIG)

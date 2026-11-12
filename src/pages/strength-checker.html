@@ -96,7 +96,7 @@
     const level=a.level;
     $('#meter').dataset.level=level;$('#bits').textContent=b+' bits';
     const names=['','Very weak','Weak','Fair','Strong','Excellent'];
-    const cols=['','var(--danger)','var(--warn)','var(--gold)','var(--accent-2)','var(--accent)'];
+    const cols=['','var(--danger)','var(--warn)','var(--gold)','var(--ok)','var(--ok)'];
     $('#lvl').textContent=names[level];$('#lvl').style.color=cols[level];
     const guesses=Math.pow(2,a.bits)/2;
     const sc=[['Online, throttled','100 / hour',100/3600],['Online, unthrottled','10 / second',10],['Offline, slow hash','10k / second',1e4],['Offline, fast hash','100B / second',1e11]];
