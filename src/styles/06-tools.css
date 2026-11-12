@@ -59,7 +59,7 @@
 .ip-hero { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
 .ip-big { font-family: var(--font-mono); font-size: clamp(1.6rem, 4vw, 2.6rem); letter-spacing: -0.02em; line-height: 1.1; word-break: break-all; }
 .ip-loc { color: var(--text-2); margin-top: 6px; }
-.bits-row { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.04em; overflow-x: auto; white-space: nowrap; padding: 12px 14px; border-radius: var(--r-md); background: var(--bg-2); border: 1px solid var(--line); }
+.bits-row { font-family: var(--font-mono); font-size: 0.8rem; letter-spacing: 0.04em; overflow-wrap: anywhere; line-height: 1.7; padding: 12px 14px; border-radius: var(--r-md); background: var(--bg-2); border: 1px solid var(--line); }
 .bits-row .n { color: var(--accent); }
 .bits-row .h { color: var(--text-3); }
 

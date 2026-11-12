@@ -3,6 +3,8 @@
 //   2. every menu and popover stays inside a 375 px screen, in English and Arabic
 //   3. OCR reads a tilted phone photo of a product label
 //   4. PDF Studio stays inside a time budget for one 12 MP photo
+//   5. a searchable PDF made from that photo has its text where the print is
+//   6. no text field is under 16 px (iPhone Safari zooms the page otherwise)
 const { chromium } = require('playwright-core');
 const fs = require('fs');
 const F = process.env.F, B = process.env.B || 'http://localhost:8899';
@@ -53,6 +55,17 @@ const clipped = (sel) => [...document.querySelectorAll(sel)].filter((el) => el.o
     await d.mouse.move(300, 300); await d.waitForTimeout(300);
     ok(await d.evaluate(() => !document.documentElement.classList.contains('idle')), 'desktop: moving the mouse wakes the page up again');
     await d.context().close();
+  }
+
+  /* ---------- 6. fields are at least 16 px, so Safari does not zoom on focus ---------- */
+  {
+    const p = await phone(375);
+    for (const path of ['/', '/account/', '/date-converter/', '/unit-converter/', '/json-formatter/', '/link-checker/', '/share/', '/vault/', '/suggest/', '/pdf-studio/', '/ar/hash-generator/']) {
+      await p.goto(B + path); await p.waitForTimeout(250);
+      const small = await p.evaluate(() => [...document.querySelectorAll('input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]):not([type=hidden]):not([type=color]), textarea, select')].filter((el) => parseFloat(getComputedStyle(el).fontSize) < 16).map((el) => el.id || el.name || el.type));
+      ok(small.length === 0, `${path}: every field is at least 16 px` + (small.length ? ' — ' + small.join(', ') : ''));
+    }
+    await p.context().close();
   }
 
   /* ---------- 2. menus and popovers stay on screen ---------- */
@@ -117,6 +130,23 @@ const clipped = (sel) => [...document.querySelectorAll(sel)].filter((el) => el.o
     ok(rest === 0, 'nothing keeps animating after OCR has finished');
     ok(p.errs.length === 0, 'no script errors' + (p.errs.length ? ' — ' + p.errs[0] : ''));
     await p.context().close();
+  }
+
+  /* ---------- 5. searchable PDF: the invisible text sits on the tilted print ---------- */
+  {
+    const ctx = await br.newContext({ viewport: { width: 1200, height: 900 }, acceptDownloads: true, serviceWorkers: 'block' }); const p = await ctx.newPage();
+    await p.goto(B + '/pdf-studio/'); await p.setInputFiles('#fileIn', [PHOTO]); await p.waitForSelector('.pg.ready', { timeout: 60000 });
+    await p.click('#moreBtn'); await p.click('#moreMenu [data-act="ocr"]'); await p.click('#ocrStart'); await p.waitForSelector('#ocrActs:not([hidden])', { timeout: 180000 });
+    await p.check('#ocrSearchable', { force: true }); await p.click('#dlgOcr [value=ok]');
+    const [d] = await Promise.all([p.waitForEvent('download', { timeout: 180000 }), p.click('#save')]); const f = process.env.DL + '/mq-label.pdf'; await d.saveAs(f);
+    const xml = require('child_process').execSync(`pdftotext -bbox "${f}" -`, { encoding: 'utf8' });
+    const pg = xml.match(/<page width="([\d.]+)" height="([\d.]+)"/), at = (w) => { const m = xml.match(new RegExp('xMin="([\\d.]+)" yMin="([\\d.]+)" xMax="([\\d.]+)" yMax="([\\d.]+)">' + w + '<')); return m ? [(+m[1] + +m[3]) / 2 / +pg[1], (+m[2] + +m[4]) / 2 / +pg[2]] : null; };
+    // where those words are printed in the photo, as fractions of the page (the label is tilted about 6°)
+    for (const [w, x, y] of [['ATF', 0.365, 0.568], ['HYUNDAI', 0.412, 0.494], ['Genuine', 0.545, 0.483]]) {
+      const c = at(w); ok(c && Math.abs(c[0] - x) < 0.03 && Math.abs(c[1] - y) < 0.03, `searchable PDF: “${w}” lies on its print` + (c ? ` (${c[0].toFixed(3)}, ${c[1].toFixed(3)})` : ' — not found'));
+    }
+    const h = at('HYUNDAI'), g = at('Genuine'); ok(h && g && g[1] < h[1], 'searchable PDF: the text layer follows the tilt of the label');
+    await ctx.close();
   }
 
   await br.close();
