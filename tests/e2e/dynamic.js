@@ -21,13 +21,14 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
     await p.waitForTimeout(800);
     const pw = (await p.textContent('#tryGen')).trim();
     ok(pw.length === 20, tag + ': fresh 20-character password (' + pw.length + ')');
+    await p.hover('.hero-stage', { position: { x: 4, y: 4 } });   // the floating cards hold still while the pointer is over the stage
     await p.click('#tryNew'); await p.waitForTimeout(800);
     ok((await p.textContent('#tryGen')).trim() !== pw, tag + ': “New one” makes a different password');
     // live: changes by itself, but holds still while you point at it
     await p.mouse.move(5, 5); await p.locator('body').focus().catch(() => {}); await p.evaluate(() => document.activeElement && document.activeElement.blur());
     const live1 = (await p.textContent('#tryGen')).trim(); await p.waitForTimeout(4800);
     ok((await p.textContent('#tryGen')).trim() !== live1, tag + ': live card makes a new password by itself');
-    await p.hover('#tryGen'); await p.waitForTimeout(1000); const held = (await p.textContent('#tryGen')).trim();
+    await p.hover('.hero-stage', { position: { x: 4, y: 4 } }); await p.hover('#tryGen'); await p.waitForTimeout(1000); const held = (await p.textContent('#tryGen')).trim();
     ok(await p.evaluate(() => document.getElementById('tryMake').classList.contains('paused')), tag + ': pointing at it pauses it');
     await p.waitForTimeout(4800); ok((await p.textContent('#tryGen')).trim() === held, tag + ': paused password stays the same');
     await p.mouse.move(5, 5);
@@ -80,7 +81,7 @@ let fails = 0; const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); 
     const p = await ctx.newPage(); p.on('pageerror', (e) => errs.push('motion: ' + e.message));
     await p.goto(B + '/');
     ok(await p.evaluate(() => document.documentElement.classList.contains('nd-first')), 'first visit: the logo check draws itself');
-    ok(await p.locator('h1.display .marked').count() === 1, 'headline: the key words are highlighted');
+    ok(await p.locator('h1.display em').count() === 1, 'headline: the key words carry the gradient');
     await p.reload();
     ok(!(await p.evaluate(() => document.documentElement.classList.contains('nd-first'))), 'second visit: no logo animation');
     for (const L of ['', '/ar']) {

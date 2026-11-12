@@ -5,7 +5,9 @@
 /* Arabic letters must join: never space them out. */
 [dir="rtl"] *, [dir="rtl"] *::before, [dir="rtl"] *::after { letter-spacing: 0 !important; }
 [dir="rtl"] body { font-size: 16.5px; line-height: 1.75; }
-[dir="rtl"] .display { line-height: 1.3; font-size: clamp(2.1rem, 4.8vw, 3.5rem); }
+[dir="rtl"] .display { line-height: 1.3; font-size: clamp(2.2rem, 5vw, 3.8rem); }
+[dir="rtl"] .display, [dir="rtl"] .h1, [dir="rtl"] .h2 { font-weight: 700; }
+[dir="rtl"] .display em, [dir="rtl"] .h1 em, [dir="rtl"] .h2 em { padding-block: 0.25em; }
 [dir="rtl"] .h1 { line-height: 1.35; }
 [dir="rtl"] .h2, [dir="rtl"] .h4, [dir="rtl"] .principle h3, [dir="rtl"] .prose h2, [dir="rtl"] .about-sec .num h2, [dir="rtl"] .news-i h2, [dir="rtl"] .task-t strong { line-height: 1.45; }
 [dir="rtl"] em, [dir="rtl"] i { font-style: normal; }

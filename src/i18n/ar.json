@@ -2331,5 +2331,13 @@
  "Remove the password from a PDF you can already open.": "شيل كلمة المرور من ملف PDF تقدر تفتحه أصلًا.",
  "Black out ID numbers, IBANs and personal details — for good.": "اطمس أرقام الهوية والآيبان والبيانات الشخصية — نهائيًا.",
  "Copy text out of scans and photos — Arabic and English.": "انسخ النص من الأوراق الممسوحة والصور — عربي وإنجليزي.",
- "Turn PDF pages into sharp JPG or PNG pictures.": "حوّل صفحات PDF لصور JPG أو PNG واضحة."
+ "Turn PDF pages into sharp JPG or PNG pictures.": "حوّل صفحات PDF لصور JPG أو PNG واضحة.",
+ "#f6f6fb": "#f6f6fb",
+ "/verify": "/verify",
+ "https://": "https://",
+ "Free": "مجاني",
+ "Made by one person · no tricks": "سوّاه شخص واحد · بدون حركات",
+ "free tools": "أداة مجانية",
+ "ads or trackers": "إعلانات أو تتبّع",
+ "files uploaded": "ملفات مرفوعة"
 }

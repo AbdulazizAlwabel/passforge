@@ -111,7 +111,7 @@
   const currentTheme = () => root.getAttribute('data-theme') || (darkMq.matches ? 'dark' : 'light');
   const syncMeta = () => {
     const m = document.querySelector('meta[name="theme-color"]');
-    if (m) m.setAttribute('content', currentTheme() === 'light' ? '#f6f4ee' : '#0f1412');
+    if (m) m.setAttribute('content', currentTheme() === 'light' ? '#f6f6fb' : '#08080f');
     const b = document.querySelector('[data-theme-toggle]');
     if (b) b.setAttribute('aria-pressed', currentTheme() === 'dark' ? 'true' : 'false');
   };
@@ -238,7 +238,7 @@
       ans = null;
     } else if (ans) html += answerHtml(ans);
     const item = (t, id) => '<div class="cmdk-item" role="option" id="cmdk-' + id + '" data-href="' + t.href + '" aria-selected="false">' +
-      '<div class="tile-icon">' + t.icon + '</div><div><strong>' + ND.esc(t.name) + '</strong><span>' + ND.esc(t.short) + '</span></div><span class="ret">↵</span></div>';
+      '<div class="tile-icon" data-c="' + (t.c || '') + '">' + t.icon + '</div><div><strong>' + ND.esc(t.name) + '</strong><span>' + ND.esc(t.short) + '</span></div><span class="ret">↵</span></div>';
     if (!q) {
       // what you pinned or used last comes first — remembered only in this browser
       const bare = (h) => h.replace(/^\/ar\//, '/');
@@ -419,18 +419,44 @@
     })(t0);
   };
 
-  /* ---------- The card under the pointer is marked (mouse only, never with reduced motion) ---------- */
+  /* ---------- A soft light follows the pointer across cards (mouse only, never with reduced motion) ---------- */
   const fine = matchMedia('(hover: hover) and (pointer: fine)');
-  const SPOT = '.task, .widget-callout, .recent-i';
+  const SPOT = '.card-link, .recent-i';
   let spotEl = null;
   document.addEventListener('pointermove', (e) => {
     if (!fine.matches || calm.matches || e.pointerType !== 'mouse') return;
     const el = e.target.closest && e.target.closest(SPOT);
     if (spotEl && spotEl !== el) spotEl.classList.remove('spot');
     spotEl = el;
-    if (el) el.classList.add('spot');
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--mx', (e.clientX - r.left) + 'px'); el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    el.classList.add('spot');
   }, { passive: true });
   document.addEventListener('pointerleave', () => { if (spotEl) { spotEl.classList.remove('spot'); spotEl = null; } });
+
+  /* ---------- The hero's floating cards lean toward the pointer ---------- */
+  const stage = document.querySelector('.hero-stage'), stageIn = stage && stage.querySelector('.stage-in');
+  if (stageIn) {
+    const hero = stage.closest('section') || stage;
+    hero.addEventListener('pointermove', (e) => {
+      if (!fine.matches || calm.matches || e.pointerType !== 'mouse' || innerWidth < 981) return;
+      const r = stage.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+      stageIn.style.setProperty('--ry', (Math.max(-1, Math.min(1, x)) * 5).toFixed(2) + 'deg');
+      stageIn.style.setProperty('--rx', (Math.max(-1, Math.min(1, y)) * -4).toFixed(2) + 'deg');
+    }, { passive: true });
+    hero.addEventListener('pointerleave', () => { stageIn.style.setProperty('--rx', '0deg'); stageIn.style.setProperty('--ry', '0deg'); });
+  }
+
+  /* ---------- Numbers marked data-count climb to their value when they come into view ---------- */
+  const counters = ND.$$('[data-count]');
+  if (counters.length && 'IntersectionObserver' in window && !calm.matches) {
+    const cio = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) { cio.unobserve(en.target); ND.countUp(en.target, +en.target.dataset.count, null, 900); } });
+    }, { threshold: 0.6 });
+    counters.forEach((el) => cio.observe(el));
+  }
 
   /* ---------- Cards that grow into the page ----------
      When you open a tool from a card, the card's icon and title glide into place as the tool's

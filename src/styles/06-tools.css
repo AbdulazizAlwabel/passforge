@@ -348,3 +348,25 @@
 :root[data-theme="dark"] .ios-widget { --iw-bg: #0b0c0b; --iw-fg: #ecebe6; --iw-accent: #7ee2b0; --iw-dim: #a6a59f; --iw-gold: #e8c98a; --iw-chip: #15271f; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ios-widget { --iw-bg: #0b0c0b; --iw-fg: #ecebe6; --iw-accent: #7ee2b0; --iw-dim: #a6a59f; --iw-gold: #e8c98a; --iw-chip: #15271f; } }
 .qr-empty { color: #5f5e58; }
+
+/* "good" is green; the brand is iris */
+.ua-seg.good code, .ua-seg.good small, .em-addr.good, .em-auth.ok, .em-url.good, .ir-save { color: var(--ok); }
+.ua-seg.good code, .em-addr.good, .em-auth.ok { background: var(--ok-soft); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+.em-link.good .em-dot { background: var(--ok); }
+.verdict[data-kind="good"] .v-icon, .breach[data-state="ok"] .breach-icon { background: var(--ok-soft); color: var(--ok); }
+.verdict[data-kind="good"] .v-title { color: var(--ok); }
+.ctime[data-level="4"], .ctime[data-level="5"] { --ctime: var(--ok); }
+.ctime[data-level="5"] .ctime-head b { color: var(--ok); }
+.pw-text .c-sym { color: #d0448f; } .pw-text .c-num { color: var(--accent); }
+.pw-display { border-radius: var(--r-lg); }
+.go { background: var(--grad); color: #fff; box-shadow: 0 0 0 10px var(--accent-soft), 0 20px 44px -14px var(--glow); }
+.go:hover { box-shadow: 0 0 0 16px var(--accent-soft), 0 26px 54px -14px var(--glow); }
+.grade { background: var(--ok-soft); color: var(--ok); }
+.name-btn { transition: border-color var(--t), background var(--t), transform 240ms var(--spring); }
+.name-btn:hover { transform: translateY(-2px); }
+.case-item { transition: border-color var(--t), background var(--t), transform 240ms var(--ease); }
+.case-item:hover { background: var(--accent-soft); transform: translateY(-2px); }
+.hash-row.match { border-color: var(--ok); box-shadow: 0 0 0 3px var(--ok-soft); }
+.vote.on { background: var(--grad); border-color: transparent; color: #fff; } .vote.on b { color: #fff; }
+.idea { box-shadow: var(--card-edge), var(--shadow-sm); border-radius: var(--r-lg); }
+.wcard { box-shadow: var(--card-edge), var(--shadow); }
