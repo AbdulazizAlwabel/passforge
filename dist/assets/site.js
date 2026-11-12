@@ -33,6 +33,48 @@
     return n.toLocaleString(ND.lang === 'ar' ? 'en-US' : undefined) + ' ' + ND.pl(n, en, ar);
   };
 
+  /* ---------- What this page uploads ----------
+     A running count of the bytes this page sends in the body of its own requests (fetch, XHR, beacons),
+     and of how many files it has asked for. Pages show it as proof: on a tool that works on your
+     device the first number stays at zero, whatever you type or drop in. Set up before anything else
+     runs, so nothing is missed. */
+  (function () {
+    let bytes = 0, requests = 0; const subs = [];
+    const enc = typeof TextEncoder === 'function' ? new TextEncoder() : null;
+    const len = (s) => (enc ? enc.encode(s).length : s.length);
+    const size = (b) => {
+      try {
+        if (b == null) return 0;
+        if (typeof b === 'string') return len(b);
+        if (b instanceof Blob) return b.size;
+        if (b instanceof ArrayBuffer || ArrayBuffer.isView(b)) return b.byteLength;
+        if (b instanceof URLSearchParams) return len(b.toString());
+        if (b instanceof FormData) { let n = 0; b.forEach((v, k) => { n += len(k) + (typeof v === 'string' ? len(v) : v.size); }); return n; }
+      } catch (e) { /* unknown body: counted as nothing rather than guessed */ }
+      return 0;
+    };
+    const tell = () => subs.forEach((f) => { try { f(); } catch (e) { /* a reader failed; keep counting */ } });
+    const add = (n) => { if (n > 0) { bytes += n; tell(); } };
+    const f0 = window.fetch;
+    if (f0) window.fetch = function (input, init) {
+      try {
+        if (init && init.body != null) add(size(init.body));
+        else if (typeof Request === 'function' && input instanceof Request && input.method !== 'GET' && input.method !== 'HEAD') input.clone().arrayBuffer().then((b) => add(b.byteLength), () => {});
+      } catch (e) { /* never break a request over the count */ }
+      return f0.apply(this, arguments);
+    };
+    if (window.XMLHttpRequest) { const s0 = XMLHttpRequest.prototype.send; XMLHttpRequest.prototype.send = function (body) { add(size(body)); return s0.apply(this, arguments); }; }
+    if (navigator.sendBeacon) { const b0 = navigator.sendBeacon; navigator.sendBeacon = function (url, data) { add(size(data)); return b0.apply(this, arguments); }; }
+    try { new PerformanceObserver((l) => { requests += l.getEntries().length; tell(); }).observe({ type: 'resource', buffered: true }); } catch (e) { /* no resource timing here */ }
+    ND.sent = { get bytes() { return bytes; }, get requests() { return requests; }, on: (f) => { subs.push(f); } };
+    /* any element marked data-sent shows the count and keeps it current */
+    ND.sentBind = (el) => {
+      const n = el.querySelector('[data-sent-n]'), r = el.querySelector('[data-sent-req]');
+      const paint = () => { if (n) n.textContent = bytes.toLocaleString('en-US'); if (r) r.textContent = requests.toLocaleString('en-US'); el.setAttribute('data-sent', bytes ? 'some' : 'none'); };
+      paint(); subs.push(paint);
+    };
+  })();
+
   /* ---------- Utilities ---------- */
   ND.$ = (s, el) => (el || document).querySelector(s);
   ND.$$ = (s, el) => Array.from((el || document).querySelectorAll(s));
@@ -111,7 +153,7 @@
   const currentTheme = () => root.getAttribute('data-theme') || (darkMq.matches ? 'dark' : 'light');
   const syncMeta = () => {
     const m = document.querySelector('meta[name="theme-color"]');
-    if (m) m.setAttribute('content', currentTheme() === 'light' ? '#f6f6fb' : '#08080f');
+    if (m) m.setAttribute('content', '#06070c');   // the stage is ink in both themes
     const b = document.querySelector('[data-theme-toggle]');
     if (b) b.setAttribute('aria-pressed', currentTheme() === 'dark' ? 'true' : 'false');
   };
@@ -127,7 +169,7 @@
   });
 
   /* ---------- Rest when nobody is there ----------
-     Endless decorative motion (aurora, floating cards) is paused after a few
+     Motion that repeats (the live dot, the glass on the home page) is paused after a few
      seconds without input, so an open tab never keeps the machine busy. */
   (function () {
     const root = document.documentElement; let timer = 0;
@@ -316,6 +358,7 @@
     else if (e.key === '/' && !typing) { e.preventDefault(); openCmdk(); }
   });
   const isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+  ND.$$('[data-sent]').forEach(ND.sentBind);
   ND.$$('[data-mod]').forEach((el) => { el.textContent = isMac ? '⌘' : 'Ctrl'; });
 
   /* ---------- Leaked-password check (Have I Been Pwned, k-anonymity) ----------
@@ -428,36 +471,6 @@
       if (k < 1) requestAnimationFrame(step);
     })(t0);
   };
-
-  /* ---------- A soft light follows the pointer across cards (mouse only, never with reduced motion) ---------- */
-  const fine = matchMedia('(hover: hover) and (pointer: fine)');
-  const SPOT = '.card-link, .recent-i';
-  let spotEl = null;
-  document.addEventListener('pointermove', (e) => {
-    if (!fine.matches || calm.matches || e.pointerType !== 'mouse') return;
-    const el = e.target.closest && e.target.closest(SPOT);
-    if (spotEl && spotEl !== el) spotEl.classList.remove('spot');
-    spotEl = el;
-    if (!el) return;
-    const r = el.getBoundingClientRect();
-    el.style.setProperty('--mx', (e.clientX - r.left) + 'px'); el.style.setProperty('--my', (e.clientY - r.top) + 'px');
-    el.classList.add('spot');
-  }, { passive: true });
-  document.addEventListener('pointerleave', () => { if (spotEl) { spotEl.classList.remove('spot'); spotEl = null; } });
-
-  /* ---------- The hero's floating cards lean toward the pointer ---------- */
-  const stage = document.querySelector('.hero-stage'), stageIn = stage && stage.querySelector('.stage-in');
-  if (stageIn) {
-    const hero = stage.closest('section') || stage;
-    hero.addEventListener('pointermove', (e) => {
-      if (!fine.matches || calm.matches || e.pointerType !== 'mouse' || innerWidth < 981) return;
-      const r = stage.getBoundingClientRect();
-      const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
-      stageIn.style.setProperty('--ry', (Math.max(-1, Math.min(1, x)) * 5).toFixed(2) + 'deg');
-      stageIn.style.setProperty('--rx', (Math.max(-1, Math.min(1, y)) * -4).toFixed(2) + 'deg');
-    }, { passive: true });
-    hero.addEventListener('pointerleave', () => { stageIn.style.setProperty('--rx', '0deg'); stageIn.style.setProperty('--ry', '0deg'); });
-  }
 
   /* ---------- Numbers marked data-count climb to their value when they come into view ---------- */
   const counters = ND.$$('[data-count]');

@@ -2339,5 +2339,15 @@
  "Made by one person · no tricks": "سوّاه شخص واحد · بدون حركات",
  "free tools": "أداة مجانية",
  "ads or trackers": "إعلانات أو تتبّع",
- "files uploaded": "ملفات مرفوعة"
+ "files uploaded": "ملفات مرفوعة",
+ "// prism": "Redesign v4 (Prism): home page",
+ "Your files stay sealed <em>on your device.</em>": "ملفاتك ما تطلع <em>من جهازك.</em>",
+ "30 free tools for PDFs, passwords, links and code. They work right here, nothing is uploaded, and there’s no paywall at the end.": "30 أداة مجانية لملفات PDF وكلمات المرور والروابط والأكواد. تشتغل هنا على طول، ما ينرفع شي، وما فيه دفع في الآخر.",
+ "Drop a file": "حط ملف",
+ "PDFs and photos open in PDF Studio, right here on your device.": "ملفات PDF والصور تنفتح في استوديو PDF، هنا على جهازك.",
+ "What do you need? Sign, merge, JSON…": "وش تحتاج؟ توقيع، دمج، JSON…",
+ "Test a password or check the date, <em>without leaving this page.</em>": "اختبر كلمة مرور أو شوف تاريخ اليوم، <em>وأنت في نفس الصفحة.</em>",
+ "bytes sent from this page: <b id=\"sentN\" data-sent-n>0</b>": "البايتات اللي انرسلت من هذي الصفحة: <b id=\"sentN\" data-sent-n>0</b>",
+ "This page counts what it uploads, as it happens. It has fetched <b id=\"sentReq\" data-sent-req>a few</b> files to show itself, and sent none of yours. Drop a file and the count stays at zero.": "هذي الصفحة تعدّ اللي ترفعه أول بأول. حمّلت <b id=\"sentReq\" data-sent-req>كم</b> ملف عشان تنعرض، وما أرسلت شي من ملفاتك. حط ملف وشوف العدّاد يبقى صفر.",
+ "bytes sent from this page: <b data-sent-n>0</b>": "البايتات اللي انرسلت من هذي الصفحة: <b data-sent-n>0</b>"
 }
