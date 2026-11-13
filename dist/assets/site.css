@@ -26,7 +26,7 @@
   --btn-bg: #06070c;
   --btn-ink: #f5f7ff;
   --mark: #cfdcff;
-  --ok: #067a5f;      --ok-soft: #dcf7ef;
+  --ok: #05735a;      --ok-soft: #dcf7ef;
   --danger: #c2183c;  --danger-soft: #ffe3e8;
   --warn: #8a5300;    --warn-soft: #fbecc8;
   --info: #1c58c4;    --info-soft: #e3ecfb;
@@ -132,6 +132,8 @@ h1, h2, h3, h4, h5 { font-weight: 600; }
 main { flex: 1; position: relative; }
 .site-header, main, .site-footer { z-index: 1; }
 .site-footer { position: relative; }
+p, li, dd, figcaption, blockquote { text-wrap: pretty; }
+h1, h2, h3, h4 { text-wrap: balance; }
 .display {
   font-family: var(--font-display); font-weight: 600;
   font-size: clamp(2.7rem, 5.84vw, 5.25rem); line-height: 0.96; letter-spacing: -0.04em;
@@ -459,11 +461,12 @@ a.panel:hover { border-color: var(--text-3); background: var(--surface-2); }
 .range:focus-visible { outline: none; }
 .range:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--accent); outline-offset: 3px; }
 .range:focus-visible::-moz-range-thumb { outline: 2px solid var(--accent); outline-offset: 3px; }
+.range:focus-visible::-moz-range-thumb { outline: 2px solid var(--accent); outline-offset: 3px; }
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { position: relative; }
 .chip input { position: absolute; opacity: 0; pointer-events: none; }
 .chip span {
-  position: relative; display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 0 14px; border-radius: var(--r-md);
+  position: relative; display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 8px 14px; border-radius: var(--r-md);
   border: 1px solid var(--line-2); background: var(--surface); color: var(--text-2); font-size: 0.92rem; cursor: pointer;
   transition: border-color var(--t), background var(--t), color var(--t), transform 160ms var(--ease); user-select: none;
 }
@@ -533,7 +536,7 @@ table.data tr:hover td { background: var(--surface-2); }
 .dropzone:hover, .dropzone.over { border-color: var(--text); color: var(--text); background: var(--surface-2); }
 .dropzone b { color: var(--text); font-weight: 600; }
 .dropzone svg { width: 26px; height: 26px; margin: 0 auto 8px; color: var(--text-2); }
-.prose { max-width: 68ch; color: var(--text-2); }
+.prose { max-width: 62ch; color: var(--text-2); }
 .prose h2 { font-family: var(--font-display); font-weight: 600; color: var(--text); font-size: clamp(1.5rem, 2.4vw, 2rem); letter-spacing: -0.03em; line-height: 1.1; margin: 0 0 14px; text-wrap: balance; }
 .prose p + p { margin-top: 12px; }
 .prose code, .aside code { font-family: var(--font-mono); font-size: 0.86em; padding: 2px 6px; border-radius: 6px; background: var(--surface-2); color: var(--text); }
@@ -1164,7 +1167,7 @@ main:has(> .ink:last-child) + .site-footer > .wrap { border-top: 1px solid var(-
 @media (max-width: 640px) { .ir-opts { grid-template-columns: 1fr; } }
 .em-actions { margin-top: 16px; gap: 10px; flex-wrap: wrap; }
 .em-how { margin-top: 16px; font-size: 0.88rem; color: var(--text-2); }
-.em-how summary { cursor: pointer; color: var(--accent); }
+.em-how summary { cursor: pointer; color: var(--accent); min-height: 44px; display: flex; align-items: center; }
 .em-how ul { margin: 10px 0 0; padding-inline-start: 20px; display: flex; flex-direction: column; gap: 6px; }
 .em-h { margin-top: 22px; }
 .em-card { margin-top: 14px; border-radius: var(--r-md); background: var(--bg-2); border: 1px solid var(--line); overflow: hidden; }

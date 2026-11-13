@@ -408,19 +408,20 @@
   };
   ND.me = (async () => {
     const slot = document.querySelector('[data-account]');
-    const r = await ND.api('/me');
+    const r = await ND.api('/session');
     if (r.offline) { if (slot) slot.hidden = true; return null; }
+    const me = r.ok && r.data.user ? r.data.user : null;
     if (slot) {
       slot.hidden = false;
-      if (r.ok && r.data.username) {
-        const u = r.data.username;
+      if (me) {
+        const u = me.username;
         slot.className = 'account-chip';
         slot.href = ND.url('/profile/');
         slot.setAttribute('aria-label', T('Your profile') + ' (' + u + ')');
         slot.innerHTML = '<span class="avatar">' + ND.esc(u.charAt(0).toUpperCase()) + '</span><span class="name">' + ND.esc(u) + '</span>';
       }
     }
-    return r.ok ? r.data : false;
+    return me || false;
   })();
 
   /* ---------- Language suggestion ----------
