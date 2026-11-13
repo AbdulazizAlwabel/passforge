@@ -113,7 +113,9 @@
   const fmt=iso=>iso?new Date(iso).toLocaleDateString(ND.lang==='ar'?'ar-u-nu-latn':'en-GB',{day:'numeric',month:'long',year:'numeric'}):'—';
   const q=new URLSearchParams(location.search);
   async function load(){
-    const r=await ND.api('/profile');
+    const me=await ND.me;
+    // Signed out: say so without asking for a profile that would only come back as a 401.
+    const r=me?await ND.api('/profile'):{ok:false,offline:me===null};
     $('#loading').hidden=true;
     if(!r.ok){$('#signedOut').hidden=false;if(r.offline)$('#signedOut').querySelector('p').textContent='Accounts aren’t available on this deployment right now.';return;}
     const u=r.data;
