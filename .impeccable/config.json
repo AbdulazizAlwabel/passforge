@@ -1,0 +1,26 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "geeza pro",
+        "createdAt": "2026-11-13T06:38:02.615Z",
+        "reason": "builder: pre-existing system-font stack for the one Arabic letter of the language switch and the Arabic hint on English pages, so English pages fetch no Arabic font; not a site typeface"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "caveat",
+        "createdAt": "2026-11-13T06:38:02.627Z",
+        "reason": "builder: the maker's handwritten signature on the home note, carried over from the live site; a signature mark, not a UI typeface"
+      },
+      {
+        "rule": "design-system-font",
+        "value": "aref ruqaa",
+        "createdAt": "2026-11-13T06:38:02.640Z",
+        "reason": "builder: the Arabic form of the maker's signature, carried over from the live site; a signature mark, not a UI typeface"
+      }
+    ]
+  }
+}

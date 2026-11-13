@@ -28,7 +28,7 @@
 .st-sheet b { display: block; height: 26px; border-radius: 5px; background: var(--accent); opacity: 0.85; margin-bottom: 2px; }
 .st-sheet.s1 { transform: translateX(-34px) rotate(-11deg); }
 .st-sheet.s2 { transform: translateX(34px) rotate(10deg); }
-.st-sheet.s3 { transform: translateY(-2px); z-index: 1; animation: st-float 5s ease-in-out infinite; }
+.st-sheet.s3 { transform: translateY(-2px); z-index: 1; }
 .st-empty:hover .s1, .st-empty.over .s1 { transform: translateX(-48px) translateY(4px) rotate(-17deg); }
 .st-empty:hover .s2, .st-empty.over .s2 { transform: translateX(48px) translateY(4px) rotate(16deg); }
 .st-empty.over .s3 { transform: translateY(-12px) scale(1.04); animation: none; }

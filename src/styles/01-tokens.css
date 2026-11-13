@@ -1,70 +1,73 @@
 /* ==========================================================================
-   Nicely Done — design tokens ("Aurora")
-   Soft light, deep colour, real depth: layered cards over a slow aurora,
-   an iris gradient for what matters, one hue per kind of tool.
+   Nicely Done — design tokens ("Prism")
+   Your device is a sealed block of glass: light gets in, your files never get out.
+   A deep ink stage carries the page top, the header and the footer in both themes;
+   the working areas below are bright paper (light) or ink panels (dark).
+   Rose, mint and blue appear only where light passes through glass, or to mark state.
    Every colour, size, radius and shadow on the site comes from here.
-   See docs/DESIGN.md for the reasoning.
    ========================================================================== */
 
 :root {
-  /* --- neutrals: light is the default --- */
-  --bg: #f6f6fb;
-  --bg-2: #ededf6;           /* wells: results, code, sunken areas */
-  --surface: #ffffff;        /* cards */
-  --surface-2: #f1f1f9;      /* hover on a card, neutral tags */
+  /* --- the three spectral lines: glass edges and state, never washes --- */
+  --rose: #ff4d6d;
+  --mint: #3ee6c1;
+  --blue: #5b8cff;
+  /* the ink stage, the same in both themes */
+  --ink: #06070c;
+  --ink-2: #0f1220;
+
+  /* --- paper: the working surface (light is the default) --- */
+  --bg: #f4f5f9;
+  --bg-2: #eaecf3;           /* wells: results, code, sunken areas */
+  --surface: #ffffff;        /* panels */
+  --surface-2: #eff0f6;      /* hover on a panel, neutral tags */
   --surface-solid: #ffffff;  /* opaque overlays: menus, dialogs */
   --raised: #ffffff;
-  --glass: rgb(255 255 255 / 0.8);
-  --line: #e4e4ef;
-  --line-2: #d0d0e0;
-  --field-line: #84859f;     /* edges of things you type into (3:1) */
-  --text: #0c0c1a;
-  --text-2: #4a4b66;
-  --text-3: #5f6079;
+  --line: #dfe2ec;
+  --line-2: #c8ccdb;
+  --field-line: #7b8098;     /* edges of things you type into (3:1) */
+  --text: #06070c;
+  --text-2: #3f4560;
+  --text-3: #596080;
+  --dim: #7b8098;            /* the quieter half of a headline */
 
-  /* --- the brand: iris --- */
-  --accent: #5142dd;         /* links, selection, focus */
-  --accent-2: #3f31bf;       /* hover; small text on tints */
+  /* --- what you can act on --- */
+  --accent: #2952d9;         /* links, selection, focus */
+  --accent-2: #1e3fae;       /* hover; small text on tints */
   --accent-ink: #ffffff;
-  --accent-soft: #eceafd;
-  --accent-line: #c5bff8;
-  --grad: linear-gradient(135deg, #5b4bea 0%, #8250ee 55%, #b24fe0 100%);   /* buttons, marks */
-  --grad-text: linear-gradient(100deg, #5142dd 0%, #9a4ff0 45%, #e0458f 100%);
-  --btn-ink: #ffffff;
-  --glow: rgb(104 84 240 / 0.35);
-  --mark: #dcd8ff;
-
-  /* --- one hue per kind of tool (icon tiles, page glow) --- */
-  --c-brand: linear-gradient(140deg, #6657f0, #a25cf0);       --c-brand-glow: rgb(118 92 240 / 0.38);
-  --c-security: linear-gradient(140deg, #6d5cff, #b56bff);    --c-security-glow: rgb(128 96 255 / 0.4);
-  --c-developer: linear-gradient(140deg, #1f8fff, #19c6e6);   --c-developer-glow: rgb(31 150 255 / 0.38);
-  --c-everyday: linear-gradient(140deg, #ff6a3d, #ffa53d);    --c-everyday-glow: rgb(255 122 61 / 0.38);
-  --c-pdf: linear-gradient(140deg, #f43f6e, #ff8257);         --c-pdf-glow: rgb(244 70 110 / 0.36);
-  /* the aurora behind the page top */
-  --a1: #8f7bff; --a2: #ff8bc4; --a3: #6fc3ff; --aurora-o: 0.42;
+  --accent-soft: #e7ecff;
+  --accent-line: #b4c4fa;
+  --btn-bg: #06070c;         /* the one thing to do: ink on paper, paper on ink */
+  --btn-ink: #f5f7ff;
+  --mark: #cfdcff;
 
   /* --- status (never decoration) --- */
-  --ok: #08764a;      --ok-soft: #dff5ea;
-  --danger: #b8261c;  --danger-soft: #fbe6e3;
+  --ok: #067a5f;      --ok-soft: #dcf7ef;
+  --danger: #c2183c;  --danger-soft: #ffe3e8;
   --warn: #8a5300;    --warn-soft: #fbecc8;
   --info: #1c58c4;    --info-soft: #e3ecfb;
   --gold: #855600;    --gold-soft: #f8ecc9;
-  --violet: #6f3bb8;
+  --violet: #a3195b;
 
-  --scrim: rgb(12 12 30 / 0.45);
-  --shadow-sm: 0 1px 2px rgb(20 18 60 / 0.06);
-  --shadow: 0 1px 2px rgb(20 18 60 / 0.05), 0 10px 28px -14px rgb(40 30 110 / 0.22);
-  --shadow-lg: 0 2px 6px rgb(20 18 60 / 0.06), 0 28px 60px -22px rgb(40 30 110 / 0.38);
-  --card-edge: inset 0 1px 0 rgb(255 255 255 / 0.9);
-  --theme-color: #f6f6fb;
+  --scrim: rgb(6 7 12 / 0.5);
+  --shadow-sm: 0 1px 2px rgb(6 7 12 / 0.05);
+  --shadow: 0 1px 2px rgb(6 7 12 / 0.04), 0 12px 28px -18px rgb(6 7 12 / 0.22);
+  --shadow-lg: 0 2px 4px rgb(6 7 12 / 0.05), 0 30px 60px -28px rgb(6 7 12 / 0.38);
+  --card-edge: 0 0 0 0 transparent;
+  --theme-color: #06070c;
   color-scheme: light;
 
-  /* legacy name still used by a few tool styles */
-  --accent-glow: var(--glow);
+  /* names kept for tool styles written before Prism */
+  --grad: var(--btn-bg);
+  --grad-text: none;
+  --glow: transparent;
+  --accent-glow: transparent;
+  --glass: var(--surface);
+  --c-brand: var(--surface-2); --c-security: var(--surface-2); --c-developer: var(--surface-2); --c-everyday: var(--surface-2); --c-pdf: var(--surface-2);
 
   /* --- type --- */
-  --font-display: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-sans: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Funnel Display', 'Funnel Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'Funnel Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
   --fs-xs: 0.78rem; --fs-sm: 0.875rem; --fs-md: 1rem; --fs-lg: 1.125rem;
 
@@ -74,72 +77,61 @@
   /* --- shape --- */
   --r-sm: 8px;
   --r-md: 12px;
-  --r-lg: 18px;
-  --r-xl: 24px;
-  --r-2xl: 32px;
+  --r-lg: 14px;
+  --r-xl: 18px;
+  --r-2xl: 24px;
   --r-pill: 999px;
 
   /* --- motion --- */
-  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --spring: cubic-bezier(0.34, 1.4, 0.5, 1);
-  --t: 180ms var(--ease);
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);          /* strong ease-out: things arrive */
+  --ease-io: cubic-bezier(0.77, 0, 0.175, 1);      /* things that move across the screen */
+  --spring: cubic-bezier(0.34, 1.3, 0.5, 1);
+  --t: 160ms var(--ease);
 
   /* --- layout --- */
-  --max: 1160px;
-  --gutter: clamp(16px, 4vw, 40px);
-  --header-h: 72px;          /* the floating bar plus its top gap */
+  --max: 1312px;
+  --gutter: clamp(20px, 4.45vw, 64px);
+  --header-h: 72px;
 }
 
-/* Dark. Applied by choice (data-theme) or by the system when no choice was made. */
-:root[data-theme="dark"] {
-  --bg: #08080f; --bg-2: #05050a; --surface: #11111c; --surface-2: #191927; --surface-solid: #141421; --raised: #1c1c2b;
-  --glass: rgb(17 17 28 / 0.78);
-  --line: #20202f; --line-2: #2f2f47; --field-line: #6a6b88;
-  --text: #f3f3fa; --text-2: #b0b1c8; --text-3: #8a8ba6;
-  --accent: #a9a2ff; --accent-2: #c4bfff; --accent-ink: #0d0b2b; --accent-soft: #1b1938; --accent-line: #3f38a3;
-  --grad-text: linear-gradient(100deg, #a9a2ff 0%, #c890ff 45%, #ff8fc4 100%);
-  --glow: rgb(128 108 255 / 0.5); --mark: #322c7a;
-  --a1: #6a55ff; --a2: #e0559f; --a3: #2f8fe6; --aurora-o: 0.3;
-  --ok: #5fd6a0; --ok-soft: #0f2a1f; --danger: #ff8a7a; --danger-soft: #3a1512; --warn: #f0b55e; --warn-soft: #33240a;
-  --info: #8fb6ff; --info-soft: #141f3d; --gold: #e9c06f; --gold-soft: #33290f; --violet: #c9a2ff;
-  --scrim: rgb(0 0 0 / 0.62);
+/* Ink. Applied by choice (data-theme), by the system when no choice was made, and always on the stage:
+   the header, the top of every page and the footer. */
+:root[data-theme="dark"],
+.site-header, .site-footer, .home-hero, .tool-hero, .page-hero, .ink {
+  --bg: #06070c; --bg-2: #030408; --surface: #0f1220; --surface-2: #171b2e; --surface-solid: #0f1220; --raised: #171b2e;
+  --line: #1d2133; --line-2: #2a2f45; --field-line: #636a8b;
+  --text: #f5f7ff; --text-2: #aab0c8; --text-3: #8a90ad; --dim: #6d7390;
+  --accent: #86a8ff; --accent-2: #a9c0ff; --accent-ink: #06070c; --accent-soft: #131b36; --accent-line: #2c3f7a;
+  --btn-bg: #f5f7ff; --btn-ink: #06070c; --mark: #243565;
+  --ok: #3ee6c1; --ok-soft: #0a2a25; --danger: #ff6682; --danger-soft: #33121b; --warn: #f0b55e; --warn-soft: #33240a;
+  --info: #8fb6ff; --info-soft: #141f3d; --gold: #e9c06f; --gold-soft: #33290f; --violet: #ff8fc4;
+  --scrim: rgb(0 0 0 / 0.66);
   --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 14px 34px -16px rgb(0 0 0 / 0.75);
-  --shadow-lg: 0 2px 6px rgb(0 0 0 / 0.45), 0 34px 70px -24px rgb(0 0 0 / 0.9);
-  --card-edge: inset 0 1px 0 rgb(255 255 255 / 0.06);
-  --theme-color: #08080f;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 16px 34px -18px rgb(0 0 0 / 0.8);
+  --shadow-lg: 0 2px 6px rgb(0 0 0 / 0.45), 0 34px 70px -26px rgb(0 0 0 / 0.9);
   color-scheme: dark;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #08080f; --bg-2: #05050a; --surface: #11111c; --surface-2: #191927; --surface-solid: #141421; --raised: #1c1c2b;
-    --glass: rgb(17 17 28 / 0.78);
-    --line: #20202f; --line-2: #2f2f47; --field-line: #6a6b88;
-    --text: #f3f3fa; --text-2: #b0b1c8; --text-3: #8a8ba6;
-    --accent: #a9a2ff; --accent-2: #c4bfff; --accent-ink: #0d0b2b; --accent-soft: #1b1938; --accent-line: #3f38a3;
-    --grad-text: linear-gradient(100deg, #a9a2ff 0%, #c890ff 45%, #ff8fc4 100%);
-    --glow: rgb(128 108 255 / 0.5); --mark: #322c7a;
-    --a1: #6a55ff; --a2: #e0559f; --a3: #2f8fe6; --aurora-o: 0.3;
-    --ok: #5fd6a0; --ok-soft: #0f2a1f; --danger: #ff8a7a; --danger-soft: #3a1512; --warn: #f0b55e; --warn-soft: #33240a;
-    --info: #8fb6ff; --info-soft: #141f3d; --gold: #e9c06f; --gold-soft: #33290f; --violet: #c9a2ff;
-    --scrim: rgb(0 0 0 / 0.62);
+    --bg: #06070c; --bg-2: #030408; --surface: #0f1220; --surface-2: #171b2e; --surface-solid: #0f1220; --raised: #171b2e;
+    --line: #1d2133; --line-2: #2a2f45; --field-line: #636a8b;
+    --text: #f5f7ff; --text-2: #aab0c8; --text-3: #8a90ad; --dim: #6d7390;
+    --accent: #86a8ff; --accent-2: #a9c0ff; --accent-ink: #06070c; --accent-soft: #131b36; --accent-line: #2c3f7a;
+    --btn-bg: #f5f7ff; --btn-ink: #06070c; --mark: #243565;
+    --ok: #3ee6c1; --ok-soft: #0a2a25; --danger: #ff6682; --danger-soft: #33121b; --warn: #f0b55e; --warn-soft: #33240a;
+    --info: #8fb6ff; --info-soft: #141f3d; --gold: #e9c06f; --gold-soft: #33290f; --violet: #ff8fc4;
+    --scrim: rgb(0 0 0 / 0.66);
     --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.4);
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 14px 34px -16px rgb(0 0 0 / 0.75);
-    --shadow-lg: 0 2px 6px rgb(0 0 0 / 0.45), 0 34px 70px -24px rgb(0 0 0 / 0.9);
-    --card-edge: inset 0 1px 0 rgb(255 255 255 / 0.06);
-    --theme-color: #08080f;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.4), 0 16px 34px -18px rgb(0 0 0 / 0.8);
+    --shadow-lg: 0 2px 6px rgb(0 0 0 / 0.45), 0 34px 70px -26px rgb(0 0 0 / 0.9);
     color-scheme: dark;
   }
 }
-
-/* A page takes the hue of its kind of tool: the aurora and the page's own icon follow it. */
-[data-cat="security"] { --c-page: var(--c-security); --c-page-glow: var(--c-security-glow); --a1: #7d63ff; --a2: #c06bff; --a3: #6f8cff; }
-[data-cat="developer"] { --c-page: var(--c-developer); --c-page-glow: var(--c-developer-glow); --a1: #3f9dff; --a2: #3fd6e6; --a3: #7b8cff; }
-[data-cat="everyday"] { --c-page: var(--c-everyday); --c-page-glow: var(--c-everyday-glow); --a1: #ff8f5c; --a2: #ffc45c; --a3: #ff7aa8; }
-[data-cat="pdf"] { --c-page: var(--c-pdf); --c-page-glow: var(--c-pdf-glow); --a1: #ff6f8f; --a2: #ffa06b; --a3: #c77bff; }
+/* the stage paints itself, so what sits on it reads its own text colour */
+.site-header, .site-footer, .home-hero, .tool-hero, .page-hero, .ink { background: var(--bg); color: var(--text); }
 
 /* Arabic: one family for everything, so headings and text share a voice. */
 :root[lang="ar"] {
-  --font-display: 'IBM Plex Sans Arabic', 'Geist', system-ui, sans-serif;
-  --font-sans: 'IBM Plex Sans Arabic', 'Geist', system-ui, sans-serif;
+  --font-display: 'Readex Pro', system-ui, 'Segoe UI', Tahoma, sans-serif;
+  --font-sans: 'Readex Pro', system-ui, 'Segoe UI', Tahoma, sans-serif;
 }

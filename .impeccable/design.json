@@ -1,0 +1,1120 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-13T06:36:10+00:00",
+  "title": "Design System: Nicely Done",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "primary",
+        "displayName": "Ink",
+        "canonical": "#06070c",
+        "tonalRamp": [
+          "#1f222d",
+          "#313754",
+          "#414b81",
+          "#5563aa",
+          "#7e89be",
+          "#a7aed3",
+          "#cfd2e3",
+          "#f0f1f5"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Ink Panel",
+        "canonical": "#0f1220",
+        "tonalRamp": [
+          "#1f212e",
+          "#2f3655",
+          "#3e4a84",
+          "#5162ae",
+          "#7b87c1",
+          "#a5add5",
+          "#ced2e4",
+          "#f0f1f5"
+        ]
+      },
+      "rose": {
+        "role": "secondary",
+        "displayName": "Prism Rose",
+        "canonical": "#ff4d6d",
+        "tonalRamp": [
+          "#3b1119",
+          "#770d20",
+          "#c20023",
+          "#ff002e",
+          "#ff3d60",
+          "#ff7a92",
+          "#f7bac5",
+          "#f9ebee"
+        ]
+      },
+      "mint": {
+        "role": "secondary",
+        "displayName": "Prism Mint",
+        "canonical": "#3ee6c1",
+        "tonalRamp": [
+          "#16362f",
+          "#196b59",
+          "#16ac8b",
+          "#1de2b6",
+          "#53e9c8",
+          "#8af0d9",
+          "#c1f0e6",
+          "#edf8f5"
+        ]
+      },
+      "blue": {
+        "role": "secondary",
+        "displayName": "Prism Blue",
+        "canonical": "#5b8cff",
+        "tonalRamp": [
+          "#111e3b",
+          "#0d2d77",
+          "#003ac2",
+          "#004cff",
+          "#3d77ff",
+          "#7aa2ff",
+          "#baccf7",
+          "#ebeff9"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "Paper",
+        "canonical": "#f4f5f9",
+        "tonalRamp": [
+          "#20232c",
+          "#333952",
+          "#44507d",
+          "#5a69a5",
+          "#828dbb",
+          "#a9b1d0",
+          "#d0d3e2",
+          "#f0f1f4"
+        ]
+      },
+      "paper-well": {
+        "role": "neutral",
+        "displayName": "Paper Well",
+        "canonical": "#eaecf3",
+        "tonalRamp": [
+          "#21232c",
+          "#343a51",
+          "#46527b",
+          "#5d6ca2",
+          "#848fb9",
+          "#abb3cf",
+          "#d0d4e1",
+          "#f0f1f4"
+        ]
+      },
+      "surface": {
+        "role": "neutral",
+        "displayName": "Surface",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#262626",
+          "#424242",
+          "#616161",
+          "#808080",
+          "#9e9e9e",
+          "#bdbdbd",
+          "#d9d9d9",
+          "#f2f2f2"
+        ]
+      },
+      "surface-2": {
+        "role": "neutral",
+        "displayName": "Surface Hover",
+        "canonical": "#eff0f6",
+        "tonalRamp": [
+          "#20222c",
+          "#333851",
+          "#464e7c",
+          "#5c66a3",
+          "#838bb9",
+          "#aaafcf",
+          "#d0d3e1",
+          "#f0f1f4"
+        ]
+      },
+      "line": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#dfe2ec",
+        "tonalRamp": [
+          "#21232c",
+          "#353b50",
+          "#48547a",
+          "#5f6ea0",
+          "#8591b7",
+          "#acb4ce",
+          "#d1d5e1",
+          "#f0f1f4"
+        ]
+      },
+      "line-2": {
+        "role": "neutral",
+        "displayName": "Strong Hairline",
+        "canonical": "#c8ccdb",
+        "tonalRamp": [
+          "#22242b",
+          "#373c4d",
+          "#4d5575",
+          "#65709a",
+          "#8a92b2",
+          "#afb5cb",
+          "#d2d5df",
+          "#f1f1f4"
+        ]
+      },
+      "field-line": {
+        "role": "neutral",
+        "displayName": "Field Edge",
+        "canonical": "#7b8098",
+        "tonalRamp": [
+          "#242529",
+          "#3c3e49",
+          "#55596d",
+          "#70758f",
+          "#9296aa",
+          "#b5b7c5",
+          "#d5d6dd",
+          "#f1f2f3"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Text",
+        "canonical": "#06070c",
+        "tonalRamp": [
+          "#1f222d",
+          "#313754",
+          "#414b81",
+          "#5563aa",
+          "#7e89be",
+          "#a7aed3",
+          "#cfd2e3",
+          "#f0f1f5"
+        ]
+      },
+      "text-2": {
+        "role": "neutral",
+        "displayName": "Text 2",
+        "canonical": "#3f4560",
+        "tonalRamp": [
+          "#22232b",
+          "#373b4d",
+          "#4d5475",
+          "#656f9a",
+          "#8a91b2",
+          "#afb4ca",
+          "#d2d5df",
+          "#f1f1f4"
+        ]
+      },
+      "text-3": {
+        "role": "neutral",
+        "displayName": "Text 3",
+        "canonical": "#596080",
+        "tonalRamp": [
+          "#22242a",
+          "#393c4c",
+          "#4f5672",
+          "#697196",
+          "#8d93b0",
+          "#b1b5c9",
+          "#d3d5de",
+          "#f1f1f4"
+        ]
+      },
+      "dim": {
+        "role": "neutral",
+        "displayName": "Dim",
+        "canonical": "#7b8098",
+        "tonalRamp": [
+          "#242529",
+          "#3c3e49",
+          "#55596d",
+          "#70758f",
+          "#9296aa",
+          "#b5b7c5",
+          "#d5d6dd",
+          "#f1f2f3"
+        ]
+      },
+      "accent": {
+        "role": "tertiary",
+        "displayName": "Link Blue",
+        "canonical": "#2952d9",
+        "tonalRamp": [
+          "#181e35",
+          "#1d2f67",
+          "#1d3da5",
+          "#2650d9",
+          "#5a7ae2",
+          "#8ea4eb",
+          "#c3cdee",
+          "#edf0f7"
+        ]
+      },
+      "accent-2": {
+        "role": "tertiary",
+        "displayName": "Link Blue Hover",
+        "canonical": "#1e3fae",
+        "tonalRamp": [
+          "#171e35",
+          "#1d2e68",
+          "#1d3ca5",
+          "#264fda",
+          "#5a79e2",
+          "#8ea3eb",
+          "#c3cdee",
+          "#edf0f7"
+        ]
+      },
+      "accent-soft": {
+        "role": "tertiary",
+        "displayName": "Link Blue Tint",
+        "canonical": "#e7ecff",
+        "tonalRamp": [
+          "#111a3b",
+          "#0d2377",
+          "#0028c2",
+          "#0035ff",
+          "#3d66ff",
+          "#7a96ff",
+          "#bac7f7",
+          "#ebeef9"
+        ]
+      },
+      "accent-line": {
+        "role": "tertiary",
+        "displayName": "Link Underline",
+        "canonical": "#b4c4fa",
+        "tonalRamp": [
+          "#141c39",
+          "#142971",
+          "#0c33b6",
+          "#1043ef",
+          "#4970f3",
+          "#839df7",
+          "#becaf4",
+          "#eceff8"
+        ]
+      },
+      "mark": {
+        "role": "tertiary",
+        "displayName": "Selection",
+        "canonical": "#cfdcff",
+        "tonalRamp": [
+          "#111d3b",
+          "#0d2a77",
+          "#0034c2",
+          "#0045ff",
+          "#3d72ff",
+          "#7a9eff",
+          "#bacbf7",
+          "#ebeff9"
+        ]
+      },
+      "ok": {
+        "role": "tertiary",
+        "displayName": "Ok",
+        "canonical": "#067a5f",
+        "tonalRamp": [
+          "#133930",
+          "#12725c",
+          "#09b990",
+          "#0cf3bd",
+          "#46f6cd",
+          "#81f9dd",
+          "#bdf4e8",
+          "#ecf9f6"
+        ]
+      },
+      "ok-soft": {
+        "role": "tertiary",
+        "displayName": "Ok Soft",
+        "canonical": "#dcf7ef",
+        "tonalRamp": [
+          "#19332c",
+          "#216450",
+          "#249e7a",
+          "#2fd0a0",
+          "#61dbb7",
+          "#93e6ce",
+          "#c6ece1",
+          "#eef7f4"
+        ]
+      },
+      "danger": {
+        "role": "tertiary",
+        "displayName": "Danger",
+        "canonical": "#c2183c",
+        "tonalRamp": [
+          "#37161d",
+          "#6c192a",
+          "#ac1535",
+          "#e31c46",
+          "#ea5373",
+          "#f0899f",
+          "#f1c1cb",
+          "#f8edef"
+        ]
+      },
+      "danger-soft": {
+        "role": "tertiary",
+        "displayName": "Danger Soft",
+        "canonical": "#ffe3e8",
+        "tonalRamp": [
+          "#3b1119",
+          "#770d20",
+          "#c20023",
+          "#ff002e",
+          "#ff3d60",
+          "#ff7a92",
+          "#f7bac5",
+          "#f9ebee"
+        ]
+      },
+      "warn": {
+        "role": "tertiary",
+        "displayName": "Warn",
+        "canonical": "#8a5300",
+        "tonalRamp": [
+          "#3b2b11",
+          "#774d0d",
+          "#c27500",
+          "#ff9900",
+          "#ffb23d",
+          "#ffca7a",
+          "#f7dfba",
+          "#f9f4eb"
+        ]
+      },
+      "warn-soft": {
+        "role": "tertiary",
+        "displayName": "Warn Soft",
+        "canonical": "#fbecc8",
+        "tonalRamp": [
+          "#382e14",
+          "#705514",
+          "#b5830d",
+          "#eead11",
+          "#f2c14a",
+          "#f6d483",
+          "#f3e4be",
+          "#f8f5ec"
+        ]
+      },
+      "info": {
+        "role": "tertiary",
+        "displayName": "Info",
+        "canonical": "#1c58c4",
+        "tonalRamp": [
+          "#162236",
+          "#1b376a",
+          "#184caa",
+          "#2064df",
+          "#5589e7",
+          "#8baeee",
+          "#c2d2f0",
+          "#edf1f8"
+        ]
+      },
+      "info-soft": {
+        "role": "tertiary",
+        "displayName": "Info Soft",
+        "canonical": "#e3ecfb",
+        "tonalRamp": [
+          "#162236",
+          "#1b386a",
+          "#184faa",
+          "#2068df",
+          "#558ce7",
+          "#8bb0ee",
+          "#c2d3f0",
+          "#edf1f8"
+        ]
+      },
+      "gold": {
+        "role": "tertiary",
+        "displayName": "Gold",
+        "canonical": "#855600",
+        "tonalRamp": [
+          "#3b2c11",
+          "#77520d",
+          "#c27d00",
+          "#ffa500",
+          "#ffbb3d",
+          "#ffd07a",
+          "#f7e2ba",
+          "#f9f4eb"
+        ]
+      },
+      "gold-soft": {
+        "role": "tertiary",
+        "displayName": "Gold Soft",
+        "canonical": "#f8ecc9",
+        "tonalRamp": [
+          "#362e16",
+          "#6b5619",
+          "#ac8516",
+          "#e2b01d",
+          "#e9c353",
+          "#f0d68a",
+          "#f0e4c1",
+          "#f8f5ed"
+        ]
+      },
+      "ink-well": {
+        "role": "neutral",
+        "displayName": "Ink Well",
+        "canonical": "#030408",
+        "tonalRamp": [
+          "#1d2130",
+          "#2a345a",
+          "#35468d",
+          "#465db9",
+          "#7284ca",
+          "#9fabdb",
+          "#cbd0e7",
+          "#eff0f5"
+        ]
+      },
+      "ink-panel-2": {
+        "role": "neutral",
+        "displayName": "Ink Panel 2",
+        "canonical": "#171b2e",
+        "tonalRamp": [
+          "#1f222d",
+          "#313754",
+          "#414c81",
+          "#5564aa",
+          "#7e89be",
+          "#a7aed3",
+          "#cfd2e3",
+          "#f0f1f5"
+        ]
+      },
+      "ink-line": {
+        "role": "neutral",
+        "displayName": "Ink Line",
+        "canonical": "#1d2133",
+        "tonalRamp": [
+          "#20232c",
+          "#343951",
+          "#46507c",
+          "#5c69a3",
+          "#838db9",
+          "#aab1cf",
+          "#d0d3e1",
+          "#f0f1f4"
+        ]
+      },
+      "ink-line-2": {
+        "role": "neutral",
+        "displayName": "Ink Line 2",
+        "canonical": "#2a2f45",
+        "tonalRamp": [
+          "#21232b",
+          "#353a4f",
+          "#495278",
+          "#606c9f",
+          "#878fb6",
+          "#adb3cd",
+          "#d1d4e0",
+          "#f1f1f4"
+        ]
+      },
+      "ink-field-line": {
+        "role": "neutral",
+        "displayName": "Ink Field Line",
+        "canonical": "#636a8b",
+        "tonalRamp": [
+          "#23242a",
+          "#393d4b",
+          "#515671",
+          "#6a7295",
+          "#8e94ae",
+          "#b2b5c8",
+          "#d4d5de",
+          "#f1f1f3"
+        ]
+      },
+      "ink-text": {
+        "role": "primary",
+        "displayName": "Paper White on Ink",
+        "canonical": "#f5f7ff",
+        "tonalRamp": [
+          "#111a3b",
+          "#0d2277",
+          "#0027c2",
+          "#0033ff",
+          "#3d64ff",
+          "#7a95ff",
+          "#bac6f7",
+          "#ebeef9"
+        ]
+      },
+      "ink-text-2": {
+        "role": "neutral",
+        "displayName": "Ink Text 2",
+        "canonical": "#aab0c8",
+        "tonalRamp": [
+          "#22242b",
+          "#373b4e",
+          "#4c5476",
+          "#646f9b",
+          "#8992b3",
+          "#aeb4cb",
+          "#d2d5df",
+          "#f1f1f4"
+        ]
+      },
+      "ink-text-3": {
+        "role": "neutral",
+        "displayName": "Ink Text 3",
+        "canonical": "#8a90ad",
+        "tonalRamp": [
+          "#23242a",
+          "#393c4c",
+          "#505672",
+          "#697196",
+          "#8d93af",
+          "#b1b5c8",
+          "#d3d5de",
+          "#f1f1f3"
+        ]
+      },
+      "ink-dim": {
+        "role": "neutral",
+        "displayName": "Dim on Ink",
+        "canonical": "#6d7390",
+        "tonalRamp": [
+          "#232429",
+          "#3b3d4a",
+          "#53586e",
+          "#6e7491",
+          "#9195ac",
+          "#b4b7c6",
+          "#d5d6dd",
+          "#f1f2f3"
+        ]
+      },
+      "ink-accent": {
+        "role": "tertiary",
+        "displayName": "Link Blue on Ink",
+        "canonical": "#86a8ff",
+        "tonalRamp": [
+          "#111d3b",
+          "#0d2b77",
+          "#0036c2",
+          "#0048ff",
+          "#3d74ff",
+          "#7aa0ff",
+          "#bacbf7",
+          "#ebeff9"
+        ]
+      },
+      "ink-accent-2": {
+        "role": "tertiary",
+        "displayName": "Ink Accent 2",
+        "canonical": "#a9c0ff",
+        "tonalRamp": [
+          "#111c3b",
+          "#0d2a77",
+          "#0034c2",
+          "#0044ff",
+          "#3d71ff",
+          "#7a9eff",
+          "#bacbf7",
+          "#ebeff9"
+        ]
+      },
+      "ink-accent-soft": {
+        "role": "tertiary",
+        "displayName": "Ink Accent Soft",
+        "canonical": "#131b36",
+        "tonalRamp": [
+          "#1c2130",
+          "#29345c",
+          "#32488f",
+          "#425ebd",
+          "#7085cd",
+          "#9dabdc",
+          "#cad1e7",
+          "#eff0f6"
+        ]
+      },
+      "ink-accent-line": {
+        "role": "tertiary",
+        "displayName": "Ink Accent Line",
+        "canonical": "#2c3f7a",
+        "tonalRamp": [
+          "#1c2130",
+          "#29365b",
+          "#334a8e",
+          "#4461bb",
+          "#7187cc",
+          "#9eaddc",
+          "#cad1e7",
+          "#eff1f6"
+        ]
+      },
+      "ink-mark": {
+        "role": "tertiary",
+        "displayName": "Ink Mark",
+        "canonical": "#243565",
+        "tonalRamp": [
+          "#1c2130",
+          "#29365b",
+          "#334b8f",
+          "#4363bc",
+          "#7088cc",
+          "#9daedc",
+          "#cad2e7",
+          "#eff1f6"
+        ]
+      },
+      "ink-ok-soft": {
+        "role": "tertiary",
+        "displayName": "Ink Ok Soft",
+        "canonical": "#0a2a25",
+        "tonalRamp": [
+          "#19332f",
+          "#226359",
+          "#259d8a",
+          "#31ceb5",
+          "#62dac7",
+          "#94e6d9",
+          "#c6ece6",
+          "#eef7f5"
+        ]
+      },
+      "ink-danger": {
+        "role": "tertiary",
+        "displayName": "Ink Danger",
+        "canonical": "#ff6682",
+        "tonalRamp": [
+          "#3b1119",
+          "#770d21",
+          "#c20023",
+          "#ff002f",
+          "#ff3d61",
+          "#ff7a93",
+          "#f7bac5",
+          "#f9ebee"
+        ]
+      },
+      "ink-danger-soft": {
+        "role": "tertiary",
+        "displayName": "Ink Danger Soft",
+        "canonical": "#33121b",
+        "tonalRamp": [
+          "#301c22",
+          "#5c2937",
+          "#8f334c",
+          "#bc4364",
+          "#cc7089",
+          "#dc9dae",
+          "#e7cad2",
+          "#f6eff1"
+        ]
+      },
+      "ink-warn": {
+        "role": "tertiary",
+        "displayName": "Ink Warn",
+        "canonical": "#f0b55e",
+        "tonalRamp": [
+          "#382a15",
+          "#6e4b16",
+          "#b17011",
+          "#e99416",
+          "#eeae4e",
+          "#f4c786",
+          "#f2debf",
+          "#f8f3ec"
+        ]
+      },
+      "ink-warn-soft": {
+        "role": "tertiary",
+        "displayName": "Ink Warn Soft",
+        "canonical": "#33240a",
+        "tonalRamp": [
+          "#342a18",
+          "#664c1f",
+          "#a27220",
+          "#d5962a",
+          "#dfb05d",
+          "#e9c990",
+          "#eddec4",
+          "#f7f4ee"
+        ]
+      },
+      "ink-info": {
+        "role": "tertiary",
+        "displayName": "Ink Info",
+        "canonical": "#8fb6ff",
+        "tonalRamp": [
+          "#11203b",
+          "#0d3277",
+          "#0043c2",
+          "#0059ff",
+          "#3d81ff",
+          "#7aa9ff",
+          "#bacff7",
+          "#ebf0f9"
+        ]
+      },
+      "ink-info-soft": {
+        "role": "tertiary",
+        "displayName": "Ink Info Soft",
+        "canonical": "#141f3d",
+        "tonalRamp": [
+          "#1c2131",
+          "#27365d",
+          "#304a92",
+          "#3f62c0",
+          "#6d87cf",
+          "#9badde",
+          "#c9d2e8",
+          "#eff1f6"
+        ]
+      },
+      "ink-gold": {
+        "role": "tertiary",
+        "displayName": "Ink Gold",
+        "canonical": "#e9c06f",
+        "tonalRamp": [
+          "#362b17",
+          "#694f1b",
+          "#a8781a",
+          "#dd9e22",
+          "#e5b557",
+          "#edcd8c",
+          "#efe0c2",
+          "#f7f4ed"
+        ]
+      },
+      "ink-gold-soft": {
+        "role": "tertiary",
+        "displayName": "Ink Gold Soft",
+        "canonical": "#33290f",
+        "tonalRamp": [
+          "#322b1b",
+          "#5f4f25",
+          "#96782c",
+          "#c59e3a",
+          "#d3b669",
+          "#e1cd99",
+          "#e9e0c8",
+          "#f6f4ee"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The one sentence at the top of the home page; a step smaller on info pages."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "A tool page's name."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section headings."
+      },
+      "subtitle": {
+        "displayName": "Subtitle",
+        "purpose": "Card titles, list group heads, principles."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "The plain promise under a heading, in text-2, max 58ch."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Everything else. Prose is capped at 68ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "The small name above a group of things. Sentence case, no tracking."
+      },
+      "mono": {
+        "displayName": "Mono",
+        "purpose": "Values: passwords, counts, bits, dates, step numbers, keys, the bytes counter."
+      },
+      "display-ar": {
+        "displayName": "Arabic Display",
+        "purpose": "Arabic headlines in Readex Pro: a step smaller, taller line-height, no letter-spacing."
+      },
+      "body-ar": {
+        "displayName": "Arabic Body",
+        "purpose": "Arabic text in Readex Pro at 16.5px and 1.75."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shadow-sm",
+        "value": "0 1px 2px rgb(6 7 12 / 0.05)",
+        "purpose": "Available for small raised controls."
+      },
+      {
+        "name": "shadow",
+        "value": "0 1px 2px rgb(6 7 12 / 0.04), 0 12px 28px -18px rgb(6 7 12 / 0.22)",
+        "purpose": "Available for raised cards."
+      },
+      {
+        "name": "shadow-lg",
+        "value": "0 2px 4px rgb(6 7 12 / 0.05), 0 30px 60px -28px rgb(6 7 12 / 0.38)",
+        "purpose": "Things that float over the page: the Tools menu, search palette, toast, sign-in card, and the first panel of a tool where it overlaps the stage."
+      },
+      {
+        "name": "shadow-lg-on-ink",
+        "value": "0 2px 6px rgb(0 0 0 / 0.45), 0 34px 70px -26px rgb(0 0 0 / 0.9)",
+        "purpose": "The same role on the stage and in the dark theme."
+      },
+      {
+        "name": "focus-ring",
+        "value": "0 0 0 3px var(--accent-soft)",
+        "purpose": "A field that has focus, with an accent edge."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "Strong ease-out: things arrive. The default for everything."
+      },
+      {
+        "name": "ease-io",
+        "value": "cubic-bezier(0.77, 0, 0.175, 1)",
+        "purpose": "Things that move across the screen: the icon and title travelling between pages."
+      },
+      {
+        "name": "spring",
+        "value": "cubic-bezier(0.34, 1.3, 0.5, 1)",
+        "purpose": "A small overshoot for things you set yourself: the pin star."
+      },
+      {
+        "name": "t",
+        "value": "160ms cubic-bezier(0.23, 1, 0.32, 1)",
+        "purpose": "State changes: hover, focus, press."
+      },
+      {
+        "name": "hero-entrance",
+        "value": "headline 700ms; lede 600ms +90ms; ways in 600ms +170ms; password 550ms +230ms; counter 500ms +520ms; glass scale 0.94 to 1 over 1100ms +60ms",
+        "purpose": "The one choreographed entrance, on the home page only."
+      },
+      {
+        "name": "glass-spring",
+        "value": "response 0.55s; damping 1 at rest, 0.74 to 0.82 after a drag or a dropped file",
+        "purpose": "The glass: turns toward the pointer, follows a drag 1:1 and springs back with the speed it was given."
+      },
+      {
+        "name": "glass-takeover",
+        "value": "10 unseen frames averaging under 22ms, then a 400ms fade over the still",
+        "purpose": "The live canvas replaces the still picture only on machines that keep up."
+      },
+      {
+        "name": "page-change",
+        "value": "220ms cross-fade; 400ms for the travelling icon and title",
+        "purpose": "View transitions between pages."
+      },
+      {
+        "name": "idle",
+        "value": "12000ms without input",
+        "purpose": "After this the page is idle: the glass stops drawing and repeating CSS motion pauses."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone",
+        "value": "480px"
+      },
+      {
+        "name": "tasks-1col",
+        "value": "560px"
+      },
+      {
+        "name": "touch-rules",
+        "value": "820px"
+      },
+      {
+        "name": "hero-1col",
+        "value": "860px"
+      },
+      {
+        "name": "header-collapse",
+        "value": "940px"
+      },
+      {
+        "name": "aside-drops",
+        "value": "980px"
+      },
+      {
+        "name": "tasks-2col",
+        "value": "1040px"
+      },
+      {
+        "name": "max",
+        "value": "1312px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one thing to do in a view: ink on paper, paper on ink.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">Copy</button>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 18px; border-radius: var(--r-md); font-family: var(--font-sans); font-size: 0.95rem; font-weight: 500; white-space: nowrap; border: 1px solid var(--line-2); background: var(--surface); color: var(--text); cursor: pointer; transition: background var(--t), border-color var(--t), color var(--t), transform 160ms var(--ease); } .ds-btn:hover { border-color: var(--text-3); background: var(--surface-2); } .ds-btn:active { transform: scale(0.97); } .ds-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; } .ds-btn-primary { background: var(--btn-bg); color: var(--btn-ink); border-color: var(--btn-bg); font-weight: 600; } .ds-btn-primary:hover { background: color-mix(in srgb, var(--btn-bg) 86%, var(--bg)); border-color: transparent; }"
+    },
+    {
+      "name": "Default Button",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "Every other action: a panel-coloured button with a strong hairline.",
+      "html": "<button class=\"ds-btn2\">New password</button>",
+      "css": ".ds-btn2 { display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border-radius: var(--r-md); font-family: var(--font-sans); font-size: 0.95rem; font-weight: 500; border: 1px solid var(--line-2); background: var(--surface); color: var(--text); cursor: pointer; transition: background var(--t), border-color var(--t), transform 160ms var(--ease); } .ds-btn2:hover { border-color: var(--text-3); background: var(--surface-2); } .ds-btn2:active { transform: scale(0.97); } .ds-btn2:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "A quiet action with no edge until hovered.",
+      "html": "<button class=\"ds-btn-ghost\">Clear</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; height: 44px; padding: 0 18px; border-radius: var(--r-md); font-family: var(--font-sans); font-size: 0.95rem; font-weight: 500; border: 1px solid transparent; background: transparent; color: var(--text-2); cursor: pointer; transition: background var(--t), color var(--t), transform 160ms var(--ease); } .ds-btn-ghost:hover { background: var(--surface-2); color: var(--text); } .ds-btn-ghost:active { transform: scale(0.97); } .ds-btn-ghost:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Anything you type into: a 3:1 edge, an accent edge and soft ring on focus.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-label\">Password to test</span><input class=\"ds-input\" placeholder=\"Type a password to test it\"></label>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 7px; font-family: var(--font-sans); } .ds-label { font-size: 0.9rem; font-weight: 500; color: var(--text); } .ds-input { width: 100%; border-radius: var(--r-md); border: 1px solid var(--field-line); background: var(--raised); color: var(--text); padding: 11px 13px; font: inherit; font-size: 1rem; outline: none; transition: border-color var(--t), box-shadow var(--t); } .ds-input::placeholder { color: var(--text-3); } .ds-input:hover { border-color: var(--text-2); } .ds-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }"
+    },
+    {
+      "name": "Toggle Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "A checkbox that reads as a toggle, 44px tall.",
+      "html": "<label class=\"ds-chip\"><input type=\"checkbox\" checked><span>Symbols <small>!@#</small></span></label>",
+      "css": ".ds-chip { position: relative; display: inline-block; font-family: var(--font-sans); } .ds-chip input { position: absolute; opacity: 0; pointer-events: none; } .ds-chip span { position: relative; display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 0 14px; border-radius: var(--r-md); border: 1px solid var(--line-2); background: var(--surface); color: var(--text-2); font-size: 0.92rem; cursor: pointer; transition: border-color var(--t), color var(--t), transform 160ms var(--ease); } .ds-chip span::before { content: ''; width: 17px; height: 17px; border-radius: 5px; border: 1.5px solid var(--field-line); flex: none; } .ds-chip span:hover { border-color: var(--text-3); color: var(--text); } .ds-chip span:active { transform: scale(0.97); } .ds-chip input:checked + span { color: var(--text); border-color: var(--text-3); } .ds-chip input:checked + span::before { background: var(--text); border-color: var(--text); } .ds-chip input:checked + span::after { content: ''; position: absolute; left: 14px; top: 50%; width: 17px; height: 17px; margin-top: -8.5px; background: var(--bg); clip-path: polygon(20% 52%, 29% 43%, 42% 56%, 71% 27%, 80% 36%, 42% 74%); } .ds-chip input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; } .ds-chip small { font-family: var(--font-mono); color: var(--text-3); font-size: 0.76rem; }"
+    },
+    {
+      "name": "Tool Card",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "A hairline panel that opens a tool: a neutral icon tile, a name and one line.",
+      "html": "<a class=\"ds-card\" href=\"#\"><span class=\"ds-tile\"><svg viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z\"/><path d=\"m9 12 2 2 4-4\"/></svg></span><span><strong>Strength Checker</strong><span>How long would your password survive a real attack?</span></span></a>",
+      "css": ".ds-card { display: flex; align-items: center; gap: 14px; padding: 16px; border-radius: var(--r-xl); background: var(--surface); border: 1px solid var(--line); color: var(--text); text-decoration: none; font-family: var(--font-sans); transition: border-color var(--t), background var(--t), transform 160ms var(--ease); } .ds-card:hover, .ds-card:focus-visible { border-color: var(--text-3); background: var(--surface-2); } .ds-card:active { transform: scale(0.99); } .ds-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; } .ds-card strong { display: block; font-weight: 500; font-size: 1rem; } .ds-card span span { display: block; font-size: 0.86rem; color: var(--text-2); margin-top: 1px; } .ds-tile { width: 42px; height: 42px; border-radius: 11px; display: grid; place-items: center; flex: none; color: var(--text); background: var(--surface-2); border: 1px solid var(--line-2); } .ds-tile svg { width: 20px; height: 20px; }"
+    },
+    {
+      "name": "Header",
+      "kind": "nav",
+      "description": "A quiet line of ink across the top of every page, in both themes.",
+      "html": "<header class=\"ds-nav\"><a class=\"ds-brand\" href=\"#\"><svg viewBox=\"0 0 32 32\" aria-hidden=\"true\"><rect x=\"5\" y=\"2.5\" width=\"22\" height=\"27\" rx=\"6\" fill=\"#f5f7ff\"/><path d=\"M5.9 9v14\" stroke=\"#ff4d6d\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><path d=\"M26.1 9v14\" stroke=\"#3ee6c1\" stroke-width=\"1.8\" stroke-linecap=\"round\"/><path d=\"M10.8 16.6l3.7 3.7 6.9-7.6\" fill=\"none\" stroke=\"#06070c\" stroke-width=\"2.8\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg>Nicely Done</a><a class=\"ds-nav-link\" href=\"#\">Tools</a><a class=\"ds-nav-link\" href=\"#\">PDF Studio</a><a class=\"ds-nav-link\" href=\"#\">About</a><span class=\"ds-search\">Search tools… <kbd>Ctrl K</kbd></span></header>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 2px; height: 72px; padding: 0 24px; background: #06070c; color: #f5f7ff; font-family: var(--font-sans); } .ds-brand { display: inline-flex; align-items: center; gap: 10px; margin-right: 22px; color: inherit; text-decoration: none; font-family: 'Funnel Display', var(--font-sans); font-size: 1.08rem; font-weight: 600; letter-spacing: -0.015em; } .ds-brand svg { width: 26px; height: 26px; } .ds-nav-link { display: inline-flex; align-items: center; height: 44px; padding: 0 13px; border-radius: var(--r-md); font-size: 0.95rem; color: #aab0c8; text-decoration: none; transition: color var(--t); } .ds-nav-link:hover { color: #f5f7ff; } .ds-nav-link:focus-visible { outline: 2px solid #86a8ff; outline-offset: 2px; } .ds-search { margin-left: auto; display: inline-flex; align-items: center; gap: 9px; height: 40px; width: 232px; padding: 0 8px 0 14px; border-radius: 999px; border: 1px solid #2a2f45; color: #8a90ad; font-size: 0.9rem; } .ds-search kbd { margin-left: auto; font-family: var(--font-mono); font-size: 0.72rem; padding: 4px 8px; border-radius: 999px; border: 1px solid #2a2f45; color: #aab0c8; }"
+    },
+    {
+      "name": "Live Password",
+      "kind": "custom",
+      "description": "The home page pill: a live dot, a mono password with symbols in rose and digits in mint, and its strength drawn along the bottom edge.",
+      "html": "<div class=\"ds-pw\"><div class=\"ds-pw-row\"><i class=\"ds-dot\"></i><span class=\"ds-pw-text\">iNRggeAaZkCKC<b>@</b>a<b>*</b>G<b>%^%</b><em>7</em></span><button class=\"ds-pw-copy\">Copy</button></div><div class=\"ds-pw-meta\">Live, made on your device right now <span>123 bits</span></div><div class=\"ds-pw-bar\"><i></i></div></div>",
+      "css": ".ds-pw { display: inline-flex; flex-direction: column; border: 1px solid #1d2133; border-radius: var(--r-md); background: #0f1220; overflow: hidden; font-family: var(--font-sans); } .ds-pw-row { display: flex; align-items: center; gap: 14px; padding: 8px 8px 8px 16px; } .ds-dot { width: 8px; height: 8px; border-radius: 50%; background: #3ee6c1; flex: none; } .ds-pw-text { font-family: var(--font-mono); font-weight: 500; font-size: 1.12rem; line-height: 40px; color: #f5f7ff; white-space: nowrap; } .ds-pw-text b { color: #ff4d6d; font-weight: 500; } .ds-pw-text em { color: #3ee6c1; font-style: normal; } .ds-pw-copy { height: 40px; padding: 0 13px; border-radius: 10px; border: 1px solid #f5f7ff; background: #f5f7ff; color: #06070c; font: inherit; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: background var(--t), transform 160ms var(--ease); } .ds-pw-copy:hover { background: #d4d8e6; } .ds-pw-copy:active { transform: scale(0.97); } .ds-pw-copy:focus-visible { outline: 2px solid #86a8ff; outline-offset: 2px; } .ds-pw-meta { display: flex; gap: 14px; padding: 0 16px 10px; font-size: 0.86rem; color: #8a90ad; } .ds-pw-meta span { font-family: var(--font-mono); font-size: 0.8rem; } .ds-pw-bar { height: 2px; background: #1d2133; } .ds-pw-bar i { display: block; height: 100%; width: 92%; background: #3ee6c1; }"
+    },
+    {
+      "name": "Bytes Counter",
+      "kind": "custom",
+      "description": "The proof: a measured count of what this page has uploaded, in mono with the number in mint.",
+      "html": "<p class=\"ds-sent\">bytes sent from this page: <b>0</b></p>",
+      "css": ".ds-sent { display: inline-flex; align-items: center; gap: 0.6ch; min-height: 44px; margin: 0; padding: 0 16px; background: #06070c; font-family: var(--font-mono); font-size: 0.88rem; color: #8a90ad; font-variant-numeric: tabular-nums; } .ds-sent b { color: #3ee6c1; font-weight: 500; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Sealed Glass",
+    "overview": "Your device is a sealed block of glass: light gets in, your files never get out. The home page shows that with one real object, a slab of optical glass with a page sealed inside it, drawn live by a hand-written shader, and then hands over the working tool. Everything else on the site is quiet on purpose, so the glass is the only thing that shines.\n\nThe site is built from two materials. The first is ink: a near-black stage that carries the header, the top of every page, the footer and the maker's promise, in the light theme and the dark theme alike. The second is paper: the bright surface the tools sit on, made of white panels with one hairline edge each. In the dark theme the paper becomes ink panels; the stage does not change. Colour is rationed. Rose, mint and blue are the three lines a prism splits light into, and they appear where light passes through the glass, in the brand mark, and to mark a state. They are never a background wash and never a glow.\n\nThe interface is dense and exact: tight grotesque headlines, mono for anything that is a value, 44px controls, hairlines instead of boxes inside boxes. It moves once, when the home page arrives, and after that only when you move something yourself.",
+    "keyCharacteristics": [
+      "One ink stage in both themes; paper (light) or ink panels (dark) for the working areas.",
+      "One live 3D object, the glass on the home page. No other page has a scene.",
+      "Three spectral colours, kept for the glass, the brand mark and state.",
+      "Hairline panels, flat at rest. Shadows only under things that float over the page.",
+      "Large tight headlines whose second half is dimmer, never coloured.",
+      "Mono for values: passwords, counts, bits, dates, file sizes, keyboard keys.",
+      "A real, measured \"bytes sent from this page\" counter as the proof of the promise.",
+      "English and Arabic are both first-class; the Arabic hero is mirrored, not translated in place."
+    ],
+    "rules": [
+      {
+        "name": "The Stage Rule",
+        "body": "The header, the top of every page, the promise band and the footer are ink in both themes. The styles do this by re-scoping the tokens on those regions, so a component placed on the stage picks up its on-ink colours without a second set of rules. A new region joins the stage by taking the `ink` class, not by hard-coding dark colours.",
+        "section": "colors"
+      },
+      {
+        "name": "The Spectrum Rule",
+        "body": "Rose, mint and blue belong to the glass, the brand mark and state. They are never a gradient wash, a glow, a card tint or a category colour. The one place they describe data instead of state is the live password, where they tell symbols and digits apart.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink-on-Paper Rule",
+        "body": "The one thing to do is ink on paper and paper on ink (`--btn-bg` / `--btn-ink`). The primary action is never blue and never coloured.",
+        "section": "colors"
+      },
+      {
+        "name": "The Dimmer Half Rule",
+        "body": "Emphasis in a heading is the opposite of emphasis: the second half of the sentence is set in `dim`. It is a flat colour, never a gradient, and it is used only at headline sizes, where its contrast (above 3:1) is enough.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Voice in Arabic Rule",
+        "body": "Arabic pages set headings and text in Readex Pro, with letter-spacing forced to zero everywhere so letters join, a 16.5px body at 1.75, and headlines a step smaller with taller line-height for the marks. Values stay in Geist Mono and left to right; the brand name stays in Latin, in Funnel Display.",
+        "section": "typography"
+      },
+      {
+        "name": "The Value Rule",
+        "body": "If a visitor could copy it or compare it, it is in mono.",
+        "section": "typography"
+      },
+      {
+        "name": "The Float Rule",
+        "body": "A shadow means the thing is over something else. If it sits in the page, it gets a hairline.",
+        "section": "elevation"
+      },
+      {
+        "name": "The No-Glow Rule",
+        "body": "Nothing glows and nothing is blurred. The only light on the site is drawn inside the glass.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do open every page on the ink stage and put the working tool on paper below it. Add the `ink` class to a band that should join the stage.",
+      "Do use the tokens in `01-tokens.css` for every colour, radius and shadow, so the stage re-scoping and the dark theme keep working.",
+      "Do keep the primary action ink on paper or paper on ink, one per view.",
+      "Do dim the second half of a headline with `dim`, at headline sizes only.",
+      "Do set values in Geist Mono with tabular numerals.",
+      "Do separate lists with hairlines; use a panel only for an object.",
+      "Do pair every status colour with words or an icon.",
+      "Do keep tap targets at least 44px and fields at least 16px on touch screens.",
+      "Do build with logical properties and check the page in Arabic; mirror directional arrows.",
+      "Do keep the glass on its still picture wherever motion is reduced or the machine is slow, and record where any new raster comes from in `docs/provenance/`."
+    ],
+    "donts": [
+      "Don't use rose, mint or blue as a background wash, a gradient, a glow, a card tint or a category colour.",
+      "Don't set headline emphasis in a gradient or an accent colour.",
+      "Don't add a second live scene, or a 3D library. The glass is the only one.",
+      "Don't give a panel a shadow unless it floats over something.",
+      "Don't blur backgrounds or add glows.",
+      "Don't colour icon tiles.",
+      "Don't add letter-spacing to Arabic, or set it in a second family.",
+      "Don't animate content in on scroll, or leave anything moving while the page sits idle.",
+      "Don't invent proof. There are no testimonials or user counts; the proof is the counter and the working tools.",
+      "Don't hard-code dark colours for something on the stage."
+    ]
+  }
+}

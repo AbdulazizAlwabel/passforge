@@ -88,10 +88,12 @@ ICONS = {
     "moon": '<svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.1A8.5 8.5 0 1 1 9.9 3.5a6.6 6.6 0 0 0 10.6 10.6Z"/></svg>',
 }
 
+# The mark: a slab of glass holding a tick, with the light split into rose and mint at its two edges.
 MARK = ('<svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">'
-        '<defs><linearGradient id="ndg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b4bea"/><stop offset=".55" stop-color="#8250ee"/><stop offset="1" stop-color="#c05be8"/></linearGradient></defs>'
-        '<rect width="32" height="32" rx="9" fill="url(#ndg)"/>'
-        '<path class="mark-check" pathLength="1" d="M9 16.6l4.7 4.7L23 11.4" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>'
+        '<rect x="5" y="2.5" width="22" height="27" rx="6" fill="#f5f7ff"/>'
+        '<path d="M5.9 9v14" stroke="#ff4d6d" stroke-width="1.8" stroke-linecap="round"/>'
+        '<path d="M26.1 9v14" stroke="#3ee6c1" stroke-width="1.8" stroke-linecap="round"/>'
+        '<path class="mark-check" pathLength="1" d="M10.8 16.6l3.7 3.7 6.9-7.6" fill="none" stroke="#06070c" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>'
         '</svg>')
 
 
@@ -100,7 +102,7 @@ MARK = ('<svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true">'
 # ---------------------------------------------------------------------------
 TOOLS = [
     dict(slug="password-generator", name="Password Generator", title="Password <em>Generator</em>",
-         cat="Security", icon="lock",
+         cat="Security", icon="lock", sent=True,
          short="Strong passwords in one tap — nobody else ever sees them.",
          lede="Make a strong password, or an easy-to-remember passphrase, in one tap. It’s made on your phone or computer — nothing is sent, saved or seen by anyone, not even me.",
          desc="Generate strong, cryptographically secure random passwords and passphrases in your browser. Adjustable length, character sets, and entropy meter. Nothing leaves your device.",
@@ -136,31 +138,31 @@ TOOLS = [
          desc="A free zero-knowledge password and secrets vault: logins, notes and API keys encrypted in your browser with AES-256 before syncing. I can’t read it. Includes a password health check.",
          keywords="vault password manager encrypted notes secrets api keys zero knowledge sync store"),
     dict(slug="hash-generator", name="Hash Generator", title="Hash <em>Generator</em>",
-         cat="Security", icon="hash",
+         cat="Security", icon="hash", sent=True,
          short="MD5 and SHA checksums for text or files — and a quick verify.",
          lede="Get MD5 and SHA checksums for any text or file as you type, and paste an expected checksum to see instantly if a download is genuine.",
          desc="Generate MD5, SHA-1, SHA-256, SHA-384 and SHA-512 hashes of text or files instantly in your browser, and verify checksums.",
          keywords="md5 sha1 sha256 sha512 checksum digest file verify"),
     dict(slug="username-generator", name="Username Generator", title="Username <em>Generator</em>",
-         cat="Security", icon="user",
+         cat="Security", icon="user", sent=True,
          short="Fresh usernames in five styles — tap one to copy it.",
          lede="Stuck on a username? Get fresh ideas in five styles — professional, gamer, anonymous, friendly and techie. Tap any name to copy it.",
          desc="Generate unique usernames and gamer tags in professional, gamer, anonymous, friendly and techie styles.",
          keywords="username handle gamertag nickname name"),
     dict(slug="base64-tool", name="Base64 Encoder", title="Base64 <em>Encode & Decode</em>",
-         cat="Developer", icon="code",
+         cat="Developer", icon="code", sent=True,
          short="Encode and decode Base64 — standard or URL-safe.",
          lede="Encode or decode Base64 as you type — with Arabic and emoji working properly, a URL-safe mode, and file-to-Base64 too.",
          desc="Encode and decode Base64 and URL-safe Base64 strings live, with Unicode support and file to data-URL conversion.",
          keywords="base64 encode decode url-safe data url btoa atob"),
     dict(slug="json-formatter", name="JSON Formatter", title="JSON <em>Formatter</em>",
-         cat="Developer", icon="braces",
+         cat="Developer", icon="braces", sent=True,
          short="Tidy, check, shrink and sort JSON.",
          lede="Paste JSON to tidy it up, check it for mistakes, shrink it, or sort its keys — with colours, and the exact line and column of any error.",
          desc="Format, validate, minify and sort JSON online with syntax highlighting and line/column error messages. Runs in your browser.",
          keywords="json format beautify validate minify pretty print lint"),
     dict(slug="text-converter", name="Text Case Converter", title="Text <em>Case</em> Converter",
-         cat="Developer", icon="type",
+         cat="Developer", icon="type", sent=True,
          short="camelCase, snake_case, Title Case and more — all at once.",
          lede="Type once and get your text in every case at the same time — camel, Pascal, snake, kebab, constant, title, sentence and more.",
          desc="Convert text between UPPERCASE, lowercase, Title Case, Sentence case, camelCase, PascalCase, snake_case, kebab-case and more.",
@@ -178,7 +180,7 @@ TOOLS = [
          desc="Free private PDF editor in your browser: merge PDFs, split pages, reorder, rotate and delete pages, convert JPG to PDF and PDF to JPG. No uploads — files never leave your device.",
          keywords="pdf merge combine join split extract reorder rotate delete pages jpg png image to pdf convert organize sign signature fill form page numbers watermark دمج تقسيم تدوير تحويل صور ملف"),
     dict(slug="unit-converter", name="Unit Converter", title="Unit <em>Converter</em>",
-         cat="Everyday", icon="ruler",
+         cat="Everyday", icon="ruler", sent=True,
          short="Kilos to pounds, Celsius to Fahrenheit, and eight more.",
          lede="Convert weight, length, speed, temperature, volume, area, data, time, pressure and energy — just type a number and pick the units.",
          desc="Convert units of weight, length, speed, temperature, volume, area, data, time, pressure and energy instantly.",
@@ -190,19 +192,19 @@ TOOLS = [
          desc="A private internet speed test: download, upload, latency, jitter and bufferbloat, measured against my own server in Riyadh. No tracking, no third parties, nothing stored.",
          keywords="speed test internet bandwidth download upload ping latency jitter bufferbloat mbps"),
     dict(slug="date-converter", name="Hijri Date Converter", title="Hijri <em>&amp;</em> Gregorian",
-         cat="Everyday", icon="calendar",
+         cat="Everyday", icon="calendar", sent=True,
          short="Hijri and Gregorian dates, side by side.",
          lede="Turn any Hijri date into Gregorian and back (Umm al-Qura calendar), and see both calendars side by side for the whole month.",
          desc="Convert dates between Hijri (Islamic, Umm al-Qura) and Gregorian calendars with today’s date and a dual monthly calendar.",
          keywords="hijri islamic gregorian date convert umm al-qura calendar"),
     dict(slug="qr-code", name="QR Code Maker", title="QR code <em>maker</em>", title_ar="صانع <em>رمز QR</em>",
-         cat="Everyday", icon="qr", new=True,
+         cat="Everyday", icon="qr", sent=True, new=True,
          short="QR codes for links, Wi-Fi and contacts — that never expire.",
          lede="Make a QR code for a link, your Wi-Fi, a WhatsApp chat or a contact card. It’s made on your device, holds your details directly, and never stops working — no sign-up, no hidden redirect.",
          desc="Free QR code generator for links, text, Wi-Fi, WhatsApp and contacts. Made in your browser, static codes that never expire, PNG and SVG download, no sign-up.",
          keywords="qr code generator maker wifi whatsapp vcard contact link barcode free static رمز باركود كيو آر"),
     dict(slug="image-resizer", name="Photo Resizer", title="Photo <em>resizer</em>", title_ar="تصغير <em>الصور</em>",
-         cat="Everyday", icon="image", new=True,
+         cat="Everyday", icon="image", sent=True, new=True,
          short="Shrink photos for email or upload limits — on your device.",
          lede="Make photos smaller in size and dimensions — for email, WhatsApp or a form with an upload limit. Your photos are resized right on your device, and the hidden location data is left out.",
          desc="Resize and compress photos in your browser: JPG, PNG, WebP and HEIC, batch resize, fit under a KB limit, strips GPS location data. Nothing is uploaded.",
@@ -338,7 +340,7 @@ VERIFY_META = "".join(
 
 THEME_BOOT = ("<script>(function(){try{var t=JSON.parse(localStorage.getItem('nd:theme'));"
               "if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t);"
-              "if(!localStorage.getItem('nd:seen'))document.documentElement.classList.add('nd-first')}catch(e){}})();</script>")
+              "if(!localStorage.getItem('nd:seen'))document.documentElement.classList.add('nd-first')}catch(e){}document.documentElement.classList.add('js')})();</script>")
 
 
 def tools_json():
@@ -365,7 +367,7 @@ def head(title, desc, path, extra_head="", jsonld=None, noindex=False):
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(desc)}">
 <link rel="canonical" href="{url}">{robots}{VERIFY_META if path == "/" else ""}
-<meta name="theme-color" content="#f6f6fb">
+<meta name="theme-color" content="#06070c">
 <meta name="color-scheme" content="light dark">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="{SITE}">
@@ -383,7 +385,8 @@ def head(title, desc, path, extra_head="", jsonld=None, noindex=False):
 <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.webmanifest">
-<link rel="preload" href="/assets/fonts/geist-normal-300-700-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/funnel-display-normal-300-800-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/assets/fonts/funnel-sans-normal-300-800-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/assets/fonts.css?v={{V}}">
 <link rel="stylesheet" href="/assets/site.css?v={{V}}">{extra_head}
 {THEME_BOOT}
@@ -393,7 +396,6 @@ def head(title, desc, path, extra_head="", jsonld=None, noindex=False):
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
 """
 
 
@@ -418,9 +420,10 @@ def header(active=None):
     cur = lambda k: ' aria-current="page"' if active == k else ""
     return f"""<header class="site-header">
   <div class="wrap">
-    <a class="brand" href="/">{MARK}<span class="brand-word" aria-hidden="true">nicely<em>done</em></span><span class="sr-only">{SITE} — home</span></a>
+    <a class="brand" href="/">{MARK}<span class="brand-word" aria-hidden="true">Nicely Done</span><span class="sr-only">{SITE} — home</span></a>
     <nav class="nav" aria-label="Primary">
       <a class="nav-link menu-btn" href="/tools/" data-menu="toolsMenu" aria-expanded="false" aria-controls="toolsMenu"{cur("tools")}>Tools {ICONS['chev']}</a>
+      <a class="nav-link" href="/pdf-studio/">PDF Studio</a>
       <a class="nav-link" href="/about/"{cur("about")}>About</a>
       <a class="nav-link" href="/whats-new/"{cur("news")}>What’s new</a>
     </nav>
@@ -446,7 +449,7 @@ def footer():
   <div class="wrap">
     <div class="foot-grid">
       <div>
-        <a class="brand" href="/">{MARK}<span class="brand-word" aria-hidden="true">nicely<em>done</em></span><span class="sr-only">{SITE} — home</span></a>
+        <a class="brand" href="/">{MARK}<span class="brand-word" aria-hidden="true">Nicely Done</span><span class="sr-only">{SITE} — home</span></a>
         <p class="foot-tag">Free, honest tools that work on your device. Made by Abdulaziz — no ads, no tracking, no catch.</p>
       </div>
       {cols}
@@ -516,13 +519,15 @@ def build_tool(t):
     aside_html = f'<aside class="aside">{aside}</aside>' if aside else ""
     st = STEPS.get(t["slug"], [])
     steps_html = ('<div class="guide-steps"><p class="panel-title">How it works</p><ol class="steps3">'
-                  + "".join(f'<li class="reveal" style="--d:{i * 90}ms"><span class="s3-n">{i + 1}</span><strong>{a}</strong><span>{b}</span></li>' for i, (a, b) in enumerate(st))
+                  + "".join(f'<li><span class="s3-n">{i + 1}</span><strong>{a}</strong><span>{b}</span></li>' for i, (a, b) in enumerate(st))
                   + '</ol></div>') if st else ""
     about = s.get("about", "")
-    about_html = f'<div class="prose reveal">{about}</div>' if about else ""
+    about_html = f'<div class="prose">{about}</div>' if about else ""
     guide_html = (f'<section class="section guide-sec"><div class="wrap guide">{steps_html}{about_html}</div></section>'
                   if steps_html or about_html else "")
 
+    # proof, for tools that never send what you give them: a live count of what this page has uploaded
+    sent_html = '<p class="tool-sent" data-sent="none">bytes sent from this page: <b data-sent-n>0</b></p>' if t.get("sent") else ""
     parent_crumb = (f'<a href="/{t["parent"]}/">{TOOL_BY_SLUG[t["parent"]]["name"]}</a>{ICONS["chev"]}' if t.get("parent")
                     else f'<a href="/{CAT_META[t["cat"]]["slug"]}/">{CAT_META[t["cat"]]["name"]}</a>{ICONS["chev"]}')
     ar_title = f' data-ar-title="{html.escape(t["title_ar"])}"' if t.get("title_ar") and not t.get("parent") else ""
@@ -542,6 +547,7 @@ def build_tool(t):
         {offline_badge}
         {badges}
       </div>
+      {sent_html}
     </div>
   </section>
   <section>
@@ -575,7 +581,7 @@ def tool_row(t, attrs=""):
 def tool_card(t, attrs="", i=0):
     """A tool as a card (directory and category pages)."""
     new = ' <span class="badge ok row-new">New</span>' if t.get("new") else ""
-    return (f'<a class="dir-card card card-link reveal" style="--d:{(i % 3) * 60}ms" href="/{t["slug"]}/"{attrs}>{tile(t)}'
+    return (f'<a class="dir-card card card-link" href="/{t["slug"]}/"{attrs}>{tile(t)}'
             f'<span class="tr-text"><strong>{t["name"]}{new}</strong><span>{t["short"]}</span></span>'
             f'<span class="tr-go">{ICONS["chev"]}</span></a>')
 
@@ -586,38 +592,42 @@ HOME_TASKS = [
     ("pdf-studio", "Fix a PDF", "Join, split, sign, shrink, or turn photos into one PDF.", "pages", "t-xl",
      '<span class="art art-pdf" aria-hidden="true"><i></i><i></i><i></i></span>'),
     ("link-checker", "Is this link safe?", "Got a strange link in a message? Check it before you tap.", "shield", "t-wide",
-     '<span class="art art-url" aria-hidden="true"><b>https://</b><b class="u-bad">absher-sa.info</b><b>/verify</b><em>Likely a scam</em></span>'),
+     '<span class="art art-url"><b class="u-eg">Example</b><b>https://</b><b class="u-bad">absher-sa.info</b><b>/verify</b><em>Likely a scam</em></span>'),
     ("password-generator", "Make a strong password", "One tap. Nobody else ever sees it — not even me.", "lock", "",
-     '<span class="art art-pw" aria-hidden="true">k7#Qm<b>9</b>vX!pL2<b>@</b>wR4z</span>'),
-    ("share", "Send a password safely", "A link that works once, then disappears.", "link", "", ""),
-    ("vault", "Keep my passwords safe", "A locked box for your passwords that only you can open.", "key", "", ""),
-    ("ocr-pdf", "Copy text from a photo", "Arabic or English — from scans, photos and screenshots.", "type", "", ""),
+     '<span class="art art-line art-pw" aria-hidden="true"><span>k7#Qm<b>9</b>vX!pL2<b>@</b>wR4z</span></span>'),
+    ("share", "Send a password safely", "A link that works once, then disappears.", "link", "",
+     '<span class="art art-line"><span>/s/#x7Qm9…</span><b>Opens once</b></span>'),
+    ("vault", "Keep my passwords safe", "A locked box for your passwords that only you can open.", "key", "",
+     '<span class="art art-line" aria-hidden="true"><span>bank</span><i>••••••••••••••</i></span>'),
+    ("ocr-pdf", "Copy text from a photo", "Arabic or English — from scans, photos and screenshots.", "type", "",
+     '<span class="art art-line" aria-hidden="true"><i>IMG_2041.jpg</i><span>→ “Invoice 1042”</span></span>'),
     ("speed-test", "How fast is my internet?", "A quick, honest test. Nothing is logged.", "gauge", "",
      '<svg class="art art-gauge" viewBox="0 0 92 52" aria-hidden="true"><path d="M8 46a38 38 0 0 1 76 0" fill="none" stroke="var(--line-2)" stroke-width="8" stroke-linecap="round"/>'
-     '<path d="M8 46a38 38 0 0 1 57-33" fill="none" stroke="#ff8a3d" stroke-width="8" stroke-linecap="round"/>'
+     '<path d="M8 46a38 38 0 0 1 57-33" fill="none" stroke="#5b8cff" stroke-width="8" stroke-linecap="round"/>'
      '<path class="needle" d="M46 46V16" fill="none" stroke="var(--text)" stroke-width="3.5" stroke-linecap="round"/><circle cx="46" cy="46" r="5" fill="var(--text)"/></svg>'),
-    ("date-converter", "Hijri and Gregorian dates", "Today in both calendars, and an easy converter.", "calendar", "", ""),
+    ("date-converter", "Hijri and Gregorian dates", "Today in both calendars, and an easy converter.", "calendar", "",
+     '<span class="art art-line" id="taskDate" aria-hidden="true"></span>'),
 ]
 
 
 def build_home():
-    def task(i, slug, name, short, icon, size, art):
+    def task(slug, name, short, icon, size, art):
         t = TOOL_BY_SLUG.get(slug) or next(v for v in PDF_VARIANTS if v["slug"] == slug)
-        pic = art if size or "art-pw" not in art else art   # small pictures sit above the text
         head_art = art if "art-pdf" in art else ""
         body_art = "" if "art-pdf" in art else art
-        return (f'<a class="task card card-link reveal {size}" style="--d:{(i % 4) * 70}ms" href="/{slug}/">'
-                f'<span class="tile-icon" data-c="{ckey(t)}">{ICONS[icon]}</span>{head_art}'
+        tile_html = f'<span class="tile-icon" data-c="{ckey(t)}">{ICONS[icon]}</span>' if head_art or not art else ""
+        return (f'<a class="task {size}" href="/{slug}/">'
+                f'{tile_html}{head_art}'
                 f'<span class="task-t">{body_art}<strong>{name}</strong><span>{short}</span></span>'
                 f'<span class="task-go">{ICONS["arrow"]}</span></a>')
-    tasks = "".join(task(i, *row) for i, row in enumerate(HOME_TASKS))
+    tasks = "".join(task(*row) for row in HOME_TASKS)
     groups = ""
-    for i, c in enumerate(CATS):
+    for c in CATS:
         m = CAT_META[c]
         rows = "".join(tool_row(t) for t in TOOLS if t["cat"] == c)
         n = sum(1 for t in TOOLS if t["cat"] == c)
-        groups += f"""<div class="cat-group card reveal" style="--d:{i * 90}ms">
-  <a class="cat-head" href="/{m['slug']}/"><span class="tile-icon" data-c="{c.lower()}">{ICONS[m['icon']]}</span><span><strong>{m['name']}</strong><span class="cat-count">{n} tools</span></span>{ICONS['chev']}</a>
+        groups += f"""<div class="cat-group">
+  <a class="cat-head" href="/{m['slug']}/"><span class="tile-icon" data-c="{c.lower()}">{ICONS[m['icon']]}</span><span><strong>{m['name']}</strong><span class="cat-count">{n}</span></span>{ICONS['chev']}</a>
   <div class="cat-rows">{rows}</div>
 </div>
 """
@@ -629,63 +639,45 @@ def build_home():
     desc = ("Free, honest tools made by one person: fix PDFs, make strong passwords, check suspicious links, read text from photos. "
             "Everything works on your device — no ads, no tracking, no paywall at the end.")
     n_tools = len(TOOLS) + len(PDF_VARIANTS)
-    page = head(f"{SITE} — Free tools, no catch.", desc, "/", "", jsonld) + header() + f"""<main id="main">
-  <section class="home-hero">
+    still = '\n<link rel="preload" as="image" href="/assets/prism-still.webp?v={V}" fetchpriority="high">'
+    page = head(f"{SITE} — Free tools, no catch.", desc, "/", still, jsonld) + header() + f"""<main id="main">
+  <section class="home-hero" id="hero">
     <div class="wrap home-hero-grid">
       <div class="home-hero-main">
-        <p class="hero-pill"><b>Free</b><span>Made by one person · no tricks</span></p>
-        <h1 class="display">Tools that do the job.<br><em>No catch.</em></h1>
-        <p class="lede">Fix a PDF, make a strong password, check a suspicious link. Everything works right on your phone or computer — your files never leave it, and there’s never a bill at the end.</p>
+        <h1 class="display">Your files stay sealed <em>on your device.</em></h1>
+        <p class="lede">{n_tools} free tools for PDFs, passwords, links and code. They work right here, nothing is uploaded, and there’s no paywall at the end.</p>
         <div class="home-start">
-          <button type="button" class="home-search" data-search>{ICONS['search']}<span>Search tools or type pw 24, 10 km in mi, 15% of 200…</span><span class="kbd" aria-hidden="true"><span data-mod>Ctrl</span>K</span></button>
+          <button type="button" class="home-search" data-search>{ICONS['search']}<span>What do you need? Sign, merge, JSON…</span><span class="kbd" aria-hidden="true"><span data-mod>Ctrl</span>K</span></button>
           <label class="hero-drop" id="heroDrop" tabindex="0">
             <input type="file" id="heroFile" multiple accept=".pdf,application/pdf,image/*,.heic,.heif" hidden>
-            <span class="hero-drop-ic">{ICONS['pages']}</span>
-            <span class="hero-drop-t"><strong>Drop a PDF or photo here</strong><span>or tap to choose — it opens in PDF Studio, on your device</span></span>
-            <span class="hero-drop-go">{ICONS['arrow']}</span>
+            {ICONS['file']}<span>Drop a file</span>
           </label>
-          <div class="hero-quick">
-            <a href="/sign-pdf/">{ICONS['pen']}Sign a PDF</a>
-            <a href="/compress-pdf/">{ICONS['download']}Shrink a PDF</a>
-            <a href="/link-checker/">{ICONS['shield']}Check a link</a>
-            <a href="/password-generator/">{ICONS['lock']}Make a password</a>
-          </div>
         </div>
-        <ul class="hero-stats">
-          <li><b data-count="{n_tools}">{n_tools}</b><span>free tools</span></li>
-          <li><b>0</b><span>ads or trackers</span></li>
-          <li><b>0</b><span>files uploaded</span></li>
-        </ul>
-      </div>
-      <div class="hero-stage" id="try">
-        <div class="stage-in">
-          <div class="stage-card try-card try-today" id="tryToday">
-            <p class="try-k"><span class="tile-icon" data-c="everyday">{ICONS['calendar']}</span>Today</p>
-            <p class="try-hijri" id="tryHijri"></p>
-            <p class="try-greg" id="tryGreg"></p>
-            <p class="try-next" id="tryNext" hidden></p>
-            <a class="try-more" href="/date-converter/">Convert any date{ICONS['arrow']}</a>
-          </div>
-          <div class="stage-card try-card try-live" id="tryMake">
-            <div class="specimen-head"><span class="live-tag" id="tryLive"><span class="live-dot"></span><span class="live-on">Live — made on your device right now</span><span class="live-off">Paused while you look</span></span></div>
-            <div class="specimen-pw" id="tryGen" dir="ltr" aria-live="off"></div>
-            <div class="specimen-meta" dir="ltr"><span id="tryBits">— bits</span><span class="bar"><i id="tryBar"></i></span></div>
-            <div class="try-row">
+        <p class="home-start-note">PDFs and photos open in PDF Studio, right here on your device.</p>
+        <div class="pw-pill try-live" id="tryMake">
+          <div class="pw-pill-row">
+            <span class="live-dot" aria-hidden="true"></span>
+            <div class="specimen-pw" id="tryGen" dir="ltr" aria-live="off" title="Copy this password"></div>
+            <div class="pw-pill-acts">
               <button type="button" class="btn btn-primary btn-sm" id="tryCopy">{ICONS['copy']}Copy</button>
-              <button type="button" class="btn btn-sm" id="tryNew">{ICONS['refresh']}New one</button>
-              <a class="try-more" href="/password-generator/" style="margin-inline-start:auto;align-self:center">More options{ICONS['arrow']}</a>
+              <button type="button" class="icon-btn" id="tryNew" aria-label="New one" title="New one">{ICONS['refresh']}</button>
             </div>
           </div>
-          <div class="stage-card try-card" id="tryStrength">
-            <p class="try-k"><span class="tile-icon" data-c="security">{ICONS['shield']}</span>How strong is my password?</p>
-            <input class="input" type="password" id="tryPw" placeholder="Type a password to test it…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Password to test">
-            <div class="meter" id="tryMeter" data-level="0"><i></i><i></i><i></i><i></i><i></i></div>
-            <p class="try-out" id="tryOut">Nothing you type leaves this page.</p>
-            <a class="try-more" href="/strength-checker/">Full check, including leaks{ICONS['arrow']}</a>
-          </div>
+          <div class="specimen-meta"><span class="live-tag" id="tryLive"><span class="live-on">Live — made on your device right now</span><span class="live-off">Paused while you look</span></span><span id="tryBits" dir="ltr">— bits</span><a class="try-more" href="/password-generator/">More options</a></div>
+          <span class="bar" aria-hidden="true"><i id="tryBar"></i></span>
+        </div>
+      </div>
+      <div class="hero-stage" id="try">
+        <div class="slab" id="slab" aria-hidden="true">
+          <img class="slab-still" src="/assets/prism-still.webp?v={{V}}" width="1300" height="1000" alt="" decoding="async" fetchpriority="high">
+          <canvas id="prism"></canvas>
         </div>
       </div>
     </div>
+    <details class="sent" id="sent" data-sent="none">
+      <summary>bytes sent from this page: <b id="sentN" data-sent-n>0</b></summary>
+      <p>This page counts what it uploads, as it happens. It has fetched <b id="sentReq" data-sent-req>a few</b> files to show itself, and sent none of yours. Drop a file and the count stays at zero.</p>
+    </details>
   </section>
 
   <section class="section recent-sec" id="recent" hidden>
@@ -697,8 +689,30 @@ def build_home():
 
   <section class="section" id="tools">
     <div class="wrap">
-      <div class="section-head"><h2 class="h2 reveal">What do you need <em>to do?</em></h2><a class="section-link" href="/tools/"><span>See all tools</span>{ICONS['chev']}</a></div>
+      <div class="section-head"><h2 class="h2">What do you need <em>to do?</em></h2><a class="section-link" href="/tools/"><span>See all tools</span>{ICONS['chev']}</a></div>
       <div class="tasks">{tasks}</div>
+    </div>
+  </section>
+
+  <section class="section" id="live" style="padding-top:0">
+    <div class="wrap">
+      <div class="section-head"><h2 class="h2">Test a password or check the date, <em>without leaving this page.</em></h2></div>
+      <div class="try-grid">
+        <div class="try-card try-today" id="tryToday">
+          <p class="try-k"><span class="tile-icon" data-c="everyday">{ICONS['calendar']}</span>Today</p>
+          <p class="try-hijri" id="tryHijri"></p>
+          <p class="try-greg" id="tryGreg"></p>
+          <p class="try-next" id="tryNext" hidden></p>
+          <a class="try-more" href="/date-converter/">Convert any date{ICONS['arrow']}</a>
+        </div>
+        <div class="try-card" id="tryStrength">
+          <label class="try-k" for="tryPw"><span class="tile-icon" data-c="security">{ICONS['shield']}</span>How strong is my password?</label>
+          <input class="input" type="password" id="tryPw" placeholder="Type a password to test it…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Password to test">
+          <div class="meter" id="tryMeter" data-level="0"><i></i><i></i><i></i><i></i><i></i></div>
+          <p class="try-out" id="tryOut">Nothing you type leaves this page.</p>
+          <a class="try-more" href="/strength-checker/">Full check, including leaks{ICONS['arrow']}</a>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -706,38 +720,39 @@ def build_home():
     <div class="wrap">
       <div class="section-head">
         <div>
-          <h2 class="h2 reveal">All the <em>tools</em></h2>
-          <p class="lede">Or press <span class="kbd"><span data-mod>Ctrl</span>K</span> anywhere and type what you need.</p>
+          <h2 class="h2">All the <em>tools</em></h2>
+          <p class="lede">{len(TOOLS)} tools are listed here. PDF Studio holds {len(PDF_VARIANTS)} more jobs.</p>
+          <p class="hint" style="margin-top:8px;font-size:.95rem">Or press <span class="kbd"><span data-mod>Ctrl</span>K</span> anywhere and type what you need.</p>
         </div>
       </div>
       <div class="cat-groups">{groups}</div>
+      <div class="callouts home-more">
+      <a class="widget-callout card card-link" href="/suggest/"><span class="tile-icon">{ICONS['sparkle']}</span><span class="tr-text"><strong>Missing a tool?</strong><span>Tell me what you need — the most-wanted ideas get built first.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
+      <a class="widget-callout card card-link" href="/widgets/"><span class="tile-icon" data-c="everyday">{ICONS['calendar']}</span><span class="tr-text"><strong>On iPhone? Add the widgets</strong><span>The Hijri date and one-tap passwords on your Home Screen.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
+      </div>
     </div>
   </section>
 
-  <section class="section" id="promise" style="padding-top:0">
-    <div class="wrap">
-      <div class="section-head"><h2 class="h2 reveal">My <em>promise</em></h2><a class="section-link" href="/privacy/"><span>Privacy &amp; security</span>{ICONS['chev']}</a></div>
-      <div class="promise-grid">
+  <section class="section ink" id="promise">
+    <div class="wrap promise-grid">
+      <div>
+        <h2 class="h2">My <em>promise</em></h2>
         <div class="principles">
-          <div class="principle card reveal"><span class="num">01</span><h3>Your files stay yours</h3><p>PDFs, photos and passwords are handled on your device. They’re never sent to me or to anyone else.</p></div>
-          <div class="principle card reveal" style="--d:90ms"><span class="num">02</span><h3>Free, for real</h3><p>No “pay to download” at the end, no sign-up walls, no trial that runs out. If it works today, it’s free today.</p></div>
-          <div class="principle card reveal" style="--d:180ms"><span class="num">03</span><h3>No ads, no tracking</h3><p>There are no trackers here at all. I don’t even know you visited — and I like it that way.</p></div>
+          <div class="principle"><h3>Your files stay yours</h3><p>PDFs, photos and passwords are handled on your device. They’re never sent to me or to anyone else.</p></div>
+          <div class="principle"><h3>Free, for real</h3><p>No “pay to download” at the end, no sign-up walls, no trial that runs out. If it works today, it’s free today.</p></div>
+          <div class="principle"><h3>No ads, no tracking</h3><p>There are no trackers here at all. I don’t even know you visited — and I like it that way.</p></div>
         </div>
-        <aside class="note card reveal" style="--d:270ms" aria-label="A note from Abdulaziz">
-          <p class="note-k">A note from the maker</p>
-          <p>Most tool websites aren’t honest. You spend ten minutes working on your file — then they ask you to pay, or won’t let you download it.</p>
-          <p>That made me angry, so I built my own. Everything here is free, there are no ads, and your files stay yours.</p>
-          <p class="note-sig">Abdulaziz</p>
-        </aside>
+        <a class="section-link" href="/privacy/"><span>Privacy &amp; security</span>{ICONS['chev']}</a>
       </div>
-      <div class="callouts" style="margin-top:20px">
-      <a class="widget-callout card card-link reveal" href="/suggest/"><span class="tile-icon">{ICONS['sparkle']}</span><span class="tr-text"><strong>Missing a tool?</strong><span>Tell me what you need — the most-wanted ideas get built first.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
-      <a class="widget-callout card card-link reveal" style="--d:90ms" href="/widgets/"><span class="tile-icon" data-c="everyday">{ICONS['calendar']}</span><span class="tr-text"><strong>On iPhone? Add the widgets</strong><span>The Hijri date and one-tap passwords on your Home Screen.</span></span><span class="tr-go">{ICONS['chev']}</span></a>
-      </div>
+      <aside class="note" aria-label="A note from Abdulaziz">
+        <p>Most tool websites aren’t honest. You spend ten minutes working on your file — then they ask you to pay, or won’t let you download it.</p>
+        <p>That made me angry, so I built my own. Everything here is free, there are no ads, and your files stay yours.</p>
+        <p class="note-sig">Abdulaziz</p>
+      </aside>
     </div>
   </section>
 </main>
-""" + footer() + scripts('<script src="/assets/strength.js?v={V}"></script>\n' + HOME_SCRIPT2)
+""" + footer() + scripts('<script src="/assets/strength.js?v={V}"></script>\n' + HOME_SCRIPT2 + '\n<script src="/assets/prism.js?v={V}" defer></script>')
     return page
 
 
@@ -835,29 +850,42 @@ HOME_SCRIPT2 = r"""<script>
 (function(){
   if(new URLSearchParams(location.search).get('deleted')==='1'){ND.toast('Your account has been deleted');history.replaceState(null,'',location.pathname);}
   // Drop a file on the home page → hand it to PDF Studio through this browser's own storage (it never leaves the device).
-  const drop=document.getElementById('heroDrop'),fin=document.getElementById('heroFile');
+  const drop=document.getElementById('heroDrop'),fin=document.getElementById('heroFile'),hero=document.getElementById('hero');
+  const prism=()=>window.NDPrism||{take:()=>Promise.resolve(),lean:()=>{}};
+  let going=false;
   function handoff(files){
     files=[...files].filter(f=>/pdf|image/.test(f.type)||/\.(pdf|jpe?g|png|webp|heic|heif)$/i.test(f.name));
     if(!files.length){ND.toast('Choose a PDF or a photo.');return;}
+    if(going)return;going=true;
     const go=()=>{location.href=ND.url(files.every(f=>/image/.test(f.type))?'/jpg-to-pdf/':'/pdf-studio/')+'#from-home';};
-    try{
-      const rq=indexedDB.open('nd-handoff',1);
-      rq.onupgradeneeded=()=>rq.result.createObjectStore('files');
-      rq.onsuccess=()=>{const tx=rq.result.transaction('files','readwrite');tx.objectStore('files').put(files.map(f=>({name:f.name,type:f.type,blob:f})),'pending');tx.oncomplete=go;tx.onerror=go;};
-      rq.onerror=go;
-    }catch(e){go();}
+    // the file goes into the glass (its name shows on the page inside) while it is put in this browser's own storage
+    const sealed=prism().take(files[0].name,files.length);
+    const stored=new Promise(done=>{
+      try{
+        const rq=indexedDB.open('nd-handoff',1);
+        rq.onupgradeneeded=()=>rq.result.createObjectStore('files');
+        rq.onsuccess=()=>{const tx=rq.result.transaction('files','readwrite');tx.objectStore('files').put(files.map(f=>({name:f.name,type:f.type,blob:f})),'pending');tx.oncomplete=done;tx.onerror=done;};
+        rq.onerror=done;
+      }catch(e){done();}
+    });
+    Promise.all([sealed,stored]).then(go,go);
   }
+  addEventListener('pageshow',e=>{if(e.persisted)going=false;});
   fin.addEventListener('change',()=>{if(fin.files.length)handoff(fin.files);});
   drop.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='enter'||e.key===' '){e.preventDefault();fin.click();}});
-  ['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('over');}));
-  ['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,()=>drop.classList.remove('over')));
-  drop.addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer.files.length)handoff(e.dataTransfer.files);});
+  // the whole top of the page takes a dropped file, not only the button
+  let over=0;const setOver=on=>{drop.classList.toggle('over',on);prism().lean(on);};
+  hero.addEventListener('dragenter',e=>{e.preventDefault();if(++over===1)setOver(true);});
+  hero.addEventListener('dragover',e=>{e.preventDefault();});
+  hero.addEventListener('dragleave',()=>{if(--over<=0){over=0;setOver(false);}});
+  hero.addEventListener('drop',e=>{e.preventDefault();over=0;setOver(false);if(e.dataTransfer.files.length)handoff(e.dataTransfer.files);});
   // "Your tools": pinned first, then recently used — remembered only in this browser
   const find=h=>(window.ND_TOOLS||[]).find(t=>t.href.replace(/^\/ar\//,'/')===h);
+  const STAR='<svg class="pin-star" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3.5 2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9Z"/></svg>';
   const pins=ND.store.get('pins',[]).map(find).filter(Boolean);
   const recent=ND.store.get('recent',[]).map(find).filter(t=>t&&!pins.includes(t)).slice(0,Math.max(0,8-pins.length));
   if(pins.length||recent.length){
-    document.getElementById('recentList').innerHTML=pins.concat(recent).map(t=>'<a class="recent-i'+(pins.includes(t)?' pinned':'')+'" href="'+ND.url(t.href)+'"><span class="mi" data-c="'+(t.c||'')+'">'+t.icon+'</span><span>'+ND.esc(t.name)+'</span></a>').join('');
+    document.getElementById('recentList').innerHTML=pins.concat(recent).map(t=>'<a class="recent-i'+(pins.includes(t)?' pinned':'')+'" href="'+ND.url(t.href)+'"><span class="mi" data-c="'+(t.c||'')+'">'+t.icon+'</span><span>'+ND.esc(t.name)+'</span>'+(pins.includes(t)?STAR:'')+'</a>').join('');
     document.getElementById('recentHint').hidden=pins.length>0;
     document.getElementById('recent').hidden=false;
   }
@@ -899,7 +927,9 @@ HOME_SCRIPT2 = r"""<script>
   fresh();syncLive();
   if(!reduce)setInterval(()=>{syncLive();if(!document.hidden&&!paused()&&!document.documentElement.classList.contains('idle')&&onScreen)fresh();},4200);
   document.getElementById('tryNew').addEventListener('click',fresh);
-  document.getElementById('tryCopy').addEventListener('click',e=>{holdUntil=Date.now()+8000;syncLive();ND.copy(cur,e.currentTarget,'Password copied');});
+  const copyBtn=document.getElementById('tryCopy');
+  copyBtn.addEventListener('click',()=>{holdUntil=Date.now()+8000;syncLive();ND.copy(cur,copyBtn,'Password copied');});
+  gen.addEventListener('click',()=>copyBtn.click());   // the password itself is a way to copy it
   // 3) today in both calendars, with the next Ramadan / Eid
   const HM=['Muharram','Safar','Rabiʿ al-Awwal','Rabiʿ al-Thani','Jumada al-Ula','Jumada al-Akhirah','Rajab','Shaʿban','Ramadan','Shawwal','Dhu al-Qaʿdah','Dhu al-Hijjah'];
   let HF=null;try{HF=new Intl.DateTimeFormat('en-u-ca-islamic-umalqura-nu-latn',{day:'numeric',month:'numeric',year:'numeric'});}catch(e){}
@@ -907,6 +937,7 @@ HOME_SCRIPT2 = r"""<script>
   const now=new Date(),h=hijri(now);
   if(h&&h.m){
     document.getElementById('tryHijri').textContent=h.d+' '+HM[h.m-1]+' '+h.y+' '+ND.t('AH');
+    const td=document.getElementById('taskDate');if(td)td.textContent=h.d+'/'+h.m+'/'+h.y+' = '+now.getDate()+'/'+(now.getMonth()+1)+'/'+now.getFullYear();
     document.getElementById('tryGreg').textContent=now.toLocaleDateString(ND.lang==='ar'?'ar-SA-u-ca-gregory-nu-latn':'en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
     const DAYS={one:'day',other:'days'},DAYS_AR={one:'يوم',two:'يومين',few:'أيام',many:'يوم',other:'يوم'};
     let msg='';
@@ -954,7 +985,6 @@ def build_404():
         for t in (TOOL_BY_SLUG[k] for k in ("pdf-studio", "password-generator", "link-checker")))
     return head(f"Page not found — {SITE}", "This page doesn’t exist.", "/404.html") + header() + f"""<main id="main">
   <section class="nf"><div class="wrap">
-    <p class="eyebrow"><span class="dot"></span>Error 404</p>
     <div class="code" aria-hidden="true">4<em>0</em>4</div>
     <h1 class="h2">Not quite <em>done</em> — this page doesn’t exist.</h1>
     <div class="path" id="nfPath">/</div>
@@ -973,9 +1003,11 @@ def build_404():
 # Static extras
 # ---------------------------------------------------------------------------
 FAVICON = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b4bea"/><stop offset=".55" stop-color="#8250ee"/><stop offset="1" stop-color="#c05be8"/></linearGradient></defs>
-<rect width="32" height="32" rx="9" fill="url(#g)"/>
-<path d="M9 16.6l4.7 4.7L23 11.4" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect width="32" height="32" rx="8" fill="#06070c"/>
+<rect x="7" y="4.5" width="18" height="23" rx="5" fill="#f5f7ff"/>
+<path d="M7.9 10v12" stroke="#ff4d6d" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M24.1 10v12" stroke="#3ee6c1" stroke-width="1.8" stroke-linecap="round"/>
+<path d="M11.6 16.4l3.1 3.1 5.8-6.4" fill="none" stroke="#06070c" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
 """
 
@@ -1034,8 +1066,9 @@ def finish(html_src, rel, lang):
     out = re.sub(r'<h1 class="h1" data-ar-title="([^"]*)">(.*?)</h1>', ar_title, out)
     out = out.replace('<script src="/assets/site.js', '<script>window.ND_I18N=' + RUNTIME_AR + ';</script>\n<script src="/assets/site.js', 1)
     out = out.replace('<html lang="en" class="no-js">', '<html lang="ar" dir="rtl" class="no-js">', 1)
-    out = out.replace("/assets/fonts/geist-normal-300-700-latin.woff2", "/assets/fonts/ibm-plex-sans-arabic-normal-400-arabic.woff2", 1)
-    out = out.replace('<link rel="stylesheet" href="/assets/fonts.css', '<link rel="preload" href="/assets/fonts/ibm-plex-sans-arabic-normal-700-arabic.woff2" as="font" type="font/woff2" crossorigin>\n<link rel="stylesheet" href="/assets/fonts.css', 1)
+    # Arabic pages are set in Readex Pro alone: one preload instead of the two Latin faces
+    out = out.replace('<link rel="preload" href="/assets/fonts/funnel-display-normal-300-800-latin.woff2" as="font" type="font/woff2" crossorigin>\n', "", 1)
+    out = out.replace("/assets/fonts/funnel-sans-normal-300-800-latin.woff2", "/assets/fonts/readex-pro-normal-160-700-arabic.woff2", 1)
     is_file = lambda p: re.search(r"\.(?!html\b)[A-Za-z0-9]{1,12}(?:$|[?#])", p.split("/")[-1] or "") is not None
     out = re.sub(r'(href|data-href)="/(?!/)([^"]*)"', lambda m: m.group(0) if m.group(2).startswith(STATIC_PREFIXES) or is_file(m.group(2)) else f'{m.group(1)}="/ar/{m.group(2)}"', out)
     out = out.replace('"href":"/', '"href":"/ar/').replace('"href": "/', '"href": "/ar/')
@@ -1128,7 +1161,7 @@ def main():
     (DIST / "manifest.webmanifest").write_text(json.dumps({
         "name": SITE, "short_name": SITE, "description": "Free, honest tools that work on your device.",
         "start_url": "/", "scope": "/", "display": "standalone",
-        "background_color": "#f6f6fb", "theme_color": "#f6f6fb",
+        "background_color": "#06070c", "theme_color": "#06070c",
         "icons": [
             {"src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
             {"src": "/icon-192.png", "sizes": "192x192", "type": "image/png"},
@@ -1137,7 +1170,7 @@ def main():
         "shortcuts": [{"name": t["name"], "url": f"/{t['slug']}/"} for t in TOOLS[:4]],
     }, indent=2))
     precache = ["/", "/404.html", f"/assets/site.css?v={version}", f"/assets/site.js?v={version}", f"/assets/fonts.css?v={version}", f"/assets/strength.js?v={version}", f"/assets/pdf-studio.css?v={version}",
-                "/assets/fonts/geist-normal-300-700-latin.woff2", "/favicon.svg"] + \
+                "/assets/fonts/funnel-display-normal-300-800-latin.woff2", "/assets/fonts/funnel-sans-normal-300-800-latin.woff2", f"/assets/prism.js?v={version}", f"/assets/prism-still.webp?v={version}", "/favicon.svg"] + \
                [f"/{t['slug']}/" for t in TOOLS] + ["/tools/", "/about/", "/privacy/", "/ar/", "/ar/404.html"]
     (DIST / "sw.js").write_text(SW.replace("{V}", version).replace("{PRECACHE}", json.dumps(precache)))
     # Keep IIS / Azure App Service compatibility from the original deployment.

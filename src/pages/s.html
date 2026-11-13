@@ -6,8 +6,7 @@
       <div data-state="loading" class="empty-state"><span class="spinner"></span></div>
 
       <div data-state="ready" hidden>
-        <p class="eyebrow"><span class="dot"></span>One-time secret</p>
-        <h1 class="h2" style="margin-top:18px">Someone shared a <em>secret</em> with you</h1>
+        <h1 class="h2">Someone shared a <em>secret</em> with you</h1>
         <p class="muted" style="margin-top:10px">It can be viewed <b style="color:var(--text)">once</b>. After you reveal it, it’s permanently destroyed — so have somewhere ready to save it.</p>
         <div class="stat-grid" style="margin-top:22px">
           <div class="stat"><div class="k">Expires</div><div class="v" id="exp">—</div></div>
@@ -24,8 +23,8 @@
       </div>
 
       <div data-state="revealed" hidden>
-        <p class="eyebrow"><span class="dot"></span>Revealed · now destroyed</p>
-        <h1 class="h2" style="margin-top:18px">Here’s your <em>secret</em></h1>
+        <h1 class="h2">Here’s your <em>secret</em></h1>
+        <p class="badge ok" style="margin-top:12px">Revealed · now destroyed</p>
         <pre class="out scroll" id="plain" style="margin-top:20px;font-size:1rem;max-height:420px"></pre>
         <div class="row" style="margin-top:14px">
           <button class="btn btn-primary" id="copy">{{icon:copy}}Copy</button>

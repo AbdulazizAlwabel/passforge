@@ -8,8 +8,9 @@ site, installs it, checks `/api/health` and sends a notification. So:
 
 > **Merging into `main` is the deploy.** Nothing else on the server needs touching.
 
-The redesign lives on the branch `redesign-v3`. It changes only the front end
-(`build.py`, `src/`, `tools/`, `tests/`, `docs/`, and the generated `dist/`).
+The current redesign (v4, “Prism”) lives on the branch `redesign-v4`. It changes
+only the front end (`build.py`, `src/`, `tools/`, `tests/`, `docs/`, and the
+generated `dist/`).
 `server/` and `deploy/` are untouched, and there are no database migrations.
 
 ## Before merging
@@ -29,7 +30,7 @@ python3 build.py && node tests/harness.js     # http://localhost:8899
 
 ```sh
 git checkout main && git pull
-git merge --no-ff redesign-v3 -m "Redesign v3"
+git merge --no-ff redesign-v4 -m "Redesign v4"
 git push origin main        # live within about five minutes
 ```
 
@@ -41,7 +42,7 @@ build, so the old cache is dropped.
 ## To roll back
 
 The version before the redesign is the commit `main` pointed to before the
-merge (tagged `pre-redesign-v3` if the tag was pushed; otherwise it is the
+merge (tag it `pre-redesign-v4` before merging; otherwise it is the
 first parent of the merge commit).
 
 ```sh
@@ -64,7 +65,7 @@ sudo python3 build.py && sudo bash deploy/install-vm.sh
 
 and start the timer again once `main` is in a good state.
 
-## What changed for search engines
+## What changed for search engines (v3)
 
 - No URL was removed or renamed. Added: `/tools/`, `/privacy/`, `/contact/`
   (each also under `/ar/`), all in `sitemap.xml` with `hreflang` pairs.
