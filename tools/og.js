@@ -7,7 +7,7 @@ const { chromium } = require(path.join(__dirname, '../tests/node_modules/playwri
 const ROOT = path.join(__dirname, '..'), DIST = path.join(ROOT, 'dist'), OUT = path.join(ROOT, 'src/og');
 const B = process.env.B || 'http://localhost:8899';
 
-const MARK = '<svg viewBox="0 0 32 32"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b4bea"/><stop offset=".55" stop-color="#8250ee"/><stop offset="1" stop-color="#c05be8"/></linearGradient></defs><rect width="32" height="32" rx="9" fill="url(#g)"/><path d="M9 16.6l4.7 4.7L23 11.4" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const MARK = '<svg viewBox="0 0 32 32"><rect x="5" y="2.5" width="22" height="27" rx="6" fill="#f5f7ff"/><path d="M5.9 9v14" stroke="#ff4d6d" stroke-width="1.8" stroke-linecap="round"/><path d="M26.1 9v14" stroke="#3ee6c1" stroke-width="1.8" stroke-linecap="round"/><path d="M10.8 16.6l3.7 3.7 6.9-7.6" fill="none" stroke="#06070c" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 const CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
 const CHIPS = { en: ['Free', 'No ads, no tracking', 'Works on your device'], ar: ['مجاني', 'بدون إعلانات ولا تتبّع', 'يشتغل على جهازك'] };
 
@@ -30,38 +30,38 @@ function pages() {
   return out;
 }
 
+// Prism: the ink stage, the sentence on one side and the sealed glass (the shader's own still frame) on the other.
 const css = (ar) => `
-@font-face{font-family:Geist;src:url(/assets/fonts/geist-normal-300-700-latin.woff2) format('woff2');font-weight:300 700}
-@font-face{font-family:Plex;font-weight:400;src:url(/assets/fonts/ibm-plex-sans-arabic-normal-400-arabic.woff2) format('woff2')}
-@font-face{font-family:Plex;font-weight:700;src:url(/assets/fonts/ibm-plex-sans-arabic-normal-700-arabic.woff2) format('woff2')}
-@font-face{font-family:Plex;font-weight:400;src:url(/assets/fonts/ibm-plex-sans-arabic-normal-400-latin.woff2) format('woff2');unicode-range:U+0000-00FF}
-@font-face{font-family:Plex;font-weight:700;src:url(/assets/fonts/ibm-plex-sans-arabic-normal-700-latin.woff2) format('woff2');unicode-range:U+0000-00FF}
+@font-face{font-family:FD;src:url(/assets/fonts/funnel-display-normal-300-800-latin.woff2) format('woff2');font-weight:300 800}
+@font-face{font-family:FS;src:url(/assets/fonts/funnel-sans-normal-300-800-latin.woff2) format('woff2');font-weight:300 800}
+@font-face{font-family:RP;src:url(/assets/fonts/readex-pro-normal-160-700-arabic.woff2) format('woff2');font-weight:160 700}
+@font-face{font-family:RP;src:url(/assets/fonts/readex-pro-normal-160-700-latin.woff2) format('woff2');font-weight:160 700;unicode-range:U+0000-00FF}
+@font-face{font-family:GM;src:url(/assets/fonts/geist-mono-normal-400-latin.woff2) format('woff2')}
 *{box-sizing:border-box;margin:0}
 html,body{width:1200px;height:630px;overflow:hidden}
-body{position:relative;background:#08080f;color:#f3f3fa;font-family:${ar ? 'Plex,' : ''}Geist,sans-serif;padding:60px 76px}
-.bg{position:absolute;inset:0;background:radial-gradient(620px 460px at ${ar ? '100%' : '0%'} -10%,rgba(106,85,255,.55),transparent 70%),radial-gradient(560px 420px at ${ar ? '0%' : '100%'} -10%,rgba(224,85,159,.42),transparent 70%),radial-gradient(520px 380px at 55% 115%,rgba(47,143,230,.32),transparent 70%)}
-.wrap{position:relative;height:100%;display:flex;flex-direction:column}
-.brand{display:flex;align-items:center;gap:14px;font-family:Geist;font-weight:650;font-size:36px;letter-spacing:-.04em;direction:ltr;align-self:flex-start}
-.brand svg{width:48px;height:48px}.brand em{font-style:normal;background:linear-gradient(100deg,#a9a2ff,#c890ff 45%,#ff8fc4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.mid{flex:1;display:flex;align-items:center;gap:44px}
-.ic{flex:none;width:132px;height:132px;border-radius:36px;display:grid;place-items:center;background:linear-gradient(140deg,#6657f0,#a25cf0);color:#fff;box-shadow:inset 0 2px 0 rgba(255,255,255,.35),0 30px 60px -20px rgba(118,92,240,.8)}
-.ic svg{width:64px;height:64px;stroke-width:1.6}
-.t{font-family:${ar ? 'Plex' : 'Geist'};font-weight:${ar ? 700 : 650};font-size:${ar ? 66 : 86}px;line-height:${ar ? 1.3 : 1.02};letter-spacing:${ar ? 0 : '-.045em'}}
-.t em{font-style:normal;background:linear-gradient(100deg,#a9a2ff,#c890ff 45%,#ff8fc4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;padding-bottom:.1em}
-.l{margin-top:20px;font-size:${ar ? 29 : 28}px;line-height:1.45;color:#b0b1c8;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-width:880px}
-.foot{display:flex;align-items:center;gap:12px}
-.chip{display:inline-flex;align-items:center;gap:8px;height:46px;padding:0 18px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);font-size:${ar ? 21 : 20}px;font-weight:500;color:#e6e6f2}
-.chip svg{width:18px;height:18px;color:#5fd6a0;stroke-width:2.4}
-.dom{margin-inline-start:auto;font-size:21px;color:#8a8ba6;direction:ltr;font-family:Geist}`;
+body{position:relative;background:#06070c;color:#f5f7ff;font-family:${ar ? 'RP' : 'FS'},sans-serif;padding:56px 64px}
+.glass{position:absolute;top:50%;${ar ? 'left' : 'right'}:-300px;height:740px;width:962px;transform:translateY(-50%)${ar ? ' scaleX(-1)' : ''}}
+.wrap{position:relative;height:100%;display:flex;flex-direction:column;max-width:${ar ? 590 : 600}px}
+.brand{display:flex;align-items:center;gap:13px;font-family:FD;font-weight:600;font-size:31px;letter-spacing:-.015em;direction:ltr;align-self:flex-start}
+.brand svg{width:40px;height:40px}
+.mid{flex:1;display:flex;flex-direction:column;justify-content:center}
+.t{font-family:${ar ? 'RP' : 'FD'};font-weight:600;font-size:${ar ? 58 : 74}px;line-height:${ar ? 1.25 : .98};letter-spacing:${ar ? 0 : '-.04em'}}
+.t em{font-style:normal;color:#6d7390}
+.l{margin-top:22px;font-size:${ar ? 26 : 27}px;line-height:${ar ? 1.6 : 1.4};color:#aab0c8;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.foot{display:flex;align-items:center;gap:22px;font-size:${ar ? 20 : 19}px;color:#aab0c8;white-space:nowrap}
+.chip{display:inline-flex;align-items:center;gap:8px}
+.chip svg{width:17px;height:17px;color:#3ee6c1;stroke-width:2.4}
+.dom{position:absolute;${ar ? 'left' : 'right'}:64px;bottom:56px;font-size:19px;color:#8a90ad;direction:ltr;font-family:GM}`;
 
 function template(d, ar) {
   return `<!doctype html><html lang="${ar ? 'ar' : 'en'}" dir="${ar ? 'rtl' : 'ltr'}"><head><meta charset="utf-8"><style>${css(ar)}</style></head><body>
-<div class="bg"></div>
+<img class="glass" src="/assets/prism-still.webp" alt="">
 <div class="wrap">
-  <div class="brand">${MARK}<span>nicely<em>done</em></span></div>
-  <div class="mid"><div class="ic">${d.icon || CHECK}</div><div><h1 class="t">${d.title}</h1>${d.lede ? `<p class="l">${d.lede}</p>` : ''}</div></div>
-  <div class="foot">${CHIPS[ar ? 'ar' : 'en'].map((c) => `<span class="chip">${CHECK}${c}</span>`).join('')}<span class="dom">nicelydone.qd.je</span></div>
-</div></body></html>`;
+  <div class="brand">${MARK}<span>Nicely Done</span></div>
+  <div class="mid"><h1 class="t">${d.title}</h1>${d.lede ? `<p class="l">${d.lede}</p>` : ''}</div>
+  <div class="foot">${CHIPS[ar ? 'ar' : 'en'].map((c) => `<span class="chip">${CHECK}${c}</span>`).join('')}</div>
+</div>
+<span class="dom">nicelydone.qd.je</span></body></html>`;
 }
 
 (async () => {
@@ -84,7 +84,7 @@ function template(d, ar) {
       return { title: keep(clone).replace(/\s+/g, ' ').trim(), lede: lede ? lede.textContent.replace(/\s+/g, ' ').trim().replace(/[<>&]/g, '') : '', icon: ic ? ic.outerHTML : '' };
     });
     html = template(d, pg.ar);
-    await p.goto(B + '/__og'); await p.evaluate(() => document.fonts.ready);
+    await p.goto(B + '/__og'); await p.evaluate(() => Promise.all([document.fonts.ready, document.querySelector('.glass').decode().catch(() => {})]));
     if (pg.key === 'home') await p.screenshot({ path: path.join(ROOT, 'src/static/og.png'), type: 'png' });
     const file = path.join(OUT, pg.key + '.jpg');
     fs.mkdirSync(path.dirname(file), { recursive: true });

@@ -246,7 +246,8 @@ main:has(> .ink:last-child) + .site-footer > .wrap { border-top: 1px solid var(-
 @media (max-width: 600px) { .dir-list { grid-template-columns: 1fr; } .dir-card { flex-direction: row; align-items: flex-start; padding: 16px; } .dir-card .tr-go { display: none; } }
 
 /* ---------- Tool page: the title on the stage, the tool on the work surface ---------- */
-.tool-hero { position: relative; padding: clamp(14px, 2vw, 24px) 0 clamp(64px, 7vw, 88px); }
+.tool-hero { position: relative; padding: clamp(14px, 2vw, 24px) 0 clamp(32px, 4vw, 48px); }
+.tool-hero:has(+ section > .workspace) { padding-bottom: clamp(64px, 7vw, 88px); }
 .crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.86rem; color: var(--text-3); margin-bottom: clamp(20px, 3vw, 36px); }
 .crumbs a { color: var(--text-3); display: inline-flex; align-items: center; min-height: 32px; }
 .crumbs a:hover { color: var(--text); }
@@ -261,7 +262,9 @@ main:has(> .ink:last-child) + .site-footer > .wrap { border-top: 1px solid var(-
 .tool-badges .badge { min-height: 32px; padding: 0 12px; background: transparent; border: 1px solid var(--line-2); color: var(--text-2); font-size: 0.82rem; }
 .tool-badges .badge svg { color: var(--ok); }
 /* the tool itself rides up over the edge of the stage */
-.tool-hero + section { position: relative; margin-top: clamp(-48px, -4vw, -32px); }
+.tool-hero + section:has(> .workspace) { position: relative; margin-top: clamp(-48px, -4vw, -32px); }
+.tool-hero + section:not(:has(> .workspace)) { padding-top: clamp(20px, 3vw, 36px); }
+.tool-hero + section .dir-group:first-child { padding-top: 0; }
 .tool-sent { position: absolute; inset-inline-end: var(--gutter); top: clamp(14px, 2vw, 24px); font-family: var(--font-mono); font-size: 0.82rem; color: var(--text-3); min-height: 32px; display: inline-flex; align-items: center; gap: 0.6ch; font-variant-numeric: tabular-nums; }
 .tool-sent b { color: var(--mint); font-weight: 500; }
 .tool-sent[data-sent="some"] b { color: var(--gold); }
@@ -305,7 +308,6 @@ main:has(> .ink:last-child) + .site-footer > .wrap { border-top: 1px solid var(-
 .page-hero + * { margin-top: clamp(24px, 4vw, 48px); }
 .about-sec { padding: clamp(24px, 3.4vw, 40px) 0; display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 12px 40px; border-top: 1px solid var(--line); }
 .about-sec > * { min-width: 0; }
-.about-sec .num { font-size: 0; color: transparent; }
 .about-sec .num h2 { font-family: var(--font-display); font-weight: 600; color: var(--text); font-size: 1.6rem; letter-spacing: -0.03em; line-height: 1.1; }
 .about-sec .mono, .prose .mono { overflow-wrap: anywhere; }
 .about-sec .panel { background: var(--surface); }
