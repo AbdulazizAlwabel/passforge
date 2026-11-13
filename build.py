@@ -594,9 +594,9 @@ HOME_TASKS = [
     ("link-checker", "Is this link safe?", "Got a strange link in a message? Check it before you tap.", "shield", "t-wide",
      '<span class="art art-url"><b class="u-eg">Example</b><b>https://</b><b class="u-bad">absher-sa.info</b><b>/verify</b><em>Likely a scam</em></span>'),
     ("password-generator", "Make a strong password", "One tap. Nobody else ever sees it — not even me.", "lock", "",
-     '<span class="art art-pw" aria-hidden="true">k7#Qm<b>9</b>vX!pL2<b>@</b>wR4z</span>'),
+     '<span class="art art-line art-pw" aria-hidden="true"><span>k7#Qm<b>9</b>vX!pL2<b>@</b>wR4z</span></span>'),
     ("share", "Send a password safely", "A link that works once, then disappears.", "link", "",
-     '<span class="art art-line"><span>nicelydone.qd.je/s/#x7Qm…</span><b>Opens once</b></span>'),
+     '<span class="art art-line"><span>/s/#x7Qm9…</span><b>Opens once</b></span>'),
     ("vault", "Keep my passwords safe", "A locked box for your passwords that only you can open.", "key", "",
      '<span class="art art-line" aria-hidden="true"><span>bank</span><i>••••••••••••••</i></span>'),
     ("ocr-pdf", "Copy text from a photo", "Arabic or English — from scans, photos and screenshots.", "type", "",
@@ -615,8 +615,9 @@ def build_home():
         t = TOOL_BY_SLUG.get(slug) or next(v for v in PDF_VARIANTS if v["slug"] == slug)
         head_art = art if "art-pdf" in art else ""
         body_art = "" if "art-pdf" in art else art
+        tile_html = f'<span class="tile-icon" data-c="{ckey(t)}">{ICONS[icon]}</span>' if head_art or not art else ""
         return (f'<a class="task {size}" href="/{slug}/">'
-                f'<span class="tile-icon" data-c="{ckey(t)}">{ICONS[icon]}</span>{head_art}'
+                f'{tile_html}{head_art}'
                 f'<span class="task-t">{body_art}<strong>{name}</strong><span>{short}</span></span>'
                 f'<span class="task-go">{ICONS["arrow"]}</span></a>')
     tasks = "".join(task(*row) for row in HOME_TASKS)

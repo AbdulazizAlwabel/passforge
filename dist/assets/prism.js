@@ -38,10 +38,10 @@
     'vec4 page(vec3 ro,vec3 rd){vec3 o=tf(ro),d=tf(rd);float t=-o.z/d.z;vec3 h=o+d*t;h.y-=PY;',
     'if(t>0.&&abs(h.x)<.5&&abs(h.y)<.68&&abs(h.y+PY)<1.06){vec2 q=vec2(h.x*FX+.5,h.y/1.36+.5);return vec4(texture2D(PG,q).rgb*.92,1.);}return vec4(env(rd),0.);}',
     // light arriving from the side: five thin lines that rise toward the glass
-    'float beams(vec2 u){float s=0.;for(int k=0;k<5;k++){float fk=float(k),x=u.x,y=.34-fk*.14;',
+    'float beams(vec2 u){float s=0.;for(int k=0;k<5;k++){float fk=float(k),x=u.x,y=.27-fk*.125;',
     'float b=y+.07*sin(x*2.6+T*.55+fk*1.3)-max(0.,x-.34)*max(0.,x-.34)*1.5;float dy=abs(u.y-b);float w=exp(-dy*dy/.0000075)+.1*exp(-dy/.022);',
     's+=w*(.7+.3*sin(x*13.+T*1.7+fk*2.1));}',
-    'return s*smoothstep(-.4,-.24,u.x)*(1.-smoothstep(.46,.7,u.x));}',
+    'return s*smoothstep(-.4,-.24,u.x)*(1.-smoothstep(.46,.7,u.x))*(1.-smoothstep(.3,.4,abs(u.y)));}',
     'void main(){vec2 uv=(gl_FragCoord.xy-vec2(R.x*.45,R.y*.5))/R.y;',
     'vec3 ro=vec3(0.,0.,-6.4),rd=normalize(vec3(uv,1.9));float t=4.4,m=1.;bool hit=false;',
     // only rays that pass near the slab are marched at all

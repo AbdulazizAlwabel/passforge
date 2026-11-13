@@ -161,12 +161,12 @@
 .art-url b { font-weight: 500; padding: 2px 4px; border-radius: 5px; }
 .art-url .u-bad { color: var(--danger); background: var(--danger-soft); }
 .art-url em { font-style: normal; font-family: var(--font-sans); font-size: 0.8rem; font-weight: 600; margin-inline-start: auto; padding: 3px 9px; border-radius: var(--r-pill); color: var(--danger); background: var(--danger-soft); direction: inherit; }
-.art-pw { position: relative; font-family: var(--font-mono); font-size: 0.95rem; color: var(--text-2); direction: ltr; text-align: left; white-space: nowrap; overflow: hidden; }
-.art-pw b { color: var(--danger); font-weight: 500; }
-.art-line { position: relative; display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 0.9rem; color: var(--text-2); direction: ltr; white-space: nowrap; overflow: hidden; min-height: 26px; }
-[dir="rtl"] .art-line { justify-content: flex-end; }
-.art-line b { font-family: var(--font-sans); font-weight: 500; font-size: 0.8rem; padding: 2px 9px; border-radius: var(--r-pill); color: var(--ok); background: var(--ok-soft); }
+/* one line of the tool at work, in the same sunken box as the link check */
+.art-line { position: relative; display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; min-height: 44px; padding: 8px 12px; border-radius: var(--r-md); background: var(--bg-2); border: 1px solid var(--line); font-family: var(--font-mono); font-size: 0.86rem; color: var(--text-2); direction: ltr; min-width: 0; }
+.art-line > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.art-line > b { font-family: var(--font-sans); font-weight: 500; font-size: 0.8rem; padding: 2px 9px; border-radius: var(--r-pill); color: var(--ok); background: var(--ok-soft); margin-inline-start: auto; white-space: nowrap; direction: inherit; }
 .art-line i { font-style: normal; color: var(--text-3); }
+.art-pw span b { color: var(--danger); font-weight: 500; }
 .art-url .u-eg { font-family: var(--font-sans); font-size: 0.78rem; color: var(--text-3); padding: 0; margin-inline-end: 6px; direction: inherit; }
 .art-gauge { position: relative; width: 92px; height: 52px; align-self: flex-start; margin-bottom: 4px; overflow: visible; }
 .art-gauge .needle { transform-origin: 46px 46px; transform: rotate(-58deg); transition: transform 500ms var(--ease); }
