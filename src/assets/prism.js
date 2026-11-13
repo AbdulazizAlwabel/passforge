@@ -155,7 +155,8 @@
   }
 
   /* ---------- the loop: runs only while there is something to show ---------- */
-  let raf = 0, last = 0, seen = true, lost = false, wakeUntil = 0, warm = 0, shown = false;
+  let raf = 0, last = 0, seen = true, lost = false, wakeUntil = 0, warm = 0, cost = 0, shown = false;
+  const probe = new Uint8Array(4);
   const ambient = () => fine.matches && innerWidth > 860 && !root.classList.contains('idle');
   function frame(now) {
     raf = 0;
@@ -163,9 +164,8 @@
     const raw = last ? (now - last) / 1000 : 0.016, dt = Math.min(0.05, raw); last = now;
     // the canvas is only shown at full sharpness. It draws its first frames unseen, under the still picture;
     // if this machine keeps up it takes over, and if it ever stops keeping up the still comes back for good.
-    if (raw > 0.04 && raw < 0.5) { if (++slow >= 4 && !window.ND_PRISM_KEEP) { lost = true; box.classList.remove('live'); return; } }
+    if (raw > 0.04) { if (++slow >= 4 && !window.ND_PRISM_KEEP) { lost = true; box.classList.remove('live'); return; } }
     else if (slow > 0) slow--;
-    if (!shown && ++warm >= 10) { shown = true; box.classList.add('live'); yaw.v = rtl ? 0.9 : -0.9; bounce = 0.8; kick(600); }
     T += dt;
     const amb = ambient();
     if (!dragging) {
@@ -177,8 +177,18 @@
     moving = step(slide, dt, 0.5, 0.82) || moving;
     moving = step(flash, dt, 0.7, 1) || moving;
     if (!moving) bounce = 1;
-    if (size()) draw();
-    if (dragging || moving || amb || now < wakeUntil) raf = requestAnimationFrame(frame);
+    if (size()) {
+      if (shown) draw();
+      else {
+        // timed for real: reading one pixel back makes the graphics card finish the frame before the clock stops
+        const t0 = performance.now(); draw(); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, probe); cost += performance.now() - t0;
+        if (++warm >= 10) {
+          if (cost / warm > 22 && !window.ND_PRISM_KEEP) { lost = true; return; }   // too slow for this machine: the still stays
+          shown = true; box.classList.add('live'); yaw.v = rtl ? 0.9 : -0.9; bounce = 0.8; wakeUntil = now + 600;
+        }
+      }
+    }
+    if (dragging || moving || amb || !shown || now < wakeUntil) raf = requestAnimationFrame(frame);   // the first ten frames run back to back, so the measurement is fair
     else last = 0;
   }
   function kick(ms) { if (ms) wakeUntil = Math.max(wakeUntil, performance.now() + ms); if (!raf && gl && !lost) raf = requestAnimationFrame(frame); }

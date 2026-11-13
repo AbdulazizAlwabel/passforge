@@ -13,7 +13,8 @@ const W = 1300, H = 1000, OUT = path.resolve(__dirname, '../src/assets/prism-sti
 (async () => {
   const br = await chromium.launch({ executablePath: require(T + '/chrome.js'), args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
   const p = await (await br.newContext({ viewport: { width: 1440, height: 900 }, serviceWorkers: 'block' })).newPage();
-  await p.goto(B + '/'); await p.waitForSelector('.slab.live', { timeout: 20000 });
+  await p.addInitScript(() => { window.ND_PRISM_KEEP = true; });   // software WebGL is slow; keep the canvas so its frame can be saved
+  await p.goto(B + '/'); await p.waitForSelector('.slab.live', { timeout: 30000 });
   const url = await p.evaluate(([w, h]) => window.NDPrism.still(w, h, 'image/webp', 0.94), [W, H]);
   await br.close();
   if (!url || !url.startsWith('data:image/webp')) throw new Error('the canvas did not give a WebP frame');
