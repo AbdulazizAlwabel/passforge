@@ -274,6 +274,14 @@ api.post('/reset-password', strict, wrap(async (req, res) => {
 api.get('/me', auth, (req, res) => {
   res.json({ id: req.user.id, username: req.user.username, admin: isAdmin(req.user) });
 });
+// Same as /me, but a signed-out visitor gets 200 { user: null } instead of a 401, so ordinary page loads
+// don't log an error in the browser console. site.js asks this one on every page.
+api.get('/session', wrap(async (req, res) => {
+  if (!req.cookies[COOKIE]) return res.json({ user: null });
+  const u = await readUser(req);
+  if (!u) { res.clearCookie(COOKIE, { path: '/' }); return res.json({ user: null }); }
+  res.json({ user: { id: u.id, username: u.username, admin: isAdmin(u) } });
+}));
 
 api.get('/profile', auth, wrap(async (req, res) => {
   const [[u]] = await db.execute('SELECT id, username, email, verified, created_at FROM users WHERE id = ?', [req.user.id]);

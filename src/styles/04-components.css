@@ -106,13 +106,14 @@ a.panel:hover { border-color: var(--text-3); background: var(--surface-2); }
 .range:focus-visible { outline: none; }
 .range:focus-visible::-webkit-slider-thumb { outline: 2px solid var(--accent); outline-offset: 3px; }
 .range:focus-visible::-moz-range-thumb { outline: 2px solid var(--accent); outline-offset: 3px; }
+.range:focus-visible::-moz-range-thumb { outline: 2px solid var(--accent); outline-offset: 3px; }
 
 /* Chips: checkboxes that read as toggles */
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .chip { position: relative; }
 .chip input { position: absolute; opacity: 0; pointer-events: none; }
 .chip span {
-  position: relative; display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 0 14px; border-radius: var(--r-md);
+  position: relative; display: inline-flex; align-items: center; gap: 9px; min-height: 44px; padding: 8px 14px; border-radius: var(--r-md);
   border: 1px solid var(--line-2); background: var(--surface); color: var(--text-2); font-size: 0.92rem; cursor: pointer;
   transition: border-color var(--t), background var(--t), color var(--t), transform 160ms var(--ease); user-select: none;
 }
@@ -192,7 +193,7 @@ table.data tr:hover td { background: var(--surface-2); }
 .dropzone svg { width: 26px; height: 26px; margin: 0 auto 8px; color: var(--text-2); }
 
 /* ---------- Prose and FAQ ---------- */
-.prose { max-width: 68ch; color: var(--text-2); }
+.prose { max-width: 62ch; color: var(--text-2); }
 .prose h2 { font-family: var(--font-display); font-weight: 600; color: var(--text); font-size: clamp(1.5rem, 2.4vw, 2rem); letter-spacing: -0.03em; line-height: 1.1; margin: 0 0 14px; text-wrap: balance; }
 .prose p + p { margin-top: 12px; }
 .prose code, .aside code { font-family: var(--font-mono); font-size: 0.86em; padding: 2px 6px; border-radius: 6px; background: var(--surface-2); color: var(--text); }

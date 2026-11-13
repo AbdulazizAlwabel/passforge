@@ -36,6 +36,8 @@ main { flex: 1; position: relative; }
 .site-footer { position: relative; }
 
 /* ---------- Type ---------- */
+p, li, dd, figcaption, blockquote { text-wrap: pretty; }
+h1, h2, h3, h4 { text-wrap: balance; }
 .display {
   font-family: var(--font-display); font-weight: 600;
   font-size: clamp(2.7rem, 5.84vw, 5.25rem); line-height: 0.96; letter-spacing: -0.04em;

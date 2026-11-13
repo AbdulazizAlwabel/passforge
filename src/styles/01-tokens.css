@@ -42,7 +42,7 @@
   --mark: #cfdcff;
 
   /* --- status (never decoration) --- */
-  --ok: #067a5f;      --ok-soft: #dcf7ef;
+  --ok: #05735a;      --ok-soft: #dcf7ef;
   --danger: #c2183c;  --danger-soft: #ffe3e8;
   --warn: #8a5300;    --warn-soft: #fbecc8;
   --info: #1c58c4;    --info-soft: #e3ecfb;
