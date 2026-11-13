@@ -592,17 +592,21 @@ HOME_TASKS = [
     ("pdf-studio", "Fix a PDF", "Join, split, sign, shrink, or turn photos into one PDF.", "pages", "t-xl",
      '<span class="art art-pdf" aria-hidden="true"><i></i><i></i><i></i></span>'),
     ("link-checker", "Is this link safe?", "Got a strange link in a message? Check it before you tap.", "shield", "t-wide",
-     '<span class="art art-url" aria-hidden="true"><b>https://</b><b class="u-bad">absher-sa.info</b><b>/verify</b><em>Likely a scam</em></span>'),
+     '<span class="art art-url"><b class="u-eg">Example</b><b>https://</b><b class="u-bad">absher-sa.info</b><b>/verify</b><em>Likely a scam</em></span>'),
     ("password-generator", "Make a strong password", "One tap. Nobody else ever sees it — not even me.", "lock", "",
      '<span class="art art-pw" aria-hidden="true">k7#Qm<b>9</b>vX!pL2<b>@</b>wR4z</span>'),
-    ("share", "Send a password safely", "A link that works once, then disappears.", "link", "", ""),
-    ("vault", "Keep my passwords safe", "A locked box for your passwords that only you can open.", "key", "", ""),
-    ("ocr-pdf", "Copy text from a photo", "Arabic or English — from scans, photos and screenshots.", "type", "", ""),
+    ("share", "Send a password safely", "A link that works once, then disappears.", "link", "",
+     '<span class="art art-line"><span>nicelydone.qd.je/s/#x7Qm…</span><b>Opens once</b></span>'),
+    ("vault", "Keep my passwords safe", "A locked box for your passwords that only you can open.", "key", "",
+     '<span class="art art-line" aria-hidden="true"><span>bank</span><i>••••••••••••••</i></span>'),
+    ("ocr-pdf", "Copy text from a photo", "Arabic or English — from scans, photos and screenshots.", "type", "",
+     '<span class="art art-line" aria-hidden="true"><i>IMG_2041.jpg</i><span>→ “Invoice 1042”</span></span>'),
     ("speed-test", "How fast is my internet?", "A quick, honest test. Nothing is logged.", "gauge", "",
      '<svg class="art art-gauge" viewBox="0 0 92 52" aria-hidden="true"><path d="M8 46a38 38 0 0 1 76 0" fill="none" stroke="var(--line-2)" stroke-width="8" stroke-linecap="round"/>'
-     '<path d="M8 46a38 38 0 0 1 57-33" fill="none" stroke="#ff8a3d" stroke-width="8" stroke-linecap="round"/>'
+     '<path d="M8 46a38 38 0 0 1 57-33" fill="none" stroke="#5b8cff" stroke-width="8" stroke-linecap="round"/>'
      '<path class="needle" d="M46 46V16" fill="none" stroke="var(--text)" stroke-width="3.5" stroke-linecap="round"/><circle cx="46" cy="46" r="5" fill="var(--text)"/></svg>'),
-    ("date-converter", "Hijri and Gregorian dates", "Today in both calendars, and an easy converter.", "calendar", "", ""),
+    ("date-converter", "Hijri and Gregorian dates", "Today in both calendars, and an easy converter.", "calendar", "",
+     '<span class="art art-line" id="taskDate" aria-hidden="true"></span>'),
 ]
 
 
@@ -716,7 +720,8 @@ def build_home():
       <div class="section-head">
         <div>
           <h2 class="h2">All the <em>tools</em></h2>
-          <p class="lede">Or press <span class="kbd"><span data-mod>Ctrl</span>K</span> anywhere and type what you need.</p>
+          <p class="lede">{len(TOOLS)} tools are listed here. PDF Studio holds {len(PDF_VARIANTS)} more jobs.</p>
+          <p class="hint" style="margin-top:8px;font-size:.95rem">Or press <span class="kbd"><span data-mod>Ctrl</span>K</span> anywhere and type what you need.</p>
         </div>
       </div>
       <div class="cat-groups">{groups}</div>
@@ -931,6 +936,7 @@ HOME_SCRIPT2 = r"""<script>
   const now=new Date(),h=hijri(now);
   if(h&&h.m){
     document.getElementById('tryHijri').textContent=h.d+' '+HM[h.m-1]+' '+h.y+' '+ND.t('AH');
+    const td=document.getElementById('taskDate');if(td)td.textContent=h.d+'/'+h.m+'/'+h.y+' = '+now.getDate()+'/'+(now.getMonth()+1)+'/'+now.getFullYear();
     document.getElementById('tryGreg').textContent=now.toLocaleDateString(ND.lang==='ar'?'ar-SA-u-ca-gregory-nu-latn':'en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
     const DAYS={one:'day',other:'days'},DAYS_AR={one:'يوم',two:'يومين',few:'أيام',many:'يوم',other:'يوم'};
     let msg='';

@@ -2349,5 +2349,12 @@
  "Test a password or check the date, <em>without leaving this page.</em>": "اختبر كلمة مرور أو شوف تاريخ اليوم، <em>وأنت في نفس الصفحة.</em>",
  "bytes sent from this page: <b id=\"sentN\" data-sent-n>0</b>": "البايتات اللي انرسلت من هذي الصفحة: <b id=\"sentN\" data-sent-n>0</b>",
  "This page counts what it uploads, as it happens. It has fetched <b id=\"sentReq\" data-sent-req>a few</b> files to show itself, and sent none of yours. Drop a file and the count stays at zero.": "هذي الصفحة تعدّ اللي ترفعه أول بأول. حمّلت <b id=\"sentReq\" data-sent-req>كم</b> ملف عشان تنعرض، وما أرسلت شي من ملفاتك. حط ملف وشوف العدّاد يبقى صفر.",
- "bytes sent from this page: <b data-sent-n>0</b>": "البايتات اللي انرسلت من هذي الصفحة: <b data-sent-n>0</b>"
+ "bytes sent from this page: <b data-sent-n>0</b>": "البايتات اللي انرسلت من هذي الصفحة: <b data-sent-n>0</b>",
+ "18 tools are listed here. PDF Studio holds 12 more jobs.": "18 أداة مذكورة هنا. واستوديو PDF فيه 12 شغلة ثانية.",
+ "Example": "مثال",
+ "Opens once": "ينفتح مرة وحدة",
+ "bank": "البنك",
+ "IMG_2041.jpg": "IMG_2041.jpg",
+ "nicelydone.qd.je/s/#x7Qm…": "nicelydone.qd.je/s/#x7Qm…",
+ "→ “Invoice 1042”": "→ «فاتورة 1042»"
 }

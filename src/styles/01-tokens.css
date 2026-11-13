@@ -40,7 +40,6 @@
   --btn-bg: #06070c;         /* the one thing to do: ink on paper, paper on ink */
   --btn-ink: #f5f7ff;
   --mark: #cfdcff;
-  --fringe: inset 1px 0 0 rgb(255 77 109 / 0.75), inset -1px 0 0 rgb(18 170 138 / 0.8);   /* light split at a glass edge */
 
   /* --- status (never decoration) --- */
   --ok: #067a5f;      --ok-soft: #dcf7ef;
@@ -104,7 +103,6 @@
   --text: #f5f7ff; --text-2: #aab0c8; --text-3: #8a90ad; --dim: #6d7390;
   --accent: #86a8ff; --accent-2: #a9c0ff; --accent-ink: #06070c; --accent-soft: #131b36; --accent-line: #2c3f7a;
   --btn-bg: #f5f7ff; --btn-ink: #06070c; --mark: #243565;
-  --fringe: inset 1px 0 0 rgb(255 77 109 / 0.8), inset -1px 0 0 rgb(62 230 193 / 0.8);
   --ok: #3ee6c1; --ok-soft: #0a2a25; --danger: #ff6682; --danger-soft: #33121b; --warn: #f0b55e; --warn-soft: #33240a;
   --info: #8fb6ff; --info-soft: #141f3d; --gold: #e9c06f; --gold-soft: #33290f; --violet: #ff8fc4;
   --scrim: rgb(0 0 0 / 0.66);
@@ -120,7 +118,6 @@
     --text: #f5f7ff; --text-2: #aab0c8; --text-3: #8a90ad; --dim: #6d7390;
     --accent: #86a8ff; --accent-2: #a9c0ff; --accent-ink: #06070c; --accent-soft: #131b36; --accent-line: #2c3f7a;
     --btn-bg: #f5f7ff; --btn-ink: #06070c; --mark: #243565;
-    --fringe: inset 1px 0 0 rgb(255 77 109 / 0.8), inset -1px 0 0 rgb(62 230 193 / 0.8);
     --ok: #3ee6c1; --ok-soft: #0a2a25; --danger: #ff6682; --danger-soft: #33121b; --warn: #f0b55e; --warn-soft: #33240a;
     --info: #8fb6ff; --info-soft: #141f3d; --gold: #e9c06f; --gold-soft: #33290f; --violet: #ff8fc4;
     --scrim: rgb(0 0 0 / 0.66);

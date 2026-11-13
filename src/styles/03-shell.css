@@ -82,7 +82,7 @@
 .menu-items { display: flex; flex-direction: column; }
 .menu-items a { display: flex; align-items: center; gap: 11px; min-height: 44px; padding: 6px 10px; border-radius: var(--r-md); font-size: 0.95rem; color: var(--text); transition: background var(--t); }
 .menu-items a:hover, .menu-items a:focus-visible { background: var(--surface); }
-.mi { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; flex: none; color: var(--text); background: var(--surface-2); box-shadow: var(--fringe); }
+.mi { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; flex: none; color: var(--text); background: var(--surface-2); border: 1px solid var(--line-2); }
 .mi svg { width: 15px; height: 15px; }
 .menu-pdf .menu-items { display: grid; grid-template-columns: 1fr 1fr; }
 .menu-pdf .menu-items a { font-size: 0.9rem; color: var(--text-2); }

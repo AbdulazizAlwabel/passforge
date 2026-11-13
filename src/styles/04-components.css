@@ -43,8 +43,8 @@
 .copy svg { width: 14px; height: 14px; }
 .copy.done { color: var(--ok); border-color: var(--ok); background: var(--ok-soft); }
 
-/* ---------- Icon tile: a small pane of glass, with the light split at its two edges ---------- */
-.tile-icon { width: 42px; height: 42px; border-radius: 11px; display: grid; place-items: center; flex: none; color: var(--text); background: var(--surface-2); box-shadow: var(--fringe); }
+/* ---------- Icon tile: a small hairline square. Colour is kept for the glass and for state. ---------- */
+.tile-icon { width: 42px; height: 42px; border-radius: 11px; display: grid; place-items: center; flex: none; color: var(--text); background: var(--surface-2); border: 1px solid var(--line-2); }
 .tile-icon svg { width: 20px; height: 20px; }
 
 /* ---------- Panels ---------- */
@@ -62,7 +62,7 @@ a.panel:hover { border-color: var(--text-3); background: var(--surface-2); }
 .badge.bad { color: var(--danger); background: var(--danger-soft); }
 .badge.info { color: var(--info); background: var(--info-soft); }
 .badge.warn { color: var(--warn); background: var(--warn-soft); }
-.row-new { min-height: 19px; padding: 0 7px; font-size: 0.72rem; font-weight: 600; }
+.row-new, .badge.ok.row-new { min-height: 19px; padding: 0 7px; font-size: 0.72rem; font-weight: 500; color: var(--text-3); background: none; border: 1px solid var(--line-2); }
 
 /* ---------- Forms ---------- */
 .field { display: flex; flex-direction: column; gap: 7px; }

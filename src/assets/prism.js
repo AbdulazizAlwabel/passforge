@@ -143,7 +143,7 @@
   function size() {
     const r = box.getBoundingClientRect(); if (!r.width) return false;
     // never more than about a million pixels: a ray is marched for each one
-    const s = Math.min(Math.min(window.devicePixelRatio || 1, 2), Math.sqrt(1.1e6 / (r.width * r.height))) * scale;
+    const s = Math.min(Math.min(window.devicePixelRatio || 1, 2), Math.sqrt(1.6e6 / (r.width * r.height))) * scale;
     const w = Math.max(2, Math.round(r.width * s)), h = Math.max(2, Math.round(r.height * s));
     if (w !== cw || h !== ch) { cw = canvas.width = w; ch = canvas.height = h; gl.viewport(0, 0, w, h); }
     return true;
@@ -155,20 +155,17 @@
   }
 
   /* ---------- the loop: runs only while there is something to show ---------- */
-  let raf = 0, last = 0, seen = true, lost = false, wakeUntil = 0;
+  let raf = 0, last = 0, seen = true, lost = false, wakeUntil = 0, warm = 0, shown = false;
   const ambient = () => fine.matches && innerWidth > 860 && !root.classList.contains('idle');
   function frame(now) {
     raf = 0;
     if (lost || !seen || document.hidden) return;
     const raw = last ? (now - last) / 1000 : 0.016, dt = Math.min(0.05, raw); last = now;
-    // a machine that cannot keep up gets fewer pixels, step by step; one that still cannot gets the still picture back
-    if (raw > 0.04 && raw < 0.5) {
-      if (++slow >= 4) {
-        slow = 0;
-        if (scale > 0.45) { scale *= 0.7; cw = 0; }
-        else if (!window.ND_PRISM_KEEP) { lost = true; box.classList.remove('live'); return; }
-      }
-    } else if (slow > 0) slow--;
+    // the canvas is only shown at full sharpness. It draws its first frames unseen, under the still picture;
+    // if this machine keeps up it takes over, and if it ever stops keeping up the still comes back for good.
+    if (raw > 0.04 && raw < 0.5) { if (++slow >= 4 && !window.ND_PRISM_KEEP) { lost = true; box.classList.remove('live'); return; } }
+    else if (slow > 0) slow--;
+    if (!shown && ++warm >= 10) { shown = true; box.classList.add('live'); yaw.v = rtl ? 0.9 : -0.9; bounce = 0.8; kick(600); }
     T += dt;
     const amb = ambient();
     if (!dragging) {
@@ -192,16 +189,14 @@
     if (!init()) return;
     if (!size()) return;
     draw();
-    box.classList.add('live');
-    // it wakes with a small turn, so you can tell it is alive
-    yaw.v = rtl ? 0.9 : -0.9; bounce = 0.8; kick(600);
+    kick(900);   // ten unseen frames to measure this machine; then it wakes with a small turn, so you can tell it is alive
 
     if ('IntersectionObserver' in window) new IntersectionObserver((es) => { seen = es[0].isIntersecting; if (seen) kick(); }).observe(stage);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
     new MutationObserver(() => kick()).observe(root, { attributes: true, attributeFilter: ['class'] });
     addEventListener('resize', () => kick(), { passive: true });
     canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); lost = true; box.classList.remove('live'); });
-    canvas.addEventListener('webglcontextrestored', () => { lost = false; if (init()) { box.classList.add('live'); kick(300); } });
+    canvas.addEventListener('webglcontextrestored', () => { lost = false; if (init()) { if (shown) box.classList.add('live'); kick(300); } });
 
     // it turns toward the pointer, wherever the pointer is on the page top
     const hero = stage.closest('section') || stage;

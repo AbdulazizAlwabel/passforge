@@ -1,7 +1,7 @@
 {
  "page": "/home/aziz/Projects/nicelydone/dist/index.html",
  "url": "http://127.0.0.1:5200/index.html",
- "at": "2026-11-13T00:19:16.111Z",
+ "at": "2026-11-13T01:32:51.338Z",
  "out": "/home/aziz/Projects/nicelydone/.taste-skill/gate/consistency",
  "widths": [
   {
@@ -12,23 +12,13 @@
    "errors": [],
    "findings": [
     {
-     "check": "spill",
-     "sev": "FAIL",
-     "sel": "div.tasks > a.task.t-xl > span.art.art-pdf > i:nth-of-type(3)",
-     "text": "",
-     "msg": "runs 92px past the right edge of the panel it sits on (div.tasks > a.task.t-xl > span.art.art-pdf > i:nth-of-type(1))",
-     "stop": 1,
-     "crop": "1440-08-spill.jpg",
-     "fix": "keep the box inside the panel it starts on: shrink it, or grow the panel to hold it"
-    },
-    {
      "check": "no-visual",
      "sev": "FAIL",
      "sel": "section#tools",
      "text": "What do you need to do?",
-     "msg": "pictures, effects and mocks cover 11% of this section; a feature section needs a visual (about 25% or more)",
+     "msg": "pictures, effects and mocks cover 9% of this section; a feature section needs a visual (about 25% or more)",
      "stop": 1,
-     "crop": "1440-09-no-visual.jpg",
+     "crop": "1440-08-no-visual.jpg",
      "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits"
     },
     {
@@ -38,7 +28,7 @@
      "text": "Test a password or check the date, without leavi",
      "msg": "no picture, effect or mock in this section; a feature section needs a visual",
      "stop": 2,
-     "crop": "1440-18-no-visual.jpg",
+     "crop": "1440-15-no-visual.jpg",
      "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits"
     },
     {
@@ -48,7 +38,7 @@
      "text": "All the tools",
      "msg": "no picture, effect or mock in this section; a feature section needs a visual",
      "stop": 3,
-     "crop": "1440-23-no-visual.jpg",
+     "crop": "1440-19-no-visual.jpg",
      "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits"
     },
     {
@@ -58,7 +48,7 @@
      "text": "My promise",
      "msg": "the closing section is only text: no picture, icon, mock or effect in it",
      "stop": 4,
-     "crop": "1440-26-text-only.jpg",
+     "crop": "1440-22-text-only.jpg",
      "fix": "give the section a visual: a photograph that fits, the real icons, or a UI fragment on a ground"
     },
     {
@@ -68,7 +58,7 @@
      "text": "My promise",
      "msg": "the last section before the footer ends with no button",
      "stop": 4,
-     "crop": "1440-27-cta.jpg",
+     "crop": "1440-23-cta.jpg",
      "fix": "add the action: a button in the hero, one on every priced item, one in the closing section"
     },
     {
@@ -88,38 +78,8 @@
      "text": "What do you need to do?",
      "msg": "\"What do you need to do?\" names no product, part, place or section (4 headings like it; at most one brand line per page) (and 3 more like it: \"My promise\", \"Your files stay yours\", \"No ads, no tracking\")",
      "stop": 1,
-     "crop": "1440-10-copy-headings.jpg",
+     "crop": "1440-09-copy-headings.jpg",
      "fix": "name the thing in every heading: the product, a part, the place or a section noun"
-    },
-    {
-     "check": "tilt",
-     "sev": "FAIL",
-     "sel": "div.tasks > a.task.t-xl > span.art.art-pdf > i:nth-of-type(1)",
-     "text": "",
-     "msg": "rotated -10.0°",
-     "stop": 1,
-     "crop": "1440-11-tilt.jpg",
-     "fix": "set it straight"
-    },
-    {
-     "check": "tilt",
-     "sev": "FAIL",
-     "sel": "div.tasks > a.task.t-xl > span.art.art-pdf > i:nth-of-type(2)",
-     "text": "",
-     "msg": "rotated 9.0°",
-     "stop": 1,
-     "crop": "1440-12-tilt.jpg",
-     "fix": "set it straight"
-    },
-    {
-     "check": "text-contrast",
-     "sev": "FAIL",
-     "sel": "section#promise > div.wrap.promise-grid > aside.note > p:nth-of-type(2)",
-     "text": "That made me angry, so I built my own. Everythin",
-     "stop": 5,
-     "msg": "body text in #6d7390 on #06070c reads 4.32:1 (needs 4.5:1)",
-     "crop": "1440-29-text-contrast.jpg",
-     "fix": "body text in the ink at 7:1 or more; grey (4.5:1 or more) only for captions and labels"
     },
     {
      "check": "section-gaps",
@@ -128,7 +88,7 @@
      "text": "",
      "stop": 4,
      "msg": "220px between these sections, +79% against the median 123px of gaps at a change of ground",
-     "crop": "1440-28-section-gaps.jpg",
+     "crop": "1440-24-section-gaps.jpg",
      "fix": "use one gap between sections (all within 25% of each other)"
     },
     {
@@ -138,7 +98,7 @@
      "text": "",
      "stop": 5,
      "msg": "180px between these sections, +67% against the median 108px",
-     "crop": "1440-30-section-gaps.jpg",
+     "crop": "1440-25-section-gaps.jpg",
      "fix": "use one gap between sections (all within 25% of each other)"
     },
     {
@@ -149,25 +109,15 @@
      "shows": "section#live",
      "msg": "the section is 954px tall (1.06 screens at 1440x900), not one screen or two: the screen one screen on from its top (scroll 1801px) shows none of it and 484px of the next section, its heading \"Test a password or check the d\" on screen",
      "stop": 1,
-     "crop": "1440-13-section-tile.jpg",
+     "crop": "1440-10-section-tile.jpg",
      "fix": "set every section after the hero to one screen or two (height: calc(var(--h,1) * 100vh)) and fit its content above --padb"
-    },
-    {
-     "check": "field-label",
-     "sev": "FAIL",
-     "sel": "input#tryPw",
-     "text": "",
-     "msg": "a input[type=password] without a label you can see: only a placeholder (\"Type a password to test it…\") names it",
-     "stop": 2,
-     "crop": "1440-19-field-label.jpg",
-     "fix": "put a <label for> with the field's name above it (references/system.md, Forms); a placeholder is no label"
     },
     {
      "check": "focus-ring",
      "sev": "FAIL",
      "sel": ".range:focus-visible",
      "text": "",
-     "msg": "\".range:focus-visible\" in site.css?v=99c0839a8a removes the focus outline and sets nothing in its place",
+     "msg": "\".range:focus-visible\" in site.css?v=f0e801e9e5 removes the focus outline and sets nothing in its place",
      "stop": null,
      "fix": "keep the kit's :focus-visible ring, or put a change of the same strength (a 2px line in --action) in the rule that removes it"
     },
@@ -187,7 +137,7 @@
      "text": "",
      "msg": "its last line sits 14px above the lower edge of section#hero, where the ground changes to section#tools",
      "stop": 1,
-     "crop": "1440-14-flush.jpg",
+     "crop": "1440-11-flush.jpg",
      "fix": "give the section its padding at the edge where the ground changes (the closing call keeps a clear gap above the footer)"
     },
     {
@@ -226,7 +176,7 @@
      "text": "Abdulaziz",
      "msg": "1 line of plain text set larger than the section headings (41.6px against h2 40px)",
      "stop": 5,
-     "crop": "1440-31-heading-scale.jpg",
+     "crop": "1440-26-heading-scale.jpg",
      "fix": "size headings by level: the h1 largest, one size per level, each level below the one above"
     },
     {
@@ -236,7 +186,7 @@
      "text": "How strong is my password? Nothing you type leav",
      "msg": "the second column starts at 3 places: 598px (section#live), 748px (section#promise), 827px (section#hero)",
      "stop": 2,
-     "crop": "1440-20-col-edge.jpg",
+     "crop": "1440-16-col-edge.jpg",
      "fix": "start the second column of every split on the same one or two grid columns"
     },
     {
@@ -246,7 +196,7 @@
      "text": "",
      "stop": 1,
      "msg": "uneven space at the edge of a band: 110px outside its edge, 14px inside it (the space on either side of a change of ground reads as one gap only when the two match)",
-     "crop": "1440-15-section-gaps.jpg",
+     "crop": "1440-12-section-gaps.jpg",
      "fix": "use one gap between sections (all within 25% of each other)"
     },
     {
@@ -256,7 +206,7 @@
      "text": "Send a password safely A link that works once, t",
      "msg": "an empty band 72px tall across the card (34% of its height), with content above and below it",
      "stop": 1,
-     "crop": "1440-16-hole.jpg",
+     "crop": "1440-13-hole.jpg",
      "fix": "close the empty space: move the content together, or give the space the visual it lacks"
     },
     {
@@ -286,7 +236,7 @@
      "text": "",
      "stop": 1,
      "msg": "the nav changes form as the page scrolls: header.site-header gives way to header.site-header.scrolled",
-     "crop": "1440-17-nav-family.jpg",
+     "crop": "1440-14-nav-family.jpg",
      "fix": "keep one nav on every screen: the same bar, fill, links and type"
     },
     {
@@ -296,7 +246,7 @@
      "text": "Stay safe online 8",
      "msg": "text links in 3 looks: underline, regular (5, like \"More options\"); border 1px, regular (4, like \"Stay safe online 8\"); no line, regular (29, like \"Stay safe online\")",
      "stop": 3,
-     "crop": "1440-24-link-styles.jpg",
+     "crop": "1440-20-link-styles.jpg",
      "fix": "give text links one look wherever they sit: one underline, one weight"
     },
     {
@@ -317,7 +267,7 @@
      "msg": "4 sections over 90 words a screen outside the UI mocks (\"All the tools\" 228, \"My promise\" 127, \"Your files stay sealed o\" 110); 126 words a screen across the page (669 words in 5.3 screens): a tech page says it in about 80 or fewer",
      "fix": "cut every section to its heading, one line and the product UI: the UI says the rest; no second paragraph, no list of feature sentences",
      "stop": 3,
-     "crop": "1440-25-copy-length.jpg"
+     "crop": "1440-21-copy-length.jpg"
     },
     {
      "check": "progress-bar",
@@ -326,7 +276,7 @@
      "text": "How strong is my password? Nothing you type leav",
      "msg": "a progress or meter bar on the page, like the one in \"How strong is my password? Not\": the house rules have no drag or progress bars",
      "stop": 2,
-     "crop": "1440-21-progress-bar.jpg",
+     "crop": "1440-17-progress-bar.jpg",
      "fix": "show the figure in words or as a number (\"2 of 5 done\"), not as a bar that fills"
     },
     {
@@ -337,7 +287,7 @@
      "msg": "2 sections are shorter than the screen, so the next one's heading or picture shows with them: \"Test a password or check the date, witho\" is 503px of the 827px under the nav, and \"All the tools\" shows below it (\"My promise\")",
      "fix": "give each section the screen (min-height: 100svh less the nav, its content centred), or join two short ones into one",
      "stop": 2,
-     "crop": "1440-22-one-screen.jpg"
+     "crop": "1440-18-one-screen.jpg"
     },
     {
      "check": "visual-caption",
@@ -646,23 +596,13 @@
    "errors": [],
    "findings": [
     {
-     "check": "spill",
-     "sev": "FAIL",
-     "sel": "div.tasks > a.task.t-xl > span.art.art-pdf > i:nth-of-type(3)",
-     "text": "",
-     "msg": "runs 61px past the right edge of the panel it sits on (div.tasks > a.task.t-xl > span.art.art-pdf > i:nth-of-type(1))",
-     "stop": 1,
-     "crop": "390-04-spill.jpg",
-     "fix": "keep the box inside the panel it starts on: shrink it, or grow the panel to hold it"
-    },
-    {
      "check": "no-visual",
      "sev": "FAIL",
      "sel": "section#tools",
      "text": "What do you need to do?",
-     "msg": "pictures, effects and mocks cover 6% of this section; a feature section needs a visual (about 25% or more)",
+     "msg": "no picture, effect or mock in this section; a feature section needs a visual",
      "stop": 2,
-     "crop": "390-08-no-visual.jpg",
+     "crop": "390-05-no-visual.jpg",
      "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits"
     },
     {
@@ -672,7 +612,7 @@
      "text": "Test a password or check the date, without leavi",
      "msg": "no picture, effect or mock in this section; a feature section needs a visual",
      "stop": 4,
-     "crop": "390-09-no-visual.jpg",
+     "crop": "390-06-no-visual.jpg",
      "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits"
     },
     {
@@ -682,7 +622,7 @@
      "text": "All the tools",
      "msg": "no picture, effect or mock in this section; a feature section needs a visual",
      "stop": 6,
-     "crop": "390-11-no-visual.jpg",
+     "crop": "390-08-no-visual.jpg",
      "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits"
     },
     {
@@ -691,8 +631,8 @@
      "sel": "section#promise",
      "text": "My promise",
      "msg": "no picture, effect or mock in this section; a feature section needs a visual",
-     "stop": 8,
-     "crop": "390-12-no-visual.jpg",
+     "stop": 9,
+     "crop": "390-10-no-visual.jpg",
      "fix": "give the section a visual: a UI fragment on a ground, real icons, or a photograph that fits"
     },
     {
@@ -701,39 +641,9 @@
      "sel": "section#promise",
      "text": "My promise",
      "msg": "the last section before the footer ends with no button",
-     "stop": 8,
-     "crop": "390-13-cta.jpg",
-     "fix": "add the action: a button in the hero, one on every priced item, one in the closing section"
-    },
-    {
-     "check": "tilt",
-     "sev": "FAIL",
-     "sel": "div.tasks > a.task.t-xl > span.art.art-pdf > i:nth-of-type(1)",
-     "text": "",
-     "msg": "rotated -10.0°",
-     "stop": 1,
-     "crop": "390-05-tilt.jpg",
-     "fix": "set it straight"
-    },
-    {
-     "check": "tilt",
-     "sev": "FAIL",
-     "sel": "div.tasks > a.task.t-xl > span.art.art-pdf > i:nth-of-type(2)",
-     "text": "",
-     "msg": "rotated 9.0°",
-     "stop": 1,
-     "crop": "390-06-tilt.jpg",
-     "fix": "set it straight"
-    },
-    {
-     "check": "text-contrast",
-     "sev": "FAIL",
-     "sel": "section#promise > div.wrap.promise-grid > aside.note > p:nth-of-type(2)",
-     "text": "That made me angry, so I built my own. Everythin",
      "stop": 9,
-     "msg": "body text in #6d7390 on #06070c reads 4.32:1 (needs 4.5:1)",
-     "crop": "390-15-text-contrast.jpg",
-     "fix": "body text in the ink at 7:1 or more; grey (4.5:1 or more) only for captions and labels"
+     "crop": "390-11-cta.jpg",
+     "fix": "add the action: a button in the hero, one on every priced item, one in the closing section"
     },
     {
      "check": "section-gaps",
@@ -742,7 +652,7 @@
      "text": "",
      "stop": 9,
      "msg": "102px between these sections, +92% against the median 53px",
-     "crop": "390-16-section-gaps.jpg",
+     "crop": "390-12-section-gaps.jpg",
      "fix": "use one gap between sections (all within 25% of each other)"
     },
     {
@@ -750,9 +660,9 @@
      "sev": "WARN",
      "sel": "div.foot-grid > div:nth-of-type(2) > h2.foot-h > a",
      "text": "Stay safe online",
-     "msg": "a 93x16px tap target (and 1 more like it on this screen): under the 44px a phone needs",
-     "stop": 9,
-     "crop": "390-17-tap-size.jpg",
+     "msg": "a 93x16px tap target (and 2 more like it on this screen): under the 44px a phone needs",
+     "stop": 10,
+     "crop": "390-14-tap-size.jpg",
      "fix": "make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box"
     },
     {
@@ -772,7 +682,7 @@
      "text": "Abdulaziz",
      "msg": "1 line of plain text set larger than the section headings (41.6px against h2 27.2px)",
      "stop": 9,
-     "crop": "390-18-heading-scale.jpg",
+     "crop": "390-13-heading-scale.jpg",
      "fix": "size headings by level: the h1 largest, one size per level, each level below the one above"
     },
     {
@@ -782,7 +692,7 @@
      "text": "",
      "stop": 8,
      "msg": "109px between these sections, +25% against the median 87px of gaps at a change of ground",
-     "crop": "390-14-section-gaps.jpg",
+     "crop": "390-09-section-gaps.jpg",
      "fix": "use one gap between sections (all within 25% of each other)"
     },
     {
@@ -812,7 +722,7 @@
      "text": "",
      "stop": 1,
      "msg": "the nav changes form as the page scrolls: header.site-header gives way to header.site-header.scrolled",
-     "crop": "390-07-nav-family.jpg",
+     "crop": "390-04-nav-family.jpg",
      "fix": "keep one nav on every screen: the same bar, fill, links and type"
     },
     {
@@ -822,7 +732,7 @@
      "text": "Stay safe online 8",
      "msg": "text links in 3 looks: underline, regular (5, like \"More options\"); border 1px, regular (4, like \"Stay safe online 8\"); no line, regular (29, like \"Stay safe online\")",
      "stop": 5,
-     "crop": "390-10-link-styles.jpg",
+     "crop": "390-07-link-styles.jpg",
      "fix": "give text links one look wherever they sit: one underline, one weight"
     }
    ],
@@ -868,18 +778,28 @@
   "findings": [
    {
     "check": "tap-size",
-    "sev": "WARN",
+    "sev": "FAIL",
     "sel": "div.foot-grid > div:nth-of-type(2) > h2.foot-h > a",
     "text": "Stay safe online",
-    "msg": "a 93x16px tap target (and 1 more like it on this screen): under the 44px a phone needs",
+    "msg": "a 93x16px tap target (and 1 more like it on this screen): 0px from the next one (\"Nicely Done — home\"), so a thumb lands on the wrong one",
     "crop": "narrow-320-01-tap-size.jpg",
+    "width": 320,
+    "fix": "make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box"
+   },
+   {
+    "check": "tap-size",
+    "sev": "WARN",
+    "sel": "div.foot-grid > div:nth-of-type(4) > h2.foot-h > a",
+    "text": "Everyday helpers",
+    "msg": "a 101x16px tap target: under the 44px a phone needs",
+    "crop": "narrow-320-02-tap-size.jpg",
     "width": 320,
     "fix": "make every link and control outside running text 44px tall on a phone: display: inline-flex; align-items: center; min-height: 44px (a footer list then needs no gap), a 44px small button, or a transparent ::before laid past the box"
    }
   ]
  },
  "counts": {
-  "FAIL": 55,
+  "FAIL": 47,
   "WARN": 29
  },
  "checks": {
@@ -895,13 +815,13 @@
   "credit-wall": "PASS",
   "nav": "PASS",
   "nav-covers": "PASS",
-  "spill": "FAIL",
+  "spill": "PASS",
   "off-viewport": "PASS",
   "fold-card": "PASS",
   "hover-spill": "not checked",
   "overlap-text": "PASS",
   "collide": "PASS",
-  "tap-size": "WARN",
+  "tap-size": "FAIL",
   "row-gap": "PASS",
   "cut-text": "WARN",
   "fold-cut": "PASS",
@@ -942,9 +862,9 @@
   "col-edge": "WARN",
   "right-edge": "PASS",
   "centre-axis": "PASS",
-  "tilt": "FAIL",
+  "tilt": "PASS",
   "contrast": "PASS",
-  "text-contrast": "FAIL",
+  "text-contrast": "PASS",
   "body-size": "PASS",
   "busy-ground": "PASS",
   "section-gaps": "FAIL",
@@ -1010,7 +930,7 @@
   "empty-area": "PASS",
   "a11y-name": "PASS",
   "img-alt": "PASS",
-  "field-label": "FAIL",
+  "field-label": "PASS",
   "heading-order": "PASS",
   "tabindex": "PASS",
   "focus-ring": "FAIL",
