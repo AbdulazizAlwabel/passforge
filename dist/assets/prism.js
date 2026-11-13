@@ -155,7 +155,7 @@
   }
 
   /* ---------- the loop: runs only while there is something to show ---------- */
-  let raf = 0, last = 0, seen = true, lost = false, wakeUntil = 0, warm = 0, cost = 0, shown = false;
+  let raf = 0, last = 0, seen = true, lost = false, wakeUntil = 0, warm = -3, cost = 0, best = 1e9, shown = false;
   const probe = new Uint8Array(4);
   const ambient = () => fine.matches && innerWidth > 860 && !root.classList.contains('idle');
   function frame(now) {
@@ -181,12 +181,14 @@
       if (shown) draw();
       else {
         // timed for real: reading one pixel back makes the graphics card finish the frame before the clock stops
-        // The very first probe is a sixteenth of the picture, so a machine far too slow is found out in a blink
-        // instead of freezing the page on one full frame.
-        const small = warm === 0, pw = small ? Math.max(2, cw >> 2) : cw, ph = small ? Math.max(2, ch >> 2) : ch;
+        // The first four probes are a sixteenth of the picture, so a machine far too slow is found out in a blink
+        // instead of freezing the page on one full frame. The very first is not judged: it carries the one-off
+        // cost of preparing the shader. The other three are judged by the quickest of them, because a single
+        // timing can be slow by chance (the browser was busy), and that says nothing about this machine.
+        const small = warm < 1, pw = small ? Math.max(2, cw >> 2) : cw, ph = small ? Math.max(2, ch >> 2) : ch;
         const t0 = performance.now(); gl.viewport(0, 0, pw, ph); draw(pw, ph); gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, probe);
         const took = performance.now() - t0; gl.viewport(0, 0, cw, ch);
-        if (small) { if (took * 16 > 44 && !window.ND_PRISM_KEEP) { lost = true; return; } }
+        if (small) { if (warm > -3) best = Math.min(best, took); if (warm === 0 && best > 6 && !window.ND_PRISM_KEEP) { lost = true; return; } }
         else { cost += took; if (took > 60 && !window.ND_PRISM_KEEP) { lost = true; return; } }
         if (++warm >= 11) {
           if (cost / 10 > 22 && !window.ND_PRISM_KEEP) { lost = true; return; }   // too slow for this machine: the still stays
@@ -194,7 +196,7 @@
         }
       }
     }
-    if (dragging || moving || amb || !shown || now < wakeUntil) raf = requestAnimationFrame(frame);   // the first ten frames run back to back, so the measurement is fair
+    if (dragging || moving || amb || !shown || now < wakeUntil) raf = requestAnimationFrame(frame);   // the first fourteen frames run back to back, so the measurement is fair
     else last = 0;
   }
   function kick(ms) { if (ms) wakeUntil = Math.max(wakeUntil, performance.now() + ms); if (!raf && gl && !lost) raf = requestAnimationFrame(frame); }
@@ -204,8 +206,7 @@
     drawSheet('');
     if (!init()) return;
     if (!size()) return;
-    draw();
-    kick(900);   // ten unseen frames to measure this machine; then it wakes with a small turn, so you can tell it is alive
+    kick(900);   // fourteen unseen frames to measure this machine; then it wakes with a small turn, so you can tell it is alive
 
     if ('IntersectionObserver' in window) new IntersectionObserver((es) => { seen = es[0].isIntersecting; if (seen) kick(); }).observe(stage);
     document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
