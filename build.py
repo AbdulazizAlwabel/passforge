@@ -701,7 +701,7 @@ def build_home():
           <a class="try-more" href="/date-converter/">Convert any date{ICONS['arrow']}</a>
         </div>
         <div class="try-card" id="tryStrength">
-          <p class="try-k"><span class="tile-icon" data-c="security">{ICONS['shield']}</span>How strong is my password?</p>
+          <label class="try-k" for="tryPw"><span class="tile-icon" data-c="security">{ICONS['shield']}</span>How strong is my password?</label>
           <input class="input" type="password" id="tryPw" placeholder="Type a password to test it…" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Password to test">
           <div class="meter" id="tryMeter" data-level="0"><i></i><i></i><i></i><i></i><i></i></div>
           <p class="try-out" id="tryOut">Nothing you type leaves this page.</p>

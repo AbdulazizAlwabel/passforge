@@ -38,7 +38,7 @@
 .specimen-pw { font-family: var(--font-mono); font-weight: 500; font-size: 1.12rem; line-height: 40px; min-height: 40px; min-width: 20ch; white-space: nowrap; color: var(--text); direction: ltr; text-align: left; cursor: copy; font-variant-ligatures: none; }
 .specimen-pw .c-sym { color: var(--rose); }
 .specimen-pw .c-num { color: var(--mint); }
-.specimen-pw .scramble { color: var(--dim); }
+.specimen-pw .scramble { color: var(--text-3); }
 .specimen-meta { display: flex; align-items: center; flex-wrap: wrap; gap: 4px 14px; padding: 0 16px 10px; font-size: 0.86rem; color: var(--text-3); }
 .live-off { display: none; }
 .try-live.paused .live-on { display: none; }
@@ -149,10 +149,10 @@
 .art-pdf { inset-inline-end: 7%; top: 11%; width: 58%; height: 56%; }
 .art-pdf i { position: absolute; left: 50%; top: 50%; width: 44%; aspect-ratio: 0.74; margin: -30% 0 0 -22%; border-radius: 6px; background: #fff; border: 1px solid #c8ccdb; box-shadow: 0 14px 24px -16px rgb(6 7 12 / 0.5); transition: transform 300ms var(--ease);
   background-image: linear-gradient(var(--tab, #ff4d6d), var(--tab, #ff4d6d)), repeating-linear-gradient(#c9cddb 0 2px, transparent 2px 10px); background-size: 34% 7%, 70% 46%; background-position: 15% 13%, 32% 64%; background-repeat: no-repeat; }
-.art-pdf i:nth-child(1) { transform: translateX(-66%) rotate(-10deg); --tab: #5b8cff; }
-.art-pdf i:nth-child(2) { transform: translateX(66%) rotate(9deg); --tab: #3ee6c1; }
-.task:hover .art-pdf i:nth-child(1) { transform: translateX(-34%) rotate(-4deg); }
-.task:hover .art-pdf i:nth-child(2) { transform: translateX(34%) rotate(3deg); }
+.art-pdf i:nth-child(1) { transform: translate(-58%, 7%); --tab: #5b8cff; }
+.art-pdf i:nth-child(2) { transform: translate(58%, 7%); --tab: #3ee6c1; }
+.task:hover .art-pdf i:nth-child(1) { transform: translate(-30%, 3%); }
+.task:hover .art-pdf i:nth-child(2) { transform: translate(30%, 3%); }
 .art-url { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 2px; padding: 9px 12px; border-radius: var(--r-md); background: var(--bg-2); border: 1px solid var(--line); font-family: var(--font-mono); font-size: 0.86rem; direction: ltr; color: var(--text-3); margin-top: 2px; max-width: 100%; overflow: hidden; white-space: nowrap; }
 .art-url b { font-weight: 500; padding: 2px 4px; border-radius: 5px; }
 .art-url .u-bad { color: var(--danger); background: var(--danger-soft); }
@@ -214,7 +214,7 @@
 .promise-grid .section-link { margin-top: 18px; }
 .note { position: relative; }
 .note p { max-width: 24ch; font-family: var(--font-display); font-weight: 500; font-size: clamp(1.6rem, 2.9vw, 2.5rem); line-height: 1.14; letter-spacing: -0.03em; color: var(--text); text-wrap: balance; }
-.note p + p { margin-top: 0.7em; color: var(--dim); }
+.note p + p { margin-top: 0.7em; color: var(--text-2); }
 .note .note-k { font-family: var(--font-sans); font-size: 0.9rem; font-weight: 500; letter-spacing: 0; color: var(--text-3); margin-bottom: 18px; max-width: none; }
 .note .note-sig { font-family: Caveat, 'Aref Ruqaa', cursive; font-weight: 500; font-size: 2.6rem; letter-spacing: 0; color: var(--text); margin-top: 0.5em; line-height: 1; }
 [dir="rtl"] .note .note-sig { font-family: 'Aref Ruqaa', serif; font-size: 2rem; }

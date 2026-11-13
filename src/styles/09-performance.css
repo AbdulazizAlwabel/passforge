@@ -25,3 +25,10 @@ html.idle .live-dot::after, html.idle .st-sheet, html.idle .pulse { animation-pl
 @media (pointer: coarse), (max-width: 820px) {
   button.link { min-height: 32px; min-width: 32px; padding-block: 6px; margin-block: -6px; display: inline-flex; align-items: center; justify-content: center; }
 }
+
+/* Things you tap with a thumb are at least 44px tall on touch screens. */
+@media (pointer: coarse), (max-width: 820px) {
+  .pin-btn, .copy, .try-more, .section-link, .seg button, .filter, .tool-badges .badge, .crumbs a, .cmdk-try button { min-height: 44px; }
+  .btn-sm { --h: 44px; }
+  .icon-btn { width: 44px; height: 44px; }
+}
