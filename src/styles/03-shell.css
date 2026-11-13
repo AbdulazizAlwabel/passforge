@@ -159,7 +159,7 @@
 @media (max-width: 560px) { .cmdk-backdrop { padding: 8px; } .cmdk { max-height: calc(100dvh - 16px); } .cmdk-foot span:not(:last-child) { display: none; } }
 
 /* ---------- Toast ---------- */
-.toast { position: fixed; left: 50%; bottom: 26px; z-index: 90; transform: translate(-50%, 12px) scale(0.97); opacity: 0; display: inline-flex; align-items: center; gap: 9px; padding: 11px 18px 11px 14px; border-radius: var(--r-pill); background: #f5f7ff; color: #06070c; font-size: 0.9rem; font-weight: 500; box-shadow: var(--shadow-lg); pointer-events: none; transition: opacity 180ms var(--ease), transform 220ms var(--ease); max-width: calc(100vw - 24px); }
+.toast { position: fixed; left: 50%; bottom: 26px; z-index: 90; transform: translate(-50%, 12px) scale(0.97); opacity: 0; display: inline-flex; align-items: center; gap: 9px; padding: 11px 18px 11px 14px; border-radius: var(--r-pill); background: var(--btn-bg); color: var(--btn-ink); font-size: 0.9rem; font-weight: 500; box-shadow: var(--shadow-lg); pointer-events: none; transition: opacity 180ms var(--ease), transform 220ms var(--ease); max-width: calc(100vw - 24px); }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
 .toast svg { width: 16px; height: 16px; flex: none; }
 .toast > svg:not(.t-file) path { stroke-dasharray: 30; stroke-dashoffset: 0; }
