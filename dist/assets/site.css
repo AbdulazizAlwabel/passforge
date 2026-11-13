@@ -738,7 +738,7 @@ table.data tr:hover td { background: var(--surface-2); }
 .art-gauge .needle { transform-origin: 46px 46px; transform: rotate(-58deg); transition: transform 500ms var(--ease); }
 .task:hover .art-gauge .needle { transform: rotate(40deg); }
 @media (max-width: 1040px) { .tasks { grid-template-columns: repeat(2, minmax(0, 1fr)); } .t-xl { grid-row: span 1; min-height: 320px; } }
-@media (max-width: 560px) { .tasks { grid-template-columns: 1fr; grid-auto-rows: auto; } .t-xl, .t-wide { grid-column: auto; } .t-xl { min-height: 300px; } .task { padding: 20px; min-height: 150px; } .art-pdf { width: 72%; top: 8%; height: 48%; } }
+@media (max-width: 560px) { .tasks { grid-template-columns: 1fr; grid-auto-rows: auto; } .t-xl, .t-wide { grid-column: auto; } .task { padding: 20px; min-height: 150px; } .task.t-xl { min-height: 380px; } .art-pdf { width: 62%; top: 24px; height: 190px; } .art-pdf i { margin-top: -75px; } }
 .try-grid { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: 16px; }
 .try-card { display: flex; flex-direction: column; gap: 12px; padding: clamp(20px, 2.6vw, 30px); border-radius: var(--r-xl); background: var(--surface); border: 1px solid var(--line); min-width: 0; }
 .try-k { display: flex; align-items: center; gap: 10px; font-weight: 500; font-size: 0.98rem; color: var(--text-2); }
